@@ -2,6 +2,53 @@
 
 A policy-driven AI workflow system that governs how ideas evolve into maintained, durable outcomes.
 
+## Quick Start
+
+From any project directory, start an agentic AI session (Claude Code, Copilot, etc.) and prompt:
+
+```
+Start a new Praxis project for building a Python CLI tool.
+```
+
+The AI will:
+
+1. **Initialize** — Create `praxis.yaml` with domain, privacy, and stage
+2. **Capture** — Ask what you're trying to build and why
+3. **Guide** — Walk you through each lifecycle stage
+4. **Validate** — Ensure you don't skip required artifacts (like an SOD before execution)
+
+### Example Session
+
+```
+You: Start a new Praxis project for building a Python CLI tool.
+
+AI: I'll initialize a Praxis project for you.
+
+    Created praxis.yaml:
+      domain: build
+      stage: capture
+      privacy_level: personal
+
+    We're now in the Capture stage. What problem does this CLI solve?
+    Who will use it? What prior art or references should I know about?
+
+You: It's a CLI for validating markdown files against a style guide...
+
+AI: Got it. I've captured:
+    - Problem: Markdown files drift from style conventions
+    - Users: Technical writers, docs teams
+    - References: markdownlint, vale
+
+    Ready to move to Sense? I'll organize these inputs and identify patterns.
+```
+
+### What Praxis Prevents
+
+- Starting to code before you've defined intent (Execute without Formalize)
+- Accidentally exposing sensitive material (Privacy enforcement)
+- Forgetting why you built something (Capture → Close lifecycle)
+- AI acting without constraints (Policy-driven behavior)
+
 ## The Problem
 
 AI-assisted work is structurally fragile. Current tools optimize for speed without providing coherent governance across the full lifecycle—from raw idea capture through sustained maintenance. This leads to:
