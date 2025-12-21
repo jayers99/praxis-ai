@@ -1,6 +1,6 @@
 # Praxis Privacy Model
 
-Version: 0.1  
+Version: 0.2
 Status: Draft  
 Scope: Cross-cutting control overlay for all Praxis domains and lifecycle stages
 
@@ -199,7 +199,24 @@ Downgrades are **discouraged by default**.
 
 ---
 
-## 7. Praxis Metadata Integration (Planned)
+## 7. Pre-Project Capture (Observe Domain)
+
+Raw captures in the Observe domain may occur *before* a project context exists—screenshots, brain dumps, web clippings collected in a scratch space.
+
+### Default Handling
+
+- All pre-project Observe artifacts default to **Personal** until explicitly classified
+- AI processing of unclassified Observe artifacts is prohibited
+- Promotion from Observe to another domain requires explicit privacy declaration
+- Once assigned to a project, artifacts inherit the project's privacy level
+
+### Rationale
+
+Conservative defaults prevent accidental exposure. The cost of delayed AI processing is lower than the cost of leaked sensitive material. Users can always upgrade to a more restrictive level immediately upon capture if the material warrants it.
+
+---
+
+## 8. Praxis Metadata Integration (Planned)
 
 Each project should declare privacy explicitly, e.g.:
 

@@ -1,8 +1,8 @@
 # Solution Overview Document (SOD)
 
-**Project:** Praxis  
-**Version:** v0.2  
-**Status:** Integrated Draft  
+**Project:** Praxis
+**Version:** v0.3
+**Status:** Integrated Draft
 **Date:** 2025-12-21
 
 ---
@@ -185,18 +185,65 @@ The SOD:
 
 ## 7. Policy Enforcement
 
-Praxis uses **CUE** as its policy and schema backbone to:
+Praxis requires a policy engine to:
 
-- encode domain and lifecycle rules  
-- enforce privacy invariants  
-- validate reclassification  
-- guarantee deterministic composition  
+- encode domain and lifecycle rules
+- enforce privacy invariants
+- validate reclassification
+- guarantee deterministic composition
+
+CUE is the current candidate for this role. See [ADR-001](adr/001-policy-engine.md) for trade-off analysis (status: exploratory).
 
 This enables validation-first, order-independent governance of AI behavior.
 
 ---
 
-## 8. Summary
+## 8. Risks & Mitigations
+
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Model too heavy for small work | High | Medium | Define "lightweight mode" or minimum viable governance for trivial tasks |
+| Privacy reclassification friction causes abandonment | Medium | High | Design reclassification as a first-class workflow, not an exception path |
+| Domain taxonomy is wrong | Medium | High | Treat domains as mutable; version them; plan for domain evolution |
+| Policy engine choice is wrong | Low | High | Isolate policy engine behind abstraction; defer deep investment until validated |
+| Solo-author bias limits future scaling | High | Medium | Explicitly scope v1 as single-user; collaboration is future scope |
+| Lifecycle stages don't fit real work patterns | Medium | High | Validate with worked examples before heavy execution investment |
+| Governance overhead exceeds value | Medium | High | Measure friction in early projects; establish abandonment criteria |
+
+---
+
+## 9. Abandonment Criteria
+
+Praxis should be abandoned or fundamentally rethought if:
+
+1. **Overhead exceeds value** — Governance consistently slows work without proportional benefit across 3+ real projects
+2. **Privacy model fails** — Sensitive material is exposed due to model gaps (not user error)
+3. **Lifecycle doesn't fit** — >50% of real work requires constant regression or stage-skipping
+4. **Domain model is wrong** — Significant work repeatedly falls outside or between defined domains
+5. **Policy enforcement is untenable** — No suitable policy engine can be integrated without excessive complexity
+
+---
+
+## 10. First Executable Increment
+
+### Deliverable
+Minimal policy schema + CLI validator for Build domain artifacts.
+
+### Acceptance Tests
+1. Given a `praxis.yaml` with `domain: build, stage: execute, privacy: confidential`, the validator passes
+2. Given `stage: execute` without a Formalize artifact (SOD), the validator fails with "Cannot execute without formalization"
+3. Given `privacy: public` with a reference to a `.env` file, the validator warns "Potential secret in public project"
+4. Given an invalid stage transition (e.g., Capture → Execute), the validator fails with "Invalid stage transition"
+
+### Definition of Done
+- Schema validates happy path for Build domain
+- Schema rejects 3+ known-bad configurations
+- CLI runs locally with no external dependencies
+- Worked example (helloworld CLI) passes validation
+
+---
+
+## 11. Summary
 
 Praxis is a **policy-driven AI workflow system** that governs how ideas become maintained reality.
 

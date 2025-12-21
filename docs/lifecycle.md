@@ -1,7 +1,7 @@
 # Praxis Lifecycle — Draft
 
-**File:** lifecycle-draft.md  
-**Version:** v0.1  
+**File:** lifecycle.md
+**Version:** v0.2
 **Purpose:** Capture the canonical Praxis lifecycle, the role of Formalize as the structural hinge, and the allowed regression model.
 
 ---
@@ -74,6 +74,39 @@ This table defines the only permitted backward transitions between lifecycle sta
 2. Formalize is a hard boundary; late stages cannot regress to early exploration without re-formalization.
 3. Execution is never speculative; ambiguity discovered during Execute forces a return to Formalize.
 4. Close is terminal; it may only seed a new Capture.
+
+---
+
+## Regression Triggers
+
+A regression occurs when the current stage cannot be completed due to gaps in prior stages. Triggers are detected manually (author recognizes friction) or via policy validation failure.
+
+| Current Stage | Trigger Condition | Target Stage | Required Response |
+|---------------|-------------------|--------------|-------------------|
+| Sense | Raw inputs are missing, incomplete, or incorrect | Capture | Amend captured material before resuming |
+| Explore | Understanding is insufficient to generate options | Sense | Strengthen sense artifacts |
+| Shape | No viable direction emerges; exploration was premature | Explore | Re-open divergent exploration |
+| Formalize | Intent or scope remains unstable after shaping | Shape | Continue convergence before formalizing |
+| Commit | Constraints, priorities, or scope changed since formalization | Formalize | Revise and re-validate SOD |
+| Execute | Implementation reveals ambiguous or contradictory intent | Formalize | Pause execution; clarify and re-commit |
+| Execute | Scope creep detected during implementation | Commit | Re-evaluate commitment decision |
+| Sustain | Defect root cause is a design flaw, not implementation bug | Formalize | Fix design before patching symptoms |
+| Sustain | Enhancement requires scope expansion | Commit | Treat as new commitment decision |
+
+### Detection Methods
+
+1. **Manual recognition** — Author encounters friction, confusion, or repeated rework
+2. **Policy validation failure** — Automated check fails (e.g., missing SOD at Execute)
+3. **Peer review feedback** — Collaborator identifies upstream gaps
+4. **Retrospective analysis** — Post-hoc review reveals stage was entered prematurely
+
+### Regression Process
+
+1. **Halt** — Stop work in current stage
+2. **Document** — Record regression rationale (why, what's missing)
+3. **Regress** — Move to target stage and address gap
+4. **Re-validate** — Ensure target stage outputs are now complete
+5. **Resume** — Progress forward through stages again
 
 ---
 
