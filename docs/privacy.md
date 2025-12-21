@@ -82,8 +82,8 @@ Content is broadly shareable but collaboration is intentionally limited.
 
 ### 3.3 Personal
 
-**Intent**  
-Private to the author; low-to-moderate sensitivity.
+**Intent**
+Private to the author or trusted collaborators; low-to-moderate sensitivity.
 
 **Storage**
 - Private GitHub repositories allowed
@@ -98,7 +98,7 @@ Private to the author; low-to-moderate sensitivity.
 - Avoid sensitive logs, screenshots, or configs
 
 **Collaboration**
-- Optional, small trusted group
+- Single user or small trusted group
 
 ---
 
