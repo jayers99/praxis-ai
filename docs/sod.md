@@ -1,158 +1,211 @@
 # Solution Overview Document (SOD)
 
 **Project:** Praxis  
-**Version:** v0.1 (Draft)  
-**Artifact:** sod-draft.md
+**Version:** v0.2  
+**Status:** Integrated Draft  
+**Date:** 2025-12-21
 
 ---
 
 ## 1. Problem Statement
 
-Modern AI usage is powerful but structurally weak.
+AI-assisted work today is powerful but structurally fragile.
 
-Individuals working across **creative, technical, and regulated domains** face persistent challenges when attempting to use AI responsibly and repeatably:
+Individuals operating across **creative, technical, and regulated domains** lack a coherent system that governs how ideas evolve into durable outcomes while maintaining safety, repeatability, and clarity. The core problems are:
 
-1. **AI interactions are ad hoc and non-repeatable**  
-   Prompts are created opportunistically, with little structure, no lifecycle awareness, and no consistent handoff between ideation, execution, and maintenance.
+1. **Ad hoc AI usage**  
+   Prompts, experiments, and executions are disconnected, non-repeatable, and rarely lifecycle-aware.
 
-2. **Privacy and security are treated as afterthoughts**  
-   Users must rely on memory and discipline to decide when to redact data, abstract inputs, switch execution targets, or avoid collaboration. This creates unacceptable risk as projects evolve in sensitivity.
+2. **Late and manual privacy decisions**  
+   Sensitivity is often recognized after artifacts already exist, creating risk, rework, or abandonment.
 
-3. **Environment mismatch creates friction**  
-   Ideas often originate in informal or creative contexts (e.g., at home) but must later be rewritten to meet conservative, compliance-oriented work standards.
+3. **Context switching friction**  
+   Work often begins informally (home, creative) and must later be adapted to conservative or regulated environments.
 
-4. **No coherent end-to-end model exists for AI-assisted work**  
-   Existing prompt libraries focus on isolated tasks rather than supporting the full lifecycle from raw idea to maintained deliverable.
+4. **No end-to-end lifecycle model**  
+   Existing tools optimize for isolated tasks, not the full arc from raw capture to sustained maintenance.
 
-5. **There is no policy-driven control plane for AI usage**  
-   Users lack deterministic guarantees that AI collaboration, data exposure, storage, and execution targets remain aligned with a project’s evolving privacy posture.
+5. **No enforceable AI governance layer**  
+   Users rely on memory and discipline rather than deterministic controls for storage, collaboration, and AI exposure.
 
 ---
 
 ## 2. Desired Outcomes
 
-Praxis is designed to provide a **structured, enforceable system** that:
+Praxis aims to provide a **governed, reusable system** that:
 
-1. **Treats AI as a governed collaborator**  
-   AI behavior is constrained by explicit policy and validation, not user memory or best intentions.
-
-2. **Supports the full lifecycle of work**  
-   From idea capture through long-term maintenance, with clear stage boundaries and handoffs.
-
-3. **Allows privacy to evolve safely**  
-   Projects may be reclassified at any point, with constraints tightening automatically and globally.
-
-4. **Separates thinking from presentation**  
-   Core artifacts remain environment-neutral and can be re-rendered for different contexts (e.g., home to work).
-
-5. **Works across multiple domains**  
-   Including coding, project planning, writing, learning, and illustrating.
-
-6. **Enables local-only AI for highly sensitive work**  
-   Raw data may only be used when inference is fully under user control, without reliance on cloud vendors or external telemetry.
+1. Treats AI as a **policy-constrained collaborator**, not an unbounded assistant.
+2. Supports the **full lifecycle of work**, from capture to close.
+3. Allows **privacy to evolve safely** at any point in the lifecycle.
+4. Separates **thinking from presentation**, enabling late-bound rendering for different environments.
+5. Works consistently across **multiple domains of work**.
+6. Enables **local-only or air-gapped AI** for highly sensitive projects.
 
 ---
 
-## 3. Logical Structure of the Solution
+## 3. Canonical Dimensions
 
-### 3.1 Organizational Spine
+Praxis behavior is determined by the composition of four dimensions, resolved deterministically.
 
-Praxis is organized around two primary, cross-cutting dimensions that define *capability* rather than policy:
+### 3.1 Domain (What kind of work)
 
-- **Domain** – the type of work being performed  
-  `coding | illustrating | project-planning | learning | writing`
+Each artifact belongs to exactly one domain at creation.
 
-- **Stage** – the lifecycle position of the work  
-  `collect | connect | ideate | refine | implement | maintain`
+- **Build** – functional systems and tools  
+- **Create** – aesthetic and expressive output  
+- **Write** – structured externalized thought  
+- **Observe** – raw capture without interpretation  
+- **Learn** – internal model and skill formation  
+- **Project Planning** – coordination and sequencing of work  
 
----
-
-### 3.2 Project Control Planes
-
-Two global control planes define *how* AI and data may be used.
-
-#### Privacy (Mutable Project State)
-
-Privacy represents the current security posture of a project and may change at any time:
-
-- `public`
-- `private`
-- `secret` – AI interacts only with abstractions and redacted data
-- `top-secret` – raw data permitted only with local or air-gapped models
-
-Privacy reclassification applies across all domains and stages and retroactively tightens constraints on future work.
-
-#### Execution Target
-
-Defines where AI inference is allowed to run:
-
-- `cloud`
-- `local`
-- `airgap`
-
-**Invariant:**
-
-```
-privacy = top-secret ⇒ target = local | airgap
-```
+Domains define:
+- allowed artifact types  
+- storage expectations  
+- AI usage patterns  
+- quality bars  
 
 ---
 
-### 3.3 Environment as a Late-Bound Overlay
+### 3.2 Lifecycle Stage (Where the work is)
 
-- **Environment (`env`)**: `home | work`
+Praxis defines a single canonical lifecycle:
 
-Environment does not affect data handling or AI permissions. Instead, it controls:
+1. Capture  
+2. Sense  
+3. Explore  
+4. Shape  
+5. **Formalize** (structural hinge)  
+6. Commit  
+7. Execute  
+8. Sustain  
+9. Close  
 
-- tone and formality
-- compliance posture
-- formatting and presentation expectations
+Formalize, Commit, and Close form the **non-optional structural spine** that ensures durability and leverage.
 
-This allows work to originate creatively and later be rendered safely for professional contexts without rewriting core logic.
-
----
-
-### 3.4 Deterministic Resolution Model
-
-Praxis resolves AI interactions in a fixed, predictable order:
-
-1. **Select capability**: `domain + stage`
-2. **Apply constraints**: `privacy + target`
-3. **Render presentation**: `env`
-
-This model prevents unsafe defaults and ensures consistent behavior across contexts.
+A strict **stage → allowed regressions model** prevents unsafe or ambiguous backtracking.
 
 ---
 
-### 3.5 Policy Enforcement via CUE
+### 3.3 Privacy (Cross-cutting control overlay)
 
-Praxis uses **CUE** as its configuration and policy backbone to:
+Privacy defines **how information may be stored, shared, processed, and externalized**. It is mutable and may be reclassified mid-project.
 
-- define schemas
-- enforce invariants
-- unify layered policies
-- validate privacy reclassification
+Canonical levels (least → most restrictive):
 
-This provides:
-- validation-first behavior
-- order-independent policy composition
-- deterministic resolution of prompts and workflows
+1. Public  
+2. Public – Trusted Collaborators  
+3. Personal  
+4. Confidential  
+5. Restricted  
 
----
+Privacy directly constrains:
+- storage locations  
+- collaboration scope  
+- AI tooling  
+- artifact specificity  
 
-## 4. Role of the Solution Overview Document (SOD)
-
-Within Praxis, the SOD is a **keystone artifact** that:
-
-- translates ideation into structured intent
-- survives privacy reclassification
-- can be re-rendered for different environments
-- feeds downstream artifacts such as spike tickets, Jira stories, and implementation plans
+Higher privacy requires greater abstraction and tighter controls.
 
 ---
 
-## 5. Summary
+### 3.4 Environment (Late-bound presentation overlay)
 
-**Praxis** is a policy-driven AI workflow system that governs how ideas become maintained reality.
+Environment affects **tone, formality, and compliance posture**, not data handling.
 
-By combining lifecycle awareness, privacy-first governance, late-bound environment rendering, and local-only handling for highly sensitive work, Praxis enables safe, repeatable, and adaptable collaboration with AI across creative and regulated domains.
+- `home`  
+- `work`  
+
+Artifacts remain environment-neutral and are rendered safely later without rewriting core intent.
+
+---
+
+## 4. Deterministic Resolution Model
+
+Praxis resolves behavior in a fixed order:
+
+1. **Domain + Stage** → capability and intent  
+2. **Privacy** → data, AI, and collaboration constraints  
+3. **Environment** → presentation and tone  
+
+This guarantees predictable, auditable AI behavior and prevents unsafe defaults.
+
+---
+
+## 5. Formalize and the Role of the SOD
+
+Formalize is the **structural hinge** between thinking and execution.
+
+For the **Build** domain, the Formalize artifact is the **Solution Overview Document (SOD)**.
+
+The SOD:
+- locks intent without over-specifying implementation  
+- survives privacy reclassification  
+- feeds downstream execution artifacts  
+- defines explicit commit readiness  
+
+### 5.1 Required SOD Sections
+
+- Problem Statement  
+- Business Context / Drivers  
+- Goals  
+- Non-Goals  
+- Functional Overview  
+- High-Level Architecture / Workflow  
+- Assumptions  
+- Constraints (Technical, Security, Compliance, Operational)  
+- Dependencies  
+- Phases / Increments  
+- Risks & Mitigations  
+- Open Questions / Spikes  
+- Glossary / Definitions  
+- Commit Readiness Checklist  
+
+### 5.2 Explicit Exclusions
+
+- Low-level design  
+- Task breakdowns  
+- Implementation detail  
+- Unframed experimentation  
+
+---
+
+## 6. Privacy and Lifecycle Interaction
+
+- Privacy is declared no later than **Explore**.  
+- Enforced during **Shape** and **Formalize**.  
+- Honored strictly during **Execute**.  
+- Re-evaluated before **Commit**.  
+
+### 6.1 Reclassification Rules
+
+- **Upgrade (less → more restrictive):** mandatory migration, sanitization, and constraint tightening.  
+- **Downgrade (more → less restrictive):** discouraged; requires explicit review and redaction.  
+
+---
+
+## 7. Policy Enforcement
+
+Praxis uses **CUE** as its policy and schema backbone to:
+
+- encode domain and lifecycle rules  
+- enforce privacy invariants  
+- validate reclassification  
+- guarantee deterministic composition  
+
+This enables validation-first, order-independent governance of AI behavior.
+
+---
+
+## 8. Summary
+
+Praxis is a **policy-driven AI workflow system** that governs how ideas become maintained reality.
+
+By combining:
+- a universal lifecycle  
+- domain-aware artifacts  
+- mutable but enforceable privacy  
+- late-bound environments  
+- deterministic policy resolution  
+
+Praxis enables safe, repeatable, and cumulative AI-assisted work across creative and regulated contexts.
+
