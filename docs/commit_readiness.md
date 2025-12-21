@@ -1,4 +1,4 @@
-# Commit Readiness Checklist — Praxis SOD v0.2 (Assessment)
+# Commit Readiness Checklist — Praxis SOD v0.3 (Assessment)
 
 ---
 
@@ -46,8 +46,9 @@
 - [x] AI tooling is permitted or restricted by privacy level.
 - [x] Collaboration model aligns with privacy constraints.
 - [x] Reclassification implications have been considered.
+- [x] Pre-project capture defaults are defined (Observe domain).
 
-**Assessment:** Very strong. This is a differentiating feature of Praxis.
+**Assessment:** Very strong. This is a differentiating feature of Praxis. Pre-project Observe defaults now documented.
 
 ---
 
@@ -65,23 +66,23 @@
 
 ## 6. Risks & Unknowns
 
-- [~] Major risks are identified (implicitly).
-- [~] Mitigation strategies are plausible but not yet enumerated.
-- [~] Unknowns are visible but not exhaustively listed.
-- [ ] Required spikes or experiments are identified and bounded.
+- [x] Major risks are identified with likelihood and impact ratings.
+- [x] Mitigation strategies are enumerated for each risk.
+- [x] Unknowns are visible (policy engine choice flagged as exploratory).
+- [x] Required spikes or experiments are identified and bounded (ADR-001, Issue #3).
 
-**Assessment:** This is the weakest section today — not a blocker, but the first place to improve before heavy execution.
+**Assessment:** Previously the weakest section; now one of the strongest. The risk table (Section 8) is concrete and actionable.
 
 ---
 
 ## 7. Execution Framing
 
-- [~] The first executable increment is implied but not explicitly named.
+- [x] The first executable increment is explicitly named with acceptance tests.
 - [x] The work can begin without inventing requirements.
 - [x] The team (you) is capable of executing with current context.
 - [x] Inputs to execution are complete and accessible.
 
-**Assessment:** Adequate for a solo-founder / architect-driven project.
+**Assessment:** Strong. Section 10 defines deliverable, 4 acceptance tests, and definition of done.
 
 ---
 
@@ -91,8 +92,9 @@
 - [x] Formalize artifacts are complete and versioned.
 - [x] No unresolved ambiguity forces speculative execution.
 - [x] Regression paths are understood and documented.
+- [x] Regression triggers are explicitly defined.
 
-**Assessment:** One of the strongest aspects of Praxis.
+**Assessment:** One of the strongest aspects of Praxis. Regression triggers now documented in lifecycle.md v0.2.
 
 ---
 
@@ -100,29 +102,39 @@
 
 - [x] Proceeding to execution is a deliberate decision.
 - [x] Stakeholders are aligned (single decision-maker).
-- [~] The cost of execution is justified by expected value.
-- [~] Abandonment criteria are implicitly understood.
+- [x] The cost of execution is justified by expected value.
+- [x] Abandonment criteria are explicitly documented (Section 9).
 
-**Assessment:** Acceptable. Explicit abandonment criteria could be added later.
+**Assessment:** Strong. Five concrete abandonment conditions defined.
 
 ---
 
 ## Overall Verdict
 
-**Commit Readiness: YES (with noted follow-ups)**
+**Commit Readiness: YES (unconditional)**
 
-The Praxis SOD v0.2 is **sufficiently formalized to Commit**.
+The Praxis SOD v0.3 is **fully ready to Commit**.
 
-### Recommended pre-execution upgrades (not blockers):
+### Changes from v0.2 Assessment
 
-1. Add a short **Risks & Open Questions** subsection with 5–7 bullets.
-2. Name the **first executable increment** explicitly (e.g., “Policy schema + validator skeleton”).
-3. Optionally add a **non-goals** section header to make boundaries even clearer.
+| Section | v0.2 | v0.3 |
+|---------|------|------|
+| 6. Risks & Unknowns | Weakest | Strong — explicit table + spikes |
+| 7. Execution Framing | Adequate | Strong — testable increment |
+| 9. Commit Decision | Acceptable | Strong — abandonment criteria explicit |
 
-Importantly:  
-Nothing here would cause me to reject this at an architecture review.
+### Resolved Follow-ups
 
-If you want, next we can:
+All three recommendations from the v0.2 assessment have been addressed:
 
-- Tighten this into a **Commit Declaration section** for Praxis, or
-- Define the **first 2–3 Execute-stage artifacts** that naturally fall out of this SOD.
+1. ~~Add a short Risks & Open Questions subsection~~ — Section 8 added with 7 risks
+2. ~~Name the first executable increment explicitly~~ — Section 10 added with acceptance tests
+3. ~~Optionally add a non-goals section~~ — Abandonment criteria (Section 9) serves this purpose
+
+### Remaining Gap
+
+The model has not yet governed actual work. Validation will occur through [Issue #4](https://github.com/jayers99/praxis-ai/issues/4) (template-python-cli worked example).
+
+**Grade: A-**
+
+The path to A+ is completing the first worked example and confirming the lifecycle model fits real work patterns.
