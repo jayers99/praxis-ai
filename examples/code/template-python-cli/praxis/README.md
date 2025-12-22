@@ -7,10 +7,15 @@ This directory contains [Praxis](https://github.com/jayers99/praxis-ai) governan
 | File | Purpose |
 |------|---------|
 | `praxis.yaml` | Current state (domain, stage, privacy, environment) |
-| `CAPTURE.md` | Raw inputs and prior art gathered |
-| `SENSE.md` | Patterns and themes organized |
-| `EXPLORE.md` | Options evaluated and spikes run |
-| `SHAPE.md` | Final form defined |
+| `01-capture.md` | Raw inputs and prior art gathered |
+| `02-sense.md` | Patterns and themes organized |
+| `03-explore.md` | Options evaluated and spikes run |
+| `04-shape.md` | Final form defined |
+| `05-formalize.md` | Solution Overview Document (SOD) |
+| `06-commit.md` | Scope lock and commitment decision |
+| `07-execute.md` | Implementation verification |
+| `08-sustain.md` | Maintenance and governance |
+| `09-close.md` | Archive and learnings (when retired) |
 
 ## Current Stage
 

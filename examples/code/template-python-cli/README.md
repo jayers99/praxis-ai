@@ -94,7 +94,7 @@ This template uses **Hexagonal Architecture** (Ports and Adapters):
 
 **Stage:** Sustain
 
-See [praxis/SUSTAIN.md](praxis/SUSTAIN.md) for current stage artifact.
+See [praxis/08-sustain.md](praxis/08-sustain.md) for current stage artifact.
 
 ## Related
 

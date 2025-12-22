@@ -15,7 +15,7 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/SUSTAIN.md](praxis/SUSTAIN.md) — Maintenance and governance
+- [praxis/08-sustain.md](praxis/08-sustain.md) — Maintenance and governance
 
 ## Project Structure
 
