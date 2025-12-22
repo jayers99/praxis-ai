@@ -92,11 +92,12 @@ This template uses **Hexagonal Architecture** (Ports and Adapters):
 
 ## Status
 
-**Stage:** Sense
+**Stage:** Shape
 
-See [praxis/SENSE.md](praxis/SENSE.md) for current stage artifact.
+See [praxis/SHAPE.md](praxis/SHAPE.md) for current stage artifact.
 
 ## Related
 
 - [Issue #4](https://github.com/jayers99/praxis-ai/issues/4) — Parent issue
 - [Praxis](https://github.com/jayers99/praxis-ai) — Policy-driven AI workflow system
+- [praxis/README.md](praxis/README.md) — Governance files overview

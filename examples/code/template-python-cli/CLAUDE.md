@@ -5,7 +5,7 @@
 | Dimension | Value |
 |-----------|-------|
 | Domain | Code |
-| Stage | Sense |
+| Stage | Shape |
 | Privacy | Public |
 | Environment | Home |
 
@@ -15,20 +15,34 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/SENSE.md](praxis/SENSE.md) — Organizing patterns and themes
+- [praxis/SHAPE.md](praxis/SHAPE.md) — Defining the final template form
 
 ## Project Structure
 
 ```
 template-python-cli/
-├── src/                # Application source code
-├── tests/              # Test suite
-├── docs/               # Documentation
-├── praxis/             # Praxis governance files
-│   ├── praxis.yaml     # Current state
-│   └── CAPTURE.md      # Active stage artifact
-├── CLAUDE.md           # AI context (this file)
-└── README.md           # Project overview
+├── src/
+│   └── template_python_cli/
+│       ├── __init__.py
+│       ├── __main__.py           # python -m entry
+│       ├── cli.py                # Thin CLI (Typer)
+│       ├── domain/               # Pure business logic
+│       ├── application/          # Use cases (verbs)
+│       └── infrastructure/       # External integrations
+├── tests/
+│   ├── features/                 # Gherkin scenarios (BDD)
+│   ├── step_defs/                # Step implementations
+│   ├── test_cli.py               # CLI integration tests
+│   └── test_domain.py            # Domain unit tests
+├── praxis/                       # Praxis governance
+│   ├── praxis.yaml
+│   ├── CAPTURE.md
+│   ├── SENSE.md
+│   ├── EXPLORE.md
+│   └── SHAPE.md
+├── pyproject.toml
+├── CLAUDE.md                     # This file
+└── README.md
 ```
 
 ## Development Approach
@@ -40,13 +54,13 @@ template-python-cli/
 
 ## Stage Rules
 
-### Sense
-- Organize raw inputs into coherent themes
-- Identify patterns and relationships
-- Surface observations and open questions
+### Shape
+- Define the final form and canonical structure
+- Document conventions and boundaries
+- Establish acceptance criteria for formalization
 
-### Next Stage: Explore
-Advance when patterns are clear and ready to evaluate options.
+### Next Stage: Formalize
+Advance when the shape is accepted and ready for formal specification (SOD).
 
 ## Constraints
 
