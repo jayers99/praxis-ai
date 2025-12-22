@@ -20,6 +20,9 @@ poetry install
 # Activate the Poetry virtual environment (Poetry 2.0+)
 eval $(poetry env activate)
 
+# Deactivate when done
+deactivate
+
 # Or add this alias to ~/.zshrc for convenience:
 # alias penv='eval $(poetry env activate)'
 ```
