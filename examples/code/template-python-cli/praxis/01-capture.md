@@ -399,15 +399,15 @@ AI prompts user for all values at project initialization.
 ```
 praxis/
 ├── praxis.yaml       # Current state (always present)
-├── CAPTURE.md        # Raw inputs, references, constraints
-├── SENSE.md          # Organized patterns, themes
-├── EXPLORE.md        # Options considered, spikes
-├── SHAPE.md          # Refined approach, trade-offs
-├── SOD.md            # Formalize artifact (Code domain)
-├── COMMIT.md         # Commit readiness, final checks
-├── EXECUTE.md        # Implementation notes, decisions
-├── SUSTAIN.md        # Maintenance patterns, known issues
-└── CLOSE.md          # Retrospective, lessons learned
+├── 01-capture.md     # Raw inputs, references, constraints
+├── 02-sense.md       # Organized patterns, themes
+├── 03-explore.md     # Options considered, spikes
+├── 04-shape.md       # Refined approach, trade-offs
+├── 05-formalize.md   # Formalize artifact (SOD)
+├── 06-commit.md      # Commit readiness, final checks
+├── 07-execute.md     # Implementation notes, decisions
+├── 08-sustain.md     # Maintenance patterns, known issues
+└── 09-close.md       # Retrospective, lessons learned
 ```
 
 **Key rules:**
@@ -423,7 +423,7 @@ praxis/
 2. AI prompts: "What domain? (Code/Create/Write/Observe/Learn)"
 3. AI prompts: "What privacy level? (Public/Personal/Confidential/Restricted)"
 4. AI prompts: "What environment? (Home/Work)"
-5. AI sets stage to `capture` and creates `CAPTURE.md`
+5. AI sets stage to `capture` and creates `01-capture.md`
 6. User begins capturing inputs
 
 ---

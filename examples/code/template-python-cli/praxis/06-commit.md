@@ -27,7 +27,7 @@ Explicitly decide to proceed. Lock scope and intent, allocate effort, and enforc
 
 ## Scope Lock
 
-The following scope from FORMALIZE.md is now locked:
+The following scope from 05-formalize.md is now locked:
 
 ### In Scope (Locked)
 - Python 3.10+ CLI template

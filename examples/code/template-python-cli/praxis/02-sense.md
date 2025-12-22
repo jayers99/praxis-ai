@@ -87,7 +87,7 @@ BDD (What?) → TDD (How?) → DDD (Where?)
 **Files:**
 
 - `praxis.yaml` — Current state (domain, stage, privacy, environment)
-- `{STAGE}.md` — Stage-specific artifacts (CAPTURE.md, SENSE.md, etc.)
+- `{NN}-{stage}.md` — Stage-specific artifacts (01-capture.md, 02-sense.md, etc.)
 - `CLAUDE.md` — AI context at project root
 
 **Design principles:**
