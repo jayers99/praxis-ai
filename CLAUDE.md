@@ -69,7 +69,7 @@ Acceptance tests:
 domain: code|create|write|observe|learn
 stage: capture|sense|explore|shape|formalize|commit|execute|sustain|close
 privacy_level: public|public-trusted|personal|confidential|restricted
-environment: home|work
+environment: Home|Work
 ```
 
 ## Commands

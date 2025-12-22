@@ -112,8 +112,8 @@ Higher privacy requires greater abstraction and tighter controls.
 
 Environment affects **tone, formality, and compliance posture**, not data handling.
 
-- `home`  
-- `work`  
+- `Home`
+- `Work`  
 
 Artifacts remain environment-neutral and are rendered safely later without rewriting core intent.
 
