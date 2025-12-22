@@ -11,7 +11,7 @@
 
 ## Purpose
 
-Build a reusable Python CLI project template that validates the Praxis lifecycle.
+Create a reusable Python CLI project template that validates the Praxis lifecycle.
 
 ## Active Artifact
 

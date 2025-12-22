@@ -54,7 +54,7 @@ Formalize is complete only when:
 
 ---
 
-## Domain: Build
+## Domain: Code
 
 ### Formalize Artifact
 **Solution Overview Document (SOD)**
