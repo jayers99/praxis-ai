@@ -92,9 +92,9 @@ This template uses **Hexagonal Architecture** (Ports and Adapters):
 
 ## Status
 
-**Stage:** Commit
+**Stage:** Execute
 
-See [praxis/COMMIT.md](praxis/COMMIT.md) for current stage artifact.
+See [praxis/EXECUTE.md](praxis/EXECUTE.md) for current stage artifact.
 
 ## Related
 

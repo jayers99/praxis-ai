@@ -5,7 +5,7 @@
 | Dimension | Value |
 |-----------|-------|
 | Domain | Code |
-| Stage | Commit |
+| Stage | Execute |
 | Privacy | Public |
 | Environment | Home |
 
@@ -15,7 +15,7 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/COMMIT.md](praxis/COMMIT.md) — Scope lock and commitment decision
+- [praxis/EXECUTE.md](praxis/EXECUTE.md) — Implementation verification
 
 ## Project Structure
 
@@ -54,13 +54,13 @@ template-python-cli/
 
 ## Stage Rules
 
-### Commit
-- Explicitly decide to proceed
-- Lock scope and intent
-- Verify implementation matches specification
+### Execute
+- Produce the artifact
+- Implementation governed by SOD
+- AI behavior tightly controlled
 
-### Next Stage: Execute
-Advance when scope is locked and ready for implementation (or verification if already implemented).
+### Next Stage: Sustain
+Advance when artifact is produced and verified.
 
 ## Constraints
 
