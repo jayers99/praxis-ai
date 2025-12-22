@@ -5,7 +5,7 @@
 | Dimension | Value |
 |-----------|-------|
 | Domain | Code |
-| Stage | Formalize |
+| Stage | Commit |
 | Privacy | Public |
 | Environment | Home |
 
@@ -15,7 +15,7 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/FORMALIZE.md](praxis/FORMALIZE.md) — Solution Overview Document (SOD)
+- [praxis/COMMIT.md](praxis/COMMIT.md) — Scope lock and commitment decision
 
 ## Project Structure
 
@@ -54,13 +54,13 @@ template-python-cli/
 
 ## Stage Rules
 
-### Formalize
-- Convert shaped thinking into durable specification (SOD)
-- Establish explicit intent, scope, constraints, and success criteria
-- This is the boundary between exploration and execution
+### Commit
+- Explicitly decide to proceed
+- Lock scope and intent
+- Verify implementation matches specification
 
-### Next Stage: Commit
-Advance when SOD is approved and ready to lock scope for execution.
+### Next Stage: Execute
+Advance when scope is locked and ready for implementation (or verification if already implemented).
 
 ## Constraints
 

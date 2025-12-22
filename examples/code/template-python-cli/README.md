@@ -92,9 +92,9 @@ This template uses **Hexagonal Architecture** (Ports and Adapters):
 
 ## Status
 
-**Stage:** Formalize
+**Stage:** Commit
 
-See [praxis/FORMALIZE.md](praxis/FORMALIZE.md) for current stage artifact (SOD).
+See [praxis/COMMIT.md](praxis/COMMIT.md) for current stage artifact.
 
 ## Related
 
