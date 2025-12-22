@@ -60,7 +60,7 @@ Rationale:
 
 | Domain | Formalize Artifact | Expected Path |
 |--------|-------------------|---------------|
-| Build | SOD | `docs/sod.md` |
+| Code | SOD | `docs/sod.md` |
 | Create | Creative Brief | `docs/brief.md` |
 | Write | Writing Brief | `docs/brief.md` |
 | Learn | Learning Plan | `docs/plan.md` |
@@ -129,14 +129,14 @@ For v1, each project has exactly one domain declared in `praxis.yaml`.
 Rationale:
 - Keeps resolution model simple: domain + stage + privacy → behavior
 - Most real projects have a primary domain
-- Multi-domain (e.g., Build + Write in one repo) is future scope
+- Multi-domain (e.g., Code + Write in one repo) is future scope
 
 **Future extension (not v1):**
 ```yaml
 # Hypothetical multi-domain structure
 domains:
   - path: ./
-    domain: build
+    domain: code
     stage: execute
   - path: ./docs/blog/
     domain: write

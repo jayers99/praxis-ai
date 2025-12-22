@@ -74,7 +74,7 @@ This is a foundational choice that affects all downstream tooling.
 
 ### Option 4: Custom DSL
 
-**Description:** Build a Praxis-specific policy language.
+**Description:** Create a Praxis-specific policy language.
 
 | Pros | Cons |
 |------|------|
@@ -115,7 +115,7 @@ However, this remains **exploratory** until validated by the first executable in
 
 ## Validation Plan
 
-1. Implement minimal schema for Build domain in CUE
+1. Implement minimal schema for Code domain in CUE
 2. Write 3-5 test cases (valid configs, invalid transitions, privacy violations)
 3. Evaluate friction: Is CUE helping or hindering?
 4. If CUE proves wrong, fall back to Pydantic (Option 5) as pragmatic alternative
