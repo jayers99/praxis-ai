@@ -14,19 +14,26 @@ cd template-python-cli
 poetry install
 ```
 
+### Activate Virtual Environment
+
+```bash
+# Activate the Poetry virtual environment (Poetry 2.0+)
+source $(poetry env info --path)/bin/activate
+
+# Or add this alias to ~/.zshrc for convenience:
+# alias penv='source $(poetry env info --path)/bin/activate'
+```
+
 ### Run Commands
 
 ```bash
-# Show help
-poetry run template-python-cli --help
+# With venv activated, run directly:
+template-python-cli --help
+template-python-cli helloworld
+template-python-cli helloworld Praxis
 
-# Run helloworld command (default)
+# Or use poetry run (no activation needed):
 poetry run template-python-cli helloworld
-# Output: Hello, World!
-
-# Run helloworld with a name
-poetry run template-python-cli helloworld Praxis
-# Output: Hello, Praxis!
 ```
 
 ### Run Tests

@@ -69,6 +69,8 @@ Advance when work is retired, superseded, or archived.
 ## Constraints
 
 - Poetry for dependency management
+- Console script entry point pattern (`[tool.poetry.scripts]`)
+- Verb-first subcommand CLI structure (`cli <verb> [args]`)
 - pytest + pytest-bdd for testing
 - ruff for linting + formatting
 - mypy for type checking
