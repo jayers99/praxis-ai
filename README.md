@@ -25,7 +25,7 @@ You: Start a new Praxis project for building a Python CLI tool.
 AI: I'll initialize a Praxis project for you.
 
     Created praxis.yaml:
-      domain: build
+      domain: code
       stage: capture
       privacy_level: personal
 
@@ -90,7 +90,7 @@ Every piece of work moves through nine stages:
 
 | Domain  | Purpose            | Formalize Artifact         |
 | ------- | ------------------ | -------------------------- |
-| Build   | Functional systems | Solution Overview Document |
+| Code    | Functional systems | Solution Overview Document |
 | Create  | Aesthetic output   | Creative Brief             |
 | Write   | Structured thought | Writing Brief              |
 | Observe | Raw capture        | (none required)            |
@@ -110,9 +110,9 @@ Privacy is declared at Explore, enforced at Shape/Formalize, and honored at Exec
 
 ## Status
 
-**Current:** Specification complete (v0.3), commit-ready for first executable increment.
+**Current:** First worked example complete. The [template-python-cli](examples/code/template-python-cli/) demonstrates the full Praxis lifecycle from Capture through Sustain.
 
-**Next:** Validate the model with a worked example ([Issue #4](https://github.com/jayers99/praxis-ai/issues/4)).
+**Next:** Implement `praxis validate` CLI tool to operationalize the governance model.
 
 ## Documentation
 

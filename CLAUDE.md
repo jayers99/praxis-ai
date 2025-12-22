@@ -4,7 +4,7 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** Specification complete (v0.3), ready for first executable increment.
+**Current Phase:** First worked example complete ([template-python-cli](examples/code/template-python-cli/)). Ready to implement `praxis validate` CLI.
 
 ## Tech Stack
 
@@ -44,7 +44,8 @@ docs/           # Specifications and design docs
   lifecycle.md  # Canonical lifecycle stages
   privacy.md    # Privacy model
   adr/          # Architecture Decision Records
-examples/       # Worked examples (Issue #4)
+examples/       # Worked examples
+  code/template-python-cli/  # Complete example in Sustain stage
 ```
 
 ## Development Rules
@@ -55,8 +56,11 @@ examples/       # Worked examples (Issue #4)
 - No skipping required artifacts (e.g., SOD required before Execute in Code domain)
 - Privacy declared at Explore, enforced at Shape/Formalize, honored at Execute
 
-### First Increment (Issue #4)
-Deliverable: Minimal policy schema + CLI validator for Code domain
+### Completed: Worked Example (Issue #4)
+The [template-python-cli](examples/code/template-python-cli/) demonstrates the full Praxis lifecycle and is currently in Sustain stage.
+
+### Next: `praxis validate` CLI
+Deliverable: CLI validator for praxis.yaml files
 
 Acceptance tests:
 1. Valid praxis.yaml passes (domain: code, stage: execute, privacy: confidential)
@@ -64,7 +68,7 @@ Acceptance tests:
 3. Public project with .env file triggers warning
 4. Invalid stage transitions rejected
 
-### praxis.yaml Schema (planned)
+### praxis.yaml Schema
 ```yaml
 domain: code|create|write|observe|learn
 stage: capture|sense|explore|shape|formalize|commit|execute|sustain|close
@@ -91,4 +95,4 @@ poetry run mypy .
 - [Lifecycle](docs/lifecycle.md) — Stage definitions and regression rules
 - [Privacy Model](docs/privacy.md) — Privacy levels and enforcement
 - [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision (exploratory)
-- [Issue #4](https://github.com/jayers99/praxis-ai/issues/4) — First worked example
+- [template-python-cli](examples/code/template-python-cli/) — Complete worked example

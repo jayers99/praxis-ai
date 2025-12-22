@@ -1,6 +1,6 @@
 # Praxis: Domain → Allowed Artifact Types
 
-## 1. Build
+## 1. Code
 
 **Intent:** Functional systems and tools
 
