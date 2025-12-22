@@ -36,10 +36,14 @@ template-python-cli/
 │   └── test_domain.py            # Domain unit tests
 ├── praxis/                       # Praxis governance
 │   ├── praxis.yaml
-│   ├── CAPTURE.md
-│   ├── SENSE.md
-│   ├── EXPLORE.md
-│   └── SHAPE.md
+│   ├── 01-capture.md
+│   ├── 02-sense.md
+│   ├── 03-explore.md
+│   ├── 04-shape.md
+│   ├── 05-formalize.md
+│   ├── 06-commit.md
+│   ├── 07-execute.md
+│   └── 08-sustain.md
 ├── pyproject.toml
 ├── CLAUDE.md                     # This file
 └── README.md
