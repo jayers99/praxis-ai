@@ -110,6 +110,19 @@ A regression occurs when the current stage cannot be completed due to gaps in pr
 
 ---
 
+## Stage Completion Protocol
+
+Upon completing each lifecycle stage:
+
+1. **Verify** — Confirm all stage artifacts and acceptance criteria are met
+2. **Commit** — Create a git commit summarizing the stage deliverables
+3. **Push** — Push to remote to preserve progress and enable collaboration
+4. **Advance** — Update `praxis.yaml` to the next stage
+
+This ensures progress is preserved, enables seamless handoff between sessions, and maintains a clear audit trail of lifecycle progression.
+
+---
+
 ## Lifecycle Diagram (Conceptual)
 
 ```
