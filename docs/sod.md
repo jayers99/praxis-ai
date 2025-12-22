@@ -51,7 +51,7 @@ Praxis behavior is determined by the composition of four dimensions, resolved de
 
 Each artifact belongs to exactly one domain at creation.
 
-- **Build** – functional systems and tools  
+- **Code** – functional systems and tools  
 - **Create** – aesthetic and expressive output  
 - **Write** – structured externalized thought  
 - **Observe** – raw capture without interpretation  
@@ -135,7 +135,7 @@ This guarantees predictable, auditable AI behavior and prevents unsafe defaults.
 
 Formalize is the **structural hinge** between thinking and execution.
 
-For the **Build** domain, the Formalize artifact is the **Solution Overview Document (SOD)**.
+For the **Code** domain, the Formalize artifact is the **Solution Overview Document (SOD)**.
 
 The SOD:
 - locks intent without over-specifying implementation  
@@ -227,16 +227,16 @@ Praxis should be abandoned or fundamentally rethought if:
 ## 10. First Executable Increment
 
 ### Deliverable
-Minimal policy schema + CLI validator for Build domain artifacts.
+Minimal policy schema + CLI validator for Code domain artifacts.
 
 ### Acceptance Tests
-1. Given a `praxis.yaml` with `domain: build, stage: execute, privacy: confidential`, the validator passes
+1. Given a `praxis.yaml` with `domain: code, stage: execute, privacy: confidential`, the validator passes
 2. Given `stage: execute` without a Formalize artifact (SOD), the validator fails with "Cannot execute without formalization"
 3. Given `privacy: public` with a reference to a `.env` file, the validator warns "Potential secret in public project"
 4. Given an invalid stage transition (e.g., Capture → Execute), the validator fails with "Invalid stage transition"
 
 ### Definition of Done
-- Schema validates happy path for Build domain
+- Schema validates happy path for Code domain
 - Schema rejects 3+ known-bad configurations
 - CLI runs locally with no external dependencies
 - Worked example (helloworld CLI) passes validation

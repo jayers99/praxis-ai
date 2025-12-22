@@ -11,7 +11,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 - **Language:** Python (planned)
 - **Policy Engine:** CUE (leading candidate, per ADR-001) or Pydantic fallback
 - **Testing:** pytest
-- **Package Manager:** pipenv
+- **Package Manager:** Poetry
 - **Linting:** ruff
 - **Type Checking:** mypy
 
@@ -23,7 +23,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 **Critical Rule:** Formalize is a hard boundary. No execution without formalization artifacts.
 
 ### Domains
-- **Build** — Functional systems (formalize via SOD)
+- **Code** — Functional systems (formalize via SOD)
 - **Create** — Aesthetic output (formalize via Creative Brief)
 - **Write** — Structured thought (formalize via Writing Brief)
 - **Observe** — Raw capture (default: Personal privacy)
@@ -52,21 +52,21 @@ examples/       # Worked examples (Issue #4)
 ### When Implementing
 - All work must respect the lifecycle model
 - Policy validation is deterministic: Domain + Stage + Privacy + Environment → Behavior
-- No skipping required artifacts (e.g., SOD required before Execute in Build domain)
+- No skipping required artifacts (e.g., SOD required before Execute in Code domain)
 - Privacy declared at Explore, enforced at Shape/Formalize, honored at Execute
 
 ### First Increment (Issue #4)
-Deliverable: Minimal policy schema + CLI validator for Build domain
+Deliverable: Minimal policy schema + CLI validator for Code domain
 
 Acceptance tests:
-1. Valid praxis.yaml passes (domain: build, stage: execute, privacy: confidential)
+1. Valid praxis.yaml passes (domain: code, stage: execute, privacy: confidential)
 2. Missing SOD at Execute stage fails with explicit message
 3. Public project with .env file triggers warning
 4. Invalid stage transitions rejected
 
 ### praxis.yaml Schema (planned)
 ```yaml
-domain: build|create|write|observe|learn
+domain: code|create|write|observe|learn
 stage: capture|sense|explore|shape|formalize|commit|execute|sustain|close
 privacy_level: public|public-trusted|personal|confidential|restricted
 environment: home|work
@@ -76,13 +76,13 @@ environment: home|work
 
 ```bash
 # Testing (when implemented)
-pipenv run pytest
+poetry run pytest
 
 # Linting
-pipenv run ruff check .
+poetry run ruff check .
 
 # Type checking
-pipenv run mypy .
+poetry run mypy .
 ```
 
 ## References
