@@ -1,3 +1,14 @@
+# macOS
+.DS_Store
+
+# Editor backups
+*~
+*.swp
+*.swo
+
+# Python REPL history
+.python_history
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
