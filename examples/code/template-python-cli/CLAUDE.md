@@ -5,7 +5,7 @@
 | Dimension | Value |
 |-----------|-------|
 | Domain | Code |
-| Stage | Execute |
+| Stage | Sustain |
 | Privacy | Public |
 | Environment | Home |
 
@@ -15,7 +15,7 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/EXECUTE.md](praxis/EXECUTE.md) — Implementation verification
+- [praxis/SUSTAIN.md](praxis/SUSTAIN.md) — Maintenance and governance
 
 ## Project Structure
 
@@ -54,13 +54,13 @@ template-python-cli/
 
 ## Stage Rules
 
-### Execute
-- Produce the artifact
-- Implementation governed by SOD
-- AI behavior tightly controlled
+### Sustain
+- Maintain and govern delivered work
+- Updates, evaluation, optimization
+- Policy enforcement over time
 
-### Next Stage: Sustain
-Advance when artifact is produced and verified.
+### Next Stage: Close
+Advance when work is retired, superseded, or archived.
 
 ## Constraints
 
