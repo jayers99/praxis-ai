@@ -103,11 +103,11 @@ template-python-cli/
 ├── praxis/
 │   ├── README.md
 │   ├── praxis.yaml
-│   ├── CAPTURE.md
-│   ├── SENSE.md
-│   ├── EXPLORE.md
-│   ├── SHAPE.md
-│   └── FORMALIZE.md
+│   ├── 01-capture.md
+│   ├── 02-sense.md
+│   ├── 03-explore.md
+│   ├── 04-shape.md
+│   └── 05-formalize.md
 ├── pyproject.toml
 ├── poetry.lock
 ├── CLAUDE.md
