@@ -51,10 +51,10 @@ template-python-cli/
 │   └── test_domain.py               # Domain unit tests
 ├── praxis/                          # Praxis governance
 │   ├── praxis.yaml                  # Current state
-│   ├── CAPTURE.md                   # Stage artifact
-│   ├── SENSE.md                     # Stage artifact
-│   ├── EXPLORE.md                   # Stage artifact
-│   └── SHAPE.md                     # This file
+│   ├── 01-capture.md                # Stage artifact
+│   ├── 02-sense.md                  # Stage artifact
+│   ├── 03-explore.md                # Stage artifact
+│   └── 04-shape.md                  # This file
 ├── pyproject.toml                   # Poetry configuration
 ├── poetry.lock                      # Locked dependencies
 ├── CLAUDE.md                        # AI context
