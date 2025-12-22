@@ -31,7 +31,7 @@ Rationale:
 domain: build
 stage: formalize
 privacy_level: personal
-environment: home
+environment: Home
 ```
 
 **Alternative rejected:** Per-directory configs. Adds complexity without clear benefit for solo/small-team use.
@@ -167,7 +167,7 @@ stage: formalize
 privacy_level: personal
 
 # Optional
-environment: home
+environment: Home
 ```
 
 ---
