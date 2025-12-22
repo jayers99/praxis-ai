@@ -68,8 +68,8 @@ template-python-cli/
 │   └── test_domain.py            # Domain unit tests
 ├── praxis/                       # Praxis governance
 │   ├── praxis.yaml
-│   ├── CAPTURE.md
-│   └── SENSE.md
+│   ├── 01-capture.md
+│   └── 02-sense.md
 ├── pyproject.toml
 ├── CLAUDE.md
 └── README.md
