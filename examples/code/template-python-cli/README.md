@@ -18,10 +18,10 @@ poetry install
 
 ```bash
 # Activate the Poetry virtual environment (Poetry 2.0+)
-source $(poetry env info --path)/bin/activate
+eval $(poetry env activate)
 
 # Or add this alias to ~/.zshrc for convenience:
-# alias penv='source $(poetry env info --path)/bin/activate'
+# alias penv='eval $(poetry env activate)'
 ```
 
 ### Run Commands
