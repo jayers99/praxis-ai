@@ -5,7 +5,7 @@
 | Dimension | Value |
 |-----------|-------|
 | Domain | Code |
-| Stage | Capture |
+| Stage | Sense |
 | Privacy | Public |
 | Environment | Home |
 
@@ -15,7 +15,7 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/CAPTURE.md](praxis/CAPTURE.md) — Gathering inputs and prior art
+- [praxis/SENSE.md](praxis/SENSE.md) — Organizing patterns and themes
 
 ## Project Structure
 
@@ -40,13 +40,13 @@ template-python-cli/
 
 ## Stage Rules
 
-### Capture
-- Collect raw inputs with minimal friction
-- No commitment or structure required
-- Focus on: references, prior art, preferences, constraints
+### Sense
+- Organize raw inputs into coherent themes
+- Identify patterns and relationships
+- Surface observations and open questions
 
-### Next Stage: Sense
-Advance when sufficient inputs are gathered to organize and summarize patterns.
+### Next Stage: Explore
+Advance when patterns are clear and ready to evaluate options.
 
 ## Constraints
 

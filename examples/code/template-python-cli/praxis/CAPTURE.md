@@ -34,6 +34,7 @@ Collect raw inputs for building a reusable Python CLI project template.
 #### Python Packaging User Guide — Key Findings
 
 **Project Structure (src layout confirmed):**
+
 ```
 project_name/
 ├── src/
@@ -49,6 +50,7 @@ project_name/
 ```
 
 **pyproject.toml essentials:**
+
 ```toml
 [build-system]
 requires = ["hatchling >= 1.26"]
@@ -72,6 +74,7 @@ command-name = "package_name.cli:app"
 #### Typer Documentation — CLI Entrypoint Pattern
 
 **File structure:**
+
 ```
 src/package_name/
 ├── __init__.py
@@ -81,6 +84,7 @@ src/package_name/
 ```
 
 **cli.py (multi-command app):**
+
 ```python
 import typer
 
@@ -98,7 +102,8 @@ if __name__ == "__main__":
     app()
 ```
 
-**__main__.py:**
+****main**.py:**
+
 ```python
 from package_name.cli import app
 
@@ -106,12 +111,14 @@ app()
 ```
 
 **pyproject.toml entrypoint:**
+
 ```toml
 [project.scripts]
 mycli = "package_name.cli:app"
 ```
 
 **Key patterns:**
+
 - `typer.Typer(no_args_is_help=True)` — show help when no command given
 - Type hints drive CLI behavior (required vs optional)
 - Separate `cli.py` from `core.py` for testability (DDD)
@@ -125,6 +132,7 @@ mycli = "package_name.cli:app"
 **Core principle:** Domain at the center, infrastructure at the edges, dependencies point inward.
 
 **Preferred structure (Hexagonal layers):**
+
 ```
 src/package_name/
 ├── cli.py                    # Thin entry point — delegates to application layer
@@ -145,6 +153,7 @@ src/package_name/
 ```
 
 **Thin CLI pattern:**
+
 ```python
 # cli.py — thin, delegates to application layer
 import typer
@@ -164,6 +173,7 @@ def get(name: str, output: str = "json"):
 ```
 
 **Hexagonal mapping:**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                      Adapters (Ports)                   │
@@ -187,6 +197,7 @@ def get(name: str, output: str = "json"):
 ```
 
 **Key patterns:**
+
 - **CLI is a port** (input adapter) — thin, no business logic, just argument parsing + delegation
 - **Verbs map to use cases** (application services: list → list_service, get → get_service)
 - **Domain layer has zero external dependencies** — testable in isolation, pure business logic
@@ -194,6 +205,7 @@ def get(name: str, output: str = "json"):
 - **Dependencies point inward** — domain knows nothing about CLI or infrastructure
 
 **Benefits:**
+
 - CLI changes don't affect business logic
 - Domain logic testable without mocking external services
 - Clear boundaries for testing (unit → domain, integration → infrastructure)
@@ -210,7 +222,8 @@ def get(name: str, output: str = "json"):
 - **TDD** — Test-driven development (inner loop, red-green-refactor)
 - **DDD** — Domain-driven design (structure code around domain concepts)
 
-#### JPMC Tooling (available at work)
+#### Work Tooling (available at work)
+
 - pytest, mypy, ruff, black (using ruff instead)
 - gherkin (BDD specs) — consider for acceptance tests
 - karate (API testing) — future scope
@@ -220,6 +233,7 @@ def get(name: str, output: str = "json"):
 #### Test Scaffolding Pattern (pytest + Typer)
 
 **Test directory structure:**
+
 ```
 tests/
 ├── __init__.py
@@ -229,6 +243,7 @@ tests/
 ```
 
 **test_cli.py (Typer testing pattern):**
+
 ```python
 from typer.testing import CliRunner
 from package_name.cli import app
@@ -247,6 +262,7 @@ def test_hello_formal():
 ```
 
 **conftest.py (shared fixtures):**
+
 ```python
 import pytest
 
@@ -256,6 +272,7 @@ def sample_data():
 ```
 
 **Key patterns:**
+
 - `CliRunner` from typer.testing for CLI tests
 - Separate `test_cli.py` (integration) from `test_core.py` (unit)
 - Test exit codes + output assertions
@@ -264,6 +281,7 @@ def sample_data():
 #### BDD Pattern (pytest-bdd + Gherkin)
 
 **Test directory with BDD:**
+
 ```
 tests/
 ├── __init__.py
@@ -277,6 +295,7 @@ tests/
 ```
 
 **features/greeting.feature:**
+
 ```gherkin
 Feature: Greeting command
   As a CLI user
@@ -296,6 +315,7 @@ Feature: Greeting command
 ```
 
 **step_defs/test_greeting.py:**
+
 ```python
 import pytest
 from pytest_bdd import scenarios, given, when, then, parsers
@@ -332,6 +352,7 @@ def check_output(context, expected):
 ```
 
 **Development flow (outside-in):**
+
 1. Write Gherkin scenario (BDD - what behavior?)
 2. Run pytest-bdd → fails (red)
 3. Implement step definitions
@@ -357,20 +378,24 @@ template-python-cli/
 #### Praxis Governance Files Pattern
 
 **Design principles:**
+
 - Enable seamless handoff between sessions, machines, or context resets
 - Assume context window = 0 (no prior knowledge)
 - All decisions captured in files, not memory
 
 **praxis.yaml (starter template — blank):**
+
 ```yaml
 domain:
 stage:
 privacy_level:
 environment:
 ```
+
 AI prompts user for all values at project initialization.
 
 **Stage files (one per stage):**
+
 ```
 praxis/
 ├── praxis.yaml       # Current state (always present)
@@ -386,12 +411,14 @@ praxis/
 ```
 
 **Key rules:**
+
 1. `praxis.yaml` tracks current stage — update as you progress
 2. Stage files persist — never delete prior stage artifacts
 3. Each stage file is self-contained context for that phase
 4. `CLAUDE.md` at project root provides AI with project overview
 
 **Initialization flow:**
+
 1. AI detects blank/missing `praxis.yaml`
 2. AI prompts: "What domain? (Code/Create/Write/Observe/Learn)"
 3. AI prompts: "What privacy level? (Public/Personal/Confidential/Restricted)"
@@ -406,7 +433,7 @@ praxis/
 1. ~~Which CLI library? (click vs typer vs argparse)~~ → **Decided: Typer** (type hints, auto-completion, official recommendation)
 2. ~~src layout vs flat layout?~~ → **Decided: src layout**
 3. ~~What Praxis files belong in a template?~~ → **Decided: praxis/ subdir with blank praxis.yaml + stage files**
-4. ~~Dependency management tool?~~ → **Decided: Poetry** (available at home + JPMC, modern, pyproject.toml native)
+4. ~~Dependency management tool?~~ → **Decided: Poetry** (available at home + Work, modern, pyproject.toml native)
 5. ~~Praxis governance file pattern?~~ → **Decided: Blank praxis.yaml, AI prompts for values, one file per stage, CLAUDE.md at root**
 
 ---
