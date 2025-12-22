@@ -5,7 +5,7 @@
 | Dimension | Value |
 |-----------|-------|
 | Domain | Code |
-| Stage | Shape |
+| Stage | Formalize |
 | Privacy | Public |
 | Environment | Home |
 
@@ -15,7 +15,7 @@ Build a reusable Python CLI project template that validates the Praxis lifecycle
 
 ## Active Artifact
 
-- [praxis/SHAPE.md](praxis/SHAPE.md) — Defining the final template form
+- [praxis/FORMALIZE.md](praxis/FORMALIZE.md) — Solution Overview Document (SOD)
 
 ## Project Structure
 
@@ -54,13 +54,13 @@ template-python-cli/
 
 ## Stage Rules
 
-### Shape
-- Define the final form and canonical structure
-- Document conventions and boundaries
-- Establish acceptance criteria for formalization
+### Formalize
+- Convert shaped thinking into durable specification (SOD)
+- Establish explicit intent, scope, constraints, and success criteria
+- This is the boundary between exploration and execution
 
-### Next Stage: Formalize
-Advance when the shape is accepted and ready for formal specification (SOD).
+### Next Stage: Commit
+Advance when SOD is approved and ready to lock scope for execution.
 
 ## Constraints
 
