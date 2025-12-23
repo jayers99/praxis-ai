@@ -91,6 +91,18 @@ poetry run ruff check .
 poetry run mypy .
 ```
 
+## Opinions
+
+Domain-specific quality goals live in `docs/opinions/{domain}/`. When working on a project:
+
+1. Read `praxis.yaml` to determine the domain
+2. Load `docs/opinions/{domain}/README.md` into context
+3. If conversation matches any trigger keywords in the table, load the linked detail file(s)
+4. If a detail file extends another (e.g., `cli-python` extends `cli`), load the base file too
+5. Apply all loaded opinions to reasoning and suggestions
+
+Opinions are advisory, not gates. They inform decisions without blocking progress.
+
 ## References
 
 - [SOD v0.3](docs/sod.md) — Complete specification
