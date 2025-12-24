@@ -2,6 +2,11 @@
 
 When `praxis.yaml` has `domain: observe`, load this file into context.
 
+## Foundational Principles
+
+<!-- TODO: Create principles.md for the observe domain covering foundational observation principles -->
+See [principles.md](principles.md) for the foundational observation principles that guide all observe domain work.
+
 ## Available Opinions
 
 | Opinion | Triggers | Summary |

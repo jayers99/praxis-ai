@@ -2,6 +2,10 @@
 
 When `praxis.yaml` has `domain: code`, load this file into context.
 
+## Foundational Principles
+
+See [principles.md](principles.md) for the foundational software development principles that guide all code domain work. These principles are advisory and inform decision-making without enforcing specific practices.
+
 ## Available Opinions
 
 | Opinion | Triggers | Summary |

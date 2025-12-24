@@ -2,6 +2,11 @@
 
 When `praxis.yaml` has `domain: write`, load this file into context.
 
+## Foundational Principles
+
+<!-- TODO: Create principles.md for the write domain covering foundational writing principles -->
+See [principles.md](principles.md) for the foundational writing principles that guide all write domain work.
+
 ## Available Opinions
 
 | Opinion | Triggers | Summary |

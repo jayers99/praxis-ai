@@ -2,6 +2,11 @@
 
 When `praxis.yaml` has `domain: learn`, load this file into context.
 
+## Foundational Principles
+
+<!-- TODO: Create principles.md for the learn domain covering foundational learning principles -->
+See [principles.md](principles.md) for the foundational learning principles that guide all learn domain work.
+
 ## Available Opinions
 
 | Opinion | Triggers | Summary |

@@ -2,6 +2,11 @@
 
 When `praxis.yaml` has `domain: create`, load this file into context.
 
+## Foundational Principles
+
+<!-- TODO: Create principles.md for the create domain covering foundational creative principles -->
+See [principles.md](principles.md) for the foundational creative principles that guide all create domain work.
+
 ## Available Opinions
 
 | Opinion | Triggers | Summary |
