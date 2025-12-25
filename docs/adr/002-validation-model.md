@@ -22,6 +22,7 @@ Before selecting a policy engine (ADR-001), we must define what the engine valid
 **Position: One `praxis.yaml` per project, at repository root.**
 
 Rationale:
+
 - Matches common conventions (package.json, pyproject.toml, Cargo.toml)
 - Single source of truth for project governance
 - Simplifies tooling (always look in one place)
@@ -43,15 +44,18 @@ environment: Home
 **Position: Option B — Config validation + filesystem checks for required artifacts.**
 
 The validator will:
+
 1. Validate `praxis.yaml` schema and field values
 2. Check that required artifacts exist (by path convention)
 3. NOT deeply inspect artifact contents
 
 Example behavior:
+
 - `stage: execute` + `domain: build` → validator checks `docs/sod.md` exists
 - Validator does NOT parse SOD to verify it has all required sections
 
 Rationale:
+
 - Catches the most common failure mode (missing formalization)
 - Avoids complexity of content parsing
 - Content quality is author responsibility, not policy engine scope
@@ -59,7 +63,7 @@ Rationale:
 **Artifact path conventions:**
 
 | Domain | Formalize Artifact | Expected Path |
-|--------|-------------------|---------------|
+| --- | --- | --- |
 | Code | SOD | `docs/sod.md` |
 | Create | Creative Brief | `docs/brief.md` |
 | Write | Writing Brief | `docs/brief.md` |
@@ -75,12 +79,14 @@ Rationale:
 The `stage` field is the single source of truth. The author updates it when transitioning stages.
 
 Rationale:
+
 - Simple and transparent
 - No hidden state or event logs
 - Git history provides audit trail naturally
 - Aligns with "author is accountable" philosophy
 
 **Rejected alternatives:**
+
 - Inferred from artifacts: Too magical, hard to debug
 - Event-based transitions: Over-engineered for solo use
 
@@ -93,13 +99,15 @@ Rationale:
 Invalid regressions (per lifecycle.md table) produce warnings, not failures.
 
 Rationale:
+
 - Real work is messy; hard blocks cause friction
 - Author should be informed, not prevented
 - Trust the author to make intentional decisions
 - Can tighten to errors later if abuse patterns emerge
 
 Example output:
-```
+
+```text
 ⚠ Warning: Regression from Execute → Explore is not in allowed regression table.
   Allowed targets from Execute: Commit, Formalize
   Proceeding anyway (author override).
@@ -114,6 +122,7 @@ Example output:
 The validator only sees current state. Historical transitions are visible via `git log` on `praxis.yaml`.
 
 Rationale:
+
 - Avoids duplicate state management
 - Git already tracks changes with timestamps and authors
 - Keeps the model simple
@@ -127,11 +136,13 @@ Rationale:
 For v1, each project has exactly one domain declared in `praxis.yaml`.
 
 Rationale:
+
 - Keeps resolution model simple: domain + stage + privacy → behavior
 - Most real projects have a primary domain
 - Multi-domain (e.g., Code + Write in one repo) is future scope
 
 **Future extension (not v1):**
+
 ```yaml
 # Hypothetical multi-domain structure
 domains:
@@ -152,6 +163,7 @@ domains:
 If a project contains artifacts of varying sensitivity, declare the highest level.
 
 Rationale:
+
 - Simple mental model
 - Conservative default (protects sensitive material)
 - Per-artifact privacy is future scope if needed
@@ -175,7 +187,7 @@ environment: Home
 ## Validation Rules Summary
 
 | Rule | Severity | Trigger |
-|------|----------|---------|
+| --- | --- | --- |
 | Unknown domain | Error | `domain` not in allowed list |
 | Unknown stage | Error | `stage` not in allowed list |
 | Unknown privacy level | Error | `privacy_level` not in allowed list |
@@ -188,16 +200,19 @@ environment: Home
 ## Consequences
 
 ### Enables
+
 - Simple CLI: `praxis validate` checks config + artifact existence
 - Clear error messages for common failures
 - Git-native workflow (no external state)
 
 ### Limits
+
 - No content inspection (SOD could be empty and pass)
 - No multi-domain support in v1
 - No per-artifact privacy in v1
 
 ### Deferred
+
 - Deep artifact validation
 - Multi-domain projects
 - Per-artifact privacy levels

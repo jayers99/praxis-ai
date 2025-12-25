@@ -38,7 +38,7 @@ This is a foundational choice that affects all downstream tooling.
 **Description:** Configuration language with types, constraints, and unification.
 
 | Pros | Cons |
-|------|------|
+| --- | --- |
 | Strong composition via unification | Smaller ecosystem than alternatives |
 | Types and constraints in one language | Learning curve for unification model |
 | Can validate AND generate configs | Less tooling than JSON Schema |
@@ -51,7 +51,7 @@ This is a foundational choice that affects all downstream tooling.
 **Description:** Standard schema language with hand-written validation logic.
 
 | Pros | Cons |
-|------|------|
+| --- | --- |
 | Widely understood | No native composition |
 | Excellent tooling | Verbose for complex constraints |
 | Language-agnostic | Validation-only (no generation) |
@@ -64,7 +64,7 @@ This is a foundational choice that affects all downstream tooling.
 **Description:** Policy-as-code engine from CNCF.
 
 | Pros | Cons |
-|------|------|
+| --- | --- |
 | Powerful policy language | Overkill for solo/small use |
 | Strong in authorization domain | Steep learning curve |
 | Good for multi-tenant scenarios | Heavier runtime |
@@ -77,7 +77,7 @@ This is a foundational choice that affects all downstream tooling.
 **Description:** Create a Praxis-specific policy language.
 
 | Pros | Cons |
-|------|------|
+| --- | --- |
 | Tailored exactly to needs | Maintenance burden |
 | No external dependencies | Reinventing solved problems |
 | | No ecosystem |
@@ -90,7 +90,7 @@ This is a foundational choice that affects all downstream tooling.
 **Description:** Use Python dataclasses/Pydantic for schema, custom validators for rules.
 
 | Pros | Cons |
-|------|------|
+| --- | --- |
 | Familiar to Python developers | Policy mixed with implementation |
 | Strong typing with Pydantic | Less declarative |
 | Easy to start | Harder to audit/review policies |
@@ -130,12 +130,14 @@ However, this remains **exploratory** until validated by the first executable in
 
 ## Consequences
 
-### If CUE is adopted:
+### If CUE is adopted
+
 - Must learn CUE syntax and unification model
 - Policy files are `.cue`, versioned alongside code
 - CLI tooling depends on CUE runtime
 
-### If CUE is rejected:
+### If CUE is rejected
+
 - Fall back to Pydantic + custom validators
 - Policy lives in Python code
 - Less separation between policy and implementation
@@ -146,3 +148,5 @@ However, this remains **exploratory** until validated by the first executable in
 
 - SOD v0.3 Section 7 (Policy Enforcement)
 - GitHub Issue: Policy engine exploration spike
+
+---

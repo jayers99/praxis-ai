@@ -12,6 +12,7 @@ Privacy in Praxis defines **how information may be stored, shared, processed, an
 It is not a domain or stage; it is an **overlay** that constrains artifacts, tooling, collaboration, and AI usage.
 
 Privacy is:
+
 - Declared at project inception
 - Enforceable through deterministic rules
 - Reclassifiable mid-project with explicit migration steps
@@ -36,121 +37,52 @@ Each level defines the *maximum allowable exposure* for artifacts and workflows.
 
 ### 3.1 Public
 
-**Intent**  
-Content is safe for unrestricted publication and broad collaboration.
-
-**Storage**
-- Public GitHub repositories permitted
-
-**AI / Tooling**
-- Any AI tools permitted
-- No secrets or proprietary data
-
-**Artifacts**
-- Full fidelity documentation allowed
-- Real names and technologies acceptable
-
-**Collaboration**
-- Open, unrestricted
+- **Intent**: Content is safe for unrestricted publication and broad collaboration.
+- **Storage**: Public GitHub repositories permitted
+- **AI / Tooling**: Any AI tools permitted; no secrets or proprietary data
+- **Artifacts**: Full fidelity documentation allowed; real names and technologies acceptable
+- **Collaboration**: Open, unrestricted
 
 ---
 
 ### 3.2 Public – Trusted Collaborators
 
-**Intent**  
-Content is broadly shareable but collaboration is intentionally limited.
-
-**Storage**
-- Public repositories allowed
-- Write access restricted to named collaborators
-
-**AI / Tooling**
-- Any AI tools permitted
-- Same content restrictions as Public
-
-**Artifacts**
-- Same as Public
-
-**Collaboration**
-- Read: public
-- Write: trusted collaborators only
-
-**Notes**
-- This level controls *who may contribute*, not *what may be disclosed*
+- **Intent**: Content is broadly shareable but collaboration is intentionally limited.
+- **Storage**: Public repositories allowed; write access restricted to named collaborators
+- **AI / Tooling**: Any AI tools permitted; same content restrictions as Public
+- **Artifacts**: Same as Public
+- **Collaboration**: Read: public; write: trusted collaborators only
+- **Notes**: This level controls *who may contribute*, not *what may be disclosed*
 
 ---
 
 ### 3.3 Personal
 
-**Intent**
-Private to the author or trusted collaborators; low-to-moderate sensitivity.
-
-**Storage**
-- Private GitHub repositories allowed
-- Mainstream cloud storage acceptable
-
-**AI / Tooling**
-- Consumer AI tools permitted
-- No credentials, secrets, or regulated identifiers
-
-**Artifacts**
-- Real structure allowed
-- Avoid sensitive logs, screenshots, or configs
-
-**Collaboration**
-- Single user or small trusted group
+- **Intent**: Private to the author or trusted collaborators; low-to-moderate sensitivity.
+- **Storage**: Private GitHub repositories allowed; mainstream cloud storage acceptable
+- **AI / Tooling**: Consumer AI tools permitted; no credentials, secrets, or regulated identifiers
+- **Artifacts**: Real structure allowed; avoid sensitive logs, screenshots, or configs
+- **Collaboration**: Single user or small trusted group
 
 ---
 
 ### 3.4 Confidential
 
-**Intent**  
-Sensitive material requiring deliberate containment and abstraction.
-
-**Storage**
-- Private repositories only
-- Prefer restricted or self-hosted solutions
-- Encrypted backups recommended
-
-**AI / Tooling**
-- Restricted AI usage
-- Redacted or abstracted inputs only
-- No raw logs, configs, or identifiers
-
-**Artifacts**
-- Sanitized architecture
-- Tokenized names
-- No environment-specific detail
-
-**Collaboration**
-- Explicitly named collaborators
-- Intentional access review
+- **Intent**: Sensitive material requiring deliberate containment and abstraction.
+- **Storage**: Private repositories only; prefer restricted or self-hosted solutions; encrypted backups recommended
+- **AI / Tooling**: Restricted AI usage; redacted or abstracted inputs only; no raw logs, configs, or identifiers
+- **Artifacts**: Sanitized architecture; tokenized names; no environment-specific detail
+- **Collaboration**: Explicitly named collaborators; intentional access review
 
 ---
 
 ### 3.5 Restricted
 
-**Intent**  
-Single-custodian, maximum secrecy. Exposure must be minimized by design.
-
-**Storage**
-- No GitHub (public or private)
-- Local-only or encrypted vault storage
-- Per-project encryption key
-- Keys controlled solely by the author
-
-**AI / Tooling**
-- No external SaaS AI with raw content
-- Local or offline models only
-- Abstract summaries permitted, never source material
-
-**Artifacts**
-- Pattern-level abstraction only
-- No real names, topologies, logs, or configs
-- No screenshots of real systems
-
-**Collaboration**
-- None (unless explicit key-sharing model is defined)
+- **Intent**: Single-custodian, maximum secrecy. Exposure must be minimized by design.
+- **Storage**: No GitHub (public or private); local-only or encrypted vault storage; per-project encryption key; keys controlled solely by the author
+- **AI / Tooling**: No external SaaS AI with raw content; local or offline models only; abstract summaries permitted, never source material
+- **Artifacts**: Pattern-level abstraction only; no real names, topologies, logs, or configs; no screenshots of real systems
+- **Collaboration**: None (unless explicit key-sharing model is defined)
 
 ---
 
@@ -159,6 +91,7 @@ Single-custodian, maximum secrecy. Exposure must be minimized by design.
 Privacy level defines the **maximum allowed specificity** across all artifacts.
 
 Highest-impact artifacts:
+
 - `README.md`
 - `SOD.md`
 - `architecture.md`
@@ -184,6 +117,7 @@ Rule of thumb:
 ### 6.1 Upgrade (less → more restrictive)
 
 Required actions:
+
 - Migrate storage to compliant location
 - Sanitize or rewrite existing artifacts
 - Rotate any exposed secrets or tokens
@@ -192,6 +126,7 @@ Required actions:
 ### 6.2 Downgrade (more → less restrictive)
 
 Permitted only if:
+
 - Sensitive material has been removed or rewritten
 - Prior restricted artifacts are reviewed for safe disclosure
 

@@ -35,7 +35,7 @@ Collect raw inputs for building a reusable Python CLI project template.
 
 **Project Structure (src layout confirmed):**
 
-```
+```text
 project_name/
 ├── src/
 │   └── package_name/
@@ -75,7 +75,7 @@ command-name = "package_name.cli:app"
 
 **File structure:**
 
-```
+```text
 src/package_name/
 ├── __init__.py
 ├── __main__.py      # python -m package_name
@@ -125,7 +125,7 @@ mycli = "package_name.cli:app"
 
 #### Internal CLI Pattern — Hexagonal Architecture (Ports and Adapters)
 
-**Reference:** https://github.com/jayers99/shuffle-aws-vaults
+**Reference:** <https://github.com/jayers99/shuffle-aws-vaults>
 
 **Also known as:** Clean Architecture, Onion Architecture, Ports and Adapters
 
@@ -133,7 +133,7 @@ mycli = "package_name.cli:app"
 
 **Preferred structure (Hexagonal layers):**
 
-```
+```text
 src/package_name/
 ├── cli.py                    # Thin entry point — delegates to application layer
 ├── domain/                   # Pure business logic, no external dependencies
@@ -174,7 +174,7 @@ def get(name: str, output: str = "json"):
 
 **Hexagonal mapping:**
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                      Adapters (Ports)                   │
 │  ┌─────────────┐                    ┌────────────────┐  │
@@ -234,7 +234,7 @@ def get(name: str, output: str = "json"):
 
 **Test directory structure:**
 
-```
+```text
 tests/
 ├── __init__.py
 ├── conftest.py          # Shared fixtures
@@ -282,7 +282,7 @@ def sample_data():
 
 **Test directory with BDD:**
 
-```
+```text
 tests/
 ├── __init__.py
 ├── conftest.py              # Shared fixtures + step definitions
@@ -363,7 +363,7 @@ def check_output(context, expected):
 
 ### Directory Structure (decided)
 
-```
+```text
 template-python-cli/
 ├── src/                # Application source code
 ├── tests/              # Test suite (TDD)
@@ -396,7 +396,7 @@ AI prompts user for all values at project initialization.
 
 **Stage files (one per stage):**
 
-```
+```text
 praxis/
 ├── praxis.yaml       # Current state (always present)
 ├── 01-capture.md     # Raw inputs, references, constraints

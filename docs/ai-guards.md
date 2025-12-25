@@ -2,7 +2,7 @@
 
 Version: 0.1.0  
 Status: **DRAFT — Design Under Review**  
-Last Updated: 2025-12-23
+Last Updated: 2025-12-25
 
 ---
 
@@ -11,11 +11,13 @@ Last Updated: 2025-12-23
 This document defines the **design and structure of AI guard files** within Praxis.
 
 AI guards control how AI systems (Claude, Copilot, Gemini, etc.) operate across:
+
 - User environments
 - Project domains
 - Execution contexts
 
 The goal is to:
+
 - Maintain **one coherent reasoning system**
 - Apply **environmental and organizational constraints late**
 - Prevent accidental leakage between home and work contexts
@@ -72,13 +74,14 @@ AI guard content is divided across **user-level** and **project-level** scopes.
 ### User-Level (Cross-Domain, Not Committed)
 
 User-level AI guards define:
+
 - Active environment
 - Tool availability and mappings
 - Communication and compliance posture
 
 They apply across all domains and projects.
 
-```
+```text
 ~/.ai-guards/
   core.md            # Stable user preferences and invariants
   env.md             # Active environment selector (e.g., ENV=work|home)
@@ -96,13 +99,14 @@ AI systems must not prompt for it by default.
 ### Project-Level (Domain-Specific, Committed)
 
 Project-level AI guards define:
+
 - Domain workflows
 - Guardrails and practices
 - Abstract tool roles (issue tracker, VCS, CI)
 
 They must **not** embed environment-specific tooling.
 
-```
+```text
 praxis/
   ai-guards/
     build.md
@@ -121,18 +125,20 @@ Domains assume user-level tool mappings will be applied later.
 AI tools expect specific filenames. These are treated as **rendered artifacts**.
 
 Examples:
+
 - `CLAUDE.md`
 - `COPILOT.md`
 - `GEMINI.md`
 
 Each front-end file should:
+
 - Include or reference Praxis AI guard content
 - Remain thin and declarative
 - Contain no original logic
 
 Conceptually:
 
-```
+```text
 (core user guards)
 + (env overlay)
 + (project domain guards)
@@ -146,11 +152,13 @@ Conceptually:
 Environment is **collapsed to user-level**, but **not merged into a single file**.
 
 Rationale:
+
 - Prevents monolithic user files
 - Allows safe environment switching
 - Enables validation and leakage detection
 
 Environment overlays contain **only external constraints**, such as:
+
 - Regulatory posture (e.g., FDIC-regulated)
 - Communication formality
 - Tool availability restrictions
@@ -158,6 +166,7 @@ Environment overlays contain **only external constraints**, such as:
 - AI usage restrictions
 
 They must not contain:
+
 - Principles
 - Domain workflows
 - Personal opinions
@@ -169,14 +178,17 @@ They must not contain:
 User-level tool mapping is explicit.
 
 For each preferred tool:
+
 - At least one sanctioned alternative may be defined
 - Domains refer only to abstract roles
 
 Example:
+
 - Preferred: GitHub Issues
 - Work alternative: Jira
 
 This enables:
+
 - Consistent reasoning
 - Late translation
 - Compliance-safe execution
@@ -186,11 +198,13 @@ This enables:
 ## Validation and Safety
 
 Projects may validate AI guard consistency by:
+
 - Reading the active user environment
 - Ensuring no forbidden tooling is referenced
 - Failing fast on home→work leakage
 
 Validation is:
+
 - Mechanical
 - Deterministic
 - Non-negotiable
@@ -202,6 +216,7 @@ Governance does not arbitrate external constraint violations.
 ## Explicit Non-Goals
 
 This design intentionally avoids:
+
 - Multiple mental models per environment
 - AI personas per context
 - Prompt-time environment selection
@@ -214,6 +229,7 @@ This design intentionally avoids:
 This document is **draft by design**.
 
 Next steps (after review):
+
 - Finalize file naming conventions
 - Implement rendering strategy per AI tool
 - Create minimal skeletons for user and domain guard files

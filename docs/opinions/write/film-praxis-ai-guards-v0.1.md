@@ -19,6 +19,7 @@ This project exists to convert film watching into structured output **without sa
 
 **AI Slop Definition**  
 Output that is:
+
 - Generic
 - Interchangeable
 - Over-confident but under-specific
@@ -40,6 +41,7 @@ Meaning—taste, judgment, worldview, interpretation—remains exclusively human
 ## 4. Praxis Lifecycle Alignment (Human vs AI)
 
 ### 4.1 Observe / Consume — *Human Only*
+
 - Watch the film
 - Emotional response
 - Aesthetic reaction
@@ -51,6 +53,7 @@ Meaning—taste, judgment, worldview, interpretation—remains exclusively human
 ---
 
 ### 4.2 Capture (Raw) — *Human Only*
+
 - Immediate post-viewing notes
 - What lingered
 - What failed
@@ -66,12 +69,14 @@ This stage establishes *voice*.
 
 ### 4.3 Shape — *Human-Led, AI-Constrained*
 
-**Human Responsibilities**
+#### Shape: Human Responsibilities
+
 - Select one analytical angle
 - Choose what is worth pursuing
 - Define the tentative claim
 
-**AI Allowed**
+#### Shape: AI Allowed
+
 - Ask adversarial questions
 - Suggest counter-arguments
 - Surface formal film-theory vocabulary
@@ -84,18 +89,21 @@ This stage establishes *voice*.
 
 This stage is where AI provides maximum value with minimal slop risk.
 
-**AI Responsibilities**
+#### Formalize: AI Responsibilities
+
 - Propose outlines
 - Enforce logical structure
 - Identify gaps or unsupported claims
 
-**Human Responsibilities**
+#### Formalize: Human Responsibilities
+
 - Approve the thesis
 - Inject worldview and taste
 - Reject generic phrasing
 - Replace abstractions with specifics
 
-**Primary Artifact**
+#### Primary Artifact
+
 - Analysis Brief (SOD-style):
   - Claim
   - Evidence
@@ -106,13 +114,15 @@ This stage is where AI provides maximum value with minimal slop risk.
 
 ### 4.5 Produce — *AI-Accelerated, Human-Authored*
 
-**AI Can**
+#### Produce: AI Can
+
 - Generate first drafts *from approved outlines*
 - Rewrite for clarity or precision
 - Compress or expand sections
 - Apply formatting
 
-**Human Must**
+#### Produce: Human Must
+
 - Write the opening and closing
 - Author all evaluative judgments
 - Delete anything that sounds obvious or universal
@@ -124,11 +134,13 @@ This stage is where AI provides maximum value with minimal slop risk.
 ### 4.6 Create (Visual Translation) — *Human-Centered*
 
 Photography or illustration derived from:
+
 - One idea
 - One frame
 - One emotion
 
-**AI Optional**
+#### Create: AI Optional
+
 - Prompt refinement
 - Composition critique
 - Alternative metaphors
@@ -140,6 +152,7 @@ Photography or illustration derived from:
 ### 4.7 Critique & Commit — *Human Gate*
 
 Before publication:
+
 - Does this reflect my taste?
 - Would I recognize this without my name attached?
 - Is there a non-obvious insight?
@@ -152,6 +165,7 @@ If any answer is **no**, revise or discard.
 ## 5. Anti-Slop Guardrails
 
 ### 5.1 Hard Rules
+
 - No AI summaries of films already watched
 - No prompts like "explain why this film is good"
 - No publishing without a human-written thesis
@@ -170,12 +184,14 @@ If any answer is **no**, revise or discard.
 
 ## 6. Optimized Outcome
 
-**AI Maximizes**
+### AI Maximizes
+
 - Speed
 - Structural clarity
 - Artifact volume
 
-**Human Preserves**
+### Human Preserves
+
 - Meaning
 - Judgment
 - Artistic identity
@@ -191,6 +207,13 @@ If any answer is **no**, revise or discard.
 
 ## 8. Related Project Names (Context)
 
+- **Film Praxis**
+- **AI Slop Guards**
+- **Production Charter**
+- **Authorship Preservation**
+
+---
+
 - Criterion Notes
 - Frame & Meaning
 - Visual Grammar
@@ -198,7 +221,8 @@ If any answer is **no**, revise or discard.
 
 ---
 
-**Next Planned Artifacts**
+### Next Planned Artifacts
+
 - AI Alignment Preamble (project-specific)
 - Film Analysis Template
 - Stage → Allowed AI Actions Table

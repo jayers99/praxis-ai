@@ -57,7 +57,7 @@ poetry run mypy src tests
 
 ## Project Structure
 
-```
+```text
 template-python-cli/
 ├── src/
 │   └── template_python_cli/

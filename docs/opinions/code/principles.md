@@ -2,7 +2,7 @@
 
 Version: 0.2.0  
 Status: Draft — Collection & Refinement Phase  
-Last Updated: 2025-12-23
+Last Updated: 2025-12-25
 
 ---
 
@@ -11,6 +11,7 @@ Last Updated: 2025-12-23
 Software development is the discipline of **designing systems for rapid, reliable feedback and safe change**.
 
 We optimize for:
+
 - Fast, continuous feedback over delayed certainty
 - Small, reversible decisions over large speculative commitments
 - Explicit behavior over implicit intent
@@ -28,6 +29,7 @@ Improvement comes from feedback.
 This document captures the **foundational principles and intellectual influences** that guide how software work is approached.
 
 It is intentionally:
+
 - Timeless rather than situational
 - Advisory rather than binding
 - Descriptive of values, not prescriptive of process
@@ -44,11 +46,13 @@ Those emerge later through Praxis lifecycle artifacts and formalization contract
 > Structure systems, code, and processes so that incorrect assumptions, design flaws, and misunderstandings are revealed as early, cheaply, and clearly as possible.
 
 Feedback must be:
+
 - Continuous
 - Actionable
 - Designed in, not added later
 
 Feedback exists at multiple levels:
+
 - **Conceptual** — understanding the problem and domain
 - **Behavioral** — validating user-visible outcomes
 - **Technical** — correctness, safety, and performance
@@ -59,6 +63,7 @@ Feedback exists at multiple levels:
 ## Influential Lineage (By Author)
 
 ### W. Edwards Deming
+
 **Key Works:** Out of the Crisis, The New Economics
 
 - Systems thinking over local optimization
@@ -72,6 +77,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Dave Farley
+
 **Key Works:** Modern Software Engineering, Continuous Delivery
 
 - Fast, continuous feedback
@@ -83,6 +89,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Kent Beck
+
 **Key Work:** Test-Driven Development: By Example
 
 - Red–Green–Refactor as a design loop
@@ -93,6 +100,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Martin Fowler
+
 **Key Works:** Refactoring, Patterns of Enterprise Application Architecture
 
 - Continuous design improvement
@@ -103,6 +111,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Eric Evans
+
 **Key Work:** Domain-Driven Design
 
 - Domain understanding is central
@@ -113,6 +122,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Andrew Hunt & David Thomas
+
 **Key Work:** The Pragmatic Programmer
 
 - Professional responsibility
@@ -124,6 +134,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Robert C. Martin
+
 **Key Works:** Clean Code, Clean Architecture, The Clean Coder
 
 - Readable, expressive code
@@ -134,6 +145,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Steve McConnell
+
 **Key Work:** Code Complete
 
 - Construction discipline
@@ -144,6 +156,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Gang of Four
+
 **Key Work:** Design Patterns
 
 - Reusable design vocabulary
@@ -153,6 +166,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Fred Brooks
+
 **Key Work:** The Mythical Man-Month
 
 - No silver bullet
@@ -161,7 +175,8 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 
 ---
 
-### Thomas H. Cormen et al.
+### Thomas H. Cormen et al
+
 **Key Work:** Introduction to Algorithms
 
 - Algorithmic rigor
@@ -171,6 +186,7 @@ Deming provides the theoretical foundation for continuous improvement and feedba
 ---
 
 ### Martin Kleppmann
+
 **Key Work:** Designing Data-Intensive Applications
 
 - Distributed systems fail in partial ways
@@ -196,18 +212,18 @@ Principles that recur across multiple authors are given higher weight.
 
 ### Tier 2 — Structural Enablers
 
-6. Continuously refactor to preserve design quality
-7. Ground design in domain understanding
-8. Automate to support flow and consistency
-9. Prefer simple, readable solutions over clever ones
+1. Continuously refactor to preserve design quality
+2. Ground design in domain understanding
+3. Automate to support flow and consistency
+4. Prefer simple, readable solutions over clever ones
 
 ---
 
 ### Tier 3 — Contextual Principles
 
-10. Respect human and organizational limits
-11. Treat production feedback as a design concern
-12. Use patterns and theory as tools, not dogma
+1. Respect human and organizational limits
+2. Treat production feedback as a design concern
+3. Use patterns and theory as tools, not dogma
 
 ---
 
@@ -232,6 +248,7 @@ This document provides **intent and bias**.
 It does not grant authority.
 
 Authority is exercised through:
+
 - Praxis lifecycle stages
 - Formalization contracts
 - Decision arbitration rules
@@ -247,6 +264,7 @@ Learning updates principles.
 This document is expected to evolve during the collection phase.
 
 Planned next steps:
+
 - Re-read and refine language
 - Cross-check against multiple AI models
 - Collapse and sharpen phrasing

@@ -5,7 +5,7 @@ This directory contains [Praxis](https://github.com/jayers99/praxis-ai) governan
 ## Files
 
 | File | Purpose |
-|------|---------|
+| --- | --- |
 | `praxis.yaml` | Current state (domain, stage, privacy, environment) |
 | `01-capture.md` | Raw inputs and prior art gathered |
 | `02-sense.md` | Patterns and themes organized |

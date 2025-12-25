@@ -9,7 +9,7 @@ See [principles.md](principles.md) for the foundational software development pri
 ## Available Opinions
 
 | Opinion | Triggers | Summary |
-|---------|----------|---------|
+| --- | --- | --- |
 | [cli](cli.md) | CLI, command-line, terminal, Unix, GNU, coreutils, HashiCorp, Docker, AWS CLI, shell, pipeline, stdout, stderr, exit codes, automation, scripting, CI/CD, backwards compatibility, long-term maintenance | Production CLI: Unix philosophy, pipeline safety, explicit behavior, meaningful exit codes, 10-year maintainability |
 | [cli-python](cli-python.md) | Python, Poetry, Typer, pytest, pytest-bdd, BDD, TDD, hexagonal, ports and adapters, ruff, mypy, pyproject.toml, console script | Python CLI: hexagonal architecture, Poetry, Typer, BDD/TDD testing, ruff/mypy |
 | [gui](gui.md) | GUI, graphical, desktop, web app, UI, UX, interface, window, dialog, button, form, accessibility, responsive | GUI apps: responsive, accessible, clear feedback, forgiving interactions |

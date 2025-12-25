@@ -13,7 +13,7 @@ Design documentation for policy-driven AI assistant configuration.
 
 `/clear` resets conversation history but doesn't reload configuration files. To reload your user instructions without restarting the session:
 
-```
+```text
 Read ~/.claude/CLAUDE.md and apply it
 ```
 
