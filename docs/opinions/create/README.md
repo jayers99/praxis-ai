@@ -5,14 +5,15 @@ When `praxis.yaml` has `domain: create`, load this file into context.
 ## Foundational Principles
 
 <!-- TODO: Create principles.md for the create domain covering foundational creative principles -->
+
 See [principles.md](principles.md) for the foundational creative principles that guide all create domain work.
 
 ## Available Opinions
 
-| Opinion | Triggers | Summary |
-|---------|----------|---------|
-| [styles](styles.md) | style, visual, aesthetic, typography, font, color, palette, brand, design system, spacing, hierarchy, contrast, mood, tone | Creative styles: intentional, consistent visual choices serving content and audience |
-| [materials](materials.md) | material, medium, physical, tangible, paper, canvas, fabric, wood, metal, print, substrate, texture, finish, production | Creative materials: intentional selection based on purpose, durability, practical constraints |
+| Opinion                           | Triggers                                                                                                                                                       | Summary                                                                                            |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| [style-catalog](style-catalog.md) | style, visual, aesthetic, typography, font, color, palette, brand, design system, spacing, hierarchy, contrast, mood, tone, minimalist, handcrafted, brutalist | Style Catalog: A collection of reusable visual and aesthetic patterns serving content and audience |
+| [materials](materials.md)         | material, medium, physical, tangible, paper, canvas, fabric, wood, metal, print, substrate, texture, finish, production                                        | Creative materials: intentional selection based on purpose, durability, practical constraints      |
 
 ## How This Works
 
