@@ -1,6 +1,6 @@
 # Code Domain Rules
 
-Apply these rules when working on projects with domain: code in praxis.yaml.
+**User-Level Rules** — Apply to all code domain projects.
 
 ## Code Style
 
@@ -38,6 +38,3 @@ Apply these rules when working on projects with domain: code in praxis.yaml.
 ## Git
 
 - Commit messages should be descriptive but concise, focusing on "why" not "what"
-- Never commit without passing tests
-- Never commit unless explicitly asked
-- Never push — that's human responsibility
