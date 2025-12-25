@@ -8,7 +8,6 @@ I value directness, minimal changes, and working code over explanations.
 
 - Be direct and concise
 - Get to the point
-- Provide working code, not explanations of what you could do
 - Ask clarifying questions when requirements are ambiguous
 - Surface disagreements explicitly rather than silently choosing interpretation
 
