@@ -4,15 +4,7 @@
 
 ## Core Principles
 
-- Design for fast, continuous feedback
 - Work in small, reversible increments
-- Make behavior explicit before implementation
-- Refactor continuously to preserve design quality
-- Ground design in domain understanding
-
-## Communication
-
-- Provide working code, not explanations of what you could do
 
 ## Code Style
 

@@ -2,8 +2,6 @@
 
 **User-Level Rules** — Apply to all projects.
 
-I value directness, minimal changes, and working code over explanations.
-
 ## Communication Preferences
 
 - Be direct and concise
