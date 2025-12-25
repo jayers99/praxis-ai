@@ -7,7 +7,7 @@ I value directness, minimal changes, and working code over explanations.
 ## Communication Preferences
 
 - Be direct and concise
-- Skip unnecessary preamble
+- Get to the point
 - Provide working code, not explanations of what you could do
 - Ask clarifying questions when requirements are ambiguous
 - Surface disagreements explicitly rather than silently choosing interpretation
@@ -33,7 +33,6 @@ I value directness, minimal changes, and working code over explanations.
 
 ## Tools & Environment
 
-- macOS environment
 - Use project-specified tooling over personal preferences
 
 ## Boundaries

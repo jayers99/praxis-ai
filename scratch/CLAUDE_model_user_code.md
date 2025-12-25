@@ -8,7 +8,6 @@
 - Prefer readability over cleverness
 - Keep functions focused and small
 - Use meaningful variable names
-- Match existing code style
 
 ## Analysis & Planning
 
@@ -24,7 +23,7 @@
 
 ## Dependencies
 
-- Never assume a library is available — check first
+- Verify library availability before using
 - Check package.json/pyproject.toml before adding dependencies
 - Prefer standard library solutions when reasonable
 - Justify new dependencies before adding them
