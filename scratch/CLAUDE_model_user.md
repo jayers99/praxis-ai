@@ -42,3 +42,10 @@ I value directness, minimal changes, and working code over explanations.
 - Justify new dependencies before adding them
 - Scope changes to the task at hand
 - Mark incomplete or placeholder code clearly
+
+## Domain-Specific Rules
+
+If this project has a praxis.yaml, check its domain field and apply the corresponding rules:
+- domain: code → @~/.claude/rules/code.md
+- domain: write → @~/.claude/rules/write.md
+- domain: create → @~/.claude/rules/create.md
