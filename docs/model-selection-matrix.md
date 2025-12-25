@@ -17,21 +17,69 @@ A 4D scoring guide for selecting the right AI agent/model combination based on P
 
 ---
 
-### Models (as of Dec 2024)
+## Models — Arena Rankings (Dec 2024)
 
-| Provider | Model | Tier | Best For | Notes |
-|----------|-------|------|----------|-------|
-| **Anthropic** | Claude Opus 4.5 | Premium | Complex reasoning, architecture, ambiguous problems | Top-tier reasoning |
-| | Claude Sonnet 4 | Standard | Balanced tasks, code generation, analysis | Daily driver |
-| | Claude Haiku 3.5 | Fast | Quick edits, simple completions, high volume | Cost-effective |
-| **OpenAI** | o1 | Premium | Math, formal logic, multi-step reasoning | Chain-of-thought reasoning |
-| | o3-mini | Standard+ | Code generation with reasoning | Good for algorithmic work |
-| | GPT-4o | Standard | General purpose, multimodal | Solid all-rounder |
-| | GPT-4o-mini | Fast | Quick tasks, cost-sensitive | Budget option |
-| **Google** | Gemini 2.5 Pro | Premium | Complex reasoning, long context, code | Strong competitor to Opus |
-| | Gemini 2.0 Flash | Fast | Speed, multimodal, long context | Great latency |
-| | Gemini 1.5 Pro | Standard | Long documents, code analysis | 1M context window |
-| | **Gemini 2.5 Flash** | Ultra-Fast | High-volume, creative tasks, summaries | ⭐ "Nano Banana" - surprisingly capable |
+Based on [LMArena Chatbot Arena](https://lmarena.ai/leaderboard/) crowdsourced rankings (5M+ votes).
+
+### Overall Leaderboard (Top Models)
+
+| Rank | Model | Arena Score | Provider | Tier |
+|------|-------|-------------|----------|------|
+| 1 | Gemini 2.5 Pro | 1451 | Google | Premium |
+| 2 | Claude Opus 4.5 | 1467 | Anthropic | Premium |
+| 3 | Claude Opus 4.5 (thinking) | 1469 | Anthropic | Premium+ |
+| 4 | o1 | ~1440 | OpenAI | Premium |
+| 5 | GPT-4o | ~1366 | OpenAI | Standard |
+| 6 | Claude Sonnet 4 | ~1380 | Anthropic | Standard |
+| 7 | Gemini 2.0 Flash | ~1350 | Google | Fast |
+| 8 | Claude Haiku 3.5 | ~1280 | Anthropic | Fast |
+| 9 | GPT-4o-mini | ~1270 | OpenAI | Fast |
+| 10 | **Gemini 2.5 Flash** | ~1320 | Google | Ultra-Fast |
+
+### Category Leaders
+
+| Category | Top Models | Notes |
+|----------|------------|-------|
+| **Coding** | Claude Sonnet 4, Gemini 2.5 Pro, o1 | Sonnet tops WebDev Arena |
+| **Math** | o1, Gemini 2.5 Pro | o1 excels at formal logic |
+| **Creative Writing** | Claude Opus 4.5, GPT-4o | Opus best for nuance |
+| **Instruction Following** | Claude Opus 4.5, Claude Sonnet 4 | Anthropic strength |
+| **Hard Prompts** | o1, Gemini 2.5 Pro, Opus 4.5 | Reasoning-heavy |
+| **Long Context** | Gemini (1M+), Claude (200k) | Gemini wins on length |
+
+### WebDev Arena (Coding-Specific)
+
+From [WebDev Arena](https://lmarena.ai/leaderboard/webdev) (80k+ votes):
+
+| Rank | Model | Notes |
+|------|-------|-------|
+| 1 | Claude Sonnet 4 | Consistent across categories |
+| 2 | Gemini 2.5 Pro | Strong on complex apps |
+| 3 | GPT-4o | Solid all-rounder |
+| 4 | Qwen2.5-Coder-32B | Best open-source |
+
+---
+
+## Model Tiers by Provider
+
+| Tier | Anthropic | OpenAI | Google | xAI |
+|------|-----------|--------|--------|-----|
+| **Premium** | Opus 4.5 | o1 | Gemini 2.5 Pro | Grok 3 |
+| **Standard** | Sonnet 4 | GPT-4o, o3-mini | Gemini 1.5 Pro | — |
+| **Fast** | Haiku 3.5 | GPT-4o-mini | Gemini 2.0 Flash | — |
+| **Ultra-Fast** | — | — | **Gemini 2.5 Flash** ⭐ | — |
+
+### Provider Strengths (Arena-Validated)
+
+| Task Type | Best Choice | Arena Evidence |
+|-----------|-------------|----------------|
+| **Deep reasoning** | Opus 4.5, o1 | Top scores on Hard Prompts |
+| **Coding (WebDev)** | Sonnet 4 | #1 WebDev Arena |
+| **Math/Logic** | o1, Gemini 2.5 Pro | Category leaders |
+| **Creative writing** | Opus 4.5 | Category leader |
+| **Speed + quality** | Gemini 2.5 Flash | Punches above tier |
+| **Long context** | Gemini 2.5 Pro | 1M+ tokens |
+| **Cost efficiency** | Gemini 2.5 Flash, Haiku | Best value |
 
 ---
 
@@ -65,16 +113,16 @@ These domains share similar model requirements—Premium for formalization, Stan
 | **Sustain** | 3 | 3 | 4 | 2 | Maintenance, revisions |
 | **Close** | 4 | 4 | 3 | 1 | Archive, document learnings |
 
-**Domain-specific notes:**
-- **Code:** Premium especially valuable for architecture decisions, debugging complex issues
-- **Write:** Premium also valuable at Shape (argument structure) and Execute (quality prose)
-- **Learn:** Premium useful for Socratic dialogue in Execute
+**Domain-specific recommendations (Arena-informed):**
+- **Code:** Sonnet 4 for Execute (WebDev Arena #1). Opus/o1 for Formalize.
+- **Write:** Opus 4.5 for Shape/Formalize/Execute (creative writing leader).
+- **Learn:** Standard tier for most; Premium for Socratic deep dives.
 
 ---
 
 ### Pattern B: Create Domain
 
-Creative work benefits from fast iteration and high-volume generation. **Gemini 2.5 Flash ("Nano Banana")** excels here.
+Creative work benefits from fast iteration and high-volume generation. **Gemini 2.5 Flash** excels here.
 
 | Stage | Ultra-Fast | Fast | Standard | Premium | Notes |
 |-------|------------|------|----------|---------|-------|
@@ -114,33 +162,9 @@ Lowest-ceremony domain. Almost everything is Fast/Ultra-Fast.
 
 ---
 
-## Model Selection by Provider
+## Gemini 2.5 Flash: When to Use
 
-### Tier Mapping
-
-| Tier | Anthropic | OpenAI | Google |
-|------|-----------|--------|--------|
-| **Premium** | Opus 4.5 | o1 | Gemini 2.5 Pro |
-| **Standard** | Sonnet 4 | GPT-4o, o3-mini | Gemini 1.5 Pro |
-| **Fast** | Haiku 3.5 | GPT-4o-mini | Gemini 2.0 Flash |
-| **Ultra-Fast** | — | — | **Gemini 2.5 Flash** ⭐ |
-
-### Provider Strengths
-
-| Task Type | Best Provider | Why |
-|-----------|---------------|-----|
-| Deep reasoning, ambiguity | Anthropic (Opus) | Best reasoning quality |
-| Math, formal logic | OpenAI (o1) | Chain-of-thought strength |
-| Long context (>100k) | Google (Gemini) | 1M+ context window |
-| High-volume creative work | **Google (Gemini 2.5 Flash)** | ⭐ Best cost/quality for Create |
-| Code generation | Anthropic (Sonnet) or OpenAI (o3-mini) | Both strong |
-| Multimodal (images) | OpenAI (GPT-4o) or Google | Native vision |
-
----
-
-## Gemini 2.5 Flash ("Nano Banana"): When to Use
-
-You've found this model punches above its weight. Best use cases:
+Arena data shows this model punches above its weight class. Best use cases:
 
 | Use Case | Why It Works |
 |----------|--------------|
@@ -166,12 +190,13 @@ You've found this model punches above its weight. Best use cases:
 3. **Formalize stage** — SODs, briefs, contracts need careful reasoning
 4. **Debugging complex issues** — Multi-system, non-obvious root cause
 5. **Novel problems** — No existing pattern to follow
+6. **Math/logic-heavy** — Use o1 specifically
 
 ### When to use Standard (Sonnet, GPT-4o, Gemini 1.5 Pro)
 
 1. **Clear requirements** — Know what you want, need execution
 2. **Explore → Execute** — Most active work in Code/Write/Learn
-3. **Code generation** — Implement from spec
+3. **Code generation** — Sonnet 4 is Arena coding leader
 4. **Analysis** — Understand existing code/content
 
 ### When to use Fast (Haiku, GPT-4o-mini, Gemini 2.0 Flash)
@@ -222,21 +247,22 @@ You've found this model punches above its weight. Best use cases:
 
 ## Cost/Benefit Quick Reference
 
-| Scenario | Recommended | Why |
-|----------|-------------|-----|
+| Scenario | Recommended | Arena Justification |
+|----------|-------------|---------------------|
 | "Fix this typo" | Copilot / Haiku | Trivial task |
 | "Add a function like this one" | Copilot / Haiku | Pattern completion |
 | "Generate 20 logo variations" | **Gemini 2.5 Flash** | Create domain, high volume |
 | "Summarize these 50 files" | Gemini 2.5 Flash | High volume, simple task |
-| "Implement this feature" | Sonnet / GPT-4o | Clear spec, needs execution |
-| "How should I architect this?" | Opus / o1 | High ambiguity, high stakes |
+| "Implement this feature" | **Sonnet 4** | #1 WebDev Arena |
+| "How should I architect this?" | Opus / o1 | Hard Prompts leaders |
 | "Debug this weird issue" | Sonnet → Opus | Start cheaper, escalate if stuck |
-| "Write the SOD for this project" | Opus | Formalize = deep reasoning |
-| "Write the creative brief" | Opus | Formalize = deep reasoning |
-| "Refactor this file" | Sonnet | Clear goal, needs care |
-| "Analyze this 500-page doc" | Gemini 1.5 Pro | Long context |
-| "What are my options here?" | Sonnet | Explore stage |
-| "Is this approach sound?" | Opus / Gemini 2.5 Pro | Validate architecture |
+| "Write the SOD for this project" | Opus | Instruction following leader |
+| "Write the creative brief" | Opus | Creative writing leader |
+| "Solve this algorithm" | **o1** | Math category leader |
+| "Refactor this file" | Sonnet 4 | Coding category leader |
+| "Analyze this 500-page doc" | Gemini 2.5 Pro | Long context leader |
+| "What are my options here?" | Sonnet / GPT-4o | Explore stage |
+| "Is this approach sound?" | Opus / Gemini 2.5 Pro | Reasoning leaders |
 
 ---
 
@@ -255,8 +281,17 @@ Don't start with Opus for everything. Most tasks don't need it.
 
 ---
 
+## Sources
+
+- [LMArena Overall Leaderboard](https://lmarena.ai/leaderboard/)
+- [WebDev Arena](https://lmarena.ai/leaderboard/webdev)
+- [Arena Category Analysis](https://blog.lmarena.ai/blog/2024/arena-category/)
+
+---
+
 ## Version
 
-- v0.2 — Added all providers, consolidated domains, Gemini 2.5 Flash ("Nano Banana") for Create (Dec 2024)
-- v0.1 — Initial matrix (Dec 2024)
+- v0.3 — Updated with LMArena rankings, category leaders, WebDev Arena data (Dec 2024)
+- v0.2 — Added all providers, consolidated domains, Gemini 2.5 Flash for Create
+- v0.1 — Initial matrix
 - Models and pricing change frequently; revisit quarterly
