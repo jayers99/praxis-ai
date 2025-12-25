@@ -9,11 +9,13 @@ Last Updated: 2025-12-23
 ## Purpose
 
 This document defines the **three-layer conceptual model** used by Praxis to separate:
+
 - What we believe
 - How decisions are arbitrated
 - How work is executed
 
 The explicit separation of these layers prevents:
+
 - Principles turning into dogma
 - Governance collapsing into bureaucracy
 - Execution drifting without intent
@@ -26,9 +28,10 @@ This document exists to **clarify authority, responsibility, and interaction** b
 
 Praxis is intentionally structured into three distinct layers:
 
-```
+```text
 Opinions  →  Governance  →  Execution
 ```
+
 Each layer has a different purpose, lifespan, and authority level.
 
 ---
@@ -42,21 +45,25 @@ Timeless viewpoints, values, and intellectual influences that bias decisions.
 Rules, policies, workflows, or enforcement mechanisms.
 
 **Characteristics:**
+
 - Advisory, not binding
 - Stable but evolvable
 - Context-independent
 - Read for alignment, not compliance
 
 **Primary Questions Answered:**
+
 - What do we value?
 - How do we think about good software?
 - What biases should guide decisions?
 
 **Artifacts:**
+
 - `code/opinions/principles.md`
 - Future opinionated essays or manifestos
 
 **Authority:**
+
 - Informational only
 - Never enforced mechanically
 
@@ -71,21 +78,25 @@ The mechanism by which conflicts between principles and execution are resolved.
 A manifesto, a style guide, or a task list.
 
 **Characteristics:**
+
 - Procedural authority
 - Explicit arbitration rules
 - Stable but intentionally minimal
 - Applies across domains and projects
 
 **Primary Questions Answered:**
+
 - Who decides when principles and execution conflict?
 - Where are tradeoffs made explicit?
 - How is learning fed back into the system?
 
 **Artifacts:**
+
 - `docs/decision-arbitration.md`
 - Lifecycle definitions (Praxis stages)
 
 **Authority:**
+
 - Binding at decision points
 - Governs how commitments are made
 
@@ -100,17 +111,20 @@ Concrete rules, guardrails, workflows, and practices used to produce software.
 Timeless truth or universal guidance.
 
 **Characteristics:**
+
 - Context-specific
 - Explicitly binding
 - Expected to change frequently
 - Optimized for action and clarity
 
 **Primary Questions Answered:**
+
 - What is allowed right now?
 - What constraints are active?
 - How should work proceed today?
 
 **Artifacts (future or emerging):**
+
 - `docs/guardrails.md`
 - Issue templates
 - Workflow definitions
@@ -118,6 +132,7 @@ Timeless truth or universal guidance.
 - Project-specific contracts (SODs)
 
 **Authority:**
+
 - Fully binding during execution
 - Constrained by governance
 - Informed by opinions
@@ -128,7 +143,7 @@ Timeless truth or universal guidance.
 
 Authority flows **downward**, learning flows **upward**.
 
-```
+```text
 Opinions
   ↓ (bias)
 Governance
@@ -162,11 +177,13 @@ This loop is intentionally Deming-inspired (PDCA).
 `praxis/docs/layer-model.md`
 
 Rationale:
+
 - This is a **structural clarification**, not an opinion
 - It informs how Praxis itself is understood
 - It provides context for all other documents
 
 This document should be read before:
+
 - `decision-arbitration.md`
 - Any future guardrails or workflows
 
@@ -177,6 +194,7 @@ This document should be read before:
 This document is expected to be stable.
 
 Changes should occur only when:
+
 - The Praxis structure itself evolves
 - A new layer is introduced
 - Authority boundaries materially change

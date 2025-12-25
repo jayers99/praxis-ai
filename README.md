@@ -6,7 +6,7 @@ A policy-driven AI workflow system that governs how ideas evolve into maintained
 
 From any project directory, start an agentic AI session (Claude Code, Copilot, etc.) and prompt:
 
-```
+```text
 Start a new Praxis project for building a Python CLI tool.
 ```
 
@@ -19,7 +19,7 @@ The AI will:
 
 ### Example Session
 
-```
+```text
 You: Start a new Praxis project for building a Python CLI tool.
 
 AI: I'll initialize a Praxis project for you.
@@ -58,11 +58,11 @@ AI-assisted work is structurally fragile. Current tools optimize for speed witho
 - Work that can't be maintained or handed off
 - No systematic way to know when to stop
 
-## The Solution
+## The solution
 
 Praxis provides **deterministic behavior resolution** based on four dimensions:
 
-```
+```text
 Domain + Stage + Privacy + Environment → Behavior
 ```
 
