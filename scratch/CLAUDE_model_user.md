@@ -16,32 +16,21 @@ I value directness, minimal changes, and working code over explanations.
 - **"Clarify"** = I need to understand before you proceed
 - Use Plan Mode for non-trivial implementations
 
-## Code Style
-
-- Follow existing project conventions when present
-- Prefer readability over cleverness
-- Keep functions focused and small
-- Use meaningful variable names
-
 ## Workflow
 
-- Read before modifying - understand existing code first
+- Read before modifying — understand existing content first
 - Make minimal changes to accomplish the task
-- Run tests after changes when a test suite exists
-- Commit messages should be descriptive but concise
 
 ## Tools & Environment
 
 - macOS environment
-- Prefer standard library solutions when reasonable
 - Use project-specified tooling over personal preferences
 
 ## Boundaries
 
 - Keep solutions simple and focused on the current problem
-- Justify new dependencies before adding them
 - Scope changes to the task at hand
-- Mark incomplete or placeholder code clearly
+- Mark incomplete or placeholder content clearly
 
 ## Domain-Specific Rules
 
