@@ -1,8 +1,22 @@
 # Praxis-AI
 
+## The Problem
+
+AI amplifies throughput, not coherence. You can now generate 10x faster—but you can't govern 10x faster. The bottleneck moved from production to intent-maintenance.
+
+Without structure, AI collaboration becomes chasing your own tail at higher speed: rediscovering rejected ideas, drifting scope mid-stream, refining things that aren't defined yet.
+
+## What Praxis Does
+
+Praxis makes human intent durable enough to survive AI's speed.
+
+Your capacity for intent-maintenance is fixed. AI volume is not. Praxis provides leverage—canonical decisions, explicit scope boundaries, and stage gates that let fixed human intent govern unbounded AI output.
+
+---
+
 Praxis is a governance framework for AI-assisted work—moving ideas through a structured lifecycle into durable, governed outcomes.
 
-It helps you move from raw inputs to durable outcomes by making intent explicit across a lifecycle (Capture → Close), with behavior resolved deterministically by:
+Behavior is resolved deterministically by:
 
 ```text
 Domain + Stage + Privacy + Environment → Behavior
