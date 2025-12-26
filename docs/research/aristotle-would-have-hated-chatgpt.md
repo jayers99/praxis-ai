@@ -11,7 +11,7 @@
 
 **Proairesis (προαίρεσις)** — Deliberate choice, moral purpose. For the Stoics (Epictetus especially), this is the one thing truly under your control—your capacity to choose in alignment with your values. Intent-maintenance is protecting proairesis from being overwhelmed by externals.
 
-**Akrasia (ἀκρασία)** — Weakness of will. Acting against your better judgment. The failure mode of intent-maintenance—you *know* what you should do but don't do it. Socrates famously denied it existed (if you truly know the good, you'll do it). Aristotle said it's real: you can know and still fail.
+**Akrasia (ἀκρασία)** — Weakness of will. Acting against your better judgment. The failure mode of intent-maintenance—you _know_ what you should do but don't do it. Socrates famously denied it existed (if you truly know the good, you'll do it). Aristotle said it's real: you can know and still fail.
 
 **Sophrosyne (σωφροσύνη)** — Temperance, self-control, soundness of mind. The virtue that enables intent-maintenance. Keeping your faculties ordered so purpose isn't hijacked by impulse.
 
@@ -40,6 +40,7 @@ The Greeks would recognize Praxis as a system for **preserving sophrosyne** in t
 If akrasia is "acting against your better judgment," then most AI-assisted work is akrasia by default.
 
 You know you should:
+
 - Define scope before building
 - Finish one thing before starting another
 - Not let the tool drive the work
@@ -58,11 +59,12 @@ Praxis is the Aristotelian position.
 
 ## Why "Praxis" Is Actually the Right Name
 
-πρᾶξις (praxis) in Greek means "action" or "practice" — but specifically *purposeful* action, as distinguished from:
+πρᾶξις (praxis) in Greek means "action" or "practice" — but specifically _purposeful_ action, as distinguished from:
+
 - **Theoria (θεωρία)** — contemplation, pure thought
 - **Poiesis (ποίησις)** — making, production
 
-Praxis is action-with-intent. Not just doing, but doing *toward something*.
+Praxis is action-with-intent. Not just doing, but doing _toward something_.
 
 So the name isn't pretentious. It's accurate.
 
