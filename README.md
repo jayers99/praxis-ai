@@ -1,8 +1,8 @@
 # Praxis-AI
 
-Praxis is an AI-assisted workflow system for producing reusable outcomes.
+Praxis is a governance framework for AI-assisted work—moving ideas through a structured lifecycle into durable, governed outcomes.
 
-It helps you move from raw inputs to durable outcomes by making intent explicit across a lifecycle (Capture → Close), with behavior shaped by:
+It helps you move from raw inputs to durable outcomes by making intent explicit across a lifecycle (Capture → Close), with behavior resolved deterministically by:
 
 ```text
 Domain + Stage + Privacy + Environment → Behavior
@@ -84,6 +84,8 @@ If you want to understand the framework:
 - [docs/lifecycle.md](docs/lifecycle.md) — stage definitions + regressions
 - [docs/domains.md](docs/domains.md) — domain → artifact types
 - [docs/privacy.md](docs/privacy.md) — privacy levels + enforcement intent
+- [docs/external-constraints.md](docs/external-constraints.md) — environmental authority
+- [docs/ai-guards.md](docs/ai-guards.md) — AI behavior governance (draft)
 
 If you want to see Praxis applied in real projects:
 

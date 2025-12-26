@@ -51,18 +51,18 @@ Praxis behavior is determined by the composition of four dimensions, resolved de
 
 Each artifact belongs to exactly one domain at creation.
 
-- **Code** – functional systems and tools  
-- **Create** – aesthetic and expressive output  
-- **Write** – structured externalized thought  
-- **Observe** – raw capture without interpretation  
-- **Learn** – internal model and skill formation  
-- **Project Planning** – coordination and sequencing of work  
+- **Code** – functional systems and tools
+- **Create** – aesthetic and expressive output
+- **Write** – structured externalized thought
+- **Observe** – raw capture without interpretation
+- **Learn** – internal model and skill formation
 
 Domains define:
-- allowed artifact types  
-- storage expectations  
-- AI usage patterns  
-- quality bars  
+
+- allowed artifact types
+- storage expectations
+- AI usage patterns
+- quality bars
 
 ---
 
@@ -70,15 +70,15 @@ Domains define:
 
 Praxis defines a single canonical lifecycle:
 
-1. Capture  
-2. Sense  
-3. Explore  
-4. Shape  
-5. **Formalize** (structural hinge)  
-6. Commit  
-7. Execute  
-8. Sustain  
-9. Close  
+1. Capture
+2. Sense
+3. Explore
+4. Shape
+5. **Formalize** (structural hinge)
+6. Commit
+7. Execute
+8. Sustain
+9. Close
 
 Formalize, Commit, and Close form the **non-optional structural spine** that ensures durability and leverage.
 
@@ -92,17 +92,18 @@ Privacy defines **how information may be stored, shared, processed, and external
 
 Canonical levels (least → most restrictive):
 
-1. Public  
-2. Public – Trusted Collaborators  
-3. Personal  
-4. Confidential  
-5. Restricted  
+1. Public
+2. Public – Trusted Collaborators
+3. Personal
+4. Confidential
+5. Restricted
 
 Privacy directly constrains:
-- storage locations  
-- collaboration scope  
-- AI tooling  
-- artifact specificity  
+
+- storage locations
+- collaboration scope
+- AI tooling
+- artifact specificity
 
 Higher privacy requires greater abstraction and tighter controls.
 
@@ -113,7 +114,7 @@ Higher privacy requires greater abstraction and tighter controls.
 Environment affects **tone, formality, and compliance posture**, not data handling.
 
 - `Home`
-- `Work`  
+- `Work`
 
 Artifacts remain environment-neutral and are rendered safely later without rewriting core intent.
 
@@ -123,9 +124,9 @@ Artifacts remain environment-neutral and are rendered safely later without rewri
 
 Praxis resolves behavior in a fixed order:
 
-1. **Domain + Stage** → capability and intent  
-2. **Privacy** → data, AI, and collaboration constraints  
-3. **Environment** → presentation and tone  
+1. **Domain + Stage** → capability and intent
+2. **Privacy** → data, AI, and collaboration constraints
+3. **Environment** → presentation and tone
 
 This guarantees predictable, auditable AI behavior and prevents unsafe defaults.
 
@@ -138,48 +139,49 @@ Formalize is the **structural hinge** between thinking and execution.
 For the **Code** domain, the Formalize artifact is the **Solution Overview Document (SOD)**.
 
 The SOD:
-- locks intent without over-specifying implementation  
-- survives privacy reclassification  
-- feeds downstream execution artifacts  
-- defines explicit commit readiness  
+
+- locks intent without over-specifying implementation
+- survives privacy reclassification
+- feeds downstream execution artifacts
+- defines explicit commit readiness
 
 ### 5.1 Required SOD Sections
 
-- Problem Statement  
-- Business Context / Drivers  
-- Goals  
-- Non-Goals  
-- Functional Overview  
-- High-Level Architecture / Workflow  
-- Assumptions  
-- Constraints (Technical, Security, Compliance, Operational)  
-- Dependencies  
-- Phases / Increments  
-- Risks & Mitigations  
-- Open Questions / Spikes  
-- Glossary / Definitions  
-- Commit Readiness Checklist  
+- Problem Statement
+- Business Context / Drivers
+- Goals
+- Non-Goals
+- Functional Overview
+- High-Level Architecture / Workflow
+- Assumptions
+- Constraints (Technical, Security, Compliance, Operational)
+- Dependencies
+- Phases / Increments
+- Risks & Mitigations
+- Open Questions / Spikes
+- Glossary / Definitions
+- Commit Readiness Checklist
 
 ### 5.2 Explicit Exclusions
 
-- Low-level design  
-- Task breakdowns  
-- Implementation detail  
-- Unframed experimentation  
+- Low-level design
+- Task breakdowns
+- Implementation detail
+- Unframed experimentation
 
 ---
 
 ## 6. Privacy and Lifecycle Interaction
 
-- Privacy is declared no later than **Explore**.  
-- Enforced during **Shape** and **Formalize**.  
-- Honored strictly during **Execute**.  
-- Re-evaluated before **Commit**.  
+- Privacy is declared no later than **Explore**.
+- Enforced during **Shape** and **Formalize**.
+- Honored strictly during **Execute**.
+- Re-evaluated before **Commit**.
 
 ### 6.1 Reclassification Rules
 
-- **Upgrade (less → more restrictive):** mandatory migration, sanitization, and constraint tightening.  
-- **Downgrade (more → less restrictive):** discouraged; requires explicit review and redaction.  
+- **Upgrade (less → more restrictive):** mandatory migration, sanitization, and constraint tightening.
+- **Downgrade (more → less restrictive):** discouraged; requires explicit review and redaction.
 
 ---
 
@@ -200,15 +202,15 @@ This enables validation-first, order-independent governance of AI behavior.
 
 ## 8. Risks & Mitigations
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| Model too heavy for small work | High | Medium | Define "lightweight mode" or minimum viable governance for trivial tasks |
-| Privacy reclassification friction causes abandonment | Medium | High | Design reclassification as a first-class workflow, not an exception path |
-| Domain taxonomy is wrong | Medium | High | Treat domains as mutable; version them; plan for domain evolution |
-| Policy engine choice is wrong | Low | High | Isolate policy engine behind abstraction; defer deep investment until validated |
-| Solo-author bias limits future scaling | High | Medium | Explicitly scope v1 as single-user; collaboration is future scope |
-| Lifecycle stages don't fit real work patterns | Medium | High | Validate with worked examples before heavy execution investment |
-| Governance overhead exceeds value | Medium | High | Measure friction in early projects; establish abandonment criteria |
+| Risk                                                 | Likelihood | Impact | Mitigation                                                                      |
+| ---------------------------------------------------- | ---------- | ------ | ------------------------------------------------------------------------------- |
+| Model too heavy for small work                       | High       | Medium | Define "lightweight mode" or minimum viable governance for trivial tasks        |
+| Privacy reclassification friction causes abandonment | Medium     | High   | Design reclassification as a first-class workflow, not an exception path        |
+| Domain taxonomy is wrong                             | Medium     | High   | Treat domains as mutable; version them; plan for domain evolution               |
+| Policy engine choice is wrong                        | Low        | High   | Isolate policy engine behind abstraction; defer deep investment until validated |
+| Solo-author bias limits future scaling               | High       | Medium | Explicitly scope v1 as single-user; collaboration is future scope               |
+| Lifecycle stages don't fit real work patterns        | Medium     | High   | Validate with worked examples before heavy execution investment                 |
+| Governance overhead exceeds value                    | Medium     | High   | Measure friction in early projects; establish abandonment criteria              |
 
 ---
 
@@ -227,15 +229,18 @@ Praxis should be abandoned or fundamentally rethought if:
 ## 10. First Executable Increment
 
 ### Deliverable
+
 Minimal policy schema + CLI validator for Code domain artifacts.
 
 ### Acceptance Tests
+
 1. Given a `praxis.yaml` with `domain: code, stage: execute, privacy: confidential`, the validator passes
 2. Given `stage: execute` without a Formalize artifact (SOD), the validator fails with "Cannot execute without formalization"
 3. Given `privacy: public` with a reference to a `.env` file, the validator warns "Potential secret in public project"
 4. Given an invalid stage transition (e.g., Capture → Execute), the validator fails with "Invalid stage transition"
 
 ### Definition of Done
+
 - Schema validates happy path for Code domain
 - Schema rejects 3+ known-bad configurations
 - CLI runs locally with no external dependencies
@@ -248,11 +253,11 @@ Minimal policy schema + CLI validator for Code domain artifacts.
 Praxis is a **policy-driven AI workflow system** that governs how ideas become maintained reality.
 
 By combining:
-- a universal lifecycle  
-- domain-aware artifacts  
-- mutable but enforceable privacy  
-- late-bound environments  
-- deterministic policy resolution  
+
+- a universal lifecycle
+- domain-aware artifacts
+- mutable but enforceable privacy
+- late-bound environments
+- deterministic policy resolution
 
 Praxis enables safe, repeatable, and cumulative AI-assisted work across creative and regulated contexts.
-

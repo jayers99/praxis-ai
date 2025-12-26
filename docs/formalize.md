@@ -1,11 +1,13 @@
 # Praxis Formalize — Domain Definitions (v0.1)
 
 ## Purpose
+
 Formalize is the structural hinge between ideation and execution.
 Its role is to convert intent into a bounded, executable plan with explicit constraints,
 so work can proceed without inventing requirements.
 
 Formalize artifacts are **domain-specific**, but share a common spine:
+
 - Intent
 - Scope & boundaries
 - Constraints
@@ -21,18 +23,21 @@ Commit marks the transition from refinement to execution.
 Each domain’s Formalize artifact MUST explicitly define:
 
 ### 1. Intent & Outcome
+
 - Problem / Thesis / Creative Intent
 - Audience or user
 - Success criteria
 - Why now
 
 ### 2. Scope & Boundaries
+
 - In scope
 - Out of scope (non-goals)
 - Assumptions
 - Dependencies
 
 ### 3. Constraints (Hard Guardrails)
+
 - Domain constraints
 - Environment overlay (work vs personal)
 - Privacy classification
@@ -40,12 +45,15 @@ Each domain’s Formalize artifact MUST explicitly define:
 - Time / effort caps
 
 ### 4. Execution Framing
+
 - First executable increment
 - Risks & mitigations
 - Open questions → explicit spikes
 
 ### 5. Commit Criteria
+
 Formalize is complete only when:
+
 - Success is unambiguous
 - Scope is bounded
 - Constraints are complete
@@ -57,13 +65,16 @@ Formalize is complete only when:
 ## Domain: Code
 
 ### Formalize Artifact
+
 **Solution Overview Document (SOD)**
 
 ### Role
+
 The SOD is the Formalize contract for software, systems, and tools.
 It locks intent, boundaries, and constraints while remaining implementation-light.
 
 ### Required Sections (SOD-lite)
+
 - Problem Statement
 - Business Context / Drivers
 - Goals
@@ -80,6 +91,7 @@ It locks intent, boundaries, and constraints while remaining implementation-ligh
 - Commit Readiness Checklist
 
 ### Explicit Exclusions
+
 - Low-level design
 - Task breakdowns
 - Implementation detail
@@ -90,12 +102,15 @@ It locks intent, boundaries, and constraints while remaining implementation-ligh
 ## Domain: Create
 
 ### Formalize Artifact
+
 **Creative Brief**
 
 ### Role
+
 Convert inspiration into bounded creative intent without constraining exploration prematurely.
 
 ### Required Sections
+
 - Creative Intent / Theme
 - Audience / Context
 - Desired Emotional or Aesthetic Outcome
@@ -107,6 +122,7 @@ Convert inspiration into bounded creative intent without constraining exploratio
 - Commit Criteria
 
 ### Explicit Exclusions
+
 - Executable code
 - Formal documentation
 - Production pipelines
@@ -116,12 +132,15 @@ Convert inspiration into bounded creative intent without constraining exploratio
 ## Domain: Write
 
 ### Formalize Artifact
+
 **Writing Brief**
 
 ### Role
+
 Prevent meandering by fixing thesis, audience, and scope before drafting.
 
 ### Required Sections
+
 - Thesis / Core Argument
 - Intended Audience
 - Tone & Voice
@@ -133,6 +152,7 @@ Prevent meandering by fixing thesis, audience, and scope before drafting.
 - Commit Criteria
 
 ### Explicit Exclusions
+
 - Line editing
 - Polishing
 - Final formatting
@@ -142,12 +162,15 @@ Prevent meandering by fixing thesis, audience, and scope before drafting.
 ## Domain: Learn
 
 ### Formalize Artifact
+
 **Learning Plan**
 
 ### Role
+
 Turn curiosity into directed learning with clear payoff.
 
 ### Required Sections
+
 - Learning Objective
 - Motivation / Application
 - Scope (what will be learned)
@@ -158,40 +181,17 @@ Turn curiosity into directed learning with clear payoff.
 - Commit Criteria
 
 ### Explicit Exclusions
+
 - Open-ended wandering
 - Resource hoarding without intent
 
 ---
 
-## Domain: Project Planning
-
-### Formalize Artifact
-**Project Charter**
-
-### Role
-Align intent, stakeholders, and sequencing before execution begins.
-
-### Required Sections
-- Project Objective
-- Stakeholders
-- Success Metrics
-- Scope / Non-Scope
-- Constraints
-- Risks
-- Milestones / Increments
-- Commit Criteria
-
-### Explicit Exclusions
-- Task-level planning
-- Tool-specific workflows
-
----
-
 ## Notes
+
 - Formalize artifacts are versioned.
 - Domain and Environment overlays may modify constraints without redefining intent.
 - Privacy classification may be upgraded mid-lifecycle and must trigger stricter rules.
 - Commit is a deliberate act, not a feeling.
 
 ---
-
