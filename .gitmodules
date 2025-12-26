@@ -1,3 +1,6 @@
 [submodule "examples/create/xmas-cards-2025"]
 	path = examples/create/xmas-cards-2025
 	url = https://github.com/jayers99/xmas-cards-2025.git
+[submodule "examples/code/render-run"]
+	path = examples/code/render-run
+	url = https://github.com/jayers99/render-run.git
