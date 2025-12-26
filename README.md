@@ -1,126 +1,157 @@
 # Praxis-AI
 
-A policy-driven AI workflow system that governs how ideas evolve into maintained, durable outcomes.
+Praxis is an AI-assisted workflow system for producing reusable outcomes.
 
-## Quick Start
-
-From any project directory, start an agentic AI session (Claude Code, Copilot, etc.) and prompt:
-
-```text
-Start a new Praxis project for building a Python CLI tool.
-```
-
-The AI will:
-
-1. **Initialize** — Create `praxis.yaml` with domain, privacy, and stage
-2. **Capture** — Ask what you're trying to build and why
-3. **Guide** — Walk you through each lifecycle stage
-4. **Validate** — Ensure you don't skip required artifacts (like an SOD before execution)
-
-### Example Session
-
-```text
-You: Start a new Praxis project for building a Python CLI tool.
-
-AI: I'll initialize a Praxis project for you.
-
-    Created praxis.yaml:
-      domain: code
-      stage: capture
-      privacy_level: personal
-
-    We're now in the Capture stage. What problem does this CLI solve?
-    Who will use it? What prior art or references should I know about?
-
-You: It's a CLI for validating markdown files against a style guide...
-
-AI: Got it. I've captured:
-    - Problem: Markdown files drift from style conventions
-    - Users: Technical writers, docs teams
-    - References: markdownlint, vale
-
-    Ready to move to Sense? I'll organize these inputs and identify patterns.
-```
-
-### What Praxis Prevents
-
-- Starting to code before you've defined intent (Execute without Formalize)
-- Accidentally exposing sensitive material (Privacy enforcement)
-- Forgetting why you built something (Capture → Close lifecycle)
-- AI acting without constraints (Policy-driven behavior)
-
-## The Problem
-
-AI-assisted work is structurally fragile. Current tools optimize for speed without providing coherent governance across the full lifecycle—from raw idea capture through sustained maintenance. This leads to:
-
-- Premature execution without clear intent
-- Privacy violations from unsafe AI defaults
-- Work that can't be maintained or handed off
-- No systematic way to know when to stop
-
-## The solution
-
-Praxis provides **deterministic behavior resolution** based on four dimensions:
+It helps you move from raw inputs to durable outcomes by making intent explicit across a lifecycle (Capture → Close), with behavior shaped by:
 
 ```text
 Domain + Stage + Privacy + Environment → Behavior
 ```
 
-A single `praxis.yaml` file declares your project's configuration. The policy engine validates that your work respects lifecycle constraints, privacy requirements, and domain-specific formalization rules.
+This repo contains the core design docs plus worked examples.
 
-## Core Concepts
+## Philosophy
 
-### Lifecycle Stages
+### Principles Guide — Contracts Bind — Formalize Arbitrates
 
-Every piece of work moves through nine stages:
+No single artifact has universal authority.
 
-1. **Capture** — Raw input collection
-2. **Sense** — Light organization and tagging
-3. **Explore** — Divergent ideation
-4. **Shape** — Convergence and refinement
-5. **Formalize** — Durable intent via artifacts
-6. **Commit** — Explicit decision to proceed
-7. **Execute** — Implementation (governed by formalization)
-8. **Sustain** — Ongoing maintenance
-9. **Close** — Archival and learning capture
+- **Principles** are timeless and advisory; they bias decisions but are never enforced mechanically.
+- **Formalization contracts** are context-specific and binding; they enable execution by freezing selected decisions.
+- **Execution** is irreversible or costly to reverse; it must operate within the active contract.
 
-**Key rule:** Formalize is a hard boundary. No execution without formalization artifacts.
+Tension between principles and execution is intentional and necessary. Formalize is the explicit decision hinge where tradeoffs are made visible.
+
+### The Three-Layer Model
+
+Praxis separates what you believe from how you decide from how you execute.
+
+```text
+Opinions  →  Governance  →  Execution
+```
+
+- **Opinions:** Timeless viewpoints that bias decisions. Advisory, never enforced.
+- **Governance:** The mechanism by which conflicts are resolved. Procedural authority.
+- **Execution:** The work itself. Governed by formalization contracts.
+
+This separation prevents principles from becoming dogma, governance from collapsing into bureaucracy, and execution from drifting without intent.
+
+### Formalize is the Structural Hinge
+
+Formalize converts intent into a bounded, executable plan with explicit constraints, so work can proceed without inventing requirements.
+
+At Formalize, the question is:
+
+> "Given our principles, what constraints must we now accept to make progress?"
+
+Formalize exists to reduce ambiguity, freeze selected decisions, and enable safe execution. It is not bureaucracy; it is intentional commitment.
+
+### Privacy is a Real Constraint
+
+Privacy defines how information may be stored, shared, processed, and externalized. It is not a domain or stage—it is an overlay that constrains artifacts, tooling, collaboration, and AI usage.
+
+- Declared at project inception
+- Enforceable through deterministic rules
+- Reclassifiable mid-project with explicit migration steps
+
+Higher privacy requires greater abstraction and tighter controls.
+
+### Sustain is Active Governance
+
+Sustain is not a holding pattern—it's active governance of living work.
+
+The question in Sustain: Does this change alter the contract I formalized, or does it extend/refine the implementation of that contract?
+
+- **Contract change** → New iteration
+- **Implementation extension** → Sustain
+
+## What Praxis Optimizes For
+
+AI-assisted creation is fast, but it’s easy to lose what actually worked.
+
+Praxis treats your work as a lightweight “memory engine”:
+
+- Capture what you tried (prompts, constraints, artifacts, decisions)
+- Keep what reliably produces the outcome you want
+- Cut what doesn’t
+- Make the workflow reusable across future projects in the same domain
+
+## Start Here
+
+If you want to understand the framework:
+
+- [docs/sod.md](docs/sod.md) — main specification
+- [docs/lifecycle.md](docs/lifecycle.md) — stage definitions + regressions
+- [docs/domains.md](docs/domains.md) — domain → artifact types
+- [docs/privacy.md](docs/privacy.md) — privacy levels + enforcement intent
+
+If you want to see Praxis applied in real projects:
+
+- [examples/code/template-python-cli](examples/code/template-python-cli/) — a full “Code” domain worked example (in Sustain)
+
+## How Praxis Works (Short Version)
+
+### Lifecycle
+
+All work progresses through nine stages:
+
+1. Capture
+2. Sense
+3. Explore
+4. Shape
+5. Formalize
+6. Commit
+7. Execute
+8. Sustain
+9. Close
+
+Formalize is the structural hinge: you don’t “execute” without durable intent.
 
 ### Domains
 
-| Domain  | Purpose            | Formalize Artifact         |
-| ------- | ------------------ | -------------------------- |
-| Code    | Functional systems | Solution Overview Document |
-| Create  | Aesthetic output   | Creative Brief             |
-| Write   | Structured thought | Writing Brief              |
-| Observe | Raw capture        | (none required)            |
-| Learn   | Skill formation    | Learning Plan              |
+Domains tell Praxis what kinds of artifacts are valid and what “done” looks like.
 
-### Privacy Levels
+| Domain  | Intent                       | Typical formalize artifact       |
+| ------- | ---------------------------- | -------------------------------- |
+| Code    | Functional systems and tools | SOD (Solution Overview Document) |
+| Create  | Aesthetic output             | Creative brief / prompt set      |
+| Write   | Structured thought           | Writing brief                    |
+| Observe | Raw capture                  | (none required)                  |
+| Learn   | Skill formation              | Learning plan                    |
 
-From least to most restrictive:
+### Privacy
 
-1. **Public** — Open to all
-2. **Public–Trusted** — Open with known collaborators
-3. **Personal** — Private, single user or trusted collaborators
-4. **Confidential** — Sensitive, controlled access
-5. **Restricted** — Highly sensitive, air-gapped AI only
+Privacy is declared in `praxis.yaml` and should be treated as a real constraint (not a note).
 
-Privacy is declared at Explore, enforced at Shape/Formalize, and honored at Execute.
+## Quick Start (Using an Agent)
+
+From a project directory, start an agentic session (Copilot, Claude Code, etc.) and prompt:
+
+```text
+Start a new Praxis project for building a Python CLI tool.
+```
+
+Expected flow:
+
+- The agent initializes `praxis.yaml` (domain, stage, privacy, environment)
+- You capture raw inputs
+- The agent guides you through stages
+- Formalize produces the durable artifact(s) required before Execute
+
+## Repo Layout
+
+```text
+docs/                 Specifications (SOD, lifecycle, privacy, etc.)
+docs/adr/             Architecture Decision Records
+docs/opinions/        Domain-specific quality guidance (advisory)
+examples/             Worked examples
+  code/template-python-cli/     Code-domain example project
+```
 
 ## Status
 
-**Current:** First worked example complete. The [template-python-cli](examples/code/template-python-cli/) demonstrates the full Praxis lifecycle from Capture through Sustain.
-
-**Next:** Implement `praxis validate` CLI tool to operationalize the governance model.
-
-## Documentation
-
-- [Solution Overview Document](docs/sod.md) — Complete specification
-- [Lifecycle Model](docs/lifecycle.md) — Stage definitions and regression rules
-- [Privacy Model](docs/privacy.md) — Privacy levels and enforcement
-- [Domain Definitions](docs/domains.md) — Domain → artifact mappings
-- [ADR-001](docs/adr/001-policy-engine.md) — Policy engine selection (exploratory)
+- Worked examples exist for the Code domain.
+- The docs are the current source of truth; the system is being proven out through examples.
 
 ## License
 
