@@ -168,21 +168,22 @@ Prevent meandering by fixing thesis, audience, and scope before drafting.
 
 ### Formalize Artifact
 
-**Learning Plan**
+**Competency Target**
 
 ### Role
 
-Turn curiosity into directed learning with clear payoff.
+Turn curiosity into directed learning with verifiable evidence of success.
 
 ### Required Sections
 
-- Learning Objective
-- Motivation / Application
+- Competency Statement (what skill/knowledge will be gained)
+- Motivation / Application (why this matters, where it will be used)
 - Scope (what will be learned)
 - Out of Scope
+- Evidence of Competency (what external thing proves success)
+- Verification Method (test, demonstration, certification, peer validation)
 - Resources
 - Constraints (time, depth)
-- Evidence of Learning (what proves success)
 - Commit Criteria
 
 ### Explicit Exclusions

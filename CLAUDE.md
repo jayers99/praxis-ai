@@ -31,7 +31,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 - **Create** — Aesthetic output (formalize via Creative Brief)
 - **Write** — Structured thought (formalize via Writing Brief)
 - **Observe** — Raw capture (default: Personal privacy)
-- **Learn** — Skill formation (formalize via Learning Plan)
+- **Learn** — Skill formation (formalize via Competency Target)
 
 ### Privacy Levels (least to most restrictive)
 

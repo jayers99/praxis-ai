@@ -4,6 +4,8 @@
 
 **Intent:** Functional systems and tools
 
+**Formalize artifact:** Solution Overview Document (SOD)
+
 ### Primary artifacts
 
 - Source code (Python, shell, config)
@@ -29,6 +31,8 @@
 ## 2. Create
 
 **Intent:** Aesthetic and expressive output (any medium)
+
+**Formalize artifact:** Creative Brief _(draft)_
 
 ### Primary artifacts
 
@@ -56,6 +60,8 @@
 
 **Intent:** Structured externalized thought
 
+**Formalize artifact:** Writing Brief _(draft)_
+
 ### Primary artifacts
 
 - Essays
@@ -82,6 +88,8 @@
 
 **Intent:** Capture without judgment or refinement (any sense)
 
+**Formalize artifact:** _(none required—Observe is pre-Formalize by nature)_
+
 ### Primary artifacts
 
 - Visual captures (photos, screenshots, sketches)
@@ -106,6 +114,8 @@
 ## 5. Learn
 
 **Intent:** Internal model and skill formation
+
+**Formalize artifact:** Competency Target _(draft)_
 
 ### Primary artifacts
 
