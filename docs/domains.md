@@ -5,18 +5,21 @@
 **Intent:** Functional systems and tools
 
 ### Primary artifacts
+
 - Source code (Python, shell, config)
 - Executables / CLIs
 - Infrastructure definitions (IaC, manifests)
 - Tests (unit, integration, contract)
 
 ### Supporting artifacts
+
 - System Overview Documents (SOD)
 - Architecture diagrams
 - ADRs
 - API specs
 
 ### Explicit exclusions
+
 - Raw notes
 - Aesthetic drafts
 - Unstructured brainstorming
@@ -25,21 +28,24 @@
 
 ## 2. Create
 
-**Intent:** Aesthetic and expressive output
+**Intent:** Aesthetic and expressive output (any medium)
 
 ### Primary artifacts
-- Illustrations
-- Visual compositions
-- Generated images
-- Design studies
+
+- Compositions (visual, audio, spatial, textural)
+- Performances (recorded or live)
+- Generated works (images, audio, video)
+- Design studies and explorations
 
 ### Supporting artifacts
+
 - Style guides
 - Prompt sets
-- Reference boards
+- Reference collections
 - Iteration snapshots
 
 ### Explicit exclusions
+
 - Executable code
 - Formal documentation
 - Planning artifacts
@@ -51,18 +57,21 @@
 **Intent:** Structured externalized thought
 
 ### Primary artifacts
+
 - Essays
 - Technical documents
 - Philosophical writing
 - Narrative prose
 
 ### Supporting artifacts
+
 - Outlines
 - Drafts
 - Citations
 - Revision logs
 
 ### Explicit exclusions
+
 - Raw dumps
 - Image collections
 - Executable artifacts
@@ -71,20 +80,23 @@
 
 ## 4. Observe
 
-**Intent:** Capture without judgment or refinement
+**Intent:** Capture without judgment or refinement (any sense)
 
 ### Primary artifacts
-- Photographs
-- Screenshots
-- Web captures
+
+- Visual captures (photos, screenshots, sketches)
+- Audio captures (recordings, samples, voice memos)
+- Sensory notes (textures, tastes, smells described)
 - Raw notes / brain dumps
 
 ### Supporting artifacts
+
 - Tags
 - Timestamps
 - Minimal metadata
 
 ### Explicit exclusions
+
 - Interpretation
 - Synthesis
 - Polished output
@@ -96,17 +108,20 @@
 **Intent:** Internal model and skill formation
 
 ### Primary artifacts
+
 - Study notes
 - Practice exercises
 - Concept maps
 - Skill logs
 
 ### Supporting artifacts
+
 - Reading lists
 - Flashcards
 - Summaries
 
 ### Explicit exclusions
+
 - Final production work
 - Polished essays
 - Release-grade artifacts
@@ -116,7 +131,7 @@
 ## Cross-Domain Artifact Rules
 
 - Artifacts belong to exactly one domain at creation
-- Promotion across domains requires stage transition  
+- Promotion across domains requires stage transition
   - Example: Observe → Write
 - Domain determines:
   - Storage location
@@ -129,6 +144,7 @@
 ## Why this matters (Praxis-specific)
 
 This enables:
+
 - Domain-aware AI prompts
 - Schema validation
 - Safer reuse
