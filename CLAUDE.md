@@ -18,11 +18,15 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 ## Key Concepts
 
 ### Lifecycle Stages (in order)
+
 1. Capture → 2. Sense → 3. Explore → 4. Shape → 5. Formalize → 6. Commit → 7. Execute → 8. Sustain → 9. Close
 
 **Critical Rule:** Formalize is a hard boundary. No execution without formalization artifacts.
 
+**Iteration Mode:** Formalize is where iteration changes meaning. Before: _discovery_ (what is this?). After: _refinement_ (how good can it be?). Detecting scope change during Execute means regression to Formalize.
+
 ### Domains
+
 - **Code** — Functional systems (formalize via SOD)
 - **Create** — Aesthetic output (formalize via Creative Brief)
 - **Write** — Structured thought (formalize via Writing Brief)
@@ -30,6 +34,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 - **Learn** — Skill formation (formalize via Learning Plan)
 
 ### Privacy Levels (least to most restrictive)
+
 1. Public
 2. Public–Trusted Collaborators
 3. Personal
@@ -53,24 +58,29 @@ examples/       # Worked examples
 ## Development Rules
 
 ### When Implementing
+
 - All work must respect the lifecycle model
 - Policy validation is deterministic: Domain + Stage + Privacy + Environment → Behavior
 - No skipping required artifacts (e.g., SOD required before Execute in Code domain)
 - Privacy declared at Explore, enforced at Shape/Formalize, honored at Execute
 
 ### Completed: Worked Example (Issue #4)
+
 The [template-python-cli](examples/code/template-python-cli/) demonstrates the full Praxis lifecycle and is currently in Sustain stage.
 
 ### Next: `praxis validate` CLI
+
 Deliverable: CLI validator for praxis.yaml files
 
 Acceptance tests:
+
 1. Valid praxis.yaml passes (domain: code, stage: execute, privacy: confidential)
 2. Missing SOD at Execute stage fails with explicit message
 3. Public project with .env file triggers warning
 4. Invalid stage transitions rejected
 
 ### praxis.yaml Schema
+
 ```yaml
 domain: code|create|write|observe|learn
 stage: capture|sense|explore|shape|formalize|commit|execute|sustain|close

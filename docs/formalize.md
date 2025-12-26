@@ -6,6 +6,11 @@ Formalize is the structural hinge between ideation and execution.
 Its role is to convert intent into a bounded, executable plan with explicit constraints,
 so work can proceed without inventing requirements.
 
+Formalize also marks the inflection point where **iteration changes meaning**:
+
+- Before: _Discovery iteration_—finding what the thing is
+- After: _Refinement iteration_—making it as good as it can be
+
 Formalize artifacts are **domain-specific**, but share a common spine:
 
 - Intent

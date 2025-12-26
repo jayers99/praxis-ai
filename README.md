@@ -46,6 +46,13 @@ At Formalize, the question is:
 
 Formalize exists to reduce ambiguity, freeze selected decisions, and enable safe execution. It is not bureaucracy; it is intentional commitment.
 
+**Formalize also marks where the nature of iteration changes:**
+
+- **Before Formalize (Discovery):** Iteration reshapes _what_ you're building. Cheap to change. Safe to abandon.
+- **After Formalize (Refinement):** Iteration improves _how well_ you're building it. Scope is locked. Changes are costly.
+
+Recognizing which mode you're in prevents wasted effort (polishing undefined things) and expensive rework (discovering scope mid-execution).
+
 ### Privacy is a Real Constraint
 
 Privacy defines how information may be stored, shared, processed, and externalized. It is not a domain or stage—it is an overlay that constrains artifacts, tooling, collaboration, and AI usage.

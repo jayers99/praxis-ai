@@ -54,11 +54,50 @@ End work intentionally and capture leverage. Includes archiving artifacts, captu
 
 The lifecycle is reinforced by three non-optional structural guarantees:
 
-- **Formalize** — thinking becomes durable intent  
-- **Commit** — intent becomes action  
-- **Close** — action becomes leverage  
+- **Formalize** — thinking becomes durable intent
+- **Commit** — intent becomes action
+- **Close** — action becomes leverage
 
 Together, they ensure AI-assisted work remains repeatable, governed, and cumulative without sacrificing creative flow.
+
+---
+
+## Two Modes of Iteration
+
+Formalize is the inflection point where the _nature_ of iteration changes.
+
+### Discovery Iteration (Pre-Formalize)
+
+Stages: Capture → Sense → Explore → Shape
+
+- **Purpose:** Find out what the thing _is_
+- **Character:** Divergent, then convergent; cheap to abandon
+- **Question:** "What are we making?"
+- **Cost of change:** Low—nothing is committed
+- **Failure mode:** Safe abandonment; discard and restart
+
+Iteration here reshapes the work itself. Each loop through Explore ↔ Shape refines _what_ you're building, not _how well_ you're building it.
+
+### Refinement Iteration (Post-Formalize)
+
+Stages: Execute → Sustain
+
+- **Purpose:** Make the thing as _good_ as it can be
+- **Character:** Incremental improvement within fixed scope
+- **Question:** "How good can this get?"
+- **Cost of change:** Higher—scope is locked, effort invested
+- **Failure mode:** Regression to Formalize (expensive reset)
+
+Iteration here polishes quality without changing identity. The thing is defined; you're perfecting its execution.
+
+### Why This Matters
+
+Recognizing which mode you're in prevents two common failures:
+
+1. **Premature refinement** — Polishing something whose identity isn't settled (wasted effort)
+2. **Scope creep in execution** — Discovering what the thing _is_ while trying to build it (expensive rework)
+
+Formalize is the explicit moment where you declare: "The thing is now defined. Further iteration is refinement, not discovery."
 
 ---
 
@@ -66,17 +105,17 @@ Together, they ensure AI-assisted work remains repeatable, governed, and cumulat
 
 This table defines the only permitted backward transitions between lifecycle stages. Any regression outside this table is invalid and must fail validation.
 
-| Current Stage | Allowed Regression To | Purpose / Rationale | Required Action |
-| --- | --- | --- | --- |
-| Capture | — | Entry stage | — |
-| Sense | Capture | Missing or incorrect raw inputs | Amend captured material |
-| Explore | Sense, Capture | Weak understanding or insufficient inputs | Update sense artifacts |
-| Shape | Explore, Sense | Direction is unclear or premature | Re-open exploration |
-| Formalize | Shape, Explore | Intent or scope is unstable | Update SOD before proceeding |
-| Commit | Formalize | Scope, constraints, or priorities changed | Revise and re-validate SOD |
-| Execute | Commit, Formalize | Implementation reveals intent gaps | Pause execution; re-commit |
-| Sustain | Execute, Commit | Defects, enhancements, or drift | Re-enter governed execution |
-| Close | Capture | Seed new work from outcomes | Start a new lifecycle |
+| Current Stage | Allowed Regression To | Purpose / Rationale                       | Required Action              |
+| ------------- | --------------------- | ----------------------------------------- | ---------------------------- |
+| Capture       | —                     | Entry stage                               | —                            |
+| Sense         | Capture               | Missing or incorrect raw inputs           | Amend captured material      |
+| Explore       | Sense, Capture        | Weak understanding or insufficient inputs | Update sense artifacts       |
+| Shape         | Explore, Sense        | Direction is unclear or premature         | Re-open exploration          |
+| Formalize     | Shape, Explore        | Intent or scope is unstable               | Update SOD before proceeding |
+| Commit        | Formalize             | Scope, constraints, or priorities changed | Revise and re-validate SOD   |
+| Execute       | Commit, Formalize     | Implementation reveals intent gaps        | Pause execution; re-commit   |
+| Sustain       | Execute, Commit       | Defects, enhancements, or drift           | Re-enter governed execution  |
+| Close         | Capture               | Seed new work from outcomes               | Start a new lifecycle        |
 
 ### Structural Rules
 
@@ -91,17 +130,17 @@ This table defines the only permitted backward transitions between lifecycle sta
 
 A regression occurs when the current stage cannot be completed due to gaps in prior stages. Triggers are detected manually (author recognizes friction) or via policy validation failure.
 
-| Current Stage | Trigger Condition | Target Stage | Required Response |
-| --- | --- | --- | --- |
-| Sense | Raw inputs are missing, incomplete, or incorrect | Capture | Amend captured material before resuming |
-| Explore | Understanding is insufficient to generate options | Sense | Strengthen sense artifacts |
-| Shape | No viable direction emerges; exploration was premature | Explore | Re-open divergent exploration |
-| Formalize | Intent or scope remains unstable after shaping | Shape | Continue convergence before formalizing |
-| Commit | Constraints, priorities, or scope changed since formalization | Formalize | Revise and re-validate SOD |
-| Execute | Implementation reveals ambiguous or contradictory intent | Formalize | Pause execution; clarify and re-commit |
-| Execute | Scope creep detected during implementation | Commit | Re-evaluate commitment decision |
-| Sustain | Defect root cause is a design flaw, not implementation bug | Formalize | Fix design before patching symptoms |
-| Sustain | Enhancement requires scope expansion | Commit | Treat as new commitment decision |
+| Current Stage | Trigger Condition                                             | Target Stage | Required Response                       |
+| ------------- | ------------------------------------------------------------- | ------------ | --------------------------------------- |
+| Sense         | Raw inputs are missing, incomplete, or incorrect              | Capture      | Amend captured material before resuming |
+| Explore       | Understanding is insufficient to generate options             | Sense        | Strengthen sense artifacts              |
+| Shape         | No viable direction emerges; exploration was premature        | Explore      | Re-open divergent exploration           |
+| Formalize     | Intent or scope remains unstable after shaping                | Shape        | Continue convergence before formalizing |
+| Commit        | Constraints, priorities, or scope changed since formalization | Formalize    | Revise and re-validate SOD              |
+| Execute       | Implementation reveals ambiguous or contradictory intent      | Formalize    | Pause execution; clarify and re-commit  |
+| Execute       | Scope creep detected during implementation                    | Commit       | Re-evaluate commitment decision         |
+| Sustain       | Defect root cause is a design flaw, not implementation bug    | Formalize    | Fix design before patching symptoms     |
+| Sustain       | Enhancement requires scope expansion                          | Commit       | Treat as new commitment decision        |
 
 ### Detection Methods
 
@@ -137,24 +176,24 @@ This ensures progress is preserved, enables seamless handoff between sessions, a
 
 ```text
  ┌─────────┐
- │ Capture │◄───────────────┐
- └────┬────┘                │
-      │                     │
- ┌────▼────┐                │
- │  Sense  │◄──────────┐    │
- └────┬────┘           │    │
-      │                │    │
- ┌────▼────┐           │    │
- │ Explore │◄──────┐   │    │
- └────┬────┘       │   │    │
-      │            │   │    │
- ┌────▼────┐       │   │    │
- │  Shape  │◄──────┘   │    │
- └────┬────┘           │    │
-      │                │    │
- ┌────▼───────────────┐│    │
- │     Formalize      │◄┘    │
- │ (SOD / Contract)   │◄─────┘
+ │ Capture │◄────────────────────┐
+ └────┬────┘                     │
+      │                          │
+ ┌────▼────┐                     │
+ │  Sense  │◄───────────────┐    │
+ └────┬────┘                │    │
+      │                     │    │
+ ┌────▼────┐                │    │
+ │ Explore │◄──────┐        │    │
+ └────┬────┘       │        │    │
+      │            │        │    │
+ ┌────▼────┐       │        │    │
+ │  Shape  │◄──────┘        │    │
+ └────┬────┘                │    │
+      │                     │    │
+ ┌────▼───────────────┐     │    │
+ │     Formalize      │◄────┘    │
+ │ (SOD / Contract)   │◄─────────┘
  └────┬───────────────┘
       │
  ┌────▼────┐
