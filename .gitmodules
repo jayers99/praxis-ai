@@ -7,3 +7,6 @@
 [submodule "projects/code/template-python-cli"]
 	path = projects/code/template-python-cli
 	url = https://github.com/jayers99/template-python-cli.git
+[submodule "projects/create/bowerbird"]
+	path = projects/create/bowerbird
+	url = https://github.com/jayers99/bowerbird.git
