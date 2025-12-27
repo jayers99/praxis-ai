@@ -1,5 +1,8 @@
 # Praxis AI - Claude Code Instructions
 
+> **Note:** This is currently a **static, manual** file. In the future, this will be generated dynamically from `docs/ai-guards/models/`.
+
+
 ## Project Overview
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
@@ -9,7 +12,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 ## Tech Stack
 
 - **Language:** Python
-- **Policy Engine:** CUE (leading candidate, per ADR-001) or Pydantic fallback
+- **Policy Engine:** Pydantic (active implementation), CUE (exploratory/deferred per #3)
 - **Testing:** pytest
 - **Package Manager:** Poetry
 - **Linting:** ruff
