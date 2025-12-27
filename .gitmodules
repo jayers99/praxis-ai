@@ -4,3 +4,6 @@
 [submodule "projects/code/render-run"]
 	path = projects/code/render-run
 	url = https://github.com/jayers99/render-run.git
+[submodule "projects/code/template-python-cli"]
+	path = projects/code/template-python-cli
+	url = https://github.com/jayers99/template-python-cli.git
