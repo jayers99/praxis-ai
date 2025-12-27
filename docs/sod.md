@@ -160,6 +160,7 @@ The SOD:
 - Risks & Mitigations
 - Open Questions / Spikes
 - Glossary / Definitions
+- Gherkin Specification / Acceptance Criteria
 - Commit Readiness Checklist
 
 ### 5.2 Explicit Exclusions

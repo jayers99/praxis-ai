@@ -42,9 +42,9 @@ You must fill out the front-matter or top-level metadata for every feature reque
     *   `Feature`: Delivers end-user value.
     *   `Spike`: Buys information/decisions (output is knowledge, NOT code).
 *   **Maturity**:
-    *   `Raw`: Early idea. Needs shaping. (Corresponds to Praxis 'Capture')
-    *   `Shaped`: Problem is clear, solution is rough. (Corresponds to Praxis 'Shape')
-    *   `Formalized`: Ready to build. (Corresponds to Praxis 'Formalize')
+    *   `Raw`: Early idea. Needs shaping. (Corresponds to Praxis `Capture`, `Sense`)
+    *   `Shaped`: Problem is clear, solution is rough. (Corresponds to Praxis `Explore`, `Shape`)
+    *   `Formalized`: Ready to build. (Corresponds to Praxis `Formalize` $\to$ `Commit`)
 
 ### 2.2 The Standard Format (Mini-SOD)
 
@@ -74,6 +74,17 @@ Feature: [Feature Name]
 
 #### 5. Risks & Constraints
 *Security, Privacy, or Performance considerations.*
+
+### 2.3 Lifecycle Mapping Reference
+
+For users familiar with the full Praxis lifecycle, here is how the simplified status maps:
+
+| Mini-Praxis Label | Canonical Stages |
+| :--- | :--- |
+| **Maturity: Raw** | Capture $\to$ Sense |
+| **Maturity: Shaped** | Explore $\to$ Shape |
+| **Maturity: Formalized** | Formalize $\to$ Commit |
+| **(Execution)** | Execute $\to$ Sustain $\to$ Close |
 
 ---
 
