@@ -22,7 +22,7 @@ Behavior is resolved deterministically by:
 Domain + Stage + Privacy + Environment → Behavior
 ```
 
-This repo contains the core design docs plus worked examples.
+This repo contains the core design docs plus worked projects.
 
 ## Philosophy
 
@@ -110,7 +110,7 @@ If you want to understand the framework:
 
 If you want to see Praxis applied in real projects:
 
-- [examples/code/template-python-cli](examples/code/template-python-cli/) — a full “Code” domain worked example (in Sustain)
+- [projects/code/template-python-cli](projects/code/template-python-cli/) — a full “Code” domain worked project (in Sustain)
 
 ## How Praxis Works (Short Version)
 
@@ -167,14 +167,14 @@ Expected flow:
 docs/                 Specifications (SOD, lifecycle, privacy, etc.)
 docs/adr/             Architecture Decision Records
 docs/opinions/        Domain-specific quality guidance (advisory)
-examples/             Worked examples
-  code/template-python-cli/     Code-domain example project
+projects/             Worked projects
+  code/template-python-cli/     Code-domain project
 ```
 
 ## Status
 
-- Worked examples exist for the Code domain.
-- The docs are the current source of truth; the system is being proven out through examples.
+- Worked projects exist for the Code domain.
+- The docs are the current source of truth; the system is being proven out through projects.
 
 ## License
 

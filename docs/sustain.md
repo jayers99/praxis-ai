@@ -9,6 +9,7 @@
 ## Overview
 
 Sustain is the stage where delivered work is maintained, evaluated, and optimized over time. It includes:
+
 - Bug fixes
 - Enhancements
 - Performance improvements
@@ -40,17 +41,17 @@ Ask: **"Does this change alter the contract I formalized, or does it extend/refi
 
 Changes to certain SOD sections signal a contract change requiring iteration. Changes to others fit within Sustain.
 
-| Section | Change Type | Rationale |
-|---------|-------------|-----------|
-| **Problem Statement** | Iteration | The problem you're solving has changed or expanded significantly |
-| **Desired Outcomes** | Iteration | Fundamental goals have shifted (not just added goals, but changed direction) |
-| **Canonical Dimensions** | Iteration | Adding/removing/redefining domains, stages, privacy levels, or environments |
-| **Deterministic Resolution Model** | Iteration | The composition order or logic changes |
-| **Abandonment Criteria** | Iteration | The success/failure definition has changed |
-| Risks & Mitigations | Sustain | New risks discovered during execution |
-| First Executable Increment | Sustain | New increments added |
-| Policy Enforcement details | Sustain | Implementation refinements |
-| Privacy/Lifecycle Interaction details | Sustain | Clarifications, not redefinitions |
+| Section                               | Change Type | Rationale                                                                    |
+| ------------------------------------- | ----------- | ---------------------------------------------------------------------------- |
+| **Problem Statement**                 | Iteration   | The problem you're solving has changed or expanded significantly             |
+| **Desired Outcomes**                  | Iteration   | Fundamental goals have shifted (not just added goals, but changed direction) |
+| **Canonical Dimensions**              | Iteration   | Adding/removing/redefining domains, stages, privacy levels, or environments  |
+| **Deterministic Resolution Model**    | Iteration   | The composition order or logic changes                                       |
+| **Abandonment Criteria**              | Iteration   | The success/failure definition has changed                                   |
+| Risks & Mitigations                   | Sustain     | New risks discovered during execution                                        |
+| First Executable Increment            | Sustain     | New increments added                                                         |
+| Policy Enforcement details            | Sustain     | Implementation refinements                                                   |
+| Privacy/Lifecycle Interaction details | Sustain     | Clarifications, not redefinitions                                            |
 
 ### The Heuristic
 
@@ -73,13 +74,14 @@ The iteration trigger is about **contract changes, not scope size**. A massive f
 
 ---
 
-## Worked Example: CLI Ideals vs. template-python-cli
+## Worked Project: CLI Ideals vs. template-python-cli
 
 To validate this framework, we tested applying a comprehensive set of CLI quality ideals to an existing project.
 
 ### The CLI Ideals
 
 Aspirational qualities for CLI tools:
+
 - Unix philosophy / GNU conventions
 - HashiCorp/Docker/AWS UX patterns
 - Explicit commands over implicit behavior
@@ -92,44 +94,47 @@ Aspirational qualities for CLI tools:
 ### The Current SOD Contract
 
 The template-python-cli SOD defines:
+
 - **Problem:** "Developers need a consistent, well-structured starting point for Python CLI projects"
 - **Solution:** Reusable template with hexagonal architecture, Poetry, Typer, pytest-bdd
-- **Scope:** Template structure, testing patterns, governance files, working example
+- **Scope:** Template structure, testing patterns, governance files, working project
 
 ### Analysis
 
-| CLI Ideal | Classification | Rationale |
-|-----------|----------------|-----------|
-| Unix philosophy / GNU conventions | Sustain | Implementation guidance within existing scope |
-| HashiCorp/Docker/AWS UX patterns | Sustain | Style conventions, not scope change |
-| Explicit commands over implicit | Sustain | Already implied by architecture choices |
-| Composability, predictability | Sustain | Quality bar, not contract change |
-| Backwards compatibility | Sustain | Adding semver documentation fits existing scope |
-| Shell pipeline safety | Sustain | stdout/stderr separation is implementation detail |
-| Meaningful exit codes | Sustain | Convention layer, easily added |
-| 10+ year maintenance assumption | Sustain | Aspiration, not a scope change to the template itself |
+| CLI Ideal                         | Classification | Rationale                                             |
+| --------------------------------- | -------------- | ----------------------------------------------------- |
+| Unix philosophy / GNU conventions | Sustain        | Implementation guidance within existing scope         |
+| HashiCorp/Docker/AWS UX patterns  | Sustain        | Style conventions, not scope change                   |
+| Explicit commands over implicit   | Sustain        | Already implied by architecture choices               |
+| Composability, predictability     | Sustain        | Quality bar, not contract change                      |
+| Backwards compatibility           | Sustain        | Adding semver documentation fits existing scope       |
+| Shell pipeline safety             | Sustain        | stdout/stderr separation is implementation detail     |
+| Meaningful exit codes             | Sustain        | Convention layer, easily added                        |
+| 10+ year maintenance assumption   | Sustain        | Aspiration, not a scope change to the template itself |
 
 ### Result
 
 **None of the CLI ideals trigger iteration.**
 
-The ideals represent a *quality overlay*—they refine *how* the CLI should behave without changing *what* the template is trying to solve. The SOD's Problem Statement and Proposed Solution remain unchanged.
+The ideals represent a _quality overlay_—they refine _how_ the CLI should behave without changing _what_ the template is trying to solve. The SOD's Problem Statement and Proposed Solution remain unchanged.
 
 ### When Would This Become Iteration?
 
 If the 10-year maintenance posture required fundamental additions like:
+
 - Built-in deprecation warning infrastructure
 - Version migration tooling
 - API stability contract enforcement
 - Changelog automation as a core feature
 
-...then collectively these would shift the Problem Statement from "starting point template" to "production longevity framework"—which *would* warrant a new iteration.
+...then collectively these would shift the Problem Statement from "starting point template" to "production longevity framework"—which _would_ warrant a new iteration.
 
 ---
 
 ## Future: Iteration Model
 
 When a project requires a new iteration (contract change), Praxis will support:
+
 - Iteration numbering in `praxis.yaml`
 - Retrospective artifacts documenting what changed and why
 - Iteration-aware regression paths

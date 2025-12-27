@@ -26,6 +26,7 @@
 ## Work Strategy
 
 ### Understanding & Scope
+
 - Read before modifying; understand existing content first
 - Make minimal changes to accomplish the task
 - Work in small, reversible increments
@@ -33,12 +34,14 @@
 - Scope changes to the task at hand
 
 ### Planning & Decisions
+
 - Use Plan Mode for non-trivial implementations
 - Ask "Am I the right entity to decide this?" before making significant decisions
 - Punt to user: ambiguous intent, unexpected state, irreversible actions, scope changes
 - Pause before: data deletion, public API changes, git history rewrites
 
 ### Checkpointing & Context
+
 - Every ~3 actions: verify goal still understood and on track
 - Every ~10 actions: scroll back to original constraints
 - When coherence declines: reset and restate context
@@ -65,6 +68,7 @@
 ## Domain-Specific Rules
 
 If this project has a praxis.yaml, check its domain field and apply corresponding rules:
+
 - domain: code → @~/.claude/rules/code.md
 - domain: write → @~/.claude/rules/write.md
 - domain: create → @~/.claude/rules/create.md

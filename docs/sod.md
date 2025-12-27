@@ -209,7 +209,7 @@ This enables validation-first, order-independent governance of AI behavior.
 | Domain taxonomy is wrong                             | Medium     | High   | Treat domains as mutable; version them; plan for domain evolution               |
 | Policy engine choice is wrong                        | Low        | High   | Isolate policy engine behind abstraction; defer deep investment until validated |
 | Solo-author bias limits future scaling               | High       | Medium | Explicitly scope v1 as single-user; collaboration is future scope               |
-| Lifecycle stages don't fit real work patterns        | Medium     | High   | Validate with worked examples before heavy execution investment                 |
+| Lifecycle stages don't fit real work patterns        | Medium     | High   | Validate with worked projects before heavy execution investment                 |
 | Governance overhead exceeds value                    | Medium     | High   | Measure friction in early projects; establish abandonment criteria              |
 
 ---

@@ -32,18 +32,22 @@ This document is **design-level**, not an implementation guide.
 The AI guards system is built on the following decisions:
 
 1. **Reason once, translate late**
+
    - AI reasoning, principles, and workflows are invariant.
    - Tooling and compliance are applied as a final translation step.
 
 2. **Environment is a user-level concern**
+
    - Home vs work is an external constraint profile.
    - Projects do not redefine environments.
 
 3. **Domain is a project-level concern**
+
    - Projects define domain-specific guardrails and workflows.
    - Domains do not redefine user environments.
 
 4. **External constraints are non-negotiable**
+
    - They constrain governance and execution.
    - They are enforced through guardrails, not opinion.
 

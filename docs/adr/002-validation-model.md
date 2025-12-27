@@ -1,6 +1,6 @@
 # ADR-002: Validation Model
 
-**Status:** Draft — Pending validation via worked example
+**Status:** Draft — Pending validation via worked project
 **Date:** 2025-12-21
 **Deciders:** TBD
 **Relates to:** ADR-001 (Policy Engine Selection), Issue #4 (template-python-cli)
@@ -11,7 +11,7 @@
 
 Before selecting a policy engine (ADR-001), we must define what the engine validates. This ADR establishes the validation model that any policy engine must support.
 
-**Approach:** Rather than design in a vacuum, we're discovering the validation model by working through Issue #4 (template-python-cli). The positions below are initial hypotheses to be tested and refined during that worked example.
+**Approach:** Rather than design in a vacuum, we're discovering the validation model by working through Issue #4 (template-python-cli). The positions below are initial hypotheses to be tested and refined during that worked project.
 
 ---
 

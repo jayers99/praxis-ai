@@ -117,11 +117,11 @@ The Praxis SOD v0.3 is **fully ready to Commit**.
 
 ### Changes from v0.2 Assessment
 
-| Section | v0.2 | v0.3 |
-|---------|------|------|
-| 6. Risks & Unknowns | Weakest | Strong — explicit table + spikes |
-| 7. Execution Framing | Adequate | Strong — testable increment |
-| 9. Commit Decision | Acceptable | Strong — abandonment criteria explicit |
+| Section              | v0.2       | v0.3                                   |
+| -------------------- | ---------- | -------------------------------------- |
+| 6. Risks & Unknowns  | Weakest    | Strong — explicit table + spikes       |
+| 7. Execution Framing | Adequate   | Strong — testable increment            |
+| 9. Commit Decision   | Acceptable | Strong — abandonment criteria explicit |
 
 ### Resolved Follow-ups
 
@@ -137,4 +137,4 @@ The model has not yet governed actual work. Validation will occur through [Issue
 
 **Grade: A-**
 
-The path to A+ is completing the first worked example and confirming the lifecycle model fits real work patterns.
+The path to A+ is completing the first worked project and confirming the lifecycle model fits real work patterns.

@@ -9,7 +9,7 @@ Goal: capture a plausible end-to-end user journey where a Create-domain artifact
 ## 1) Starting Point: Create Project Generates Ideas
 
 - Source input document (example):
-  - `examples/create/xmas-cards-2025/praxis/docs/recipients/darin-card-ideas-opus-4.5.md`
+  - `projects/create/xmas-cards-2025/praxis/docs/recipients/darin-card-ideas-opus-4.5.md`
 - This document contains a list of Christmas card ideas for a recipient (Darin).
 
 Outcome: we have **human-readable ideas**, but not yet a machine-executable package.

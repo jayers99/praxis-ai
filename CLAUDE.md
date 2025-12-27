@@ -4,7 +4,7 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** First worked example complete ([template-python-cli](examples/code/template-python-cli/)). Ready to implement `praxis validate` CLI.
+**Current Phase:** First worked project complete ([template-python-cli](projects/code/template-python-cli/)). Ready to implement `praxis validate` CLI.
 
 ## Tech Stack
 
@@ -51,8 +51,8 @@ docs/           # Specifications and design docs
   domains.md    # Domain → artifact mappings
   formalize.md  # Formalize stage and artifact definitions
   adr/          # Architecture Decision Records
-examples/       # Worked examples
-  code/template-python-cli/  # Complete example in Sustain stage
+projects/       # Worked projects
+  code/template-python-cli/  # Complete project in Sustain stage
 ```
 
 ## Development Rules
@@ -64,9 +64,9 @@ examples/       # Worked examples
 - No skipping required artifacts (e.g., SOD required before Execute in Code domain)
 - Privacy declared at Explore, enforced at Shape/Formalize, honored at Execute
 
-### Completed: Worked Example (Issue #4)
+### Completed: Worked Project (Issue #4)
 
-The [template-python-cli](examples/code/template-python-cli/) demonstrates the full Praxis lifecycle and is currently in Sustain stage.
+The [template-python-cli](projects/code/template-python-cli/) demonstrates the full Praxis lifecycle and is currently in Sustain stage.
 
 ### Next: `praxis validate` CLI
 
@@ -122,4 +122,4 @@ Opinions are advisory, not gates. They inform decisions without blocking progres
 - [Formalize](docs/formalize.md) — Formalize stage and artifact definitions
 - [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision (exploratory)
 - [ADR-002](docs/adr/002-validation-model.md) — Validation model positions
-- [template-python-cli](examples/code/template-python-cli/) — Complete worked example
+- [template-python-cli](projects/code/template-python-cli/) — Complete worked project

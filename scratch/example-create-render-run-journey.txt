@@ -1,6 +1,6 @@
 Brain dump of a user journey that needs to be cleaned up to output a good story short of gherkin, but will be used to identify gaps in specificity so taking one step back before the render stage I have a sample document with the path below of ideas generated for a Christmas card for Darin with a document generated like this I will try and take a stab at a journey that on the other end would result in a brows bowl file system directory containing generated images by the service. See this file below it contains a list of Christmas card ideas.
 
-examples/create/xmas-cards-2025/praxis/docs/recipients/darin-card-ideas-opus-4.5.md
+projects/create/xmas-cards-2025/praxis/docs/recipients/darin-card-ideas-opus-4.5.md
 
 
 
