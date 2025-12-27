@@ -46,17 +46,6 @@ You must fill out the front-matter or top-level metadata for every feature reque
     *   `Shaped`: Problem is clear, solution is rough. (Corresponds to Praxis `Explore`, `Shape`)
     *   `Formalized`: Ready to build. (Corresponds to Praxis `Formalize` $\to$ `Commit`)
 
-### 2.3 Lifecycle Mapping Reference
-
-For users familiar with the full Praxis lifecycle, here is how the simplified status maps:
-
-| Mini-Praxis Label | Canonical Stages |
-| :--- | :--- |
-| **Maturity: Raw** | Capture $\to$ Sense |
-| **Maturity: Shaped** | Explore $\to$ Shape |
-| **Maturity: Formalized** | Formalize $\to$ Commit |
-| **(Execution)** | Execute $\to$ Sustain $\to$ Close |
-
 ### 2.2 The Standard Format (Mini-SOD)
 
 All Feature Requests must use this structure. If the maturity is `Formalized`, **Gherkin is mandatory**.
@@ -85,6 +74,17 @@ Feature: [Feature Name]
 
 #### 5. Risks & Constraints
 *Security, Privacy, or Performance considerations.*
+
+### 2.3 Lifecycle Mapping Reference
+
+For users familiar with the full Praxis lifecycle, here is how the simplified status maps:
+
+| Mini-Praxis Label | Canonical Stages |
+| :--- | :--- |
+| **Maturity: Raw** | Capture $\to$ Sense |
+| **Maturity: Shaped** | Explore $\to$ Shape |
+| **Maturity: Formalized** | Formalize $\to$ Commit |
+| **(Execution)** | Execute $\to$ Sustain $\to$ Close |
 
 ---
 
