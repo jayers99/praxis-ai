@@ -160,7 +160,8 @@ Render Run should:
 
 - accept the structured package
 - write a run folder with a manifest that is machine-readable
-- generate artifacts into a browsable directory layout
+- generate artifacts into a browseable directory layout
+- each image output should have a xmp side car with all the data from the idea.
 
 ```
 
