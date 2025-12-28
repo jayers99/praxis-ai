@@ -14,9 +14,14 @@ from praxis.application.stage_service import transition_stage
 from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
 from praxis.domain.domains import Domain
-from praxis.domain.models import AuditCheck, ToolCheckResult
+from praxis.domain.models import AuditCheck, CoverageCheckResult, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
-from praxis.infrastructure.tool_runner import run_mypy, run_pytest, run_ruff
+from praxis.infrastructure.tool_runner import (
+    run_coverage,
+    run_mypy,
+    run_pytest,
+    run_ruff,
+)
 
 app = typer.Typer(
     name="praxis",
@@ -220,7 +225,12 @@ def validate_cmd(
     check_all: bool = typer.Option(
         False,
         "--check-all",
-        help="Run all checks (tests, lint, types).",
+        help="Run all checks (tests, lint, types, coverage if configured).",
+    ),
+    check_coverage: bool = typer.Option(
+        False,
+        "--check-coverage",
+        help="Run coverage check (requires coverage_threshold in praxis.yaml).",
     ),
     json_output: bool = typer.Option(
         False,
@@ -264,8 +274,28 @@ def validate_cmd(
             tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
         ))
 
+    # Run coverage check if requested and threshold is configured
+    coverage_result: CoverageCheckResult | None = None
+    should_check_coverage = check_coverage or check_all
+    if should_check_coverage and result.config and result.config.coverage_threshold:
+        cr = run_coverage(project_root, result.config.coverage_threshold)
+        coverage_result = CoverageCheckResult(
+            success=cr.success,
+            coverage_percent=cr.coverage_percent,
+            threshold=cr.threshold,
+            error=cr.error,
+        )
+    elif check_coverage and (not result.config or not result.config.coverage_threshold):
+        coverage_result = CoverageCheckResult(
+            success=False,
+            coverage_percent=None,
+            threshold=0,
+            error="coverage_threshold not set in praxis.yaml",
+        )
+
     # Check if any tool checks failed
     tool_failures = [t for t in tool_results if not t.success]
+    has_coverage_failure = coverage_result is not None and not coverage_result.success
 
     # Determine overall success
     has_errors = len(result.errors) > 0
@@ -276,10 +306,14 @@ def validate_cmd(
         # Build combined JSON output
         output = result.model_dump()
         output["tool_checks"] = [t.model_dump() for t in tool_results]
+        if coverage_result:
+            output["coverage_check"] = coverage_result.model_dump()
         import json
 
         typer.echo(json.dumps(output, indent=2))
-        if has_errors or has_tool_failures or (strict and has_warnings):
+        if has_errors or has_tool_failures or has_coverage_failure:
+            raise typer.Exit(1)
+        if strict and has_warnings:
             raise typer.Exit(1)
         raise typer.Exit(0)
 
@@ -290,7 +324,7 @@ def validate_cmd(
         typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
 
     # Print tool check results
-    if tool_results and not quiet:
+    if (tool_results or coverage_result) and not quiet:
         typer.echo("")
         typer.echo("Tool Checks:")
         for tool_check in tool_results:
@@ -301,16 +335,36 @@ def validate_cmd(
                 first_line = tool_check.error.strip().split("\n")[0]
                 typer.echo(f"    {first_line}", err=True)
 
+        # Print coverage result
+        if coverage_result:
+            icon = "\u2713" if coverage_result.success else "\u2717"
+            if coverage_result.coverage_percent is not None:
+                pct = coverage_result.coverage_percent
+                threshold = coverage_result.threshold
+                typer.echo(f"  {icon} coverage ({pct:.0f}% / {threshold}% threshold)")
+            else:
+                typer.echo(f"  {icon} coverage")
+            if not coverage_result.success and coverage_result.error:
+                typer.echo(f"    {coverage_result.error}", err=True)
+
     # Print summary
     typer.echo("")
-    if result.valid and not has_warnings and not has_tool_failures:
+    all_checks_pass = (
+        result.valid
+        and not has_warnings
+        and not has_tool_failures
+        and not has_coverage_failure
+    )
+    if all_checks_pass:
         if not quiet:
             typer.echo("\u2713 Validation passed")
         raise typer.Exit(0)
 
-    if has_tool_failures:
-        failed_tools = ", ".join(t.tool for t in tool_failures)
-        typer.echo(f"\u2717 Tool checks failed: {failed_tools}", err=True)
+    if has_tool_failures or has_coverage_failure:
+        failed_items = [t.tool for t in tool_failures]
+        if has_coverage_failure:
+            failed_items.append("coverage")
+        typer.echo(f"\u2717 Tool checks failed: {', '.join(failed_items)}", err=True)
         raise typer.Exit(1)
 
     if result.valid and has_warnings:

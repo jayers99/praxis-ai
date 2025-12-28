@@ -111,6 +111,81 @@ build-backend = "poetry.core.masonry.api"
     init_file.write_text("")
 
 
+@given(parsers.parse("a valid project with coverage threshold {threshold:d}"))
+def create_valid_project_with_coverage(
+    tmp_path: Path,
+    context: dict[str, Any],
+    threshold: int,
+) -> None:
+    """Create a valid project with coverage threshold configured."""
+    context["project_root"] = tmp_path
+
+    # Create praxis.yaml with coverage_threshold
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        f"""domain: code
+stage: explore
+privacy_level: personal
+environment: Home
+coverage_threshold: {threshold}
+"""
+    )
+
+    # Create pyproject.toml for poetry
+    pyproject = tmp_path / "pyproject.toml"
+    pyproject.write_text(
+        """[tool.poetry]
+name = "test-project"
+version = "0.1.0"
+description = "Test"
+authors = ["Test <test@test.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-cov = "^4.0"
+
+[tool.ruff]
+line-length = 88
+
+[tool.mypy]
+python_version = "3.11"
+files = ["src"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+"""
+    )
+
+    # Create a simple module with a function
+    src_dir = tmp_path / "src"
+    src_dir.mkdir()
+    init_file = src_dir / "__init__.py"
+    init_file.write_text("")
+
+    module_file = src_dir / "example.py"
+    module_file.write_text(
+        """def add(a: int, b: int) -> int:
+    return a + b
+"""
+    )
+
+    # Create a test that covers the function
+    tests_dir = tmp_path / "tests"
+    tests_dir.mkdir()
+    test_file = tests_dir / "test_example.py"
+    test_file.write_text(
+        """from src.example import add
+
+def test_add():
+    assert add(1, 2) == 3
+"""
+    )
+
+
 @when("I run praxis validate")
 def run_validate(
     cli_runner: CliRunner,

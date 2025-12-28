@@ -61,3 +61,20 @@ Feature: Praxis Validate CLI
     When I run praxis validate --check-types
     Then the exit code should be 0
     And the output should contain "mypy"
+
+  Scenario: Check-coverage without threshold configured fails
+    Given a project with domain "code" and stage "execute"
+    And a docs/sod.md file exists
+    When I run praxis validate --check-coverage
+    Then the exit code should be 1
+    And the output should contain "coverage_threshold not set"
+
+  Scenario: Check-coverage with threshold configured attempts coverage
+    Given a valid project with coverage threshold 50
+    When I run praxis validate --check-coverage
+    Then the output should contain "coverage"
+
+  Scenario: Check-all includes coverage when threshold configured
+    Given a valid project with coverage threshold 50
+    When I run praxis validate --check-all
+    Then the output should contain "coverage"

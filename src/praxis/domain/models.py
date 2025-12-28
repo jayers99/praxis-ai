@@ -18,6 +18,12 @@ class PraxisConfig(BaseModel):
     stage: Stage
     privacy_level: PrivacyLevel
     environment: str = Field(default="Home", pattern=r"^(Home|Work)$")
+    coverage_threshold: int | None = Field(
+        default=None,
+        ge=0,
+        le=100,
+        description="Minimum test coverage percentage (0-100). Optional.",
+    )
 
 
 class ValidationIssue(BaseModel):
@@ -69,6 +75,16 @@ class ToolCheckResult(BaseModel):
     tool: str
     success: bool
     output: str = ""
+    error: str = ""
+
+
+class CoverageCheckResult(BaseModel):
+    """Result of running coverage check."""
+
+    tool: str = "coverage"
+    success: bool
+    coverage_percent: float | None = None
+    threshold: int
     error: str = ""
 
 

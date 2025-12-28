@@ -1,7 +1,8 @@
-"""Tool runner - executes external validation tools (pytest, ruff, mypy)."""
+"""Tool runner - executes external validation tools (pytest, ruff, mypy, coverage)."""
 
 from __future__ import annotations
 
+import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -150,4 +151,103 @@ def run_mypy(project_root: Path) -> ToolResult:
         output="",
         error="mypy not found. Install with: pip install mypy",
         return_code=-1,
+    )
+
+
+@dataclass
+class CoverageResult:
+    """Result of running coverage check."""
+
+    tool: str
+    success: bool
+    coverage_percent: float | None
+    threshold: int
+    output: str
+    error: str
+
+
+def parse_coverage_percent(output: str) -> float | None:
+    """Parse coverage percentage from pytest-cov output.
+
+    Looks for patterns like:
+    - "TOTAL ... 85%" (pytest-cov summary line)
+    - "Total coverage: 85.00%"
+    - "Coverage: 85%"
+
+    Args:
+        output: Combined stdout/stderr from pytest-cov.
+
+    Returns:
+        Coverage percentage as float, or None if not found.
+    """
+    # Pattern for pytest-cov TOTAL line: "TOTAL    123    45    85%"
+    match = re.search(r"TOTAL\s+\d+\s+\d+\s+(\d+)%", output)
+    if match:
+        return float(match.group(1))
+
+    # Pattern for "X%" at end of a line with TOTAL
+    match = re.search(r"TOTAL.*?(\d+(?:\.\d+)?)\s*%", output)
+    if match:
+        return float(match.group(1))
+
+    # Generic pattern for coverage percentage
+    match = re.search(r"(\d+(?:\.\d+)?)\s*%\s*(?:coverage|covered)", output, re.I)
+    if match:
+        return float(match.group(1))
+
+    return None
+
+
+def run_coverage(project_root: Path, threshold: int) -> CoverageResult:
+    """Run pytest with coverage and check against threshold.
+
+    Args:
+        project_root: Project directory containing tests.
+        threshold: Minimum coverage percentage required (0-100).
+
+    Returns:
+        CoverageResult with coverage percentage and pass/fail status.
+    """
+    # Try poetry run pytest with coverage first, fall back to pytest
+    commands = [
+        ["poetry", "run", "pytest", "--cov", "--cov-report=term", "-q"],
+        ["pytest", "--cov", "--cov-report=term", "-q"],
+    ]
+
+    for cmd in commands:
+        result = run_tool(cmd, "coverage", project_root)
+        if result.return_code != -1:
+            # Tool was found, parse coverage
+            combined_output = result.output + result.error
+            coverage_pct = parse_coverage_percent(combined_output)
+
+            if coverage_pct is None:
+                return CoverageResult(
+                    tool="coverage",
+                    success=False,
+                    coverage_percent=None,
+                    threshold=threshold,
+                    output=result.output,
+                    error="Could not parse coverage percentage from output",
+                )
+
+            meets_threshold = coverage_pct >= threshold
+            return CoverageResult(
+                tool="coverage",
+                success=meets_threshold,
+                coverage_percent=coverage_pct,
+                threshold=threshold,
+                output=result.output,
+                error="" if meets_threshold else (
+                    f"Coverage {coverage_pct:.0f}% is below threshold {threshold}%"
+                ),
+            )
+
+    return CoverageResult(
+        tool="coverage",
+        success=False,
+        coverage_percent=None,
+        threshold=threshold,
+        output="",
+        error="pytest-cov not found. Install with: pip install pytest-cov",
     )
