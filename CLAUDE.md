@@ -1,22 +1,31 @@
 # Praxis AI - Claude Code Instructions
 
-> **Note:** This is currently a **static, manual** file. In the future, this will be generated dynamically from `docs/ai-guards/models/`.
-
-
 ## Project Overview
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** First worked project complete ([template-python-cli](projects/code/template-python-cli/)). Ready to implement `praxis validate` CLI.
+**Current Phase:** CLI foundation complete (`validate`, `init`). Ready to extend with additional commands and domain support.
 
 ## Tech Stack
 
-- **Language:** Python
-- **Policy Engine:** Pydantic (active implementation), CUE (exploratory/deferred per #3)
-- **Testing:** pytest
+- **Language:** Python 3.12+
+- **CLI Framework:** Typer
+- **Validation:** Pydantic v2
+- **Testing:** pytest + pytest-bdd (BDD with Gherkin)
 - **Package Manager:** Poetry
 - **Linting:** ruff
 - **Type Checking:** mypy
+
+## CLI Commands
+
+```bash
+# Initialize a new project
+praxis init --domain code --privacy personal
+
+# Validate governance configuration
+praxis validate .
+praxis validate --strict  # Treat warnings as errors
+```
 
 ## Key Concepts
 
@@ -28,7 +37,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 
 **Iteration Mode:** Formalize is where iteration changes meaning. Before: _discovery_ (what is this?). After: _refinement_ (how good can it be?). Detecting scope change during Execute means regression to Formalize.
 
-**Allowed Regressions (from `lifecycle.md` lines 104-118):**
+**Allowed Regressions (from `lifecycle.md`):**
 
 | From | Allowed To |
 |------|------------|
@@ -38,11 +47,13 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 
 ### Domains
 
-- **Code** — Functional systems (formalize via SOD)
-- **Create** — Aesthetic output (formalize via Creative Brief)
-- **Write** — Structured thought (formalize via Writing Brief)
-- **Observe** — Raw capture (default: Personal privacy)
-- **Learn** — Skill formation (formalize via Competency Target)
+| Domain | Purpose | Formalize Artifact |
+|--------|---------|-------------------|
+| Code | Functional systems | `docs/sod.md` |
+| Create | Aesthetic output | `docs/brief.md` |
+| Write | Structured thought | `docs/brief.md` |
+| Learn | Skill formation | `docs/plan.md` |
+| Observe | Raw capture | (none required) |
 
 ### Privacy Levels (least to most restrictive)
 
@@ -52,9 +63,7 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 4. Confidential
 5. Restricted
 
-### Validation Model (ADR-002) — Core Contract
-
-The validation model governs what the Policy Engine checks:
+### Validation Model (ADR-002)
 
 | Rule | Severity | Trigger |
 |------|----------|---------|
@@ -63,67 +72,61 @@ The validation model governs what the Policy Engine checks:
 | Invalid stage regression | Warning | Transition not in allowed table |
 | Privacy downgrade | Warning | privacy_level decreased from prior commit |
 
-**Artifact Path Conventions:**
-
-| Domain | Artifact | Path |
-|--------|----------|------|
-| Code | SOD | `docs/sod.md` |
-| Create | Creative Brief | `docs/brief.md` |
-| Write | Writing Brief | `docs/brief.md` |
-| Learn | Learning Plan | `docs/plan.md` |
-| Observe | (none) | — |
-
 ## Project Structure
 
 ```
-docs/           # Specifications and design docs
-  sod.md        # Solution Overview Document (main spec)
-  lifecycle.md  # Canonical lifecycle stages
-  privacy.md    # Privacy model
-  domains.md    # Domain → artifact mappings
-  formalize.md  # Formalize stage and artifact definitions
-  adr/          # Architecture Decision Records
-projects/       # Example projects across domains for discovering how to use Praxis
-  code/template-python-cli/  # Complete project in Sustain stage
+src/praxis/              # Main CLI package
+  cli.py                 # Typer CLI entry point
+  domain/                # Domain models and enums
+    models.py            # Pydantic models (PraxisConfig, ValidationResult, etc.)
+    stages.py            # Stage enum with comparison operators
+    domains.py           # Domain enum
+    privacy.py           # PrivacyLevel enum
+  application/           # Application services
+    validate_service.py  # Validation orchestration
+    init_service.py      # Project initialization
+  infrastructure/        # External concerns
+    yaml_loader.py       # YAML parsing
+    artifact_checker.py  # File existence checks
+    git_history.py       # Git operations (regression detection)
+    env_resolver.py      # Environment variable handling
+    templates.py         # CLAUDE.md and capture.md templates
+    file_writer.py       # Safe file writes
+
+tests/
+  features/              # Gherkin feature files
+  step_defs/             # pytest-bdd step definitions
+  conftest.py            # Shared fixtures
+
+docs/                    # Specifications and guides
+  sod.md                 # Solution Overview Document
+  lifecycle.md           # Stage definitions
+  user-guide.md          # Step-by-step walkthrough
+  ai-setup.md            # AI assistant configuration
+  adr/                   # Architecture Decision Records
+
+projects/                # Worked examples
+  code/uat-praxis-code/  # Hello world CLI (full lifecycle)
+  code/template-python-cli/  # Production template (Sustain)
 ```
 
 ## Development Rules
+
+### Architecture
+
+This project follows **hexagonal architecture**:
+- **Domain:** Pure business logic, no external dependencies
+- **Application:** Orchestration, coordinates domain + infrastructure
+- **Infrastructure:** External concerns (files, git, env vars)
+- **CLI:** Thin Typer layer, delegates to application services
 
 ### When Implementing
 
 - All work must respect the lifecycle model
 - Policy validation is deterministic: Domain + Stage + Privacy + Environment → Behavior
 - No skipping required artifacts (e.g., SOD required before Execute in Code domain)
-- Privacy declared at Explore, enforced at Shape/Formalize, honored at Execute
-
-### Completed: Worked Project (Issue #4)
-
-The [template-python-cli](projects/code/template-python-cli/) demonstrates the full Praxis lifecycle and is currently in Sustain stage.
-
-### Next: `praxis validate` CLI
-
-Deliverable: CLI validator implementing ADR-002's validation rules.
-
-**Core Features (v1):**
-
-1. Schema validation (`praxis.yaml` → Pydantic model)
-2. Artifact existence check (stage ≥ commit → required artifact exists?)
-3. Regression validation (warn if transition not in allowed table)
-4. Privacy-storage coupling (error if restricted + non-local storage)
-
-**Deferred:**
-
-- AI Guard compilation (`.cursorrules` / `CLAUDE.md` generation)
-- External constraints overlay
-- Multi-domain composition
-- Deep artifact content parsing
-
-**Acceptance Tests:**
-
-1. Valid `praxis.yaml` passes validation
-2. Missing SOD at Execute stage → Error with explicit message
-3. Invalid regression (Execute → Explore) → Warning
-4. Privacy downgrade detected → Warning
+- Use BDD tests (Gherkin features + pytest-bdd step definitions)
+- Run `poetry run pytest && poetry run ruff check . && poetry run mypy .` before committing
 
 ### praxis.yaml Schema
 
@@ -137,40 +140,44 @@ environment: Home|Work
 ## Commands
 
 ```bash
-# Testing
+# Run tests
 poetry run pytest
 
-# Linting
+# Run linting
 poetry run ruff check .
 
-# Type checking
+# Run type checking
 poetry run mypy .
+
+# Run the CLI
+poetry run praxis --help
+poetry run praxis init --help
+poetry run praxis validate --help
 ```
 
-## Opinions
+## Potential Next Features
 
-Domain-specific quality goals live in `docs/opinions/{domain}/`. When working on a project:
-
-1. Read `praxis.yaml` to determine the domain
-2. Load `docs/opinions/{domain}/README.md` into context
-3. If conversation matches any trigger keywords in the table, load the linked detail file(s)
-4. If a detail file extends another (e.g., `cli-python` extends `cli`), load the base file too
-5. Apply all loaded opinions to reasoning and suggestions
-
-Opinions are advisory, not gates. They inform decisions without blocking progress.
+- `praxis stage [new-stage]` — Update stage with validation
+- `praxis status` — Show current state and next steps
+- Privacy enforcement — Check for violations (e.g., .env in public projects)
+- Additional domain templates — Create, Write, Learn
 
 ## References
 
-**Primary for Policy Engine work:**
+**User-facing:**
+- [User Guide](docs/user-guide.md) — Step-by-step walkthrough
+- [AI Setup](docs/ai-setup.md) — CLAUDE.md templates and integration
 
-- [ADR-002](docs/adr/002-validation-model.md) — Validation model specification (core contract)
-- [Lifecycle](docs/lifecycle.md) — Stage definitions and regression rules (lines 104-118)
-
-**Supporting:**
-
-- [SOD v0.3](docs/sod.md) — Complete specification
-- [Privacy Model](docs/privacy.md) — Privacy levels and enforcement
+**Specification:**
+- [SOD](docs/sod.md) — Solution Overview Document
+- [Lifecycle](docs/lifecycle.md) — Stage definitions and regressions
 - [Domains](docs/domains.md) — Domain → artifact mappings
-- [Formalize](docs/formalize.md) — Formalize stage and artifact definitions
-- [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision (exploratory)
-- [template-python-cli](projects/code/template-python-cli/) — Complete worked project
+- [Privacy](docs/privacy.md) — Privacy levels and enforcement
+
+**Architecture:**
+- [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision
+- [ADR-002](docs/adr/002-validation-model.md) — Validation model specification
+
+**Examples:**
+- [uat-praxis-code](projects/code/uat-praxis-code/) — Hello world with full lifecycle docs
+- [template-python-cli](projects/code/template-python-cli/) — Production CLI template
