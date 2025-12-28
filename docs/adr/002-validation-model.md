@@ -1,8 +1,8 @@
 # ADR-002: Validation Model
 
-**Status:** Draft — Pending validation via worked project
-**Date:** 2025-12-21
-**Deciders:** TBD
+**Status:** Accepted
+**Date:** 2025-12-21 (Draft), 2025-12-28 (Accepted)
+**Deciders:** @jayers99
 **Relates to:** ADR-001 (Policy Engine Selection), Issue #4 (template-python-cli)
 
 ---
@@ -11,15 +11,15 @@
 
 Before selecting a policy engine (ADR-001), we must define what the engine validates. This ADR establishes the validation model that any policy engine must support.
 
-**Approach:** Rather than design in a vacuum, we're discovering the validation model by working through Issue #4 (template-python-cli). The positions below are initial hypotheses to be tested and refined during that worked project.
+**Validation approach:** The model was discovered by working through Issue #4 (template-python-cli) and the uat-praxis-code project. The positions below are now validated through real-world usage.
 
 ---
 
-## Decisions (Draft — Subject to Revision)
+## Decisions
 
 ### 1. Configuration Scope
 
-**Position: One `praxis.yaml` per project, at repository root.**
+**Decision: One `praxis.yaml` per project, at repository root.**
 
 Rationale:
 
@@ -29,7 +29,7 @@ Rationale:
 
 ```yaml
 # praxis.yaml (project root)
-domain: build
+domain: code
 stage: formalize
 privacy_level: personal
 environment: Home
@@ -41,17 +41,17 @@ environment: Home
 
 ### 2. Validation Depth
 
-**Position: Option B — Config validation + filesystem checks for required artifacts.**
+**Decision: Config validation + filesystem checks for required artifacts.**
 
-The validator will:
+The validator:
 
-1. Validate `praxis.yaml` schema and field values
-2. Check that required artifacts exist (by path convention)
-3. NOT deeply inspect artifact contents
+1. Validates `praxis.yaml` schema and field values (via Pydantic)
+2. Checks that required artifacts exist (by path convention)
+3. Does NOT deeply inspect artifact contents
 
 Example behavior:
 
-- `stage: execute` + `domain: build` → validator checks `docs/sod.md` exists
+- `stage: execute` + `domain: code` → validator checks `docs/sod.md` exists
 - Validator does NOT parse SOD to verify it has all required sections
 
 Rationale:
@@ -74,7 +74,7 @@ Rationale:
 
 ### 3. Stage Tracking
 
-**Position: Explicit declaration in `praxis.yaml`, updated manually by author.**
+**Decision: Explicit declaration in `praxis.yaml`, updated manually by author.**
 
 The `stage` field is the single source of truth. The author updates it when transitioning stages.
 
@@ -85,6 +85,8 @@ Rationale:
 - Git history provides audit trail naturally
 - Aligns with "author is accountable" philosophy
 
+**Validated learning:** Manual stage tracking feels natural. The cognitive overhead is minimal—updating one field when transitioning is not burdensome.
+
 **Rejected alternatives:**
 
 - Inferred from artifacts: Too magical, hard to debug
@@ -94,7 +96,7 @@ Rationale:
 
 ### 4. Regression Enforcement
 
-**Position: Advisory warnings, not blocking errors.**
+**Decision: Advisory warnings, not blocking errors.**
 
 Invalid regressions (per lifecycle.md table) produce warnings, not failures.
 
@@ -117,7 +119,7 @@ Example output:
 
 ### 5. Transition History
 
-**Position: No explicit history tracking. Git is the audit log.**
+**Decision: No explicit history tracking. Git is the audit log.**
 
 The validator only sees current state. Historical transitions are visible via `git log` on `praxis.yaml`.
 
@@ -127,11 +129,13 @@ Rationale:
 - Git already tracks changes with timestamps and authors
 - Keeps the model simple
 
+**Implementation note:** `praxis status` displays stage history extracted from git log.
+
 ---
 
 ### 6. Multi-Domain Projects
 
-**Position: Single primary domain per project. Secondary domains via subdirectories (future scope).**
+**Decision: Single primary domain per project. Secondary domains via subdirectories (future scope).**
 
 For v1, each project has exactly one domain declared in `praxis.yaml`.
 
@@ -141,24 +145,11 @@ Rationale:
 - Most real projects have a primary domain
 - Multi-domain (e.g., Code + Write in one repo) is future scope
 
-**Future extension (not v1):**
-
-```yaml
-# Hypothetical multi-domain structure
-domains:
-  - path: ./
-    domain: code
-    stage: execute
-  - path: ./docs/blog/
-    domain: write
-    stage: shape
-```
-
 ---
 
 ### 7. Privacy Composition
 
-**Position: Single privacy level per project. Highest sensitivity wins.**
+**Decision: Single privacy level per project. Highest sensitivity wins.**
 
 If a project contains artifacts of varying sensitivity, declare the highest level.
 
@@ -170,11 +161,39 @@ Rationale:
 
 ---
 
+## Resolved Open Questions
+
+### Q: Does manual stage tracking feel natural or burdensome?
+
+**A: Natural.** Updating one field when transitioning stages is minimal overhead. The explicit declaration makes project state immediately visible.
+
+### Q: Is `docs/sod.md` the right convention, or should artifact paths be configurable?
+
+**A: Convention is correct.** Simple, predictable, no configuration needed. Configurability would add complexity without demonstrated need.
+
+### Q: What's the minimum useful validation that provides value without ceremony?
+
+**A: Schema + artifact existence + regression warnings.** The current implementation validates:
+1. praxis.yaml schema (errors)
+2. Required artifact exists (errors)
+3. Invalid stage regression (warnings)
+4. Privacy downgrade (warnings)
+
+This catches real mistakes without being overly restrictive.
+
+### Q: Should `praxis validate` be run manually, or integrated into git hooks?
+
+**A: Manual by default, CI-friendly flags available.**
+
+The `--check-tests`, `--check-lint`, `--check-types`, and `--check-all` flags enable CI integration. Let users choose their workflow.
+
+---
+
 ## Example `praxis.yaml`
 
 ```yaml
 # Minimal valid config
-domain: build
+domain: code
 stage: formalize
 privacy_level: personal
 
@@ -204,6 +223,7 @@ environment: Home
 - Simple CLI: `praxis validate` checks config + artifact existence
 - Clear error messages for common failures
 - Git-native workflow (no external state)
+- CI integration via `--check-*` flags
 
 ### Limits
 
@@ -220,17 +240,8 @@ environment: Home
 
 ---
 
-## Next Steps
+## Related
 
-1. Work through Issue #4 (template-python-cli) using these draft positions
-2. Note friction points and adjust positions as needed
-3. Finalize this ADR based on real-world learnings
-4. Update ADR-001 with validated assumptions
-5. Implement first increment against the finalized model
-
-## Open Questions (To Resolve During Issue #4)
-
-- Does manual stage tracking feel natural or burdensome?
-- Is `docs/sod.md` the right convention, or should artifact paths be configurable?
-- What's the minimum useful validation that provides value without ceremony?
-- Should `praxis validate` be run manually, or integrated into git hooks?
+- ADR-001 (Policy Engine Selection) — Pydantic chosen over CUE
+- Issue #4 (template-python-cli) — First worked project
+- Issue #7 — This ADR finalization
