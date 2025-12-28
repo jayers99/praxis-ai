@@ -178,24 +178,30 @@ praxis init --domain code --privacy personal
 Validate a project's governance configuration:
 
 ```bash
-# Validate current directory
-praxis validate
-
-# Validate a specific project
-praxis validate projects/code/my-project/
-
-# Treat warnings as errors (for CI)
-praxis validate --strict
-
-# Override environment via ENV var
-PRAXIS_ENV=Work praxis validate
+praxis validate                   # Validate current directory
+praxis validate --strict          # Treat warnings as errors (for CI)
+praxis validate --check-all       # Run tests, lint, types, coverage
 ```
 
-The validator checks:
-- Schema correctness (domain, stage, privacy_level, environment)
-- Required artifacts exist (e.g., `docs/sod.md` for Code domain at Execute stage)
-- Stage regressions are valid (warns on invalid transitions)
-- Privacy level wasn't downgraded (warns if less restrictive)
+Transition lifecycle stages:
+
+```bash
+praxis stage formalize            # Move to formalize stage
+praxis stage execute              # Move to execute (requires docs/sod.md)
+```
+
+Check project status:
+
+```bash
+praxis status                     # Current state, next steps, history
+```
+
+Audit against domain best practices:
+
+```bash
+praxis audit                      # Check tooling, structure, testing
+praxis audit --strict             # Fail on warnings
+```
 
 ## Quick Start (Using an Agent)
 
@@ -215,17 +221,19 @@ Expected flow:
 ## Repo Layout
 
 ```text
+src/praxis/           CLI package (Typer + Pydantic)
 docs/                 Specifications (SOD, lifecycle, privacy, etc.)
 docs/adr/             Architecture Decision Records
 docs/opinions/        Domain-specific quality guidance (advisory)
 projects/             Worked projects
-  code/template-python-cli/     Code-domain project
+  code/template-python-cli/     Production CLI template
+  code/uat-praxis-code/         Hello-world with full lifecycle docs
+tests/                BDD tests (pytest-bdd + Gherkin)
 ```
 
 ## Status
 
-- Worked projects exist for the Code domain.
-- The docs are the current source of truth; the system is being proven out through projects.
+Core CLI is functional with `init`, `validate`, `stage`, `status`, and `audit` commands. Code domain is fully supported with worked examples.
 
 ## License
 
