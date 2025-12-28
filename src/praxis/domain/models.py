@@ -44,3 +44,11 @@ class ValidationResult(BaseModel):
     def warnings(self) -> list[ValidationIssue]:
         """Return only warning-severity issues."""
         return [i for i in self.issues if i.severity == "warning"]
+
+
+class InitResult(BaseModel):
+    """Result of initializing a Praxis project."""
+
+    success: bool
+    files_created: list[str] = Field(default_factory=list)
+    errors: list[str] = Field(default_factory=list)

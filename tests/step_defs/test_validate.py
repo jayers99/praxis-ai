@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from pytest_bdd import given, parsers, scenarios, then, when
+from pytest_bdd import given, parsers, scenarios, when
 from typer.testing import CliRunner
 
 from praxis.cli import app
@@ -62,20 +62,3 @@ def run_validate(
     context["result"] = result
 
 
-@then(parsers.parse("the exit code should be {code:d}"))
-def check_exit_code(context: dict[str, Any], code: int) -> None:
-    """Verify the exit code."""
-    result = context["result"]
-    assert result.exit_code == code, (
-        f"Expected exit code {code}, got {result.exit_code}. "
-        f"Output: {result.output}"
-    )
-
-
-@then(parsers.parse('the output should contain "{text}"'))
-def check_output_contains(context: dict[str, Any], text: str) -> None:
-    """Verify the output contains expected text."""
-    result = context["result"]
-    assert text in result.output, (
-        f"Expected '{text}' in output. Got: {result.output}"
-    )

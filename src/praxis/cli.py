@@ -4,10 +4,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import click
 import typer
 
 from praxis import __version__
+from praxis.application.init_service import init_project
 from praxis.application.validate_service import validate
+from praxis.domain.domains import Domain
+from praxis.domain.privacy import PrivacyLevel
 
 app = typer.Typer(
     name="praxis",
@@ -36,6 +40,69 @@ def main(
     ),
 ) -> None:
     """Praxis CLI - Policy-driven AI workflow governance."""
+
+
+@app.command(name="init")
+def init_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory to initialize.",
+    ),
+    domain: str | None = typer.Option(
+        None,
+        "--domain",
+        "-d",
+        help="Project domain (code, create, write, observe, learn).",
+    ),
+    privacy: str | None = typer.Option(
+        None,
+        "--privacy",
+        "-p",
+        help="Privacy level (public, personal, confidential, restricted).",
+    ),
+    environment: str = typer.Option(
+        "Home",
+        "--env",
+        "-e",
+        help="Environment (Home, Work).",
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Overwrite existing files.",
+    ),
+) -> None:
+    """Initialize a new Praxis project."""
+    # Interactive prompts if flags not provided
+    if domain is None:
+        domain_choices = [d.value for d in Domain]
+        domain = typer.prompt(
+            "Domain",
+            default="code",
+            show_choices=True,
+            type=click.Choice(domain_choices),
+        )
+    if privacy is None:
+        privacy_choices = [p.value for p in PrivacyLevel]
+        privacy = typer.prompt(
+            "Privacy level",
+            default="personal",
+            show_choices=True,
+            type=click.Choice(privacy_choices),
+        )
+
+    result = init_project(path, domain, privacy, environment, force)
+
+    if result.success:
+        typer.echo("✓ Praxis project initialized")
+        for f in result.files_created:
+            typer.echo(f"  Created: {f}")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}")
+        raise typer.Exit(1)
 
 
 @app.command(name="validate")

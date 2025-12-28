@@ -19,22 +19,26 @@ Praxis governance works **with** AI speed by giving the AI explicit rules to fol
 
 ## Quick Setup
 
-### Option 1: Future — `praxis init` (Planned)
+### Option 1: `praxis init` (Recommended)
 
 ```bash
-# Coming soon
+# Interactive mode
+praxis init
+
+# Or with flags
 praxis init --domain code --privacy personal
 
 # Creates:
 # - praxis.yaml
-# - CLAUDE.md (or .cursorrules)
+# - CLAUDE.md
+# - docs/capture.md
 ```
 
 ### Option 2: Manual Setup
 
 1. Create `praxis.yaml` (see [User Guide](user-guide.md))
 2. Create `CLAUDE.md` using the template below
-3. Point your AI to read the Praxis docs
+3. Create `docs/capture.md` for the first stage
 
 ---
 
@@ -42,7 +46,7 @@ praxis init --domain code --privacy personal
 
 Create this file in your project root. Claude Code reads it automatically.
 
-```markdown
+````markdown
 # Project Name — AI Instructions
 
 ## Praxis Governance
@@ -89,7 +93,7 @@ poetry run praxis validate .
 - [Praxis Lifecycle](https://github.com/USER/praxis-ai/blob/main/docs/lifecycle.md)
 - [Domain Definitions](https://github.com/USER/praxis-ai/blob/main/docs/domains.md)
 - [Privacy Model](https://github.com/USER/praxis-ai/blob/main/docs/privacy.md)
-```
+````
 
 ---
 
@@ -210,9 +214,9 @@ The AI should respect privacy levels:
 
 ---
 
-## Future: `praxis init`
+## Using `praxis init`
 
-We're building a `praxis init` command that will:
+The `praxis init` command creates all governance files automatically:
 
 ```bash
 praxis init
@@ -220,15 +224,18 @@ praxis init
 # Interactive prompts:
 # Domain? [code/create/write/observe/learn]
 # Privacy level? [public/personal/confidential/restricted]
-# Environment? [Home/Work]
 
 # Generates:
 # - praxis.yaml (configured)
 # - CLAUDE.md (from template, customized)
-# - docs/ directory structure
+# - docs/capture.md (first stage template)
 ```
 
-Until then, use the manual setup above.
+You can also use flags to skip prompts:
+
+```bash
+praxis init --domain code --privacy personal --env Home
+```
 
 ---
 

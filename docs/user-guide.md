@@ -18,7 +18,14 @@ This guide walks you through building a project using Praxis governance, from in
    poetry run praxis --version
    ```
 
-4. **Configure your AI assistant** — See [AI Setup Guide](ai-setup.md) for CLAUDE.md templates and integration patterns
+4. **(Recommended) Create a shell alias** so you can run `praxis` from any directory:
+   ```bash
+   # Add to your ~/.bashrc, ~/.zshrc, or shell config:
+   alias praxis='poetry -C /path/to/praxis-ai run praxis'
+   ```
+   Replace `/path/to/praxis-ai` with your actual clone location. After reloading your shell, you can run `praxis` from anywhere.
+
+5. **Configure your AI assistant** — See [AI Setup Guide](ai-setup.md) for CLAUDE.md templates and integration patterns
 
 ---
 
@@ -54,21 +61,18 @@ This example demonstrates building a minimal Python CLI using the full Praxis li
 
 ### Step 1: Initialize the Project
 
-Create a new directory and initialize `praxis.yaml`:
+Create a new directory and initialize with `praxis init`:
 
 ```bash
 mkdir hello-world
 cd hello-world
+praxis init --domain code --privacy personal
 ```
 
-Create `praxis.yaml`:
-
-```yaml
-domain: code
-stage: capture
-privacy_level: personal
-environment: Home
-```
+This creates:
+- `praxis.yaml` — Governance configuration
+- `CLAUDE.md` — AI assistant instructions
+- `docs/capture.md` — First stage template
 
 Validate:
 
@@ -79,7 +83,7 @@ poetry run praxis validate .
 
 ### Step 2: Capture
 
-Create `docs/capture.md` with raw inputs:
+Edit `docs/capture.md` (created by `praxis init`) with your raw inputs:
 
 ```markdown
 # Capture

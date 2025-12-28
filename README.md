@@ -161,20 +161,34 @@ cd praxis-ai
 poetry install
 ```
 
+**(Recommended) Create a shell alias** so you can run `praxis` from any directory:
+
+```bash
+# Add to your ~/.bashrc, ~/.zshrc, or shell config:
+alias praxis='poetry -C /path/to/praxis-ai run praxis'
+```
+
+Initialize a new project:
+
+```bash
+praxis init --domain code --privacy personal
+# Creates: praxis.yaml, CLAUDE.md, docs/capture.md
+```
+
 Validate a project's governance configuration:
 
 ```bash
 # Validate current directory
-poetry run praxis validate
+praxis validate
 
 # Validate a specific project
-poetry run praxis validate projects/code/my-project/
+praxis validate projects/code/my-project/
 
 # Treat warnings as errors (for CI)
-poetry run praxis validate --strict
+praxis validate --strict
 
 # Override environment via ENV var
-PRAXIS_ENV=Work poetry run praxis validate
+PRAXIS_ENV=Work praxis validate
 ```
 
 The validator checks:
