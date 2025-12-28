@@ -381,6 +381,62 @@ Each domain requires a specific formalization artifact:
 
 ---
 
+## Audit Command
+
+Check your project against domain best practices with `praxis audit`:
+
+```bash
+poetry run praxis audit path/to/project/
+```
+
+### Example Output
+
+```
+Auditing: my-project (domain: code)
+
+Tooling:
+  ✓ Poetry configured (pyproject.toml exists)
+  ✓ Typer CLI (typer in dependencies)
+  ✓ ruff linter (in dev dependencies)
+  ✓ mypy type checker (in dev dependencies)
+
+Structure:
+  ✓ Hexagonal architecture (domain/, application/, infrastructure/)
+  ✓ Console script entry point configured
+  ✓ __main__.py exists (python -m support)
+
+Testing:
+  ✓ BDD tests (tests/features/*.feature exists)
+  ✓ pytest-bdd in dependencies
+
+Summary: 9 passed, 0 warning(s), 0 failed
+```
+
+### Options
+
+| Flag | Description |
+|------|-------------|
+| `--json` | Output in JSON format for automation |
+| `--strict` | Treat warnings as failures (exit code 1) |
+
+### Checks by Domain
+
+**Code Domain** (from `docs/opinions/code/cli-python.md`):
+
+| Category | Check | Description |
+|----------|-------|-------------|
+| Tooling | Poetry | pyproject.toml exists |
+| Tooling | Typer | typer in dependencies |
+| Tooling | ruff | ruff in dev dependencies |
+| Tooling | mypy | mypy in dev dependencies |
+| Structure | Hexagonal | domain/, application/, infrastructure/ dirs |
+| Structure | Console script | [tool.poetry.scripts] configured |
+| Structure | __main__.py | python -m support |
+| Testing | BDD tests | tests/features/*.feature exists |
+| Testing | pytest-bdd | pytest-bdd in dev dependencies |
+
+---
+
 ## Best Practices
 
 1. **Validate at every stage transition** — Catch governance issues early
