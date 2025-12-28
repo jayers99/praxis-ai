@@ -63,6 +63,15 @@ class StageResult(BaseModel):
     warning_message: str | None = None
 
 
+class ToolCheckResult(BaseModel):
+    """Result of running an external validation tool."""
+
+    tool: str
+    success: bool
+    output: str = ""
+    error: str = ""
+
+
 class AuditCheck(BaseModel):
     """Single audit check result."""
 

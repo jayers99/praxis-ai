@@ -14,8 +14,9 @@ from praxis.application.stage_service import transition_stage
 from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
 from praxis.domain.domains import Domain
-from praxis.domain.models import AuditCheck
+from praxis.domain.models import AuditCheck, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
+from praxis.infrastructure.tool_runner import run_mypy, run_pytest, run_ruff
 
 app = typer.Typer(
     name="praxis",
@@ -201,6 +202,26 @@ def validate_cmd(
         "-s",
         help="Treat warnings as errors (exit 1).",
     ),
+    check_tests: bool = typer.Option(
+        False,
+        "--check-tests",
+        help="Run pytest and fail if tests fail.",
+    ),
+    check_lint: bool = typer.Option(
+        False,
+        "--check-lint",
+        help="Run ruff and fail if lint errors exist.",
+    ),
+    check_types: bool = typer.Option(
+        False,
+        "--check-types",
+        help="Run mypy and fail if type errors exist.",
+    ),
+    check_all: bool = typer.Option(
+        False,
+        "--check-all",
+        help="Run all checks (tests, lint, types).",
+    ),
     json_output: bool = typer.Option(
         False,
         "--json",
@@ -216,27 +237,83 @@ def validate_cmd(
     """Validate a praxis.yaml configuration."""
     result = validate(path)
 
+    # Resolve project root for tool checks
+    project_root = path if path.is_dir() else path.parent
+
+    # Run tool checks if requested
+    tool_results: list[ToolCheckResult] = []
+    run_tests = check_tests or check_all
+    run_lint = check_lint or check_all
+    run_types = check_types or check_all
+
+    if run_tests:
+        tr = run_pytest(project_root)
+        tool_results.append(ToolCheckResult(
+            tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
+        ))
+
+    if run_lint:
+        tr = run_ruff(project_root)
+        tool_results.append(ToolCheckResult(
+            tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
+        ))
+
+    if run_types:
+        tr = run_mypy(project_root)
+        tool_results.append(ToolCheckResult(
+            tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
+        ))
+
+    # Check if any tool checks failed
+    tool_failures = [t for t in tool_results if not t.success]
+
+    # Determine overall success
+    has_errors = len(result.errors) > 0
+    has_warnings = len(result.warnings) > 0
+    has_tool_failures = len(tool_failures) > 0
+
     if json_output:
-        typer.echo(result.model_dump_json(indent=2))
-        has_failures = len(result.errors) > 0
-        has_warnings = len(result.warnings) > 0
-        if has_failures or (strict and has_warnings):
+        # Build combined JSON output
+        output = result.model_dump()
+        output["tool_checks"] = [t.model_dump() for t in tool_results]
+        import json
+
+        typer.echo(json.dumps(output, indent=2))
+        if has_errors or has_tool_failures or (strict and has_warnings):
             raise typer.Exit(1)
         raise typer.Exit(0)
 
-    # Print issues (warnings and errors go to stderr)
+    # Print validation issues (warnings and errors go to stderr)
     for issue in result.issues:
         icon = "\u2717" if issue.severity == "error" else "\u26a0"
         severity = issue.severity.upper()
         typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
 
+    # Print tool check results
+    if tool_results and not quiet:
+        typer.echo("")
+        typer.echo("Tool Checks:")
+        for tool_check in tool_results:
+            icon = "\u2713" if tool_check.success else "\u2717"
+            typer.echo(f"  {icon} {tool_check.tool}")
+            if not tool_check.success and tool_check.error:
+                # Show first line of error
+                first_line = tool_check.error.strip().split("\n")[0]
+                typer.echo(f"    {first_line}", err=True)
+
     # Print summary
-    if result.valid and not result.warnings:
+    typer.echo("")
+    if result.valid and not has_warnings and not has_tool_failures:
         if not quiet:
-            typer.echo("\u2713 praxis.yaml is valid")
+            typer.echo("\u2713 Validation passed")
         raise typer.Exit(0)
 
-    if result.valid and result.warnings:
+    if has_tool_failures:
+        failed_tools = ", ".join(t.tool for t in tool_failures)
+        typer.echo(f"\u2717 Tool checks failed: {failed_tools}", err=True)
+        raise typer.Exit(1)
+
+    if result.valid and has_warnings:
         if strict:
             typer.echo(
                 f"\u2717 Validation failed: {len(result.warnings)} warning(s)",
@@ -245,7 +322,7 @@ def validate_cmd(
             raise typer.Exit(1)
         if not quiet:
             typer.echo(
-                f"\u2713 praxis.yaml is valid ({len(result.warnings)} warning(s))"
+                f"\u2713 Validation passed ({len(result.warnings)} warning(s))"
             )
         raise typer.Exit(0)
 

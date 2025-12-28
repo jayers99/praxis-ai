@@ -8,7 +8,7 @@ Feature: Praxis Validate CLI
     And a docs/sod.md file exists
     When I run praxis validate
     Then the exit code should be 0
-    And the output should contain "valid"
+    And the output should contain "passed"
 
   Scenario: Missing SOD at Execute stage fails
     Given a project with domain "code" and stage "execute"
@@ -23,7 +23,7 @@ Feature: Praxis Validate CLI
     And no docs/sod.md file exists
     When I run praxis validate
     Then the exit code should be 0
-    And the output should contain "valid"
+    And the output should contain "passed"
 
   Scenario: Invalid domain rejected
     Given a project with domain "invalid_domain" and stage "explore"
@@ -36,3 +36,28 @@ Feature: Praxis Validate CLI
     When I run praxis validate
     Then the exit code should be 1
     And the output should contain "ERROR"
+
+  Scenario: Check-all flag runs all tool checks
+    Given a valid project with passing tests
+    When I run praxis validate --check-all
+    Then the exit code should be 0
+    And the output should contain "Tool Checks"
+    And the output should contain "pytest"
+
+  Scenario: Check-tests flag runs pytest
+    Given a valid project with passing tests
+    When I run praxis validate --check-tests
+    Then the exit code should be 0
+    And the output should contain "pytest"
+
+  Scenario: Check-lint flag runs ruff
+    Given a valid project with passing tests
+    When I run praxis validate --check-lint
+    Then the exit code should be 0
+    And the output should contain "ruff"
+
+  Scenario: Check-types flag runs mypy
+    Given a valid project with passing tests
+    When I run praxis validate --check-types
+    Then the exit code should be 0
+    And the output should contain "mypy"
