@@ -102,7 +102,7 @@ def init_cmd(
         raise typer.Exit(0)
     else:
         for err in result.errors:
-            typer.echo(f"✗ {err}")
+            typer.echo(f"✗ {err}", err=True)
         raise typer.Exit(1)
 
 
@@ -119,23 +119,23 @@ def stage_cmd(
 
     # Handle warnings that need confirmation
     if result.needs_confirmation:
-        typer.echo(f"⚠ {result.warning_message}")
+        typer.echo(f"⚠ {result.warning_message}", err=True)
         if not typer.confirm("Continue anyway?"):
             typer.echo("Aborted.")
             raise typer.Exit(0)
         # Re-run with force
         result = transition_stage(path, new_stage, force=True)
 
-    # Print issues
+    # Print issues (warnings and errors go to stderr)
     for issue in result.issues:
         icon = "✗" if issue.severity == "error" else "⚠"
-        typer.echo(f"{icon} {issue.message}")
+        typer.echo(f"{icon} {issue.message}", err=True)
 
     if result.success:
         typer.echo(f"✓ Stage updated to '{new_stage}'")
         raise typer.Exit(0)
     else:
-        typer.echo("✗ Failed to update stage")
+        typer.echo("✗ Failed to update stage", err=True)
         raise typer.Exit(1)
 
 
@@ -156,11 +156,11 @@ def validate_cmd(
     """Validate a praxis.yaml configuration."""
     result = validate(path)
 
-    # Print issues
+    # Print issues (warnings and errors go to stderr)
     for issue in result.issues:
         icon = "\u2717" if issue.severity == "error" else "\u26a0"
         severity = issue.severity.upper()
-        typer.echo(f"{icon} [{severity}] {issue.message}")
+        typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
 
     # Print summary
     if result.valid and not result.warnings:
@@ -169,7 +169,10 @@ def validate_cmd(
 
     if result.valid and result.warnings:
         if strict:
-            typer.echo(f"\u2717 Validation failed: {len(result.warnings)} warning(s)")
+            typer.echo(
+                f"\u2717 Validation failed: {len(result.warnings)} warning(s)",
+                err=True,
+            )
             raise typer.Exit(1)
         typer.echo(
             f"\u2713 praxis.yaml is valid ({len(result.warnings)} warning(s))"
@@ -177,7 +180,7 @@ def validate_cmd(
         raise typer.Exit(0)
 
     # Has errors
-    typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)")
+    typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)", err=True)
     raise typer.Exit(1)
 
 
