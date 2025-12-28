@@ -146,6 +146,37 @@ Domains tell Praxis what kinds of artifacts are valid and what “done” looks 
 
 Privacy is declared in `praxis.yaml` and should be treated as a real constraint (not a note).
 
+## Quick Start (CLI)
+
+Install the Praxis CLI:
+
+```bash
+cd praxis-ai
+poetry install
+```
+
+Validate a project's governance configuration:
+
+```bash
+# Validate current directory
+poetry run praxis validate
+
+# Validate a specific project
+poetry run praxis validate projects/code/my-project/
+
+# Treat warnings as errors (for CI)
+poetry run praxis validate --strict
+
+# Override environment via ENV var
+PRAXIS_ENV=Work poetry run praxis validate
+```
+
+The validator checks:
+- Schema correctness (domain, stage, privacy_level, environment)
+- Required artifacts exist (e.g., `docs/sod.md` for Code domain at Execute stage)
+- Stage regressions are valid (warns on invalid transitions)
+- Privacy level wasn't downgraded (warns if less restrictive)
+
 ## Quick Start (Using an Agent)
 
 From a project directory, start an agentic session (Copilot, Claude Code, etc.) and prompt:
