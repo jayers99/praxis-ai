@@ -83,7 +83,7 @@ docs/           # Specifications and design docs
   domains.md    # Domain → artifact mappings
   formalize.md  # Formalize stage and artifact definitions
   adr/          # Architecture Decision Records
-projects/       # Worked projects
+projects/       # Example projects across domains for discovering how to use Praxis
   code/template-python-cli/  # Complete project in Sustain stage
 ```
 
