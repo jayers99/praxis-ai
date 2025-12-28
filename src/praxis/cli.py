@@ -8,11 +8,13 @@ import click
 import typer
 
 from praxis import __version__
+from praxis.application.audit_service import audit_project
 from praxis.application.init_service import init_project
 from praxis.application.stage_service import transition_stage
 from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
 from praxis.domain.domains import Domain
+from praxis.domain.models import AuditCheck
 from praxis.domain.privacy import PrivacyLevel
 
 app = typer.Typer(
@@ -254,6 +256,56 @@ def status_cmd(
     else:
         typer.echo("Stage History: (no history found)")
 
+    raise typer.Exit(0)
+
+
+@app.command(name="audit")
+def audit_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+    strict: bool = typer.Option(
+        False,
+        "--strict",
+        "-s",
+        help="Treat warnings as failures (exit 1).",
+    ),
+) -> None:
+    """Check project against domain best practices."""
+    result = audit_project(path)
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+    else:
+        typer.echo(f"\nAuditing: {result.project_name} (domain: {result.domain})\n")
+
+        # Group by category
+        by_category: dict[str, list[AuditCheck]] = {}
+        for check in result.checks:
+            by_category.setdefault(check.category, []).append(check)
+
+        for category, checks in by_category.items():
+            typer.echo(f"{category.title()}:")
+            for check in checks:
+                icon = {"passed": "\u2713", "warning": "\u26a0", "failed": "\u2717"}
+                typer.echo(f"  {icon[check.status]} {check.message}")
+            typer.echo("")
+
+        # Summary
+        p, w, f = len(result.passed), len(result.warnings), len(result.failed)
+        typer.echo(f"Summary: {p} passed, {w} warning(s), {f} failed")
+
+    # Exit code
+    has_failures = len(result.failed) > 0
+    has_warnings = len(result.warnings) > 0
+    if has_failures or (strict and has_warnings):
+        raise typer.Exit(1)
     raise typer.Exit(0)
 
 
