@@ -61,3 +61,35 @@ class StageResult(BaseModel):
     issues: list[ValidationIssue] = Field(default_factory=list)
     needs_confirmation: bool = False
     warning_message: str | None = None
+
+
+class AuditCheck(BaseModel):
+    """Single audit check result."""
+
+    name: str
+    category: str  # tooling, structure, testing
+    status: Literal["passed", "warning", "failed"]
+    message: str
+
+
+class AuditResult(BaseModel):
+    """Complete audit result."""
+
+    project_name: str
+    domain: str
+    checks: list[AuditCheck] = Field(default_factory=list)
+
+    @property
+    def passed(self) -> list[AuditCheck]:
+        """Return only passed checks."""
+        return [c for c in self.checks if c.status == "passed"]
+
+    @property
+    def warnings(self) -> list[AuditCheck]:
+        """Return only warning checks."""
+        return [c for c in self.checks if c.status == "warning"]
+
+    @property
+    def failed(self) -> list[AuditCheck]:
+        """Return only failed checks."""
+        return [c for c in self.checks if c.status == "failed"]
