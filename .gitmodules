@@ -10,3 +10,6 @@
 [submodule "projects/create/bowerbird"]
 	path = projects/create/bowerbird
 	url = https://github.com/jayers99/bowerbird.git
+[submodule "projects/code/uat-praxis-code"]
+	path = projects/code/uat-praxis-code
+	url = https://github.com/jayers99/uat-praxis-code.git
