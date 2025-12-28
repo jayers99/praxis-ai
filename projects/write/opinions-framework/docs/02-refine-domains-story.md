@@ -1,184 +1,195 @@
-# Story: Refine Domain Definitions
+# Spike: Research Domain Definitions
 
 **Project:** opinions-framework  
+**Type:** Spike (research/exploration)  
 **Size:** Medium  
-**Priority:** High (blocks opinion research)  
-**Depends on:** 01-refine-lifecycle-story
+**Priority:** High (foundational for all opinions work)
+
+### Budget (by size)
+
+| Size | Time Box | AI Credit Budget |
+|------|----------|------------------|
+| Small | 15 min | ~10 queries |
+| **Medium** | **30 min** | **~25 queries** |
+| Large | 60 min | ~50 queries |
+
+*This spike is Medium.*
 
 ---
 
-## Summary
+## Spike Intent
 
-Review and refine the five domain definitions to ensure they are:
-1. **Distinct** — No overlap or ambiguity between domains
-2. **Complete** — Cover all reasonable work types
-3. **Subtype-ready** — Support hierarchical inheritance for opinions
+Research and document best practices, prior art, and academic foundations for the 5 Praxis domains (Code, Create, Write, Observe, Learn). Explore boundary definitions, subtype taxonomies, and how similar frameworks categorize work.
 
----
-
-## Problem Statement
-
-The opinions framework will generate guidance for each Domain × Stage cell. If domain definitions are fuzzy or overlap, the resulting opinions will conflict or leave gaps.
-
-**Current domains:** Code, Create, Write, Observe, Learn
-
-**Current state:** Domain definitions exist in `docs/domains.md` but may lack:
-- Clear boundary criteria (when is something Code vs. Create?)
-- Subtype taxonomy (what are the recognized subtypes per domain?)
-- Formalization artifact requirements per domain
+**This is NOT an implementation story.** The output is research, not code or final documentation.
 
 ---
 
-## Acceptance Criteria
+## Why a Spike?
 
-- [ ] Each domain has explicit **boundary criteria** (what qualifies, what doesn't)
-- [ ] Each domain has a **primary intent** (what are you trying to produce?)
-- [ ] Each domain has a **formalize artifact** requirement (SOD, brief, plan, etc.)
-- [ ] Each domain has initial **subtype taxonomy** (at least top-level categories)
-- [ ] Domains are mutually exclusive (no work fits two domains)
-- [ ] Domains are collectively exhaustive (all reasonable work fits somewhere)
-- [ ] Edge cases are documented (hybrid work, sequenced domains)
+- We need to understand how others categorize creative/technical work
+- Domain boundaries (Write vs. Create, Observe vs. Learn) need grounding in prior art
+- Subtype taxonomies should be informed by industry patterns
+- Better to research now than discover gaps during execution
 
 ---
 
-## Current Domain Definitions (Audit)
+## Research Questions per Domain
 
-| Domain | Intent | Formalize Artifact | Subtypes? | Issues |
-|--------|--------|-------------------|-----------|--------|
-| **Code** | Functional systems | SOD | CLI, Library, API, etc. (partial) | Needs subtype formalization |
-| **Create** | Aesthetic output | Creative Brief | Unknown | Unclear subtypes |
-| **Write** | Structured thought | Writing Brief | Unknown | Overlaps with Create? |
-| **Observe** | Raw capture | None | N/A | When does Observe become Learn? |
-| **Learn** | Skill formation | Learning Plan | Unknown | Boundary with Write unclear |
+### Code
 
-### Boundary Questions to Resolve
+- What taxonomies exist for software project types?
+- How do others categorize: CLI, Library, API, Web App, Infrastructure?
+- What's the industry standard for "project archetypes"?
+- Key influencers/sources?
 
-1. **Write vs. Create** — Is a blog post Write or Create? Is fiction Write or Create?
-2. **Observe vs. Learn** — When does observation become learning?
-3. **Code vs. Create** — Is generative AI art tooling Code or Create?
-4. **Hybrid work** — A project that writes documentation for code — is it Code or Write?
+### Create
 
----
+- How do creative fields categorize work? (Visual, Audio, Interactive)
+- What distinguishes "aesthetic" from "functional" output?
+- How do design schools/frameworks categorize creative work?
+- Key influencers/sources?
 
-## Proposed Refinements
+### Write
 
-### Clearer Boundary Criteria
+- How is "writing" categorized in professional/academic contexts?
+- Technical writing vs. business writing vs. narrative — standard taxonomy?
+- Where does documentation fit?
+- Key influencers/sources?
 
-| Domain | Core Question | Boundary Test |
-|--------|---------------|---------------|
-| **Code** | "Does it execute?" | If the output runs/compiles, it's Code |
-| **Create** | "Is the output primarily aesthetic?" | If quality is judged by taste/beauty, it's Create |
-| **Write** | "Is the output primarily informational?" | If quality is judged by clarity/accuracy, it's Write |
-| **Observe** | "Am I just capturing, not processing?" | If no synthesis or judgment, it's Observe |
-| **Learn** | "Am I developing a capability?" | If the goal is personal skill, it's Learn |
+### Observe
 
-### Subtype Taxonomy (First Pass)
+- What prior art exists on passive capture? (Note-taking, journaling, bookmarking)
+- How do knowledge management systems categorize raw capture?
+- When does observation become something else?
+- Key influencers/sources?
 
-**Code:**
-```
-Code
-├── CLI
-│   ├── CLI-Python
-│   └── CLI-Node
-├── Library
-├── API
-│   ├── REST
-│   └── GraphQL
-├── Web App
-└── Infrastructure
-```
+### Learn
 
-**Create:**
-```
-Create
-├── Visual
-│   ├── Illustration
-│   ├── Photography
-│   └── Video
-├── Audio
-│   ├── Music
-│   └── Podcast
-└── Interactive
-    └── Game
-```
+- How is learning categorized? (Skill vs. concept vs. practice)
+- What frameworks exist for learning goals? (Bloom's taxonomy, etc.)
+- When does learning produce an artifact vs. internal capability?
+- Key influencers/sources?
 
-**Write:**
-```
-Write
-├── Technical
-│   ├── README
-│   ├── API Docs
-│   ├── Specification
-│   └── ADR
-├── Business
-│   ├── RFP
-│   ├── User Story
-│   └── Report
-└── Narrative
-    ├── Blog Post
-    └── Essay
-```
+### Boundary Questions
 
-**Learn:**
-```
-Learn
-├── Skill
-│   ├── Programming Language
-│   └── Tool Proficiency
-├── Concept
-│   └── Domain Knowledge
-└── Practice
-    └── Deliberate Practice
-```
-
-**Observe:**
-```
-Observe
-├── Notes
-├── Bookmarks
-├── Screenshots
-└── Logs
-```
+- **Write vs. Create:** Is a blog post Write or Create? Is fiction Write or Create?
+- **Observe vs. Learn:** When does observation become learning?
+- **Code vs. Create:** Is generative AI art tooling Code or Create?
+- **Hybrid work:** How do other frameworks handle multi-domain projects?
 
 ---
 
-## Tasks
+## Output Artifacts
 
-1. [ ] Review current domain definitions in `docs/domains.md`
-2. [ ] Resolve boundary ambiguities (Write vs. Create, etc.)
-3. [ ] Draft initial subtype taxonomy per domain
-4. [ ] Document hybrid work handling (sequenced domains)
-5. [ ] Update `docs/domains.md` with refinements
-6. [ ] Validate against existing projects (template-python-cli, render-run)
-7. [ ] Review with stakeholder
+### 1. Research Report
+
+**File:** `projects/write/opinions-framework/docs/spike-02-domains-research.md`
+
+For each domain:
+- Summary of prior art found
+- How others categorize this type of work
+- Subtype taxonomies from industry/academia
+- Boundary criteria (what's in, what's out)
+- Confidence level in our current definition
+
+### 2. Follow-Up Spikes Needed
+
+Areas where more research is needed. Each should specify:
+- What question remains unanswered
+- Where to look for answers
+
+### 3. Implementation Stories Ready
+
+Refinements that are well-understood enough to become concrete stories.
+
+### 4. Proposed Next Steps
+
+What to do after this spike.
+
+---
+
+## Time Box Structure
+
+| Phase | Time | Activity |
+|-------|------|----------|
+| Setup | 3 min | Read current domain definitions |
+| Research: Code + Create | 10 min | Web search, synthesis |
+| Research: Write + Learn + Observe | 10 min | Web search, synthesis |
+| Boundary resolution | 5 min | Research hybrid/edge cases |
+| Synthesis | 5 min | Compile report, identify gaps |
+| **Total** | **30 min** | |
+
+---
+
+## Definition of Done
+
+- [ ] Research report produced for all 5 domains
+- [ ] Each domain has at least 2-3 sources identified
+- [ ] Boundary questions addressed with research-backed proposals
+- [ ] Follow-up spikes listed if needed
+- [ ] Time box respected (stop at 30 min even if incomplete)
+- [ ] Handoff summary produced
 
 ---
 
 ## Non-Goals
 
-- Not adding new domains (five are fixed for now)
-- Not defining full opinion content (that's later stories)
-- Not implementing subtype resolution in code (that's policy engine work)
+- Not updating `docs/domains.md` (that's implementation)
+- Not defining complete subtype taxonomies (may need more research)
+- Not exceeding time box
 
 ---
 
 ## Dependencies
 
-- 01-refine-lifecycle-story (stages should be clear before domains)
+- Can run in parallel with Spike 01 (Lifecycle)
 
-## Blocks
+## Enables
 
-- 03-define-praxis-contract
-- 04-define-opinion-structure
-- All opinion research work
+- Concrete domain refinement stories
+- Story 03 (Praxis contract)
+- All downstream opinion work
 
 ---
 
-## Notes
+## Agent Instructions
 
-This story addresses the concern: "We should look and see if there's a gap in our current domain definitions that could result in inferior results from this exercise."
+**To execute this spike, copy the following to the agent:**
 
-The refinements should make domains clear enough that:
-1. Any work can be unambiguously assigned to exactly one domain
-2. Subtypes can inherit opinions from parent domain
-3. AI can determine applicable opinions from `praxis.yaml` domain + subtype
+```
+Read and execute this spike file completely.
+
+This is a RESEARCH spike, not an implementation story. Your job is to explore, not to change docs/domains.md.
+
+Time box: 30 minutes (stop when time is up, even if incomplete)
+
+Your task:
+1. For EACH of the 5 domains (Code, Create, Write, Observe, Learn):
+   - Search for prior art on how this type of work is categorized
+   - Find industry/academic taxonomies for subtypes
+   - Identify boundary criteria (what's in, what's out)
+   - Note key influencers/sources
+   - Rate confidence in our current definition (high/medium/low)
+
+2. Address the boundary questions:
+   - Write vs. Create (blog post? fiction?)
+   - Observe vs. Learn (when does observation become learning?)
+   - Code vs. Create (AI art tooling?)
+   - Hybrid work handling
+
+3. Produce the research report:
+   - Save to: projects/write/opinions-framework/docs/spike-02-domains-research.md
+
+4. List follow-up spikes needed (questions that remain unanswered)
+
+5. List implementation-ready stories (changes we're confident about)
+
+6. Produce handoff summary with:
+   - What you researched
+   - Key findings
+   - What remains unknown
+   - Time spent
+
+If you hit the time box before finishing, STOP and document your partial findings.
+```
