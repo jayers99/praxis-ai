@@ -99,6 +99,11 @@ Praxis treats your work as a lightweight “memory engine”:
 
 ## Start Here
 
+If you're new to Praxis:
+
+- [docs/user-guide.md](docs/user-guide.md) — step-by-step walkthrough with examples
+- [docs/ai-setup.md](docs/ai-setup.md) — configure AI assistants (CLAUDE.md, .cursorrules)
+
 If you want to understand the framework:
 
 - [docs/sod.md](docs/sod.md) — main specification
@@ -110,7 +115,8 @@ If you want to understand the framework:
 
 If you want to see Praxis applied in real projects:
 
-- [projects/code/template-python-cli](projects/code/template-python-cli/) — a full “Code” domain worked project (in Sustain)
+- [projects/code/uat-praxis-code](projects/code/uat-praxis-code/) — hello-world CLI with full lifecycle docs
+- [projects/code/template-python-cli](projects/code/template-python-cli/) — production CLI template (in Sustain)
 
 ## How Praxis Works (Short Version)
 
