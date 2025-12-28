@@ -45,13 +45,118 @@ This guide walks you through building a project using Praxis governance, from in
 | **Sustain** | Maintain and evolve | Is it healthy? |
 | **Close** | Archive or sunset | Is this done? |
 
-### Validation
+---
 
-Run at any stage to check governance compliance:
+## CLI Commands
+
+### praxis init
+
+Initialize a new Praxis project:
 
 ```bash
-poetry run praxis validate path/to/project/
+praxis init [PATH] [OPTIONS]
 ```
+
+| Option | Description |
+|--------|-------------|
+| `PATH` | Project directory (default: `.`) |
+| `--domain`, `-d` | Project domain: code, create, write, observe, learn |
+| `--privacy`, `-p` | Privacy level: public, personal, confidential, restricted |
+| `--env`, `-e` | Environment: Home, Work (default: Home) |
+| `--force`, `-f` | Overwrite existing files |
+
+**Creates:**
+- `praxis.yaml` — Governance configuration
+- `CLAUDE.md` — AI assistant instructions
+- `docs/capture.md` — First stage template
+
+### praxis validate
+
+Validate a praxis.yaml configuration:
+
+```bash
+praxis validate [PATH] [OPTIONS]
+```
+
+| Option | Description |
+|--------|-------------|
+| `PATH` | Project directory (default: `.`) |
+| `--strict`, `-s` | Treat warnings as errors (exit 1) |
+
+**Exit codes:** 0 = valid, 1 = errors found
+
+### praxis stage
+
+Transition project to a new lifecycle stage:
+
+```bash
+praxis stage <NEW_STAGE> [PATH]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `NEW_STAGE` | Target stage (capture, sense, explore, shape, formalize, commit, execute, sustain, close) |
+| `PATH` | Project directory (default: `.`) |
+
+**Example:**
+```bash
+praxis stage sense
+# ✓ Stage updated to 'sense'
+```
+
+**Behavior:**
+- Updates `praxis.yaml` with new stage
+- Updates `CLAUDE.md` stage line (if present)
+- Warns if missing required artifact (e.g., SOD at commit+)
+- Prompts for confirmation on non-standard regressions
+
+### praxis status
+
+Show project status including stage, validation, and history:
+
+```bash
+praxis status [PATH]
+```
+
+| Argument | Description |
+|----------|-------------|
+| `PATH` | Project directory (default: `.`) |
+
+**Example output:**
+```
+Project: my-project
+  Domain:  code
+  Stage:   execute (7/9)
+  Privacy: personal
+  Env:     Home
+
+Next Stage: sustain
+  - Complete initial implementation
+
+Artifact: ✓ docs/sod.md
+
+Validation: ✓ Valid
+
+Stage History:
+  2025-12-27 execute    abc1234 feat: implement core feature
+  2025-12-27 commit     def5678 ready to build
+```
+
+### praxis audit
+
+Check project against domain best practices:
+
+```bash
+praxis audit [PATH] [OPTIONS]
+```
+
+| Option | Description |
+|--------|-------------|
+| `PATH` | Project directory (default: `.`) |
+| `--json` | Output in JSON format for automation |
+| `--strict`, `-s` | Treat warnings as failures (exit 1) |
+
+See [Audit Command](#audit-command) for full details.
 
 ---
 
