@@ -10,6 +10,7 @@ import typer
 from praxis import __version__
 from praxis.application.init_service import init_project
 from praxis.application.stage_service import transition_stage
+from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
 from praxis.domain.domains import Domain
 from praxis.domain.privacy import PrivacyLevel
@@ -182,6 +183,78 @@ def validate_cmd(
     # Has errors
     typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)", err=True)
     raise typer.Exit(1)
+
+
+@app.command(name="status")
+def status_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+) -> None:
+    """Show project status including stage, validation, and history."""
+    status = get_status(path)
+
+    # Handle config load errors
+    if status.config is None:
+        typer.echo(f"Project: {status.project_name}", err=True)
+        for err in status.errors:
+            typer.echo(f"\u2717 {err}", err=True)
+        raise typer.Exit(1)
+
+    config = status.config
+
+    # Current state
+    typer.echo(f"Project: {status.project_name}")
+    typer.echo(f"  Domain:  {config.domain.value}")
+    stage_progress = f"{status.stage_index}/{status.stage_count}"
+    typer.echo(f"  Stage:   {config.stage.value} ({stage_progress})")
+    typer.echo(f"  Privacy: {config.privacy_level.value}")
+    typer.echo(f"  Env:     {config.environment}")
+
+    # Next stage
+    typer.echo("")
+    if status.next_stage:
+        typer.echo(f"Next Stage: {status.next_stage.value}")
+        for req in status.next_stage_requirements:
+            typer.echo(f"  - {req}")
+    else:
+        typer.echo("Next Stage: (none - at final stage)")
+
+    # Artifact status
+    typer.echo("")
+    if status.artifact_path:
+        icon = "\u2713" if status.artifact_exists else "\u2717"
+        typer.echo(f"Artifact: {icon} {status.artifact_path}")
+    else:
+        typer.echo("Artifact: (none required for this domain)")
+
+    # Validation
+    typer.echo("")
+    if status.validation.valid and not status.validation.warnings:
+        typer.echo("Validation: \u2713 Valid")
+    elif status.validation.valid and status.validation.warnings:
+        warn_count = len(status.validation.warnings)
+        typer.echo(f"Validation: \u2713 Valid ({warn_count} warning(s))")
+        for issue in status.validation.warnings:
+            typer.echo(f"  \u26a0 {issue.message}")
+    else:
+        err_count = len(status.validation.errors)
+        typer.echo(f"Validation: \u2717 Invalid ({err_count} error(s))")
+        for issue in status.validation.errors:
+            typer.echo(f"  \u2717 {issue.message}", err=True)
+
+    # Stage history
+    typer.echo("")
+    if status.stage_history:
+        typer.echo("Stage History:")
+        for entry in status.stage_history[:5]:  # Show last 5
+            line = f"  {entry.commit_date} {entry.stage:10} {entry.commit_hash}"
+            typer.echo(f"{line} {entry.commit_message}")
+    else:
+        typer.echo("Stage History: (no history found)")
+
+    raise typer.Exit(0)
 
 
 if __name__ == "__main__":
