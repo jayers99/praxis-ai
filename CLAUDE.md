@@ -28,6 +28,14 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 
 **Iteration Mode:** Formalize is where iteration changes meaning. Before: _discovery_ (what is this?). After: _refinement_ (how good can it be?). Detecting scope change during Execute means regression to Formalize.
 
+**Allowed Regressions (from `lifecycle.md` lines 104-118):**
+
+| From | Allowed To |
+|------|------------|
+| Execute | Commit, Formalize |
+| Sustain | Execute, Commit |
+| Close | Capture |
+
 ### Domains
 
 - **Code** — Functional systems (formalize via SOD)
@@ -43,6 +51,27 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 3. Personal
 4. Confidential
 5. Restricted
+
+### Validation Model (ADR-002) — Core Contract
+
+The validation model governs what the Policy Engine checks:
+
+| Rule | Severity | Trigger |
+|------|----------|---------|
+| Unknown domain/stage/privacy | Error | Value not in allowed list |
+| Missing formalize artifact | Error | stage ≥ commit AND artifact not found |
+| Invalid stage regression | Warning | Transition not in allowed table |
+| Privacy downgrade | Warning | privacy_level decreased from prior commit |
+
+**Artifact Path Conventions:**
+
+| Domain | Artifact | Path |
+|--------|----------|------|
+| Code | SOD | `docs/sod.md` |
+| Create | Creative Brief | `docs/brief.md` |
+| Write | Writing Brief | `docs/brief.md` |
+| Learn | Learning Plan | `docs/plan.md` |
+| Observe | (none) | — |
 
 ## Project Structure
 
@@ -73,14 +102,28 @@ The [template-python-cli](projects/code/template-python-cli/) demonstrates the f
 
 ### Next: `praxis validate` CLI
 
-Deliverable: CLI validator for praxis.yaml files
+Deliverable: CLI validator implementing ADR-002's validation rules.
 
-Acceptance tests:
+**Core Features (v1):**
 
-1. Valid praxis.yaml passes (domain: code, stage: execute, privacy: confidential)
-2. Missing SOD at Execute stage fails with explicit message
-3. Public project with .env file triggers warning
-4. Invalid stage transitions rejected
+1. Schema validation (`praxis.yaml` → Pydantic model)
+2. Artifact existence check (stage ≥ commit → required artifact exists?)
+3. Regression validation (warn if transition not in allowed table)
+4. Privacy-storage coupling (error if restricted + non-local storage)
+
+**Deferred:**
+
+- AI Guard compilation (`.cursorrules` / `CLAUDE.md` generation)
+- External constraints overlay
+- Multi-domain composition
+- Deep artifact content parsing
+
+**Acceptance Tests:**
+
+1. Valid `praxis.yaml` passes validation
+2. Missing SOD at Execute stage → Error with explicit message
+3. Invalid regression (Execute → Explore) → Warning
+4. Privacy downgrade detected → Warning
 
 ### praxis.yaml Schema
 
@@ -118,11 +161,16 @@ Opinions are advisory, not gates. They inform decisions without blocking progres
 
 ## References
 
+**Primary for Policy Engine work:**
+
+- [ADR-002](docs/adr/002-validation-model.md) — Validation model specification (core contract)
+- [Lifecycle](docs/lifecycle.md) — Stage definitions and regression rules (lines 104-118)
+
+**Supporting:**
+
 - [SOD v0.3](docs/sod.md) — Complete specification
-- [Lifecycle](docs/lifecycle.md) — Stage definitions and regression rules
 - [Privacy Model](docs/privacy.md) — Privacy levels and enforcement
 - [Domains](docs/domains.md) — Domain → artifact mappings
 - [Formalize](docs/formalize.md) — Formalize stage and artifact definitions
 - [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision (exploratory)
-- [ADR-002](docs/adr/002-validation-model.md) — Validation model positions
 - [template-python-cli](projects/code/template-python-cli/) — Complete worked project
