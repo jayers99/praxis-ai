@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 import subprocess
-from dataclasses import dataclass
 from pathlib import Path
+
+from pydantic import BaseModel, Field
 
 from praxis.application.validate_service import validate
 from praxis.domain.domains import ARTIFACT_PATHS
@@ -13,8 +14,7 @@ from praxis.domain.stages import REQUIRES_ARTIFACT, Stage
 from praxis.infrastructure.yaml_loader import load_praxis_config
 
 
-@dataclass
-class StageHistoryEntry:
+class StageHistoryEntry(BaseModel):
     """A single stage change in history."""
 
     stage: str
@@ -23,32 +23,31 @@ class StageHistoryEntry:
     commit_message: str
 
 
-@dataclass
-class ProjectStatus:
+class ProjectStatus(BaseModel):
     """Complete project status information."""
 
     # Basic info
     project_name: str
-    config: PraxisConfig | None
+    config: PraxisConfig | None = None
 
     # Stage info
-    stage_index: int  # 1-based index
-    stage_count: int  # Total stages (9)
-    next_stage: Stage | None
-    next_stage_requirements: list[str]
+    stage_index: int = 0  # 1-based index
+    stage_count: int = 9  # Total stages
+    next_stage: Stage | None = None
+    next_stage_requirements: list[str] = Field(default_factory=list)
 
     # Artifact info
-    artifact_path: str | None
-    artifact_exists: bool
+    artifact_path: str | None = None
+    artifact_exists: bool = False
 
     # Validation
     validation: ValidationResult
 
     # History
-    stage_history: list[StageHistoryEntry]
+    stage_history: list[StageHistoryEntry] = Field(default_factory=list)
 
     # Errors
-    errors: list[str]
+    errors: list[str] = Field(default_factory=list)
 
 
 def get_stage_history(project_root: Path, limit: int = 10) -> list[StageHistoryEntry]:
@@ -228,10 +227,11 @@ def get_status(path: Path) -> ProjectStatus:
     next_stage = get_next_stage(config.stage)
 
     # Artifact info
-    artifact_path = ARTIFACT_PATHS.get(config.domain)
+    artifact_path_obj = ARTIFACT_PATHS.get(config.domain)
+    artifact_path = str(artifact_path_obj) if artifact_path_obj else None
     artifact_exists = False
-    if artifact_path:
-        artifact_exists = (project_root / artifact_path).exists()
+    if artifact_path_obj:
+        artifact_exists = (project_root / artifact_path_obj).exists()
 
     # Requirements
     requirements = get_next_stage_requirements(
