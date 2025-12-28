@@ -25,6 +25,12 @@ gh issue list --label "maturity: formalized" --label "type: feature"
 
 **Rhythm:** Batch issues by labels → Implement → PR → Merge → Close
 
+**Session summaries:** Before ending a session, save progress to `scratch/sessions/YYYY-MM-DD.md` for cross-machine continuity:
+```bash
+# Resume from any machine
+git pull && cat scratch/sessions/2025-12-28.md
+```
+
 ## Tech Stack
 
 - **Language:** Python 3.12+
