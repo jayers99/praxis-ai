@@ -4,7 +4,26 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** CLI foundation complete (`validate`, `init`). Ready to extend with additional commands and domain support.
+**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`). Extending with domain-specific features.
+
+## Issue Workflow
+
+**See [CONTRIBUTING.md](CONTRIBUTING.md)** for the full issue framework.
+
+**Quick reference for batching work:**
+```bash
+# Find ready-to-implement issues
+gh issue list --label "maturity: shaped" --label "size: small"
+gh issue list --label "maturity: formalized" --label "type: feature"
+```
+
+**Labels:**
+- `maturity: raw|shaped|formalized` — Issue readiness
+- `size: small|medium|large` — Effort estimate
+- `type: feature|spike|chore` — Work type
+- `priority: high|medium|low` — Importance
+
+**Rhythm:** Batch issues by labels → Implement → PR → Merge → Close
 
 ## Tech Stack
 
@@ -24,7 +43,21 @@ praxis init --domain code --privacy personal
 
 # Validate governance configuration
 praxis validate .
-praxis validate --strict  # Treat warnings as errors
+praxis validate --strict          # Treat warnings as errors
+praxis validate --check-all       # Run tests, lint, types, coverage
+praxis validate --check-coverage  # Check coverage threshold
+
+# Transition lifecycle stage
+praxis stage formalize
+praxis stage execute --json       # JSON output for automation
+
+# Show project status
+praxis status                     # Current state, next steps, history
+praxis status --json
+
+# Audit against domain best practices
+praxis audit                      # Check tooling, structure, testing
+praxis audit --strict             # Fail on warnings
 ```
 
 ## Key Concepts
@@ -135,6 +168,7 @@ domain: code|create|write|observe|learn
 stage: capture|sense|explore|shape|formalize|commit|execute|sustain|close
 privacy_level: public|public-trusted|personal|confidential|restricted
 environment: Home|Work
+coverage_threshold: 0-100  # Optional: minimum test coverage %
 ```
 
 ## Commands
@@ -154,13 +188,6 @@ poetry run praxis --help
 poetry run praxis init --help
 poetry run praxis validate --help
 ```
-
-## Potential Next Features
-
-- `praxis stage [new-stage]` — Update stage with validation
-- `praxis status` — Show current state and next steps
-- Privacy enforcement — Check for violations (e.g., .env in public projects)
-- Additional domain templates — Create, Write, Learn
 
 ## References
 

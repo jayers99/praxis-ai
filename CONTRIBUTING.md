@@ -109,3 +109,22 @@ Use for non-user-facing improvements.
 *   **Goal**: What needs to be improved?
 *   **Rationale**: Why is this necessary now?
 *   **Acceptance Criteria**: clear definition of done.
+
+---
+
+## 5. Label Progression
+
+As work progresses, update the `maturity` label:
+
+| Transition | When |
+| :--- | :--- |
+| `raw` → `shaped` | Problem and solution approach are clear |
+| `shaped` → `formalized` | Ready to implement (Gherkin written if feature) |
+| Close issue | PR merged with "Fixes #N" in commit/PR body |
+
+**Batch selection pattern:**
+```bash
+# Find ready-to-implement issues
+gh issue list --label "maturity: shaped" --label "size: small"
+gh issue list --label "maturity: formalized" --label "type: feature"
+```
