@@ -45,17 +45,17 @@ def get_dependencies(project_root: Path) -> set[str]:
 
     # Main dependencies
     main_deps = poetry.get("dependencies", {})
-    deps.update(k.lower() for k in main_deps.keys())
+    deps.update(k.lower() for k in main_deps)
 
     # Dev dependencies (Poetry 1.2+ style)
     groups = poetry.get("group", {})
     for group in groups.values():
         group_deps = group.get("dependencies", {})
-        deps.update(k.lower() for k in group_deps.keys())
+        deps.update(k.lower() for k in group_deps)
 
     # Legacy dev-dependencies
     legacy_dev = poetry.get("dev-dependencies", {})
-    deps.update(k.lower() for k in legacy_dev.keys())
+    deps.update(k.lower() for k in legacy_dev)
 
     return deps
 

@@ -290,11 +290,11 @@ def audit_cmd(
         for check in result.checks:
             by_category.setdefault(check.category, []).append(check)
 
+        icons = {"passed": "\u2713", "warning": "\u26a0", "failed": "\u2717"}
         for category, checks in by_category.items():
             typer.echo(f"{category.title()}:")
             for check in checks:
-                icon = {"passed": "\u2713", "warning": "\u26a0", "failed": "\u2717"}
-                typer.echo(f"  {icon[check.status]} {check.message}")
+                typer.echo(f"  {icons[check.status]} {check.message}")
             typer.echo("")
 
         # Summary
