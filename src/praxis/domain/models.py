@@ -52,3 +52,12 @@ class InitResult(BaseModel):
     success: bool
     files_created: list[str] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
+
+
+class StageResult(BaseModel):
+    """Result of a stage transition."""
+
+    success: bool
+    issues: list[ValidationIssue] = Field(default_factory=list)
+    needs_confirmation: bool = False
+    warning_message: str | None = None

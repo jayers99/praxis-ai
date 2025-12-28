@@ -9,6 +9,7 @@ import typer
 
 from praxis import __version__
 from praxis.application.init_service import init_project
+from praxis.application.stage_service import transition_stage
 from praxis.application.validate_service import validate
 from praxis.domain.domains import Domain
 from praxis.domain.privacy import PrivacyLevel
@@ -102,6 +103,39 @@ def init_cmd(
     else:
         for err in result.errors:
             typer.echo(f"✗ {err}")
+        raise typer.Exit(1)
+
+
+@app.command(name="stage")
+def stage_cmd(
+    new_stage: str = typer.Argument(..., help="Target stage to transition to."),
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+) -> None:
+    """Transition project to a new lifecycle stage."""
+    result = transition_stage(path, new_stage)
+
+    # Handle warnings that need confirmation
+    if result.needs_confirmation:
+        typer.echo(f"⚠ {result.warning_message}")
+        if not typer.confirm("Continue anyway?"):
+            typer.echo("Aborted.")
+            raise typer.Exit(0)
+        # Re-run with force
+        result = transition_stage(path, new_stage, force=True)
+
+    # Print issues
+    for issue in result.issues:
+        icon = "✗" if issue.severity == "error" else "⚠"
+        typer.echo(f"{icon} {issue.message}")
+
+    if result.success:
+        typer.echo(f"✓ Stage updated to '{new_stage}'")
+        raise typer.Exit(0)
+    else:
+        typer.echo("✗ Failed to update stage")
         raise typer.Exit(1)
 
 
