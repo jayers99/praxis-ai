@@ -64,6 +64,12 @@ praxis status --json
 # Audit against domain best practices
 praxis audit                      # Check tooling, structure, testing
 praxis audit --strict             # Fail on warnings
+
+# Opinions framework (planned)
+praxis opinions                   # Show applicable opinions for project
+praxis opinions --prompt          # Generate AI context with opinions
+praxis opinions --check           # Validate against quality gates
+praxis opinions --list            # List all available opinion files
 ```
 
 ## Key Concepts
@@ -111,6 +117,48 @@ praxis audit --strict             # Fail on warnings
 | Invalid stage regression | Warning | Transition not in allowed table |
 | Privacy downgrade | Warning | privacy_level decreased from prior commit |
 
+### Subtypes by Domain
+
+| Domain | Subtypes |
+|--------|----------|
+| code | cli, library, api, webapp, infrastructure, script |
+| create | visual, audio, video, interactive, generative, design |
+| write | technical, business, narrative, academic, journalistic |
+| learn | skill, concept, practice, course, exploration |
+| observe | notes, bookmarks, clips, logs, captures |
+
+## Opinions Framework
+
+When working on a Praxis project with opinions:
+
+1. **Check for opinions:** Look for `docs/opinions/` directory
+2. **Read praxis.yaml:** Determine domain, stage, subtype
+3. **Resolve applicable opinions:** Use inheritance chain:
+   - `_shared/` → `{domain}/principles.md` → `{domain}/{stage}.md` → `subtypes/`
+4. **Apply as guidance:** Opinions are advisory, not hard rules
+5. **Note conflicts:** If user instruction conflicts with opinion, follow user
+6. **Reference gates:** Use quality gates when evaluating stage readiness
+
+Run `praxis opinions --prompt` to get formatted context for AI assistants.
+
+### Opinion File Types
+
+| File | Purpose |
+|------|---------|
+| `README.md` | Domain/subtype navigation and overview |
+| `principles.md` | Cross-stage principles (apply to ALL stages) |
+| `{stage}.md` | Stage-specific opinions and quality gates |
+
+### AI Permissions by Domain
+
+| Operation | Code | Create | Write | Learn | Observe |
+|-----------|:----:|:------:|:-----:|:-----:|:-------:|
+| suggest | Allowed | Allowed | Allowed | Allowed | Allowed |
+| complete | Allowed | Allowed | Allowed | Allowed | Blocked |
+| generate | Ask | Allowed | Ask | Allowed | Blocked |
+| transform | Ask | Allowed | Ask | Allowed | Blocked |
+| execute | Ask | — | — | — | — |
+
 ## Project Structure
 
 ```
@@ -142,7 +190,16 @@ docs/                    # Specifications and guides
   lifecycle.md           # Stage definitions
   user-guide.md          # Step-by-step walkthrough
   ai-setup.md            # AI assistant configuration
+  opinions-contract.md   # Opinions framework specification
   adr/                   # Architecture Decision Records
+  opinions/              # Domain opinions and guidance
+    _templates/          # Templates for creating opinions
+    _shared/             # Cross-domain principles
+    code/                # Code domain opinions
+    create/              # Create domain opinions
+    write/               # Write domain opinions
+    learn/               # Learn domain opinions
+    observe/             # Observe domain opinions
 
 projects/                # Worked examples
   code/uat-praxis-code/  # Hello world CLI (full lifecycle)
@@ -174,7 +231,8 @@ domain: code|create|write|observe|learn
 stage: capture|sense|explore|shape|formalize|commit|execute|sustain|close
 privacy_level: public|public-trusted|personal|confidential|restricted
 environment: Home|Work
-coverage_threshold: 0-100  # Optional: minimum test coverage %
+subtype: cli|library|api|...     # Optional: enables subtype opinion resolution
+coverage_threshold: 0-100        # Optional: minimum test coverage %
 ```
 
 ## Commands
@@ -206,10 +264,15 @@ poetry run praxis validate --help
 - [Lifecycle](docs/lifecycle.md) — Stage definitions and regressions
 - [Domains](docs/domains.md) — Domain → artifact mappings
 - [Privacy](docs/privacy.md) — Privacy levels and enforcement
+- [Opinions Contract](docs/opinions-contract.md) — Opinions framework specification
 
 **Architecture:**
 - [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision
 - [ADR-002](docs/adr/002-validation-model.md) — Validation model specification
+
+**Opinions:**
+- [Templates Guide](docs/opinions/_templates/GUIDE.md) — How to create opinion files
+- [Code Domain](docs/opinions/code/) — Code domain opinions and principles
 
 **Examples:**
 - [uat-praxis-code](projects/code/uat-praxis-code/) — Hello world with full lifecycle docs
