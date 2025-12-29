@@ -1,29 +1,62 @@
+---
+domain: code
+version: "1.0"
+status: draft
+---
+
 # Code Domain Opinions
 
-When `praxis.yaml` has `domain: code`, load this file into context.
+> **Scope:** Software development projects — applications, tools, infrastructure, scripts.
 
-## Foundational Principles
+## Quick Navigation
 
-See [principles.md](principles.md) for the foundational software development principles that guide all code domain work. These principles are advisory and inform decision-making without enforcing specific practices.
+- [Principles](principles.md) — Cross-stage principles for all Code projects
+- Stages:
+  - [Capture](capture.md) | [Sense](sense.md) | [Explore](explore.md)
+  - [Shape](shape.md) | [Formalize](formalize.md) | [Commit](commit.md)
+  - [Execute](execute.md) | [Sustain](sustain.md) | [Close](close.md)
+- Subtypes:
+  - [CLI](subtypes/cli/) | [Library](subtypes/library/) | [API](subtypes/api/)
+  - [WebApp](subtypes/webapp/) | [Infrastructure](subtypes/infrastructure/) | [Script](subtypes/script/)
 
-## Available Opinions
+## Domain at a Glance
 
-| Opinion | Triggers | Summary |
-| --- | --- | --- |
-| [cli](cli.md) | CLI, command-line, terminal, Unix, GNU, coreutils, HashiCorp, Docker, AWS CLI, shell, pipeline, stdout, stderr, exit codes, automation, scripting, CI/CD, backwards compatibility, long-term maintenance | Production CLI: Unix philosophy, pipeline safety, explicit behavior, meaningful exit codes, 10-year maintainability |
-| [cli-python](cli-python.md) | Python, Poetry, Typer, pytest, pytest-bdd, BDD, TDD, hexagonal, ports and adapters, ruff, mypy, pyproject.toml, console script | Python CLI: hexagonal architecture, Poetry, Typer, BDD/TDD testing, ruff/mypy |
-| [gui](gui.md) | GUI, graphical, desktop, web app, UI, UX, interface, window, dialog, button, form, accessibility, responsive | GUI apps: responsive, accessible, clear feedback, forgiving interactions |
-| [gui-web](gui-web.md) | web, browser, HTML, CSS, JavaScript, TypeScript, React, Vue, Angular, Svelte, frontend, SPA, PWA, responsive, mobile-first, WCAG, ARIA, CSP | Web GUI: performance, cross-browser, security, accessibility, component-based |
+| Aspect | Code Domain |
+|--------|-------------|
+| Primary artifact | Working software |
+| Quality signals | Tests pass, builds succeed, reviews approved |
+| AI role | Suggest/complete allowed; generate/execute ask |
+| Key risks | Security, maintainability, correctness |
 
-## How This Works
+## When to Use This Domain
 
-1. This README is loaded when domain = code
-2. If conversation matches any **trigger** keywords, load **all** matching detail files
-3. If a file extends another (e.g., `cli-python` extends `cli`), load the base file too
-4. Apply all loaded opinions to your reasoning and suggestions
+Use **Code** when the primary deliverable is software that:
+- Compiles or interprets
+- Has automated tests
+- Ships to users or other systems
 
-Multiple opinions can apply simultaneously. Base opinions provide general best practices; extended opinions add specific tooling and patterns.
+## Boundary
 
-## Maintenance
+- **In scope:** Output is executable/runnable code
+- **Out of scope:** AI-generated art (even if tooling is code), documentation-only
 
-When an opinion file changes, ask AI to regenerate its row in the table above. AI will read the detail file and extract updated triggers and summary.
+## Subtypes
+
+| Subtype | Description |
+|---------|-------------|
+| `cli` | Command-line tools and utilities |
+| `library` | Reusable packages and modules |
+| `api` | HTTP/REST/GraphQL services |
+| `webapp` | Web applications with UI |
+| `infrastructure` | IaC, DevOps, platform tooling |
+| `script` | One-off automation scripts |
+
+## Related Domains
+
+- **Write** for documentation accompanying code
+- **Learn** for skill development related to code
+- **Create** for generative art that uses code as medium
+
+---
+
+*Last updated: 2025-12-28*
