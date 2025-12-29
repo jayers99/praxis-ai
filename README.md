@@ -269,4 +269,4 @@ Core CLI is functional with `init`, `validate`, `stage`, `status`, and `audit` c
 
 ## License
 
-MIT
+PolyForm Noncommercial License 1.0.0
