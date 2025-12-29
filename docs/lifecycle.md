@@ -1,8 +1,10 @@
 # Praxis Lifecycle — Draft
 
 **File:** lifecycle.md
-**Version:** v0.2
+**Version:** v0.3
 **Purpose:** Capture the canonical Praxis lifecycle, the role of Formalize as the structural hinge, and the allowed regression model.
+
+> **Research basis:** Stage definitions and entry/exit criteria are grounded in established frameworks. See [Lifecycle Research](research/lifecycle-research.md) for detailed citations and methodology alignments.
 
 ---
 
@@ -14,39 +16,107 @@ Praxis organizes all work—creative, technical, and regulated—around a small,
 
 Collect raw inputs with minimal friction. Includes notes, images, references, ideas, and observations. No commitment or structure is required.
 
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Any input exists |
+| **Exit** | Input stored in retrievable location |
+| **Framework** | GTD (Allen), Zettelkasten (Luhmann) |
+
 ### 2. Sense
 
 Convert raw inputs into understanding. Includes light organization, tagging, summarization, and pattern recognition. Outputs remain environment-neutral and low-commitment.
+
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Captured inputs exist |
+| **Exit** | Inputs have meaning/context; problem can be articulated |
+| **Framework** | Sensemaking (Weick), Cynefin (Snowden) |
 
 ### 3. Explore
 
 Generate possibilities without obligation. Supports ideation, divergence, and speculative thinking. Abandonment is expected and safe.
 
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Sense complete; problem understood |
+| **Exit** | Multiple possibilities exist; can describe 2-3 directions |
+| **Framework** | Double Diamond (divergent), Divergent Thinking (Guilford) |
+
 ### 4. Shape
 
 Converge toward a viable direction. Includes selection, refinement, simplification, and preliminary structuring. Work remains reversible.
 
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Multiple options exist from Explore |
+| **Exit** | Single direction chosen; scope roughed out; major tradeoffs resolved |
+| **Framework** | Shape Up (Singer), Double Diamond (convergent) |
+
 ### 5. Formalize (Structural Hinge)
 
-Convert shaped thinking into durable, policy-bearing artifacts. Formalize establishes explicit intent, scope, constraints, and success criteria.  
-**Primary output:** Solution Overview Document (SOD).  
+Convert shaped thinking into durable, policy-bearing artifacts. Formalize establishes explicit intent, scope, constraints, and success criteria.
+**Primary output:** Solution Overview Document (SOD).
 Formalize is the boundary between exploration and execution.
+
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Shape complete; direction chosen |
+| **Exit** | SOD exists with scope, constraints, and success criteria |
+| **Framework** | SRS (IEEE), Stage-Gate Business Case (Cooper) |
 
 ### 6. Commit
 
 Explicitly decide to proceed. Locks scope and intent, allocates effort, and enforces policy invariants. Only a small subset of formalized work should reach this stage.
 
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | SOD complete and validated |
+| **Exit** | Explicit commitment to proceed; resources allocated |
+| **Framework** | Stage-Gate Go/Kill (Cooper), Shape Up Betting Table |
+
+**Go/No-Go Criteria:**
+
+| Decision | Condition |
+|----------|-----------|
+| **Go** | SOD is complete and internally consistent |
+| **Go** | Scope fits available appetite (time/effort budget) |
+| **Go** | Dependencies are identified and unblocked |
+| **Go** | Success criteria are measurable |
+| **No-Go** | Uncertainty about scope or direction remains → regress to Formalize |
+| **No-Go** | Dependencies are blocked with no clear resolution |
+| **No-Go** | Appetite insufficient for defined scope → reduce scope or wait |
+
 ### 7. Execute
 
 Produce the artifact. Includes coding, writing, illustration, or other implementation activities. AI behavior is tightly governed and driven by formalized intent.
+
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Commit complete; resources allocated |
+| **Exit** | Artifact produced per SOD specifications |
+| **Framework** | Agile/Scrum Sprint, Shape Up Build Cycle |
 
 ### 8. Sustain
 
 Maintain and govern delivered work. Includes updates, evaluation, optimization, and policy enforcement over time.
 
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Execute complete; artifact delivered |
+| **Exit** | Work retired or closed |
+| **Framework** | ITIL Service Operation, DevOps Operate/Monitor |
+
+> **Domain variance:** Sustain semantics vary by domain. For **Code**, this means maintenance, monitoring, and operations. For **Write** and **Create**, it may mean revision, republication, or audience engagement. For **Learn**, it means practice and retention. Domain-specific guidance is in development.
+
 ### 9. Close
 
 End work intentionally and capture leverage. Includes archiving artifacts, capturing learnings, retiring work, and seeding future cycles.
+
+| Criterion | Description |
+|-----------|-------------|
+| **Entry** | Sustain complete or explicit decision to end |
+| **Exit** | Learnings captured; next cycle seeded if applicable |
+| **Framework** | PMI Project Closure, Agile Retrospectives |
 
 ---
 
