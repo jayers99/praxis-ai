@@ -44,11 +44,16 @@ Praxis separates what you believe from how you decide from how you execute.
 Opinions  →  Governance  →  Execution
 ```
 
-- **Opinions:** Timeless viewpoints that bias decisions. Advisory, never enforced.
+- **Opinions:** Domain-specific guidance that biases decisions. Advisory, never enforced mechanically. Organized by domain, stage, and subtype with inheritance from general to specific.
 - **Governance:** The mechanism by which conflicts are resolved. Procedural authority.
 - **Execution:** The work itself. Governed by formalization contracts.
 
 This separation prevents principles from becoming dogma, governance from collapsing into bureaucracy, and execution from drifting without intent.
+
+Opinions are stored in `docs/opinions/` and resolved through inheritance:
+```text
+_shared → domain/principles → domain/{stage} → subtype/principles → subtype/{stage}
+```
 
 ### Formalize is the Structural Hinge
 
@@ -110,6 +115,7 @@ If you want to understand the framework:
 - [docs/lifecycle.md](docs/lifecycle.md) — stage definitions + regressions
 - [docs/domains.md](docs/domains.md) — domain → artifact types
 - [docs/privacy.md](docs/privacy.md) — privacy levels + enforcement intent
+- [docs/opinions-contract.md](docs/opinions-contract.md) — opinions framework specification
 - [docs/external-constraints.md](docs/external-constraints.md) — environmental authority
 - [docs/ai-guards.md](docs/ai-guards.md) — AI behavior governance (draft)
 
@@ -138,7 +144,7 @@ Formalize is the structural hinge: you don’t “execute” without durable int
 
 ### Domains
 
-Domains tell Praxis what kinds of artifacts are valid and what “done” looks like.
+Domains tell Praxis what kinds of artifacts are valid and what "done" looks like.
 
 | Domain  | Intent                       | Typical formalize artifact       |
 | ------- | ---------------------------- | -------------------------------- |
@@ -147,6 +153,16 @@ Domains tell Praxis what kinds of artifacts are valid and what “done” looks 
 | Write   | Structured thought           | Writing brief                    |
 | Observe | Raw capture                  | (none required)                  |
 | Learn   | Skill formation              | Learning plan                    |
+
+Each domain supports **subtypes** for more specific guidance:
+
+| Domain  | Subtypes                                              |
+| ------- | ----------------------------------------------------- |
+| Code    | cli, library, api, webapp, infrastructure, script     |
+| Create  | visual, audio, video, interactive, generative, design |
+| Write   | technical, business, narrative, academic, journalistic|
+| Observe | notes, bookmarks, clips, logs, captures               |
+| Learn   | skill, concept, practice, course, exploration         |
 
 ### Privacy
 
@@ -203,6 +219,15 @@ praxis audit                      # Check tooling, structure, testing
 praxis audit --strict             # Fail on warnings
 ```
 
+Work with domain opinions (planned):
+
+```bash
+praxis opinions                   # Show applicable opinions for project
+praxis opinions --prompt          # Generate AI context with opinions
+praxis opinions --check           # Validate against quality gates
+praxis opinions --list            # List all available opinion files
+```
+
 ## Quick Start (Using an Agent)
 
 From a project directory, start an agentic session (Copilot, Claude Code, etc.) and prompt:
@@ -225,6 +250,13 @@ src/praxis/           CLI package (Typer + Pydantic)
 docs/                 Specifications (SOD, lifecycle, privacy, etc.)
 docs/adr/             Architecture Decision Records
 docs/opinions/        Domain-specific quality guidance (advisory)
+  _templates/         Templates for creating opinion files
+  _shared/            Cross-domain principles
+  code/               Code domain opinions (principles, stage files)
+  create/             Create domain opinions
+  write/              Write domain opinions
+  learn/              Learn domain opinions
+  observe/            Observe domain opinions
 projects/             Worked projects
   code/template-python-cli/     Production CLI template
   code/uat-praxis-code/         Hello-world with full lifecycle docs
