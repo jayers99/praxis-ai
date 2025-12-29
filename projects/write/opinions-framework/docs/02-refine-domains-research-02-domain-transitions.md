@@ -9,9 +9,9 @@
 
 | Size | Time Box | AI Credit Budget |
 |------|----------|------------------|
-| **Small** | **15 min** | **~10 queries** |
-| Medium | 30 min | ~25 queries |
-| Large | 60 min | ~50 queries |
+| **Small** | **30 min** | **~20 queries** |
+| Medium | 60 min | ~50 queries |
+| Large | 120 min | ~100 queries |
 
 *This spike is Small.*
 
@@ -63,7 +63,7 @@ Research how an artifact transitions between domains. For example, how does an o
 ## Agent Instructions
 
 1. Read this issue completely
-2. Execute the spike respecting the 15-minute time box
+2. Execute the spike respecting the 30-minute time box
 3. Commit changes to your branch with message: `docs: spike domain transitions research`
 4. Create a PR with handoff summary:
    ```

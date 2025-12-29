@@ -7,8 +7,8 @@ Research how an artifact transitions between domains (e.g., Observe → Write).
 ## Time Box
 
 **Size:** Small  
-**Duration:** 15 minutes  
-**Credit Budget:** ~10 queries  
+**Duration:** 60 minutes  
+**Credit Budget:** ~20 queries  
 
 ⚠️ Stop when time is up, even if incomplete.
 

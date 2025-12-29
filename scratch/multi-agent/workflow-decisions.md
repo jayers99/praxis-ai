@@ -48,9 +48,9 @@ The issue is the **source of truth** — contains everything agent needs.
 
 | Size | Time Box | AI Credit Budget |
 |------|----------|------------------|
-| Small | 15 min | ~10 queries |
-| Medium | 30 min | ~25 queries |
-| Large | 60 min | ~50 queries |
+| Small | 30 min | ~20 queries |
+| Medium | 60 min | ~50 queries |
+| Large | 120 min | ~100 queries |
 
 **Key principle:** AI time ≠ human time. These are AI-appropriate durations.
 

@@ -9,9 +9,9 @@
 
 | Size | Time Box | AI Credit Budget |
 |------|----------|------------------|
-| Small | 15 min | ~10 queries |
-| **Medium** | **30 min** | **~25 queries** |
-| Large | 60 min | ~50 queries |
+| Small | 30 min | ~20 queries |
+| **Medium** | **60 min** | **~50 queries** |
+| Large | 120 min | ~100 queries |
 
 *This spike is Medium.*
 
@@ -64,7 +64,7 @@ Research what "sustain" means for non-Code domains. The Sustain stage is well-de
 ## Agent Instructions
 
 1. Read this issue completely
-2. Execute the spike respecting the 30-minute time box
+2. Execute the spike respecting the 60-minute time box
 3. Commit changes to your branch with message: `docs: spike 03 sustain non-code research`
 4. Create a PR with handoff summary:
    ```

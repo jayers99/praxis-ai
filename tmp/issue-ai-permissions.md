@@ -7,8 +7,8 @@ Research what AI operations should be allowed in each domain.
 ## Time Box
 
 **Size:** Medium  
-**Duration:** 30 minutes  
-**Credit Budget:** ~25 queries  
+**Duration:** 60 minutes  
+**Credit Budget:** ~50 queries  
 
 ⚠️ Stop when time is up, even if incomplete.
 

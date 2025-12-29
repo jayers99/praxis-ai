@@ -7,8 +7,8 @@ Research and document best practices, prior art, and academic foundations for th
 ## Time Box
 
 **Size:** Medium  
-**Duration:** 30 minutes  
-**Credit Budget:** ~25 queries  
+**Duration:** 60 minutes  
+**Credit Budget:** ~50 queries  
 
 ⚠️ Stop when time is up, even if incomplete. Partial findings are valuable.
 

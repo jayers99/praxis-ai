@@ -7,8 +7,8 @@ Research how closely Shape Up methodology aligns with Praxis Shape and Formalize
 ## Time Box
 
 **Size:** Small  
-**Duration:** 15 minutes  
-**Credit Budget:** ~10 queries  
+**Duration:** 60 minutes  
+**Credit Budget:** ~20 queries  
 
 ⚠️ Stop when time is up, even if incomplete.
 

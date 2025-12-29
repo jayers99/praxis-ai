@@ -7,8 +7,8 @@ Research what "sustain" means for non-Code domains (Create, Write, Learn, Observ
 ## Time Box
 
 **Size:** Medium  
-**Duration:** 30 minutes  
-**Credit Budget:** ~25 queries  
+**Duration:** 60 minutes  
+**Credit Budget:** ~50 queries  
 
 ⚠️ Stop when time is up, even if incomplete.
 
