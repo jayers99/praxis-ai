@@ -1,130 +1,78 @@
-# Contributing to Praxis AI
+# Contributing to Praxis-AI
 
-This repository follows a structured "Mini-Praxis" lifecycle for contributions. This document defines the framework for interactions, specifically optimizing for AI-driven automation where agents read this file to structure valid GitHub Issues.
+Thank you for your interest in contributing to Praxis-AI! This document outlines the process for contributing and the terms under which contributions are accepted.
 
-## Core Principles
+## Contributor License Agreement (CLA)
 
-1.  **Structure First**: All requests must follow the defined schemas to be valid.
-2.  **Mini-Praxis**: Feature requests follow a simplified lifecycle (Raw $\to$ Shaped $\to$ Formalized) to ensure clarity before execution.
-3.  **Automation Ready**: The formats below are strict to enable AI parsing and validation.
+By submitting a pull request or otherwise contributing to this project, you agree to the following terms:
 
----
+### 1. Grant of Copyright License
 
-## 1. Contribution Types
+You hereby grant to the Project Owner (the owner of the GitHub repository at https://github.com/jayers99/praxis-ai) a perpetual, worldwide, non-exclusive, royalty-free, irrevocable copyright license to:
 
-We accept three primary types of contributions. Label your issue accordingly.
+- Reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute your contributions and any derivative works thereof
+- Incorporate your contributions into the project under any license, including licenses different from the current project license
 
-| Type | Purpose | Key Requirement |
-| :--- | :--- | :--- |
-| **Feature Request** | New functionality or capability | Must follow the **Mini-SOD** format |
-| **Bug Fix** | Correcting unintended behavior | Must have Reproduction Steps |
-| **Chore** | Maintenance, refactoring, docs | Must have Clear Acceptance Criteria |
+### 2. Grant of Patent License
 
----
+You hereby grant to the Project Owner a perpetual, worldwide, non-exclusive, royalty-free, irrevocable patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer your contributions, where such license applies only to patent claims licensable by you that are necessarily infringed by your contribution alone or in combination with the project.
 
-## 2. Feature Request Framework
+### 3. Representations
 
-Feature requests are the most complex contribution type. They adhere to the **Mini-Praxis** process. The goal is to produce a "Formalized" artifact that is ready for execution.
+You represent that:
 
-### 2.1 Metadata Fields (Required)
+- You are legally entitled to grant the above licenses
+- If your employer has rights to intellectual property that you create, you have received permission to make contributions on behalf of that employer, or your employer has waived such rights
+- Your contributions are your original work and do not violate any third-party rights
+- You are not aware of any claims, suits, or actions pertaining to your contributions
 
-You must fill out the front-matter or top-level metadata for every feature request.
+### 4. Right to Relicense
 
-*   **Priority**:
-    *   `High`: Critical to core value or blocks other work.
-    *   `Medium`: Important value add, schedule normally.
-    *   `Low`: Nice to have, fill-in work.
-*   **Size**:
-    *   `Small`: < 1 Day (Quick wins, minor adjustments)
-    *   `Medium`: 2-3 Days (Standard component work)
-    *   `Large`: 1 Week (Significantly complex, may need breaking down)
-*   **Type**:
-    *   `Feature`: Delivers end-user value.
-    *   `Spike`: Buys information/decisions (output is knowledge, NOT code).
-*   **Maturity**:
-    *   `Raw`: Early idea. Needs shaping. (Corresponds to Praxis `Capture`, `Sense`)
-    *   `Shaped`: Problem is clear, solution is rough. (Corresponds to Praxis `Explore`, `Shape`)
-    *   `Formalized`: Ready to build. (Corresponds to Praxis `Formalize` $\to$ `Commit`)
+You understand and agree that the Project Owner may, at their sole discretion, change the license of the project (including your contributions) at any time, without notice to you.
 
-### 2.2 The Standard Format (Mini-SOD)
+### 5. No Obligation
 
-All Feature Requests must use this structure. If the maturity is `Formalized`, **Gherkin is mandatory**.
-
-#### 1. Problem Statement
-*What is the problem? Why is this valuable? Who is it for?*
-
-#### 2. Success Criteria
-*Bulleted list of conditions that mean "we are done".*
-
-#### 3. Scope Boundaries
-*   **In Scope**: What we WILL do.
-*   **Out of Scope**: What we definitely WON'T do.
-
-#### 4. Gherkin Specification (Mandatory for 'Formalized')
-*Required for Development/Code generation.*
-
-```gherkin
-Feature: [Feature Name]
-
-  Scenario: [Happy Path]
-    Given [Context]
-    When [Action]
-    Then [Outcome]
-```
-
-#### 5. Risks & Constraints
-*Security, Privacy, or Performance considerations.*
-
-### 2.3 Lifecycle Mapping Reference
-
-For users familiar with the full Praxis lifecycle, here is how the simplified status maps:
-
-| Mini-Praxis Label | Canonical Stages |
-| :--- | :--- |
-| **Maturity: Raw** | Capture $\to$ Sense |
-| **Maturity: Shaped** | Explore $\to$ Shape |
-| **Maturity: Formalized** | Formalize $\to$ Commit |
-| **(Execution)** | Execute $\to$ Sustain $\to$ Close |
+You understand that your contributions are voluntary and that the Project Owner is under no obligation to accept, use, or include your contributions.
 
 ---
 
-## 3. Bug Fix Framework
+## How to Contribute
 
-Use for defect reports.
+### Reporting Issues
 
-*   **Priority**: High | Medium | Low
-*   **Severity**: Critical | Major | Minor
-*   **Context**:
-    *   **Current Behavior**: What is happening?
-    *   **Expected Behavior**: What should happen?
-    *   **Reproduction Steps**: 1. 2. 3. ...
-    *   **Logs/Screenshots**: (Optional but recommended)
+- Use GitHub Issues to report bugs or suggest features
+- Check existing issues before creating a new one
+- Provide as much detail as possible
+
+### Submitting Changes
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Make your changes
+4. Ensure your code follows existing patterns
+5. Commit with clear messages
+6. Push to your fork
+7. Open a Pull Request
+
+### Pull Request Process
+
+1. PRs should target the `main` branch
+2. Include a clear description of changes
+3. Reference any related issues
+4. Wait for review and address feedback
 
 ---
 
-## 4. Chore Framework
+## Code of Conduct
 
-Use for non-user-facing improvements.
-
-*   **Goal**: What needs to be improved?
-*   **Rationale**: Why is this necessary now?
-*   **Acceptance Criteria**: clear definition of done.
+Be respectful, constructive, and professional. We're here to build something useful together.
 
 ---
 
-## 5. Label Progression
+## Questions?
 
-As work progresses, update the `maturity` label:
+Open an issue or reach out to the project owner.
 
-| Transition | When |
-| :--- | :--- |
-| `raw` → `shaped` | Problem and solution approach are clear |
-| `shaped` → `formalized` | Ready to implement (Gherkin written if feature) |
-| Close issue | PR merged with "Fixes #N" in commit/PR body |
+---
 
-**Batch selection pattern:**
-```bash
-# Find ready-to-implement issues
-gh issue list --label "maturity: shaped" --label "size: small"
-gh issue list --label "maturity: formalized" --label "type: feature"
-```
+*By submitting a contribution, you acknowledge that you have read and agree to the terms of this Contributor License Agreement.*
