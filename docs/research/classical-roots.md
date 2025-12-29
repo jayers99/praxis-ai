@@ -13,8 +13,8 @@ The name "Praxis" comes directly from Aristotle's *Nicomachean Ethics*. Aristotl
 | Greek | Translation | In Praxis-AI |
 |-------|-------------|--------------|
 | **Theoria** (θεωρία) | Contemplation/theory | Capture, Sense, Explore — "What is this?" |
-| **Praxis** (πρᾶξις) | Action/practice | Execute, Sustain — "Do the work" |
 | **Poiesis** (ποίησις) | Making/production | Formalize, Commit — "Create the artifact" |
+| **Praxis** (πρᾶξις) | Action/practice | Execute, Sustain — "Do the work" |
 
 ### Key Aristotelian Concepts in Praxis
 
