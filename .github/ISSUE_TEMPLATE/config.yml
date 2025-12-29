@@ -1,0 +1,12 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: "Questions / Discussion"
+    url: "https://github.com/jayers99/praxis-ai/discussions"
+    about: "Ask questions, propose ideas, and discuss Praxis usage."
+  - name: "Report a security vulnerability"
+    url: "https://github.com/jayers99/praxis-ai/security/policy"
+    about: "Private reporting instructions for security vulnerabilities."
+  - name: "Read the user guide"
+    url: "https://github.com/jayers99/praxis-ai/blob/main/docs/user-guide.md"
+    about: "Start here for the step-by-step walkthrough and examples."

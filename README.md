@@ -51,6 +51,7 @@ Opinions  →  Governance  →  Execution
 This separation prevents principles from becoming dogma, governance from collapsing into bureaucracy, and execution from drifting without intent.
 
 Opinions are stored in `docs/opinions/` and resolved through inheritance:
+
 ```text
 _shared → domain/principles → domain/{stage} → subtype/principles → subtype/{stage}
 ```
@@ -108,6 +109,7 @@ If you're new to Praxis:
 
 - [docs/user-guide.md](docs/user-guide.md) — step-by-step walkthrough with examples
 - [docs/ai-setup.md](docs/ai-setup.md) — configure AI assistants (CLAUDE.md, .cursorrules)
+- [SECURITY.md](SECURITY.md) — how to report security vulnerabilities
 
 If you want to understand the framework:
 
@@ -156,13 +158,13 @@ Domains tell Praxis what kinds of artifacts are valid and what "done" looks like
 
 Each domain supports **subtypes** for more specific guidance:
 
-| Domain  | Subtypes                                              |
-| ------- | ----------------------------------------------------- |
-| Code    | cli, library, api, webapp, infrastructure, script     |
-| Create  | visual, audio, video, interactive, generative, design |
-| Write   | technical, business, narrative, academic, journalistic|
-| Observe | notes, bookmarks, clips, logs, captures               |
-| Learn   | skill, concept, practice, course, exploration         |
+| Domain  | Subtypes                                               |
+| ------- | ------------------------------------------------------ |
+| Code    | cli, library, api, webapp, infrastructure, script      |
+| Create  | visual, audio, video, interactive, generative, design  |
+| Write   | technical, business, narrative, academic, journalistic |
+| Observe | notes, bookmarks, clips, logs, captures                |
+| Learn   | skill, concept, practice, course, exploration          |
 
 ### Privacy
 
