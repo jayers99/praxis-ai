@@ -282,8 +282,8 @@ def add_example(workspace_path: Path, example_name: str) -> ExampleAddResult:
             error=f"Example '{example_name}' not found in registry",
         )
 
-    # Clone the example
-    target_path = workspace_path / "examples" / example_name
+    # Clone the example (into domain subfolder)
+    target_path = workspace_path / "examples" / ex_info.domain.value / example_name
     result = clone_repo(ex_info.repo, target_path)
 
     if not result.success:
