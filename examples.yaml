@@ -17,8 +17,3 @@ examples:
     repo: https://github.com/jayers99/bowerbird.git
     domain: create
     description: AI-assisted creative project example
-
-  xmas-cards-2025:
-    repo: https://github.com/jayers99/xmas-cards-2025.git
-    domain: create
-    description: Holiday card design project using AI image generation
