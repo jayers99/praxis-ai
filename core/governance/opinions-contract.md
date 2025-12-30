@@ -24,10 +24,10 @@ This document defines the contract between the Praxis opinions framework and the
 
 ## 2. File Location Convention
 
-**Root location:** `docs/opinions/` at the repository root
+**Root location:** `opinions/` at the repository root
 
 ```
-docs/opinions/
+opinions/
 ├── _templates/                     # Templates for creating opinion files
 │   ├── GUIDE.md                    # How to use templates
 │   ├── README-template.md          # Domain/subtype overview template
@@ -417,7 +417,7 @@ praxis opinions --check
 praxis opinions --list
 
 # Output:
-# docs/opinions/
+# opinions/
 # ├── _shared/
 # │   └── first-principles.md
 # ├── code/
@@ -471,7 +471,7 @@ Add to project CLAUDE.md:
 
 When working on this Praxis project:
 
-1. **Check for opinions:** Look for `docs/opinions/` directory
+1. **Check for opinions:** Look for `opinions/` directory
 2. **Read praxis.yaml:** Determine domain, stage, subtype
 3. **Resolve applicable opinions:** Use inheritance chain:
    - `_shared/` → `{domain}/` → `{domain}/{stage}` → `subtypes/`
@@ -540,7 +540,7 @@ praxis opinions --check --verbose
 
 | Error | Severity | Behavior |
 |-------|----------|----------|
-| Missing `docs/opinions/` | Warning | No opinions applied; suggest initialization |
+| Missing `opinions/` | Warning | No opinions applied; suggest initialization |
 | Missing `praxis.yaml` | Warning | Cannot resolve; require `--domain` flag |
 | Invalid frontmatter YAML | Error | Skip file with message; continue with others |
 | Unknown domain in frontmatter | Error | Skip file with message |
@@ -554,12 +554,12 @@ praxis opinions --check --verbose
 ```bash
 # Missing opinions directory
 $ praxis opinions
-Warning: No opinions directory found at docs/opinions/
+Warning: No opinions directory found at opinions/
 Run `praxis init --opinions` to create opinion structure.
 
 # Invalid frontmatter
 $ praxis opinions
-Error: Invalid YAML in docs/opinions/code/capture.md
+Error: Invalid YAML in opinions/code/capture.md
   Line 3: expected ':' but found '-'
 Skipping file; continuing with 3 remaining opinions.
 

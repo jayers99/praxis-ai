@@ -4,7 +4,7 @@
 **Version:** v0.3
 **Purpose:** Capture the canonical Praxis lifecycle, the role of Formalize as the structural hinge, and the allowed regression model.
 
-> **Research basis:** Stage definitions and entry/exit criteria are grounded in established frameworks. See [Lifecycle Research](research/lifecycle-research.md) for detailed citations and methodology alignments.
+> **Research basis:** Stage definitions and entry/exit criteria are grounded in established frameworks. See [Lifecycle Research](../../research/spec/lifecycle-research.md) for detailed citations and methodology alignments.
 
 ---
 

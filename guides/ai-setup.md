@@ -90,9 +90,9 @@ poetry run praxis validate .
 
 ## Key References
 
-- [Praxis Lifecycle](https://github.com/USER/praxis-ai/blob/main/docs/lifecycle.md)
-- [Domain Definitions](https://github.com/USER/praxis-ai/blob/main/docs/domains.md)
-- [Privacy Model](https://github.com/USER/praxis-ai/blob/main/docs/privacy.md)
+- [Praxis Lifecycle](https://github.com/USER/praxis-ai/blob/main/core/spec/lifecycle.md)
+- [Domain Definitions](https://github.com/USER/praxis-ai/blob/main/core/spec/domains.md)
+- [Privacy Model](https://github.com/USER/praxis-ai/blob/main/core/spec/privacy.md)
 ````
 
 ---
