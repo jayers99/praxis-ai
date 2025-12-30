@@ -179,21 +179,47 @@ Privacy is declared in `praxis.yaml` and should be treated as a real constraint 
 
 ## Quick Start (CLI)
 
-Install the Praxis CLI:
+### 1. Create a workspace
 
 ```bash
+# Create and enter workspace directory
+mkdir ~/praxis-workspace
+cd ~/praxis-workspace
+
+# Clone the framework
+git clone https://github.com/jayers99/praxis-ai.git
+
+# Install dependencies
 cd praxis-ai
 poetry install
+cd ..
 ```
 
-**(Recommended) Create a shell alias** so you can run `praxis` from any directory:
+### 2. Configure your shell
+
+Add to your `~/.bashrc`, `~/.zshrc`, or shell config:
 
 ```bash
-# Add to your ~/.bashrc, ~/.zshrc, or shell config:
-alias praxis='poetry -C /path/to/praxis-ai run praxis'
+# Set workspace root
+export PRAXIS_HOME="$HOME/praxis-workspace"
+
+# Create alias to run praxis from anywhere
+alias praxis='poetry -C $PRAXIS_HOME/praxis-ai run praxis'
 ```
 
-Initialize a new project:
+Then reload your shell:
+
+```bash
+source ~/.zshrc  # or ~/.bashrc
+```
+
+### 3. Verify installation
+
+```bash
+praxis --help
+```
+
+### 4. Initialize a new project
 
 ```bash
 praxis init --domain code --privacy personal
