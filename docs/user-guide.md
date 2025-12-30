@@ -558,4 +558,10 @@ Summary: 9 passed, 0 warning(s), 0 failed
 
 ## Worked Example
 
-See [`projects/code/uat-praxis-code/`](../projects/code/uat-praxis-code/) for a complete worked example with all stage documents.
+For a complete worked example with all stage documents, install the `uat-praxis-code` example:
+
+```bash
+praxis examples add uat-praxis-code
+```
+
+This will clone the example to `$PRAXIS_HOME/examples/uat-praxis-code/`.

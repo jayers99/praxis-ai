@@ -1,0 +1,14 @@
+# Praxis Extensions Registry
+# Extensions are domain-specific tools that can be cloned into a workspace.
+# Use `praxis extensions add <name>` to install.
+
+extensions:
+  render-run:
+    repo: https://github.com/jayers99/render-run.git
+    domain: create
+    description: Send prompts to AI image generation APIs, receive images
+
+  template-python-cli:
+    repo: https://github.com/jayers99/template-python-cli.git
+    domain: code
+    description: Scaffold new Python CLI projects with best practices

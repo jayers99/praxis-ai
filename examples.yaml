@@ -1,0 +1,24 @@
+# Praxis Examples Registry
+# Examples are worked projects demonstrating Praxis lifecycle in different domains.
+# Use `praxis examples add <name>` to clone into your workspace.
+
+examples:
+  uat-praxis-code:
+    repo: https://github.com/jayers99/uat-praxis-code.git
+    domain: code
+    description: Hello-world CLI project demonstrating full Praxis lifecycle
+
+  opinions-framework:
+    repo: https://github.com/jayers99/opinions-framework.git
+    domain: write
+    description: Research and documentation for the Praxis opinions framework
+
+  bowerbird:
+    repo: https://github.com/jayers99/bowerbird.git
+    domain: create
+    description: AI-assisted creative project example
+
+  xmas-cards-2025:
+    repo: https://github.com/jayers99/xmas-cards-2025.git
+    domain: create
+    description: Holiday card design project using AI image generation
