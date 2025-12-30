@@ -25,6 +25,7 @@ A "Praxis Workspace" is a parent directory that organizes everything related to 
 │
 ├── examples/                          # Optional: cloned example repos
 │   ├── uat-praxis-code/               # Hello-world with full lifecycle
+│   ├── opinions-framework/            # Write domain: opinions framework research
 │   └── (other examples user selected)
 │
 └── projects/                          # User's personal projects (your artifacts)
@@ -74,6 +75,28 @@ extensions:
 - User selects which extensions to install
 - Praxis clones selected repos to `$PRAXIS_HOME/extensions/`
 
+### ✅ Examples Discovery Source
+
+**Decision:** `examples.yaml` inside `praxis-ai` repo contains the registry.
+
+```yaml
+# praxis-ai/examples.yaml
+examples:
+  uat-praxis-code:
+    repo: https://github.com/jayers99/uat-praxis-code.git
+    domain: code
+    description: Hello-world project demonstrating full Praxis lifecycle
+
+  opinions-framework:
+    repo: https://github.com/jayers99/opinions-framework.git
+    domain: write
+    description: Research and documentation for the Praxis opinions framework
+```
+
+- `praxis examples add` launches wizard with checkboxes
+- User selects which examples to clone
+- Praxis clones selected repos to `$PRAXIS_HOME/examples/`
+
 ### ✅ Workspace Configuration
 
 **Decision:** Workspace config lives at `$PRAXIS_HOME/workspace-config.yaml`.
@@ -89,6 +112,7 @@ installed_extensions:
 
 installed_examples:
   - uat-praxis-code
+  - opinions-framework
 
 defaults:
   privacy: personal
@@ -614,8 +638,9 @@ praxis extensions list --json | jq '.extensions[].name'
 1. [ ] Create `extensions.yaml` registry file
 2. [ ] Create `examples.yaml` registry file
 3. [ ] Remove all project submodules (`xmas-cards-2025`, `bowerbird`, `render-run`, `template-python-cli`, `uat-praxis-code`)
-4. [ ] Delete `projects/` directory from praxis-ai
-5. [ ] Update README with new workspace model
+4. [ ] Remove `projects/write/opinions-framework/` directory (now a separate repo)
+5. [ ] Delete `projects/` directory from praxis-ai
+6. [ ] Update README with new workspace model
 
 ### Phase 2: Implement workspace commands
 
