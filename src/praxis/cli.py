@@ -75,6 +75,12 @@ def main(
     """Praxis CLI - Policy-driven AI workflow governance."""
 
 
+@app.command(name="help")
+def help_cmd(ctx: typer.Context) -> None:
+    """Show this help message."""
+    typer.echo(ctx.parent.get_help())
+
+
 @app.command(name="init")
 def init_cmd(
     path: Path = typer.Argument(
