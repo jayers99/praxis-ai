@@ -40,7 +40,6 @@ app = typer.Typer(
     name="praxis",
     help="Policy-driven AI workflow governance.",
     no_args_is_help=True,
-    add_completion=False,
     rich_markup_mode=None,  # Disable Rich formatting boxes
 )
 
