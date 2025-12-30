@@ -1,0 +1,12 @@
+Open questions
+
+How does Praxis know what extensions the user has installed? Read the workspace config Yaml
+
+When do extensions get updated let's have the user run Praxis extension update
+
+For the extension center face just go with the option for the hybrid approach will use sub processes with loose coupling and then we'll have the nice benefits of entry points
+
+For extensions the bugging, I kinda like the idea that each of the extensions will live as a separate application and we can test the bug develop them individually and then wire them together later with the entry points
+
+
+
