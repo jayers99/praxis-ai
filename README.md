@@ -203,8 +203,19 @@ Add to your `~/.bashrc`, `~/.zshrc`, or shell config:
 # Set workspace root
 export PRAXIS_HOME="$HOME/praxis-workspace"
 
-# Create alias to run praxis from anywhere
-alias praxis='poetry -C $PRAXIS_HOME/praxis-ai run praxis'
+# Ensure ~/bin is in PATH
+export PATH="$HOME/bin:$PATH"
+```
+
+Create a wrapper script (enables tab completion):
+
+```bash
+mkdir -p ~/bin
+cat > ~/bin/praxis << 'EOF'
+#!/bin/bash
+exec poetry -C "$PRAXIS_HOME/praxis-ai" run praxis "$@"
+EOF
+chmod +x ~/bin/praxis
 ```
 
 Then reload your shell:
@@ -213,20 +224,28 @@ Then reload your shell:
 source ~/.zshrc  # or ~/.bashrc
 ```
 
-### 3. Verify installation
+### 3. Enable tab completion (optional)
+
+```bash
+praxis --install-completion
+```
+
+Restart your shell, then use `<tab><tab>` to see available commands and options.
+
+### 4. Verify installation
 
 ```bash
 praxis --help
 ```
 
-### 4. Initialize your workspace
+### 5. Initialize your workspace
 
 ```bash
 praxis workspace init
 # Creates: extensions/, examples/, projects/, workspace-config.yaml
 ```
 
-### 5. Install extensions and examples (optional)
+### 6. Install extensions and examples (optional)
 
 ```bash
 # List available extensions and examples
@@ -240,7 +259,7 @@ praxis extensions add template-python-cli
 praxis examples add uat-praxis-code
 ```
 
-### 6. Create a new project
+### 7. Create a new project
 
 ```bash
 cd $PRAXIS_HOME/projects

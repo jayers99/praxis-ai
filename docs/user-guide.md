@@ -18,14 +18,30 @@ This guide walks you through building a project using Praxis governance, from in
    poetry run praxis --version
    ```
 
-4. **(Recommended) Create a shell alias** so you can run `praxis` from any directory:
+4. **(Recommended) Create a wrapper script** so you can run `praxis` from any directory with tab completion support:
    ```bash
-   # Add to your ~/.bashrc, ~/.zshrc, or shell config:
-   alias praxis='poetry -C /path/to/praxis-ai run praxis'
+   # Create a wrapper script (adjust path to your clone location)
+   mkdir -p ~/bin
+   cat > ~/bin/praxis << 'EOF'
+   #!/bin/bash
+   exec poetry -C "/path/to/praxis-ai" run praxis "$@"
+   EOF
+   chmod +x ~/bin/praxis
    ```
-   Replace `/path/to/praxis-ai` with your actual clone location. After reloading your shell, you can run `praxis` from anywhere.
 
-5. **Configure your AI assistant** — See [AI Setup Guide](ai-setup.md) for CLAUDE.md templates and integration patterns
+   Ensure `~/bin` is in your PATH (add to `~/.bashrc` or `~/.zshrc` if needed):
+   ```bash
+   export PATH="$HOME/bin:$PATH"
+   ```
+
+5. **(Optional) Enable tab completion** for shell autocompletion of commands and options:
+   ```bash
+   praxis --install-completion
+   ```
+
+   Restart your shell or source your config file. Then use `<tab><tab>` to see available completions.
+
+6. **Configure your AI assistant** — See [AI Setup Guide](ai-setup.md) for CLAUDE.md templates and integration patterns
 
 ---
 
