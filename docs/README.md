@@ -1,35 +1,32 @@
 # Documentation
 
-## Start Here
+> **NOTICE**: Documentation has been reorganized into a layered architecture.
 
-- **[user-guide.md](user-guide.md)** — Step-by-step walkthrough
-- **[ai-setup.md](ai-setup.md)** — Configure AI assistants for Praxis projects
+## New Locations
 
-## Core Specification
+| Old Location | New Location | Description |
+|--------------|--------------|-------------|
+| `docs/sod.md`, `docs/lifecycle.md`, etc. | `core/spec/` | System specifications |
+| `docs/layer-model.md`, `docs/decision-arbitration.md`, etc. | `core/governance/` | Governance documents |
+| `docs/ai-guards.md`, `docs/model-selection-matrix.md` | `core/ai/` | AI behavior controls |
+| `docs/opinions/` | `opinions/` | Advisory domain guidance |
+| `docs/research/` | `research/` | Explanatory background |
+| `docs/adr/` | `adr/` | Architecture decisions |
+| `docs/user-guide.md` | `guides/user-guide.md` | User tutorials |
+| `docs/ai-setup.md` | `guides/ai-setup.md` | AI setup guide |
 
-- **[sod.md](sod.md)** — Solution Overview Document (main spec)
-- **[lifecycle.md](lifecycle.md)** — The nine stages from Capture to Close
-- **[domains.md](domains.md)** — Code, Create, Write, Learn, Observe
-- **[privacy.md](privacy.md)** — Privacy levels and enforcement
+## Entry Points
 
-## Governance
+- **Core specification**: [`core/spec/sod.md`](../core/spec/sod.md)
+- **Praxis Roles**: [`core/roles/index.md`](../core/roles/index.md)
+- **User guide**: [`guides/user-guide.md`](../guides/user-guide.md)
+- **Opinions**: [`opinions/`](../opinions/)
 
-- **[layer-model.md](layer-model.md)** — Opinions → Governance → Execution
-- **[decision-arbitration.md](decision-arbitration.md)** — How conflicts are resolved
-- **[formalize.md](formalize.md)** — The structural hinge between ideation and execution
-- **[external-constraints.md](external-constraints.md)** — Environmental authority
+## Layer Authority (Descending)
 
-## Opinions Framework
-
-- **[opinions-contract.md](opinions-contract.md)** — How opinions are structured and resolved
-- **[opinions/](opinions/)** — Domain-specific guidance organized by domain and stage
-
-## AI Behavior
-
-- **[ai-guards.md](ai-guards.md)** — AI behavior controls (draft)
-- **[model-selection-matrix.md](model-selection-matrix.md)** — Which models for which tasks
-
-## Reference
-
-- **[adr/](adr/)** — Architecture Decision Records
-- **[research/](research/)** — Background research
+1. `core/` — Normative, binding
+2. `handoff/` — Operational, must conform to core
+3. `research/` — Explanatory, non-binding
+4. `opinions/` — Advisory, domain-specific
+5. `guides/` — Tutorials, user-facing
+6. `adr/` — Historical decisions
