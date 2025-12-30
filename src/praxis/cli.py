@@ -41,12 +41,13 @@ app = typer.Typer(
     help="Policy-driven AI workflow governance.",
     no_args_is_help=True,
     add_completion=False,
+    rich_markup_mode=None,  # Disable Rich formatting boxes
 )
 
 # Sub-apps for command groups
-workspace_app = typer.Typer(help="Workspace management commands.")
-extensions_app = typer.Typer(help="Extension management commands.")
-examples_app = typer.Typer(help="Example management commands.")
+workspace_app = typer.Typer(help="Workspace management commands.", rich_markup_mode=None)
+extensions_app = typer.Typer(help="Extension management commands.", rich_markup_mode=None)
+examples_app = typer.Typer(help="Example management commands.", rich_markup_mode=None)
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")

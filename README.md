@@ -219,12 +219,37 @@ source ~/.zshrc  # or ~/.bashrc
 praxis --help
 ```
 
-### 4. Initialize a new project
+### 4. Initialize your workspace
 
 ```bash
+praxis workspace init
+# Creates: extensions/, examples/, projects/, workspace-config.yaml
+```
+
+### 5. Install extensions and examples (optional)
+
+```bash
+# List available extensions and examples
+praxis extensions list
+praxis examples list
+
+# Install an extension
+praxis extensions add template-python-cli
+
+# Install a worked example
+praxis examples add uat-praxis-code
+```
+
+### 6. Create a new project
+
+```bash
+cd $PRAXIS_HOME/projects
+mkdir my-project && cd my-project
 praxis init --domain code --privacy personal
 # Creates: praxis.yaml, CLAUDE.md, docs/capture.md
 ```
+
+### Common commands
 
 Validate a project's governance configuration:
 
