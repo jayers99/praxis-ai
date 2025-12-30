@@ -4,7 +4,9 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`). Extending with domain-specific features.
+**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`). Extending with domain-specific features.
+
+**Workspace Model:** Praxis uses a workspace-based structure. User projects live in `$PRAXIS_HOME/projects/`, separate from this framework repo. See `scratch/praxis-structure-output-2025-12-29.md` for architecture details.
 
 ## Issue Workflow
 
@@ -44,7 +46,7 @@ git pull && cat scratch/sessions/2025-12-28.md
 ## CLI Commands
 
 ```bash
-# Initialize a new project
+# Initialize a new project (run from within a project directory)
 praxis init --domain code --privacy personal
 
 # Validate governance configuration
@@ -64,6 +66,22 @@ praxis status --json
 # Audit against domain best practices
 praxis audit                      # Check tooling, structure, testing
 praxis audit --strict             # Fail on warnings
+
+# Workspace management (requires PRAXIS_HOME env var)
+praxis workspace init             # Initialize a new workspace
+praxis workspace info             # Show workspace information
+
+# Extension management
+praxis extensions list            # List available extensions
+praxis extensions add             # Interactive picker to install
+praxis extensions add render-run  # Install specific extension
+praxis extensions remove <name>   # Remove an extension
+praxis extensions update          # Update all installed extensions
+
+# Example management
+praxis examples list              # List available examples
+praxis examples add               # Interactive picker to install
+praxis examples add uat-praxis-code  # Install specific example
 
 # Opinions framework (planned)
 praxis opinions                   # Show applicable opinions for project
@@ -163,15 +181,18 @@ Run `praxis opinions --prompt` to get formatted context for AI assistants.
 
 ```
 src/praxis/              # Main CLI package
-  cli.py                 # Typer CLI entry point
+  cli.py                 # Typer CLI entry point (includes workspace/extensions commands)
   domain/                # Domain models and enums
     models.py            # Pydantic models (PraxisConfig, ValidationResult, etc.)
     stages.py            # Stage enum with comparison operators
     domains.py           # Domain enum
     privacy.py           # PrivacyLevel enum
+    workspace.py         # Workspace, Extension, Example entities
   application/           # Application services
     validate_service.py  # Validation orchestration
     init_service.py      # Project initialization
+    workspace_service.py # Workspace init, info orchestration
+    extension_service.py # Extension add/remove/list/update logic
   infrastructure/        # External concerns
     yaml_loader.py       # YAML parsing
     artifact_checker.py  # File existence checks
@@ -179,6 +200,9 @@ src/praxis/              # Main CLI package
     env_resolver.py      # Environment variable handling
     templates.py         # CLAUDE.md and capture.md templates
     file_writer.py       # Safe file writes
+    git_cloner.py        # Git clone/pull operations
+    registry_loader.py   # Load extensions.yaml, examples.yaml
+    workspace_config_repo.py  # Read/write workspace-config.yaml
 
 tests/
   features/              # Gherkin feature files
@@ -193,18 +217,12 @@ docs/                    # Specifications and guides
   opinions-contract.md   # Opinions framework specification
   adr/                   # Architecture Decision Records
   opinions/              # Domain opinions and guidance
-    _templates/          # Templates for creating opinions
-    _shared/             # Cross-domain principles
-    code/                # Code domain opinions
-    create/              # Create domain opinions
-    write/               # Write domain opinions
-    learn/               # Learn domain opinions
-    observe/             # Observe domain opinions
 
-projects/                # Worked examples
-  code/uat-praxis-code/  # Hello world CLI (full lifecycle)
-  code/template-python-cli/  # Production template (Sustain)
+extensions.yaml          # Registry of available extensions
+examples.yaml            # Registry of available examples
 ```
+
+**Note:** User projects live at workspace level (`$PRAXIS_HOME/projects/`), not inside this repo. Examples and extensions are cloned to workspace via `praxis examples add` and `praxis extensions add`.
 
 ## Development Rules
 
@@ -274,9 +292,13 @@ poetry run praxis validate --help
 - [Templates Guide](docs/opinions/_templates/GUIDE.md) — How to create opinion files
 - [Code Domain](docs/opinions/code/) — Code domain opinions and principles
 
-**Examples:**
-- [uat-praxis-code](projects/code/uat-praxis-code/) — Hello world with full lifecycle docs
-- [template-python-cli](projects/code/template-python-cli/) — Production CLI template
+**Examples (install via `praxis examples add`):**
+- `uat-praxis-code` — Hello world CLI with full lifecycle docs
+- `opinions-framework` — Opinions framework research and documentation
+
+**Extensions (install via `praxis extensions add`):**
+- `render-run` — AI image generation for Create domain
+- `template-python-cli` — Python CLI scaffolding for Code domain
 
 ## Research workflow (default)
 When I say “research:” use subagent `research-librarian` with:

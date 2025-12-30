@@ -22,7 +22,7 @@ Behavior is resolved deterministically by:
 Domain + Stage + Privacy + Environment → Behavior
 ```
 
-This repo contains the core design docs plus worked projects.
+This repo contains the core framework. Examples and extensions are separate repos managed through `praxis examples add` and `praxis extensions add`.
 
 ## Philosophy
 
@@ -123,8 +123,15 @@ If you want to understand the framework:
 
 If you want to see Praxis applied in real projects:
 
-- [projects/code/uat-praxis-code](projects/code/uat-praxis-code/) — hello-world CLI with full lifecycle docs
-- [projects/code/template-python-cli](projects/code/template-python-cli/) — production CLI template (in Sustain)
+```bash
+# Install examples to your workspace
+praxis examples add uat-praxis-code      # Hello-world CLI with full lifecycle docs
+praxis examples add opinions-framework   # Opinions framework research (Write domain)
+
+# Install extensions
+praxis extensions add template-python-cli  # Production CLI template (Code domain)
+praxis extensions add render-run           # AI image generation (Create domain)
+```
 
 ## How Praxis Works (Short Version)
 
@@ -254,20 +261,21 @@ docs/adr/             Architecture Decision Records
 docs/opinions/        Domain-specific quality guidance (advisory)
   _templates/         Templates for creating opinion files
   _shared/            Cross-domain principles
-  code/               Code domain opinions (principles, stage files)
+  code/               Code domain opinions
   create/             Create domain opinions
   write/              Write domain opinions
   learn/              Learn domain opinions
   observe/            Observe domain opinions
-projects/             Worked projects
-  code/template-python-cli/     Production CLI template
-  code/uat-praxis-code/         Hello-world with full lifecycle docs
 tests/                BDD tests (pytest-bdd + Gherkin)
+extensions.yaml       Registry of available extensions
+examples.yaml         Registry of available examples
 ```
+
+**Workspace Structure:** User projects live at `$PRAXIS_HOME/projects/`, not inside this repo. See [User Guide](docs/user-guide.md) for workspace setup.
 
 ## Status
 
-Core CLI is functional with `init`, `validate`, `stage`, `status`, and `audit` commands. Code domain is fully supported with worked examples.
+Core CLI is functional with project commands (`init`, `validate`, `stage`, `status`, `audit`) and workspace management (`workspace`, `extensions`, `examples`). Code domain is fully supported.
 
 ## License
 

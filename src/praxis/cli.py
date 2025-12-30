@@ -9,10 +9,23 @@ import typer
 
 from praxis import __version__
 from praxis.application.audit_service import audit_project
+from praxis.application.extension_service import (
+    add_example,
+    add_extension,
+    list_examples,
+    list_extensions,
+    remove_extension,
+    update_all_extensions,
+)
 from praxis.application.init_service import init_project
 from praxis.application.stage_service import transition_stage
 from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
+from praxis.application.workspace_service import (
+    get_workspace_info,
+    init_workspace,
+    require_praxis_home,
+)
 from praxis.domain.domains import Domain
 from praxis.domain.models import AuditCheck, CoverageCheckResult, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
@@ -29,6 +42,15 @@ app = typer.Typer(
     no_args_is_help=True,
     add_completion=False,
 )
+
+# Sub-apps for command groups
+workspace_app = typer.Typer(help="Workspace management commands.")
+extensions_app = typer.Typer(help="Extension management commands.")
+examples_app = typer.Typer(help="Example management commands.")
+
+app.add_typer(workspace_app, name="workspace")
+app.add_typer(extensions_app, name="extensions")
+app.add_typer(examples_app, name="examples")
 
 
 def version_callback(value: bool) -> None:
@@ -533,6 +555,489 @@ def audit_cmd(
     typer.echo(f"Summary: {p} passed, {w} warning(s), {f} failed")
 
     raise typer.Exit(exit_code)
+
+
+# =============================================================================
+# Workspace Commands
+# =============================================================================
+
+
+@workspace_app.command(name="init")
+def workspace_init_cmd(
+    path: Path | None = typer.Option(
+        None,
+        "--path",
+        "-p",
+        help="Workspace path (defaults to PRAXIS_HOME or prompts).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Initialize a new Praxis workspace."""
+    import os
+
+    import questionary
+
+    # Determine workspace path
+    if path is None:
+        praxis_home = os.environ.get("PRAXIS_HOME")
+        if praxis_home:
+            workspace_path = Path(praxis_home).expanduser()
+        elif json_output or quiet:
+            typer.echo(
+                "Error: PRAXIS_HOME not set and --path not provided", err=True
+            )
+            raise typer.Exit(3)
+        else:
+            # Interactive prompt
+            answer = questionary.path(
+                "Where should the workspace be created?",
+                default="~/praxis-workspace",
+            ).ask()
+            if answer is None:
+                typer.echo("Aborted.")
+                raise typer.Exit(0)
+            workspace_path = Path(answer).expanduser()
+    else:
+        workspace_path = path.expanduser()
+
+    result = init_workspace(workspace_path)
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        if not quiet:
+            typer.echo(f"✓ Workspace initialized at {workspace_path}")
+            for d in result.dirs_created:
+                typer.echo(f"  Created: {d}/")
+            for f in result.files_created:
+                typer.echo(f"  Created: {f}")
+            for w in result.warnings:
+                typer.echo(f"  ⚠ {w}", err=True)
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+@workspace_app.command(name="info")
+def workspace_info_cmd(
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """Show workspace information."""
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    try:
+        info = get_workspace_info(workspace_path)
+    except FileNotFoundError as e:
+        typer.echo(f"✗ {e}", err=True)
+        raise typer.Exit(1)
+
+    if json_output:
+        # Convert paths to strings for JSON
+        data = {
+            "path": str(info.path),
+            "extensions_path": str(info.extensions_path),
+            "examples_path": str(info.examples_path),
+            "projects_path": str(info.projects_path),
+            "praxis_ai_path": str(info.praxis_ai_path) if info.praxis_ai_path else None,
+            "installed_extensions": info.config.installed_extensions,
+            "installed_examples": info.config.installed_examples,
+            "defaults": {
+                "privacy": info.config.defaults.privacy.value,
+                "environment": info.config.defaults.environment,
+            },
+        }
+        import json
+
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0)
+
+    typer.echo(f"Workspace: {info.path}")
+    typer.echo(f"  Extensions: {info.extensions_path}")
+    typer.echo(f"  Examples:   {info.examples_path}")
+    typer.echo(f"  Projects:   {info.projects_path}")
+    if info.praxis_ai_path:
+        typer.echo(f"  Praxis AI:  {info.praxis_ai_path}")
+    else:
+        typer.echo("  Praxis AI:  (not found)")
+
+    typer.echo("")
+    typer.echo("Installed Extensions:")
+    if info.config.installed_extensions:
+        for ext in info.config.installed_extensions:
+            typer.echo(f"  - {ext}")
+    else:
+        typer.echo("  (none)")
+
+    typer.echo("")
+    typer.echo("Installed Examples:")
+    if info.config.installed_examples:
+        for ex in info.config.installed_examples:
+            typer.echo(f"  - {ex}")
+    else:
+        typer.echo("  (none)")
+
+    raise typer.Exit(0)
+
+
+# =============================================================================
+# Extensions Commands
+# =============================================================================
+
+
+@extensions_app.command(name="list")
+def extensions_list_cmd(
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """List available and installed extensions."""
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    result = list_extensions(workspace_path)
+
+    if json_output:
+        data = {
+            "available": [
+                {
+                    "name": ext.name,
+                    "domain": ext.domain.value,
+                    "description": ext.description,
+                    "installed": ext.installed,
+                }
+                for ext in result.available
+            ],
+            "installed": result.installed,
+        }
+        import json
+
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0)
+
+    typer.echo("Available Extensions:")
+    if result.available:
+        for ext in result.available:
+            status = "[installed]" if ext.installed else ""
+            typer.echo(f"  {ext.name:25} {status:12} {ext.description}")
+    else:
+        typer.echo("  (registry not found - is praxis-ai cloned?)")
+
+    raise typer.Exit(0)
+
+
+@extensions_app.command(name="add")
+def extensions_add_cmd(
+    names: list[str] = typer.Argument(
+        None,
+        help="Extension name(s) to add. If omitted, shows interactive picker.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """Add extension(s) to the workspace."""
+    import questionary
+
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    # If no names provided, show interactive picker
+    if not names:
+        if json_output:
+            typer.echo("Error: extension name required with --json", err=True)
+            raise typer.Exit(2)
+
+        available = list_extensions(workspace_path)
+        if not available.available:
+            typer.echo("✗ No extensions available (registry not found)", err=True)
+            raise typer.Exit(1)
+
+        # Filter out already installed
+        choices = [
+            questionary.Choice(
+                title=f"{ext.name} - {ext.description}",
+                value=ext.name,
+                disabled="already installed" if ext.installed else None,
+            )
+            for ext in available.available
+        ]
+
+        selected = questionary.checkbox(
+            "Select extensions to install:",
+            choices=choices,
+        ).ask()
+
+        if not selected:
+            typer.echo("No extensions selected.")
+            raise typer.Exit(0)
+
+        names = selected
+
+    # Add each extension
+    results = []
+    for name in names:
+        result = add_extension(workspace_path, name)
+        results.append(result)
+
+        if not json_output:
+            if result.success:
+                typer.echo(f"✓ Installed {name}")
+            else:
+                typer.echo(f"✗ Failed to install {name}: {result.error}", err=True)
+
+    if json_output:
+        import json
+
+        data = [
+            {"name": r.name, "success": r.success, "error": r.error}
+            for r in results
+        ]
+        typer.echo(json.dumps(data, indent=2))
+
+    # Exit with error if any failed
+    if any(not r.success for r in results):
+        raise typer.Exit(4)
+    raise typer.Exit(0)
+
+
+@extensions_app.command(name="remove")
+def extensions_remove_cmd(
+    name: str = typer.Argument(..., help="Extension name to remove."),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """Remove an extension from the workspace."""
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    result = remove_extension(workspace_path, name)
+
+    if json_output:
+        import json
+
+        data = {"name": name, "success": result.success, "error": result.error}
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 4)
+
+    if result.success:
+        typer.echo(f"✓ Removed {name}")
+        raise typer.Exit(0)
+    else:
+        typer.echo(f"✗ Failed to remove {name}: {result.error}", err=True)
+        raise typer.Exit(4)
+
+
+@extensions_app.command(name="update")
+def extensions_update_cmd(
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """Update all installed extensions."""
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    results = update_all_extensions(workspace_path)
+
+    if not results:
+        if json_output:
+            typer.echo("[]")
+        else:
+            typer.echo("No extensions installed.")
+        raise typer.Exit(0)
+
+    if json_output:
+        import json
+
+        data = [
+            {"name": r.name, "success": r.success, "error": r.error}
+            for r in results
+        ]
+        typer.echo(json.dumps(data, indent=2))
+    else:
+        for r in results:
+            if r.success:
+                typer.echo(f"✓ Updated {r.name}")
+            else:
+                typer.echo(f"✗ Failed to update {r.name}: {r.error}", err=True)
+
+    if any(not r.success for r in results):
+        raise typer.Exit(4)
+    raise typer.Exit(0)
+
+
+# =============================================================================
+# Examples Commands
+# =============================================================================
+
+
+@examples_app.command(name="list")
+def examples_list_cmd(
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """List available and installed examples."""
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    result = list_examples(workspace_path)
+
+    if json_output:
+        data = {
+            "available": [
+                {
+                    "name": ex.name,
+                    "domain": ex.domain.value,
+                    "description": ex.description,
+                    "installed": ex.installed,
+                }
+                for ex in result.available
+            ],
+            "installed": result.installed,
+        }
+        import json
+
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0)
+
+    typer.echo("Available Examples:")
+    if result.available:
+        for ex in result.available:
+            status = "[installed]" if ex.installed else ""
+            typer.echo(f"  {ex.name:25} {status:12} {ex.description}")
+    else:
+        typer.echo("  (registry not found - is praxis-ai cloned?)")
+
+    raise typer.Exit(0)
+
+
+@examples_app.command(name="add")
+def examples_add_cmd(
+    names: list[str] = typer.Argument(
+        None,
+        help="Example name(s) to add. If omitted, shows interactive picker.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+) -> None:
+    """Add example(s) to the workspace."""
+    import questionary
+
+    try:
+        workspace_path = require_praxis_home()
+    except ValueError as e:
+        typer.echo(str(e), err=True)
+        raise typer.Exit(3)
+
+    # If no names provided, show interactive picker
+    if not names:
+        if json_output:
+            typer.echo("Error: example name required with --json", err=True)
+            raise typer.Exit(2)
+
+        available = list_examples(workspace_path)
+        if not available.available:
+            typer.echo("✗ No examples available (registry not found)", err=True)
+            raise typer.Exit(1)
+
+        # Filter out already installed
+        choices = [
+            questionary.Choice(
+                title=f"{ex.name} - {ex.description}",
+                value=ex.name,
+                disabled="already installed" if ex.installed else None,
+            )
+            for ex in available.available
+        ]
+
+        selected = questionary.checkbox(
+            "Select examples to install:",
+            choices=choices,
+        ).ask()
+
+        if not selected:
+            typer.echo("No examples selected.")
+            raise typer.Exit(0)
+
+        names = selected
+
+    # Add each example
+    results = []
+    for name in names:
+        result = add_example(workspace_path, name)
+        results.append(result)
+
+        if not json_output:
+            if result.success:
+                typer.echo(f"✓ Installed {name}")
+            else:
+                typer.echo(f"✗ Failed to install {name}: {result.error}", err=True)
+
+    if json_output:
+        import json
+
+        data = [
+            {"name": r.name, "success": r.success, "error": r.error}
+            for r in results
+        ]
+        typer.echo(json.dumps(data, indent=2))
+
+    # Exit with error if any failed
+    if any(not r.success for r in results):
+        raise typer.Exit(4)
+    raise typer.Exit(0)
 
 
 if __name__ == "__main__":

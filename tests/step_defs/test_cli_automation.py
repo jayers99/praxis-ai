@@ -40,7 +40,7 @@ def run_init_json(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     project_root = context["project_root"]
     result = cli_runner.invoke(
         app,
-        ["init", str(project_root), "--domain", "code", "--privacy", "personal", "--json"],
+        ["init", str(project_root), "-d", "code", "-p", "personal", "--json"],
     )
     context["result"] = result
 
@@ -62,7 +62,7 @@ def run_init_quiet(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     project_root = context["project_root"]
     result = cli_runner.invoke(
         app,
-        ["init", str(project_root), "--domain", "code", "--privacy", "personal", "--quiet"],
+        ["init", str(project_root), "-d", "code", "-p", "personal", "--quiet"],
     )
     context["result"] = result
 
@@ -141,7 +141,8 @@ def check_json_has_key(context: dict[str, Any], key: str) -> None:
         # Parse if not already parsed
         result = context["result"]
         json_output = json.loads(result.output)
-    assert key in json_output, f"Expected key '{key}' in JSON. Got keys: {list(json_output.keys())}"
+    keys = list(json_output.keys())
+    assert key in json_output, f"Expected key '{key}' in JSON. Got keys: {keys}"
 
 
 @then("the output should be empty")

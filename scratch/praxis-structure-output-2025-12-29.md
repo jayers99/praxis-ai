@@ -1,7 +1,13 @@
 # Praxis Workspace Structure
 
-**Date:** 2025-12-29  
-**Status:** Proposed Architecture (with decisions)
+**Date:** 2025-12-29
+**Status:** Approved for Implementation
+
+**Implementation Notes (2025-12-29):**
+- All GitHub repos confirmed to exist (jayers99/render-run, jayers99/template-python-cli, jayers99/uat-praxis-code, jayers99/opinions-framework)
+- opinions-framework already migrated to separate repo — safe to delete local `projects/write/opinions-framework/`
+- Follow TDD/BDD/DDD approach during implementation
+- Only current user is developer (still in dev phase)
 
 ## The Workspace Model
 
@@ -642,20 +648,58 @@ praxis extensions list --json | jq '.extensions[].name'
 5. [ ] Delete `projects/` directory from praxis-ai
 6. [ ] Update README with new workspace model
 
-### Phase 2: Implement workspace commands
+### Phase 2: Implement workspace commands (TDD/BDD approach)
 
-1. [ ] Add `questionary` dependency
-2. [ ] Implement `praxis workspace init`
-3. [ ] Implement `praxis extensions list/add/remove/update`
-4. [ ] Implement `praxis examples list/add`
+**Order:** Write tests first, then implement to make them pass.
+
+1. [ ] Add `questionary` dependency to pyproject.toml
+2. [ ] Create domain models (`src/praxis/domain/workspace.py`)
+   - [ ] Write unit tests first
+   - [ ] Implement Workspace, Extension, Example entities
+3. [ ] Create infrastructure layer
+   - [ ] `git_cloner.py` — Git clone/pull operations
+   - [ ] `registry_loader.py` — Load extensions.yaml, examples.yaml
+   - [ ] `workspace_config_repo.py` — Read/write workspace-config.yaml
+4. [ ] Create application services
+   - [ ] `workspace_service.py` — Workspace init, info orchestration
+   - [ ] `extension_service.py` — Extension add/remove/list/update logic
 5. [ ] Add PRAXIS_HOME support to CLI
-6. [ ] Add BDD tests for new commands (see test scenarios below)
+6. [ ] Create BDD feature files and step definitions
+   - [ ] `tests/features/workspace.feature`
+   - [ ] `tests/features/extensions.feature`
+   - [ ] `tests/step_defs/test_workspace.py`
+   - [ ] `tests/step_defs/test_extensions.py`
+7. [ ] Implement CLI commands
+   - [ ] `praxis workspace init`
+   - [ ] `praxis workspace info`
+   - [ ] `praxis extensions list/add/remove/update`
+   - [ ] `praxis examples list/add`
 
 ### Phase 3: Update documentation
 
-1. [ ] Create workspace setup guide
-2. [ ] Update user-guide.md
-3. [ ] Create ADR for workspace structure decision
+1. [ ] Update CLAUDE.md — remove `projects/` references, update project structure diagram
+2. [ ] Update README.md — remove `projects/` references, document workspace model
+3. [ ] Update user-guide.md — remove `projects/` references, update examples
+4. [ ] Update docs/opinions/_templates/GUIDE.md — remove opinions-framework reference
+5. [ ] Create ADR for workspace structure decision
+6. [ ] Create workspace setup guide (new doc)
+
+### ✅ Documentation Strategy
+
+**Key message:** User's personal projects live at workspace level (`$PRAXIS_HOME/projects/`), NOT inside `praxis-ai/`.
+
+**Workspace CLAUDE.md:** The workspace root (`$PRAXIS_HOME/`) will have its own `CLAUDE.md` for AI assistants working across the entire workspace. This is separate from `praxis-ai/CLAUDE.md` which documents the framework itself.
+
+```text
+~/praxis-workspace/
+├── CLAUDE.md                     # Workspace-level AI instructions
+├── workspace-config.yaml
+├── praxis-ai/
+│   └── CLAUDE.md                 # Framework development instructions
+└── projects/
+    └── my-project/
+        └── CLAUDE.md             # Project-specific instructions
+```
 
 ---
 
@@ -677,10 +721,41 @@ src/praxis/
 │   ├── registry_loader.py        # Load extensions.yaml, examples.yaml
 │   └── workspace_config_repo.py  # Read/write workspace-config.yaml
 │
-└── cli/
-    ├── workspace_commands.py     # Typer commands for workspace
-    └── extension_commands.py     # Typer commands for extensions
+└── cli.py                        # All CLI commands (existing + new via Typer sub-apps)
 ```
+
+### ✅ CLI Structure Decision
+
+**Decision:** Keep single `cli.py` file, use Typer sub-apps for command groups.
+
+- Existing commands (`init`, `validate`, `stage`, `status`, `audit`) stay in `cli.py`
+- New command groups (`workspace`, `extensions`, `examples`) added as Typer sub-apps in same file
+- Simpler than splitting into `cli/` package for current codebase size
+- Can refactor to package later if file grows too large
+
+```python
+# In cli.py
+workspace_app = typer.Typer(help="Workspace management commands")
+extensions_app = typer.Typer(help="Extension management commands")
+examples_app = typer.Typer(help="Example management commands")
+
+app.add_typer(workspace_app, name="workspace")
+app.add_typer(extensions_app, name="extensions")
+app.add_typer(examples_app, name="examples")
+```
+
+### ✅ `praxis init` vs `praxis workspace init`
+
+**Decision:** Both commands coexist with distinct purposes.
+
+| Command | Purpose | Creates |
+|---------|---------|---------|
+| `praxis init` | Initialize a **project** | `praxis.yaml`, `CLAUDE.md`, `docs/capture.md` |
+| `praxis workspace init` | Initialize a **workspace** | `workspace-config.yaml`, `extensions/`, `examples/`, `projects/` dirs |
+
+- `praxis init` = existing behavior, unchanged
+- `praxis workspace init` = new command for workspace setup
+- Both can be run independently
 
 **Registry files (in praxis-ai root):**
 
@@ -769,3 +844,13 @@ Feature: Extension Management
 ## Ready for Implementation
 
 All decisions finalized. Document is ready to be used as implementation spec.
+
+**Confirmed 2025-12-29:**
+- ✅ All external repos exist on GitHub
+- ✅ opinions-framework content already migrated
+- ✅ CLI structure decision made (single cli.py with sub-apps)
+- ✅ Both `praxis init` and `praxis workspace init` will coexist
+- ✅ TDD/BDD/DDD approach confirmed
+- ✅ Documentation update scope defined
+
+**Branch:** `workspace-refactor`

@@ -225,6 +225,6 @@ When using AI to generate opinion files:
 
 ## Related Files
 
-- [opinions-contract-draft.md](../../../projects/write/opinions-framework/docs/opinions-contract-draft.md) — Full contract specification
+- [opinions-contract.md](../../opinions-contract.md) — Opinions framework specification
 - [lifecycle.md](../../lifecycle.md) — Stage definitions
 - [domains.md](../../domains.md) — Domain definitions
