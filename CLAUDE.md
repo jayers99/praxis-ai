@@ -27,11 +27,7 @@ gh issue list --label "maturity: formalized" --label "type: feature"
 
 **Rhythm:** Batch issues by labels → Implement → PR → Merge → Close
 
-**Session summaries:** Before ending a session, save progress to `scratch/sessions/YYYY-MM-DD.md` for cross-machine continuity:
-```bash
-# Resume from any machine
-git pull && cat scratch/sessions/2025-12-28.md
-```
+**Session summaries:** Save to workspace-level bench: `$PRAXIS_HOME/bench/sessions/YYYY-MM-DD.md`
 
 ## Tech Stack
 
@@ -209,14 +205,17 @@ tests/
   step_defs/             # pytest-bdd step definitions
   conftest.py            # Shared fixtures
 
-docs/                    # Specifications and guides
-  sod.md                 # Solution Overview Document
-  lifecycle.md           # Stage definitions
-  user-guide.md          # Step-by-step walkthrough
-  ai-setup.md            # AI assistant configuration
-  opinions-contract.md   # Opinions framework specification
-  adr/                   # Architecture Decision Records
-  opinions/              # Domain opinions and guidance
+core/                    # Normative specifications (binding)
+  spec/                  # System specs (sod.md, lifecycle.md, domains.md, privacy.md)
+  governance/            # Decision surfaces (layer-model.md, opinions-contract.md)
+  ai/                    # AI behavior controls (ai-guards.md, models/)
+  roles/                 # Praxis Roles subsystem
+
+opinions/                # Advisory guidance (non-binding, by domain)
+research/                # Explanatory research (non-binding)
+docs/guides/             # User-facing tutorials (user-guide.md, ai-setup.md)
+handoff/                 # Operational docs for agents
+adr/                     # Architecture Decision Records
 
 extensions.yaml          # Registry of available extensions
 examples.yaml            # Registry of available examples
@@ -274,23 +273,24 @@ poetry run praxis validate --help
 ## References
 
 **User-facing:**
-- [User Guide](docs/user-guide.md) — Step-by-step walkthrough
-- [AI Setup](docs/ai-setup.md) — CLAUDE.md templates and integration
+- [User Guide](docs/guides/user-guide.md) — Step-by-step walkthrough
+- [AI Setup](docs/guides/ai-setup.md) — CLAUDE.md templates and integration
 
-**Specification:**
-- [SOD](docs/sod.md) — Solution Overview Document
-- [Lifecycle](docs/lifecycle.md) — Stage definitions and regressions
-- [Domains](docs/domains.md) — Domain → artifact mappings
-- [Privacy](docs/privacy.md) — Privacy levels and enforcement
-- [Opinions Contract](docs/opinions-contract.md) — Opinions framework specification
+**Specification (core/):**
+- [SOD](core/spec/sod.md) — Solution Overview Document
+- [Lifecycle](core/spec/lifecycle.md) — Stage definitions, Formalize spine, Sustain governance
+- [Domains](core/spec/domains.md) — Domain → artifact mappings
+- [Privacy](core/spec/privacy.md) — Privacy levels and enforcement
+- [Opinions Contract](core/governance/opinions-contract.md) — Opinions framework specification
+- [Praxis Roles](core/roles/index.md) — Role definitions and lifecycle matrix
 
 **Architecture:**
-- [ADR-001](docs/adr/001-policy-engine.md) — Policy engine decision
-- [ADR-002](docs/adr/002-validation-model.md) — Validation model specification
+- [ADR-001](adr/001-policy-engine.md) — Policy engine decision
+- [ADR-002](adr/002-validation-model.md) — Validation model specification
 
 **Opinions:**
-- [Templates Guide](docs/opinions/_templates/GUIDE.md) — How to create opinion files
-- [Code Domain](docs/opinions/code/) — Code domain opinions and principles
+- [Templates Guide](opinions/_templates/GUIDE.md) — How to create opinion files
+- [Code Domain](opinions/code/) — Code domain opinions and principles
 
 **Examples (install via `praxis examples add`):**
 - `uat-praxis-code` — Hello world CLI with full lifecycle docs
@@ -301,9 +301,9 @@ poetry run praxis validate --help
 - `template-python-cli` — Python CLI scaffolding for Code domain
 
 ## Research workflow (default)
-When I say “research:” use subagent `research-librarian` with:
+When I say "research:" use subagent `research-librarian` with:
 - Timebox: 20 minutes unless I specify otherwise
-- Output: ONE report to ./scratch/
+- Output: ONE report to `$PRAXIS_HOME/bench/research/`
 - Include citations + consensus strength per major claim
 - Prefer primary/authoritative sources
 - I may include seed links; read those first
