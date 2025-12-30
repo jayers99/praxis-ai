@@ -44,10 +44,10 @@ app = typer.Typer(
     rich_markup_mode=None,  # Disable Rich formatting boxes
 )
 
-# Sub-apps for command groups
-workspace_app = typer.Typer(help="Workspace management commands.", rich_markup_mode=None)
-extensions_app = typer.Typer(help="Extension management commands.", rich_markup_mode=None)
-examples_app = typer.Typer(help="Example management commands.", rich_markup_mode=None)
+# Sub-apps for command groups (inherit rich_markup_mode from parent)
+workspace_app = typer.Typer(help="Workspace management commands.")
+extensions_app = typer.Typer(help="Extension management commands.")
+examples_app = typer.Typer(help="Example management commands.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
