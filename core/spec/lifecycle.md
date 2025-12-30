@@ -64,6 +64,27 @@ Formalize is the boundary between exploration and execution.
 | **Exit** | SOD exists with scope, constraints, and success criteria |
 | **Framework** | SRS (IEEE), Stage-Gate Business Case (Cooper) |
 
+#### Formalize Spine (All Domains)
+
+Every Formalize artifact MUST explicitly define:
+
+1. **Intent & Outcome** — Problem/thesis/creative intent, audience, success criteria, why now
+2. **Scope & Boundaries** — In scope, out of scope (non-goals), assumptions, dependencies
+3. **Constraints** — Domain constraints, environment overlay, privacy classification, tooling limits, time/effort caps
+4. **Execution Framing** — First executable increment, risks & mitigations, open questions as explicit spikes
+5. **Commit Criteria** — Success is unambiguous, scope is bounded, constraints are complete, unknowns are resolved or spiked
+
+#### Domain-Specific Artifacts
+
+| Domain | Artifact | Role |
+|--------|----------|------|
+| **Code** | Solution Overview Document (SOD) | Locks intent and boundaries while remaining implementation-light |
+| **Create** | Creative Brief | Bounds creative intent without constraining exploration prematurely |
+| **Write** | Writing Brief | Fixes thesis, audience, and scope before drafting |
+| **Learn** | Competency Target | Turns curiosity into directed learning with verifiable evidence |
+
+> **Reference:** See [sod.md](sod.md) for the complete SOD specification.
+
 ### 6. Commit
 
 Explicitly decide to proceed. Locks scope and intent, allocates effort, and enforces policy invariants. Only a small subset of formalized work should reach this stage.
@@ -98,7 +119,7 @@ Produce the artifact. Includes coding, writing, illustration, or other implement
 
 ### 8. Sustain
 
-Maintain and govern delivered work. Includes updates, evaluation, optimization, and policy enforcement over time.
+Maintain and govern delivered work. Includes updates, evaluation, optimization, and policy enforcement over time. Sustain is **not** a holding pattern—it's active governance of living work.
 
 | Criterion | Description |
 |-----------|-------------|
@@ -106,7 +127,45 @@ Maintain and govern delivered work. Includes updates, evaluation, optimization, 
 | **Exit** | Work retired or closed |
 | **Framework** | ITIL Service Operation, DevOps Operate/Monitor |
 
-> **Domain variance:** Sustain semantics vary by domain. For **Code**, this means maintenance, monitoring, and operations. For **Write** and **Create**, it may mean revision, republication, or audience engagement. For **Learn**, it means practice and retention. Domain-specific guidance is in development.
+> **Domain variance:** Sustain semantics vary by domain. For **Code**, this means maintenance, monitoring, and operations. For **Write** and **Create**, it may mean revision, republication, or audience engagement. For **Learn**, it means practice and retention.
+
+#### Iteration vs. Sustain
+
+A key governance question: **When does a change warrant a new iteration (v2) vs. staying in Sustain?**
+
+**The Test:** "Does this change alter the contract I formalized, or does it extend/refine the implementation of that contract?"
+
+- **Contract change** → New iteration (regress to Formalize)
+- **Implementation extension** → Sustain
+
+#### Iteration Triggers by SOD Section
+
+| Section | Change Type | Rationale |
+|---------|-------------|-----------|
+| **Problem Statement** | Iteration | The problem you're solving has changed or expanded significantly |
+| **Desired Outcomes** | Iteration | Fundamental goals have shifted (not just added goals, but changed direction) |
+| **Canonical Dimensions** | Iteration | Adding/removing/redefining domains, stages, privacy levels, or environments |
+| **Deterministic Resolution Model** | Iteration | The composition order or logic changes |
+| **Abandonment Criteria** | Iteration | The success/failure definition has changed |
+| Risks & Mitigations | Sustain | New risks discovered during execution |
+| First Executable Increment | Sustain | New increments added |
+| Policy Enforcement details | Sustain | Implementation refinements |
+| Privacy/Lifecycle Interaction details | Sustain | Clarifications, not redefinitions |
+
+**Heuristic:** If you need to change Problem Statement, Desired Outcomes, or Canonical Dimensions in the SOD, you're starting a new iteration.
+
+#### What Sustain Absorbs
+
+Sustain is more flexible than it might appear. Significant work can happen within Sustain:
+
+- Feature additions that fit existing scope
+- Quality bar improvements
+- Convention/style overlays
+- New implementation patterns
+- Performance optimization
+- Additional policy rules
+
+The iteration trigger is about **contract changes, not scope size**. A massive feature set stays in Sustain if the formalization contract holds.
 
 ### 9. Close
 

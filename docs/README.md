@@ -1,32 +1,68 @@
-# Documentation
+# Praxis Documentation
 
-> **NOTICE**: Documentation has been reorganized into a layered architecture.
+## Directory Structure
 
-## New Locations
-
-| Old Location | New Location | Description |
-|--------------|--------------|-------------|
-| `docs/sod.md`, `docs/lifecycle.md`, etc. | `core/spec/` | System specifications |
-| `docs/layer-model.md`, `docs/decision-arbitration.md`, etc. | `core/governance/` | Governance documents |
-| `docs/ai-guards.md`, `docs/model-selection-matrix.md` | `core/ai/` | AI behavior controls |
-| `docs/opinions/` | `opinions/` | Advisory domain guidance |
-| `docs/research/` | `research/` | Explanatory background |
-| `docs/adr/` | `adr/` | Architecture decisions |
-| `docs/user-guide.md` | `guides/user-guide.md` | User tutorials |
-| `docs/ai-setup.md` | `guides/ai-setup.md` | AI setup guide |
+```
+praxis-ai/
+├── core/                   # Normative (binding)
+│   ├── spec/               # System specifications
+│   │   ├── sod.md          # Solution Overview Document
+│   │   ├── lifecycle.md    # The nine stages (incl. Formalize & Sustain governance)
+│   │   ├── domains.md      # Code, Create, Write, Learn, Observe
+│   │   └── privacy.md      # Privacy levels
+│   ├── governance/         # Decision surfaces
+│   │   ├── layer-model.md
+│   │   ├── decision-arbitration.md
+│   │   ├── opinions-contract.md
+│   │   └── ...
+│   ├── ai/                 # AI behavior controls
+│   │   ├── ai-guards.md
+│   │   ├── model-selection-matrix.md
+│   │   └── models/
+│   └── roles/              # Praxis Roles subsystem
+│       ├── index.md        # Canonical entry point
+│       ├── lifecycle-matrix.md
+│       └── definitions/    # 12 role definitions
+│
+├── opinions/               # Advisory (non-binding)
+│   ├── code/
+│   ├── create/
+│   ├── write/
+│   ├── learn/
+│   └── observe/
+│
+├── research/               # Explanatory (non-binding)
+│   ├── foundations/        # Theoretical grounding
+│   ├── spec/               # Research behind specs
+│   ├── ai-guards/
+│   └── roles/
+│
+├── docs/                   # User-facing
+│   └── guides/
+│       ├── user-guide.md   # Step-by-step walkthrough
+│       └── ai-setup.md     # Configure AI assistants
+│
+├── handoff/                # Operational (for agents)
+│   └── roles/
+│
+└── adr/                    # Architecture decisions
+```
 
 ## Entry Points
 
-- **Core specification**: [`core/spec/sod.md`](../core/spec/sod.md)
-- **Praxis Roles**: [`core/roles/index.md`](../core/roles/index.md)
-- **User guide**: [`guides/user-guide.md`](../guides/user-guide.md)
-- **Opinions**: [`opinions/`](../opinions/)
+| Starting Point | Location |
+|----------------|----------|
+| Main spec | `core/spec/sod.md` |
+| Lifecycle stages | `core/spec/lifecycle.md` |
+| Praxis Roles | `core/roles/index.md` |
+| User guide | `docs/guides/user-guide.md` |
+| Domain opinions | `opinions/` |
 
-## Layer Authority (Descending)
+## Layer Authority
 
-1. `core/` — Normative, binding
-2. `handoff/` — Operational, must conform to core
-3. `research/` — Explanatory, non-binding
-4. `opinions/` — Advisory, domain-specific
-5. `guides/` — Tutorials, user-facing
-6. `adr/` — Historical decisions
+1. **core/** — Normative, binding
+2. **handoff/** — Operational, must conform to core
+3. **research/** — Explanatory, non-binding
+4. **opinions/** — Advisory, domain-specific
+5. **docs/guides/** — Tutorials, user-facing
+6. **adr/** — Historical decisions
