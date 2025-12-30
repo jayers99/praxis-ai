@@ -277,3 +277,12 @@ poetry run praxis validate --help
 **Examples:**
 - [uat-praxis-code](projects/code/uat-praxis-code/) — Hello world with full lifecycle docs
 - [template-python-cli](projects/code/template-python-cli/) — Production CLI template
+
+## Research workflow (default)
+When I say “research:” use subagent `research-librarian` with:
+- Timebox: 20 minutes unless I specify otherwise
+- Output: ONE report to ./scratch/
+- Include citations + consensus strength per major claim
+- Prefer primary/authoritative sources
+- I may include seed links; read those first
+
