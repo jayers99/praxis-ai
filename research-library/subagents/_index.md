@@ -18,7 +18,7 @@ _No primary artifacts yet_
 
 | Title | Primary Topic | Consensus | Why Relevant |
 |-------|---------------|-----------|--------------|
-| [Research Library Design Principles](../foundations/research-library-design.md) | foundations | High | Defines how research-librarian subagent organizes and retrieves knowledge |
+| [Research Library Design Principles](../foundations/research-library-design.md) | foundations | High | Defines how researcher/librarian/cataloger agents organize and retrieve knowledge |
 
 ## Related Topics
 
@@ -27,4 +27,4 @@ _No primary artifacts yet_
 
 ---
 
-_Maintained by: research-librarian (librarian function)_
+_Maintained by: cataloger agent_

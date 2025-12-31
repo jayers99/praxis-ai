@@ -31,4 +31,4 @@ _No domains yet_
 
 ---
 
-_Maintained by: research-librarian (librarian function)_
+_Maintained by: cataloger agent_

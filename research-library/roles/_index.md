@@ -36,4 +36,4 @@ Research on the Praxis roles subsystem. Role definitions, lifecycle phase mappin
 
 ---
 
-_Maintained by: research-librarian (librarian function)_
+_Maintained by: cataloger agent_

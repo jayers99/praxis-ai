@@ -36,11 +36,11 @@ Academic research validates this framing. Praxis provides the operational system
 
 ## Related Topics
 
-- [Subagents](../subagents/_index.md) — research-librarian subagent applies these principles
+- [Subagents](../subagents/_index.md) — researcher/librarian/cataloger agents apply these principles
 - [Spec](../spec/_index.md) — foundations inform specification design
 - [Patterns](../patterns/_index.md) — reusable patterns derived from foundational research
 - [AI Guards](../ai-guards/_index.md) — AI instruction design builds on these foundations
 
 ---
 
-_Maintained by: research-librarian (librarian function)_
+_Maintained by: cataloger agent_

@@ -28,4 +28,4 @@ Research on how to design effective AI instruction files (CLAUDE.md, COPILOT.md,
 
 ---
 
-_Maintained by: research-librarian_
+_Maintained by: cataloger agent_

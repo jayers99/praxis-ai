@@ -113,4 +113,4 @@ Core keywords: `knowledge-management`, `research-library`, `findability`, `metad
 
 ---
 
-_Maintained by: research-librarian (librarian function)_
+_Maintained by: cataloger agent_
