@@ -1,9 +1,38 @@
 # Model File Rules Analysis
 
-**Purpose:** Classify each rule against AI memory first principles.
-**Date:** 2024-12-24
+<!--
+metadata:
+  id: ai-guards-rules-analysis-2024-12-24
+  title: Model File Rules Analysis
+  date: 2024-12-24
+  author: research-librarian
+  status: approved
+  topic: ai-guards
+  also_relevant: []
+  keywords: [claude-md, rules-analysis, first-principles, instruction-budget, ai-guards]
+  consensus: medium
+  epistemic_standard: analysis
+  sources_count: 0
+  supersedes: null
+  related: [ai-guards-first-principles-2024-12-24, ai-guards-user-directives-2024-12-24]
+  approved_by: human
+  approved_date: 2025-12-30
+-->
 
-## First Principles Reference
+## Executive Summary
+
+- Classification of actual CLAUDE.md rules against AI memory first principles
+- 37 strong rules, 2 weak rules, 0 contrary rules after optimization
+- Both user core (22 rules) and code domain (17 rules) are well under budget
+- Order follows first principles (important stuff first)
+
+## Consensus Rating
+
+**Medium**: Analysis of specific rules against established principles. Useful as a worked example but reflects one user's rule set.
+
+## Body
+
+### First Principles Reference
 
 1. **~150-200 instructions max** — budget is limited
 2. **Earlier > later** — order matters
@@ -13,23 +42,21 @@
 6. **No code snippets** — they go stale
 7. **Pointers not copies** — reference docs, don't inline them
 
-## Classification Key
+### Classification Key
 
 - **Strong** ✓ — Follows principles, high-signal, well-formed
 - **Weak** ~ — Could be improved, minor issues
 - **Contrary** ✗ — Violates principles, should reconsider
 
----
+### CLAUDE_model_user.md Analysis
 
-## CLAUDE_model_user.md Analysis
-
-### Opening Statement
+#### Opening Statement
 
 | Rule                                                                       | Rating   | Notes                             |
 | -------------------------------------------------------------------------- | -------- | --------------------------------- |
 | "I value directness, minimal changes, and working code over explanations." | ✓ Strong | Good WHY context, sets tone early |
 
-### Communication Preferences
+#### Communication Preferences
 
 | Rule                                                                          | Rating   | Notes                                                       |
 | ----------------------------------------------------------------------------- | -------- | ----------------------------------------------------------- |
@@ -39,7 +66,7 @@
 | Ask clarifying questions when requirements are ambiguous                      | ✓ Strong | Simple conditional, actionable                              |
 | Surface disagreements explicitly rather than silently choosing interpretation | ✓ Strong | Positive framing, high-value                                |
 
-### Control Signals
+#### Control Signals
 
 | Rule                                                 | Rating   | Notes              |
 | ---------------------------------------------------- | -------- | ------------------ |
@@ -48,7 +75,7 @@
 | "Clarify" = I need to understand before you proceed  | ✓ Strong | Clear, actionable  |
 | Use Plan Mode for non-trivial implementations        | ✓ Strong | Simple conditional |
 
-### Epistemic Honesty
+#### Epistemic Honesty
 
 | Rule                                      | Rating   | Notes                          |
 | ----------------------------------------- | -------- | ------------------------------ |
@@ -56,7 +83,7 @@
 | Express uncertainty rather than hiding it | ✓ Strong | Positive framing               |
 | Uncertain + consequential → ask first     | ✓ Strong | Simple conditional, high-value |
 
-### Workflow
+#### Workflow
 
 | Rule                                                      | Rating   | Notes                        |
 | --------------------------------------------------------- | -------- | ---------------------------- |
@@ -64,13 +91,13 @@
 | Make minimal changes to accomplish the task               | ✓ Strong | Simple, positive             |
 | Incremental progress over big changes                     | ✓ Strong | Clear preference             |
 
-### Tools & Environment
+#### Tools & Environment
 
 | Rule                                                    | Rating   | Notes            |
 | ------------------------------------------------------- | -------- | ---------------- |
 | Use project-specified tooling over personal preferences | ✓ Strong | Clear preference |
 
-### Boundaries
+#### Boundaries
 
 | Rule                                                                       | Rating   | Notes                     |
 | -------------------------------------------------------------------------- | -------- | ------------------------- |
@@ -79,7 +106,7 @@
 | Mark incomplete or placeholder content clearly                             | ✓ Strong | Actionable                |
 | Before significant decisions, ask: "Am I the right entity to decide this?" | ✓ Strong | High-value autonomy check |
 
-### Domain-Specific Rules
+#### Domain-Specific Rules
 
 | Rule                                                         | Rating   | Notes                                               |
 | ------------------------------------------------------------ | -------- | --------------------------------------------------- |
@@ -88,18 +115,16 @@
 | domain: write → @~/.claude/rules/write.md                    | ✓ Strong | Pointer, not copy                                   |
 | domain: create → @~/.claude/rules/create.md                  | ✓ Strong | Pointer, not copy                                   |
 
-### Summary: CLAUDE_model_user.md
+#### Summary: CLAUDE_model_user.md
 
 - **Strong:** 21 rules
 - **Weak:** 1 rule (domain conditional — necessary complexity)
 - **Contrary:** 0 rules
 - **Total:** 22 rules (~22 of 30-40 budget for user core)
 
----
+### CLAUDE_model_user_code.md Analysis
 
-## CLAUDE_model_user_code.md Analysis
-
-### Code Style
+#### Code Style
 
 | Rule                                             | Rating   | Notes                    |
 | ------------------------------------------------ | -------- | ------------------------ |
@@ -108,7 +133,7 @@
 | Keep functions focused and small                 | ✓ Strong | Simple, positive         |
 | Use meaningful variable names                    | ✓ Strong | Kept per user preference |
 
-### Analysis & Planning
+#### Analysis & Planning
 
 | Rule                                                                     | Rating   | Notes                 |
 | ------------------------------------------------------------------------ | -------- | --------------------- |
@@ -116,7 +141,7 @@
 | Understand before fixing — a fix you don't understand becomes a timebomb | ✓ Strong | High-value, memorable |
 | List everything that reads/writes/depends on code before changing it     | ✓ Strong | Specific, high-value  |
 
-### Testing
+#### Testing
 
 | Rule                                                           | Rating   | Notes                 |
 | -------------------------------------------------------------- | -------- | --------------------- |
@@ -124,7 +149,7 @@
 | Write failing tests first, then minimal code to pass           | ✓ Strong | Clear TDD instruction |
 | For legacy code: add characterization tests before refactoring | ✓ Strong | Specific, actionable  |
 
-### Dependencies
+#### Dependencies
 
 | Rule                                                         | Rating   | Notes                                            |
 | ------------------------------------------------------------ | -------- | ------------------------------------------------ |
@@ -133,7 +158,7 @@
 | Prefer standard library solutions when reasonable            | ✓ Strong | Clear preference                                 |
 | Justify new dependencies before adding them                  | ✓ Strong | Simple, positive                                 |
 
-### Safety
+#### Safety
 
 | Rule                                                                                 | Rating   | Notes                                                         |
 | ------------------------------------------------------------------------------------ | -------- | ------------------------------------------------------------- |
@@ -141,22 +166,20 @@
 | Three real examples before abstracting patterns                                      | ✓ Strong | Specific, memorable rule                                      |
 | Cannot explain why something exists? Cannot touch it until understanding is complete | ~ Weak   | Complex negative framing, but high-value (Chesterton's fence) |
 
-### Git
+#### Git
 
 | Rule                                                                            | Rating   | Notes          |
 | ------------------------------------------------------------------------------- | -------- | -------------- |
 | Commit messages should be descriptive but concise, focusing on "why" not "what" | ✓ Strong | Clear guidance |
 
-### Summary: CLAUDE_model_user_code.md
+#### Summary: CLAUDE_model_user_code.md
 
 - **Strong:** 16 rules
 - **Weak:** 1 rule (Chesterton's fence — complex but high-value)
 - **Contrary:** 0 rules
 - **Total:** 17 rules (~17 of 40-60 budget for domain)
 
----
-
-## Recommendations
+## Reusable Artifacts
 
 ### Changes Applied (2024-12-24)
 
@@ -185,8 +208,6 @@ Both files place high-priority items first:
 
 ✓ Order follows first principles (earlier = higher priority)
 
----
-
 ## Overall Verdict
 
 **Strong alignment with first principles.** Both files are:
@@ -198,3 +219,8 @@ Both files place high-priority items first:
 - Using pointers for domain files (not inlining)
 
 **After applying changes:** 37 strong rules, 2 weak (both intentionally kept for value/necessity).
+
+---
+
+_Migrated from research/ai-guards/analysis-user-models.md_
+_Approved: 2025-12-30_

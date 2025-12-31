@@ -1,30 +1,46 @@
-# Spike 02: Domain Definitions Research Report (Consolidated)
+# Domain Definitions Research Report (Consolidated)
 
-**Date:** 2025-12-28  
-**Status:** Complete  
-**Spikes Merged:** Main research + Subtype Taxonomies + Domain Transitions + AI Permissions
-
----
+<!--
+metadata:
+  id: spec-domains-research-2025-12-28
+  title: Domain Definitions Research Report
+  date: 2025-12-28
+  author: research-librarian
+  status: approved
+  topic: spec
+  also_relevant: [domain]
+  keywords: [domains, code, create, write, observe, learn, subtypes, ai-permissions, transitions]
+  consensus: high
+  epistemic_standard: thorough
+  sources_count: 12
+  supersedes: null
+  related: [spec-lifecycle-research-2025-12-28]
+  approved_by: human
+  approved_date: 2025-12-30
+-->
 
 ## Executive Summary
 
-This consolidated report covers all domain research for Praxis. Key findings:
 - 5 domains validated with industry-standard taxonomies
 - 28 subtypes defined across all domains
-- 4 domain transition patterns identified
+- 4 domain transition patterns identified (Promotion, Derivation, Decomposition, Aggregation)
 - AI permission matrix established with 6 operation categories
 - Boundary criteria refined for adjacent domains
 
----
+## Consensus Rating
 
-## Part 1: Domain Definitions
+**High**: Domain definitions align with established taxonomies (SWEBOK, OSS Taxonomy, Bloom's Taxonomy, Zettelkasten, Design Thinking).
 
-### 1. Code Domain
+## Body
 
-**Definition:** Functional systems and tools  
+### Part 1: Domain Definitions
+
+#### 1. Code Domain
+
+**Definition:** Functional systems and tools
 **Confidence:** HIGH
 
-#### Prior Art
+##### Prior Art
 
 | Source | Key Insight |
 |--------|-------------|
@@ -32,7 +48,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | Wikipedia | Application, System, Programming tools |
 | SWEBOK | Construction (20%), Design (20%), Requirements (16%) |
 
-#### Subtypes
+##### Subtypes
 
 | Subtype | Description |
 |---------|-------------|
@@ -43,19 +59,19 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | `code.infrastructure` | IaC, DevOps, platform tooling |
 | `code.script` | One-off automation scripts |
 
-#### Boundary
+##### Boundary
 
 - **In scope:** Output is executable/runnable code
 - **Out of scope:** AI-generated art (even if tooling is code), documentation-only
 
 ---
 
-### 2. Create Domain
+#### 2. Create Domain
 
-**Definition:** Aesthetic and expressive output (any medium)  
+**Definition:** Aesthetic and expressive output (any medium)
 **Confidence:** HIGH
 
-#### Prior Art
+##### Prior Art
 
 | Source | Key Insight |
 |--------|-------------|
@@ -63,7 +79,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | UX Magazine | Stylistic, Functional, Strategic, Innovative design |
 | Springer Research | Aesthetics = sensory + cognitive response |
 
-#### Subtypes
+##### Subtypes
 
 | Subtype | Description |
 |---------|-------------|
@@ -74,7 +90,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | `create.generative` | AI-generated or algorithmic art |
 | `create.design` | UI/UX, product design, crafts |
 
-#### Boundary
+##### Boundary
 
 - **In scope:** Primary purpose is aesthetic/emotional response
 - **Out of scope:** Functional documentation, executable code
@@ -82,12 +98,12 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 ---
 
-### 3. Write Domain
+#### 3. Write Domain
 
-**Definition:** Structured externalized thought  
+**Definition:** Structured externalized thought
 **Confidence:** MEDIUM (boundary with Create needs attention)
 
-#### Prior Art
+##### Prior Art
 
 | Source | Key Insight |
 |--------|-------------|
@@ -95,7 +111,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | IEEE Technical Writing | Translates specialized knowledge into accessible information |
 | Business Writing | Reports, emails, proposals, white papers |
 
-#### Subtypes
+##### Subtypes
 
 | Subtype | Description |
 |---------|-------------|
@@ -107,7 +123,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 **Note:** Fiction and poetry belong to **Create**, not Write.
 
-#### Boundary
+##### Boundary
 
 - **In scope:** Primary purpose is information transfer or argumentation
 - **Out of scope:** Primary purpose is aesthetic/emotional response
@@ -115,12 +131,12 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 ---
 
-### 4. Observe Domain
+#### 4. Observe Domain
 
-**Definition:** Capture without judgment or refinement  
+**Definition:** Capture without judgment or refinement
 **Confidence:** HIGH
 
-#### Prior Art
+##### Prior Art
 
 | Source | Key Insight |
 |--------|-------------|
@@ -128,7 +144,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | BASB (Forte) | PARA system, capture now, organize later |
 | PKM Research | Raw capture = initial collection without processing |
 
-#### Subtypes
+##### Subtypes
 
 | Subtype | Description |
 |---------|-------------|
@@ -138,7 +154,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | `observe.logs` | Journals, daily notes, activity records |
 | `observe.captures` | Photos, recordings, sensory data |
 
-#### Boundary
+##### Boundary
 
 - **In scope:** Raw capture, minimal processing, no synthesis
 - **Out of scope:** Analysis, interpretation, structured output
@@ -146,12 +162,12 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 ---
 
-### 5. Learn Domain
+#### 5. Learn Domain
 
-**Definition:** Internal model and skill formation  
+**Definition:** Internal model and skill formation
 **Confidence:** HIGH
 
-#### Prior Art
+##### Prior Art
 
 | Source | Key Insight |
 |--------|-------------|
@@ -159,7 +175,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | Anderson & Krathwohl | Factual, Conceptual, Procedural, Metacognitive knowledge |
 | Kolb's Cycle | Experience → Reflect → Conceptualize → Experiment |
 
-#### Subtypes
+##### Subtypes
 
 | Subtype | Description |
 |---------|-------------|
@@ -169,7 +185,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | `learn.course` | Structured learning path |
 | `learn.exploration` | Self-directed discovery |
 
-#### Boundary
+##### Boundary
 
 - **In scope:** Goal is internal capability formation
 - **Out of scope:** Production-grade artifacts for external use
@@ -177,9 +193,9 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 ---
 
-## Part 2: Domain Transition Mechanics
+### Part 2: Domain Transition Mechanics
 
-### Transition Patterns
+#### Transition Patterns
 
 | Pattern | Description | Example |
 |---------|-------------|---------|
@@ -188,7 +204,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | **Decomposition** | Artifact splits across domains | Write → Write + Code (blog + examples) |
 | **Aggregation** | Multiple artifacts combine | Observe × 3 → Write (notes → synthesis) |
 
-### Transition Triggers
+#### Transition Triggers
 
 | Trigger | Description |
 |---------|-------------|
@@ -198,7 +214,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | Formalization | Artifact requires domain-specific SOD |
 | Time investment | Significant effort signals transition |
 
-### Progressive Summarization Model
+#### Progressive Summarization Model
 
 | Layer | Action | Domain |
 |-------|--------|--------|
@@ -208,7 +224,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | L4 | Executive summary | Write |
 | L5 | Remix into new form | Write → Create or Code |
 
-### Transition Requirements
+#### Transition Requirements
 
 | From → To | Requirement |
 |-----------|-------------|
@@ -220,9 +236,9 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 ---
 
-## Part 3: AI Permission Matrix
+### Part 3: AI Permission Matrix
 
-### Operation Categories
+#### Operation Categories
 
 | Operation | Description | Risk Level |
 |-----------|-------------|------------|
@@ -233,7 +249,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | `execute` | Run generated code/commands | Critical |
 | `publish` | Make content externally visible | Critical |
 
-### Domain × Operation Matrix
+#### Domain × Operation Matrix
 
 | Operation | Code | Create | Write | Learn | Observe |
 |-----------|:----:|:------:|:-----:|:-----:|:-------:|
@@ -248,7 +264,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 *Observe domain blocks AI generation to preserve raw capture authenticity.*
 
-### Privacy Level Modifiers
+#### Privacy Level Modifiers
 
 | Privacy Level | Effect |
 |---------------|--------|
@@ -258,14 +274,14 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | Confidential | All operations → Ask |
 | Restricted | `generate`/`transform` → ✗, `execute` → ✗ |
 
-### Environment Modifiers
+#### Environment Modifiers
 
 | Environment | Effect |
 |-------------|--------|
 | Home | Default permissions |
 | Work | `execute` → Ask, `publish` → Ask |
 
-### Risk by Domain
+#### Risk by Domain
 
 | Domain | Risk Level | Key Concerns |
 |--------|------------|--------------|
@@ -277,9 +293,9 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 ---
 
-## Part 4: Boundary Resolution
+### Part 4: Boundary Resolution
 
-### Write vs. Create
+#### Write vs. Create
 
 | Content Type | Domain | Rationale |
 |--------------|--------|-----------|
@@ -290,7 +306,7 @@ This consolidated report covers all domain research for Praxis. Key findings:
 | Poetry | Create | Aesthetic/emotional |
 | Creative nonfiction | Create | Narrative purpose dominates |
 
-### Observe vs. Learn
+#### Observe vs. Learn
 
 | Activity | Domain | Rationale |
 |----------|--------|-----------|
@@ -302,56 +318,60 @@ This consolidated report covers all domain research for Praxis. Key findings:
 
 **Key insight (Kolb):** Observation becomes learning when you move from "Concrete Experience" to "Reflective Observation" with intent to internalize.
 
-### Hybrid Projects
+#### Hybrid Projects
 
 - Projects can span domains
 - Each artifact belongs to exactly one domain
 - Domain determines: storage, AI permissions, quality bar
 - Promotion across domains requires explicit stage transition
 
----
+## Reusable Artifacts
+
+### Domain Quick Reference
+
+| Domain | Definition | Key Test |
+|--------|------------|----------|
+| Code | Functional systems | Output is executable |
+| Create | Aesthetic output | Ambiguity invites imagination |
+| Write | Structured thought | Clarity invites action |
+| Observe | Raw capture | For later processing |
+| Learn | Skill formation | For me to get better |
+
+### All Subtypes
+
+| Domain | Subtypes |
+|--------|----------|
+| Code | cli, library, api, webapp, infrastructure, script |
+| Create | visual, audio, video, interactive, generative, design |
+| Write | technical, business, narrative, academic, journalistic |
+| Observe | notes, bookmarks, clips, logs, captures |
+| Learn | skill, concept, practice, course, exploration |
 
 ## Sources
 
 ### Code Domain
-- [OSS Taxonomy - Nesbitt](https://nesbitt.io/2025/11/29/oss-taxonomy.html)
-- [Software categories - Wikipedia](https://en.wikipedia.org/wiki/Software_categories)
-- [Taxonomies in SE - ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0950584917300472)
+1. [OSS Taxonomy - Nesbitt](https://nesbitt.io/2025/11/29/oss-taxonomy.html)
+2. [Software categories - Wikipedia](https://en.wikipedia.org/wiki/Software_categories)
+3. [Taxonomies in SE - ScienceDirect](https://www.sciencedirect.com/science/article/pii/S0950584917300472)
 
 ### Create Domain
-- [Taxonomy of Creative Design](http://www.senseandsensation.com/2012/03/taxonomy-of-creative-design.html)
-- [Creative Technology Taxonomy - Blair Neal](https://ablairneal.com/a-creative-technology-taxonomy)
-- UNESCO Cultural Industries Classification
+4. [Taxonomy of Creative Design](http://www.senseandsensation.com/2012/03/taxonomy-of-creative-design.html)
+5. [Creative Technology Taxonomy - Blair Neal](https://ablairneal.com/a-creative-technology-taxonomy)
+6. UNESCO Cultural Industries Classification
 
 ### Write Domain
-- [Types of Writing - Grammarly](https://www.grammarly.com/blog/writing-techniques/types-of-writing/)
-- [Technical Writing - IEEE](https://ieeexplore.ieee.org/iel2/766/908/00024018.pdf)
+7. [Types of Writing - Grammarly](https://www.grammarly.com/blog/writing-techniques/types-of-writing/)
+8. [Technical Writing - IEEE](https://ieeexplore.ieee.org/iel2/766/908/00024018.pdf)
 
 ### Observe Domain
-- [Progressive Summarization - Forte Labs](https://fortelabs.com/blog/progressive-summarization-a-practical-technique-for-designing-discoverable-notes/)
-- [PKM Guide - Nick Ang](https://nickang.com/2020-07-05-personal-knowledge-management-system/)
+9. [Progressive Summarization - Forte Labs](https://fortelabs.com/blog/progressive-summarization-a-practical-technique-for-designing-discoverable-notes/)
+10. [PKM Guide - Nick Ang](https://nickang.com/2020-07-05-personal-knowledge-management-system/)
 
 ### Learn Domain
-- [Bloom's Taxonomy - Wikipedia](https://en.wikipedia.org/wiki/Bloom's_taxonomy)
-- [Experiential Learning - Cogn-IQ](https://www.cogn-iq.org/learn/theory/experiential-learning/)
-
-### AI Permissions
-- [VS Code Copilot Security](https://code.visualstudio.com/docs/copilot/security)
-- [EU AI Code of Practice](https://digital-strategy.ec.europa.eu/en/policies/contents-code-gpai)
-
-### Transitions
-- [Artifact-centric BPM - Wikipedia](https://en.wikipedia.org/wiki/Artifact-centric_business_process_model)
-- [FHIR Artifact Lifecycle](https://build.fhir.org/ig/HL7/crmi-ig/artifact-lifecycle.html)
+11. [Bloom's Taxonomy - Wikipedia](https://en.wikipedia.org/wiki/Bloom's_taxonomy)
+12. [Experiential Learning - Cogn-IQ](https://www.cogn-iq.org/learn/theory/experiential-learning/)
 
 ---
 
-## Time Spent
-
-| Spike | Budget | Actual |
-|-------|--------|--------|
-| Main domain research | 30 min | ~30 min |
-| Subtype taxonomies | 30 min | ~30 min |
-| Domain transitions | 15 min | ~15 min |
-| AI permissions | 30 min | ~30 min |
-| **Consolidation** | — | ~10 min |
-| **Total** | ~105 min | ~115 min |
+_Migrated from research/spec/domains-research.md_
+_Approved: 2025-12-30_

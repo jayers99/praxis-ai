@@ -51,6 +51,7 @@ Each artifact has:
 research-library/
 ├── README.md           # This file
 ├── CATALOG.md          # Master index
+├── ai-guards/          # AI instruction files and guard design
 ├── foundations/        # Theoretical grounding, first principles
 ├── spec/               # Research behind specifications
 ├── roles/              # Roles subsystem research
@@ -108,7 +109,6 @@ Core keywords: `knowledge-management`, `research-library`, `findability`, `metad
 
 ## Related
 
-- `../research/` — Legacy research (pending migration)
 - `../../bench/research/` — Staging area for draft research
 
 ---

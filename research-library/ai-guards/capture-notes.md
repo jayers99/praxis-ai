@@ -1,11 +1,38 @@
 # AI Guards — Capture & Design Notes
 
-**Source:** Consolidated from scratch/01-capture.md and scratch/pr-42-ai-guards.md
-**Date:** 2024-12-24
+<!--
+metadata:
+  id: ai-guards-design-notes-2024-12-24
+  title: AI Guards Capture & Design Notes
+  date: 2024-12-24
+  author: research-librarian
+  status: approved
+  topic: ai-guards
+  also_relevant: []
+  keywords: [ai-guards, design-notes, capture, environment, composition]
+  consensus: low
+  epistemic_standard: capture
+  sources_count: 0
+  supersedes: null
+  related: [ai-guards-first-principles-2024-12-24]
+  approved_by: human
+  approved_date: 2025-12-30
+-->
 
----
+## Executive Summary
 
-## The Problem Being Solved
+- Early design notes for the AI Guards feature
+- Key insight: environment is a user-level concern, not project-level
+- Proposed composition: `(core user guards) + (env overlay) + (project domain guards) = AI front-end file`
+- Open questions remain around precedence, format, and rendering triggers
+
+## Consensus Rating
+
+**Low**: Early capture notes. Useful for historical context and design rationale, but not validated research.
+
+## Body
+
+### The Problem Being Solved
 
 Users operate AI assistants (Claude Code, Copilot, Gemini) across multiple environments (home, work) with different constraints:
 - Work environments have compliance, tooling, and privacy requirements
@@ -18,9 +45,7 @@ Users operate AI assistants (Claude Code, Copilot, Gemini) across multiple envir
 - Current state: CLAUDE.md is manually authored per-project
 - Desired state: CLAUDE.md rendered from composable guards
 
----
-
-## Key Observations
+### Key Observations
 
 1. **Environment doesn't belong in projects** — A project doesn't know if I'm at home or work. The user knows.
 
@@ -33,27 +58,23 @@ Users operate AI assistants (Claude Code, Copilot, Gemini) across multiple envir
    (core user guards) + (env overlay) + (project domain guards) = AI front-end file
    ```
 
----
+### Proposed Design Principles
 
-## Proposed Design Principles
-
-### 1. Reason Once, Translate Late
+#### 1. Reason Once, Translate Late
 AI reasoning, principles, and workflows remain invariant. Tooling and compliance constraints are applied as a final translation step, not baked into the reasoning.
 
-### 2. Environment at User Level
+#### 2. Environment at User Level
 Environment (home vs work) is a user-level concern, not a project-level one. Projects define abstract tool roles; users map those to concrete tools per environment.
 
-### 3. AI Front-Ends as Rendered Outputs
+#### 3. AI Front-Ends as Rendered Outputs
 `CLAUDE.md`, `COPILOT.md`, etc. are conceptually rendered artifacts:
 ```
 (core user guards) + (env overlay) + (project domain guards) = AI front-end file
 ```
 
----
+### Proposed File Structure
 
-## Proposed File Structure
-
-### User-Level (~/.ai-guards/)
+#### User-Level (~/.ai-guards/)
 ```
 ~/.ai-guards/
   core.md            # Stable user preferences
@@ -64,7 +85,7 @@ Environment (home vs work) is a user-level concern, not a project-level one. Pro
     home.md          # Home-only constraints
 ```
 
-### Project-Level (praxis/)
+#### Project-Level (praxis/)
 ```
 praxis/
   ai-guards/
@@ -74,17 +95,13 @@ praxis/
     learn.md         # Learn domain guards
 ```
 
----
-
-## Stakeholder Needs
+### Stakeholder Needs
 
 - **As a developer**, I want my AI assistant to automatically adapt when I switch from home to work, without me reconfiguring each project
 - **As a project maintainer**, I want to define domain-specific AI guidance that applies regardless of who's working on it
 - **As a user with multiple AI tools**, I want consistent behavior across Claude, Copilot, etc. even if the specific instructions differ
 
----
-
-## Open Questions (Deferred to Future Issue)
+### Open Questions (Deferred to Future Issue)
 
 | Question | Current State | Proposed State |
 |----------|---------------|----------------|
@@ -101,11 +118,14 @@ Additional questions:
 - How do we validate the composed output?
 - What's the rendering trigger — on-demand CLI command? Git hook? IDE plugin?
 
----
-
 ## Related Documentation
 
-- [SOD v0.3](../../sod.md) — Section 3.4 Environment
-- [Layer Model](../../layer-model.md) — Opinions → Governance → Execution
-- [External Constraints](../../external-constraints.md) — Environmental authority
-- [Guardrails](../../guardrails.md) — Execution-level constraints
+- SOD v0.3 — Section 3.4 Environment
+- Layer Model — Opinions → Governance → Execution
+- External Constraints — Environmental authority
+- Guardrails — Execution-level constraints
+
+---
+
+_Migrated from research/ai-guards/capture-notes.md_
+_Approved: 2025-12-30_

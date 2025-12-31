@@ -1,24 +1,40 @@
-# Spike 01: Lifecycle Stage Research Report
+# Lifecycle Stage Research Report
 
-**Date:** 2025-12-28  
-**Time Budget:** 60 minutes  
-**Status:** Complete
-
----
+<!--
+metadata:
+  id: spec-lifecycle-research-2025-12-28
+  title: Lifecycle Stage Research Report
+  date: 2025-12-28
+  author: research-librarian
+  status: approved
+  topic: spec
+  also_relevant: [foundations]
+  keywords: [lifecycle, stages, capture, sense, explore, shape, formalize, commit, execute, sustain, close]
+  consensus: high
+  epistemic_standard: thorough
+  sources_count: 15
+  supersedes: null
+  related: [spec-domains-research-2025-12-28, spec-sustain-worked-example-2025-12-28]
+  approved_by: human
+  approved_date: 2025-12-30
+-->
 
 ## Executive Summary
 
-Praxis lifecycle stages align well with established methodologies (Design Thinking, Stage-Gate, ITIL, Shape Up) while offering unique value in its explicit "Formalize hinge" and regression model.
+- All 9 Praxis lifecycle stages align with established methodologies
+- Key synthesis: GTD (Capture), Weick (Sense), Double Diamond (diverge/converge), Shape Up (Shape), Stage-Gate (Commit), Agile (Execute), ITIL (Sustain), PMI (Close)
+- Unique Praxis contributions: explicit "Formalize hinge", two iteration modes, regression model, Close → Capture loop
+- Overall confidence: HIGH for all 9 stages
 
-**Key Synthesis:** Praxis integrates GTD (Capture), Zettelkasten (fleeting notes), Weick/Cynefin (Sense), Double Diamond (diverge/converge), Shape Up (Shaping/Betting), SRS/Stage-Gate (Formalize/Commit), ITIL (Sustain), and PMI (Close).
+## Consensus Rating
 
-**Overall Confidence:** HIGH for all 9 stages.
+**High**: Each stage maps to established frameworks with strong prior art. Unique contributions are clearly differentiated.
 
----
+## Body
 
-## Stage Research
+### Stage Research
 
-### 1. Capture
+#### 1. Capture
 
 **Definition:** Collect raw inputs with minimal friction. No commitment required.
 
@@ -39,7 +55,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 2. Sense
+#### 2. Sense
 
 **Definition:** Convert raw inputs into understanding. Light organization, tagging, pattern recognition.
 
@@ -60,7 +76,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 3. Explore
+#### 3. Explore
 
 **Definition:** Generate possibilities without obligation. Abandonment is safe.
 
@@ -81,7 +97,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 4. Shape
+#### 4. Shape
 
 **Definition:** Converge toward viable direction. Selection, refinement. Work remains reversible.
 
@@ -101,7 +117,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 5. Formalize (Structural Hinge)
+#### 5. Formalize (Structural Hinge)
 
 **Definition:** Convert shaped thinking into durable, policy-bearing artifacts. Establishes scope, constraints, success criteria. Output: SOD.
 
@@ -124,7 +140,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 6. Commit
+#### 6. Commit
 
 **Definition:** Explicitly decide to proceed. Locks scope, allocates effort, enforces policy.
 
@@ -145,7 +161,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 7. Execute
+#### 7. Execute
 
 **Definition:** Produce the artifact. Coding, writing, implementation. AI behavior tightly governed.
 
@@ -166,7 +182,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 8. Sustain
+#### 8. Sustain
 
 **Definition:** Maintain and govern delivered work. Updates, evaluation, optimization.
 
@@ -188,7 +204,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-### 9. Close
+#### 9. Close
 
 **Definition:** End work intentionally. Archive, capture learnings, seed future cycles.
 
@@ -209,9 +225,9 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-## Cross-Cutting Findings
+### Cross-Cutting Findings
 
-### Framework Alignments
+#### Framework Alignments
 
 | Framework | Praxis Mapping |
 |-----------|---------------|
@@ -220,7 +236,7 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 | **ITIL** | Strategy=Shape+Formalize, Transition=Commit+Execute, Operation=Sustain, CSI=Sustain+Close |
 | **Shape Up** | Shaping=Shape, Betting=Commit, Building=Execute |
 
-### Unique Praxis Contributions
+#### Unique Praxis Contributions
 
 1. **Explicit Formalize hinge** — Most frameworks blur exploration/execution
 2. **Two iteration modes** — Discovery (pre-Formalize) vs. refinement (post-Formalize)
@@ -230,52 +246,74 @@ Praxis lifecycle stages align well with established methodologies (Design Thinki
 
 ---
 
-## Follow-Up Spikes
+### Follow-Up Research
 
-| # | Spike | Priority | Key Questions |
-|---|-------|----------|---------------|
-| **02** | SOD Template Research | High | What makes a good SOD? Minimum viable SOD? |
-| **03** | Sustain for Non-Code Domains | Medium | What does "sustain" mean for Create, Write, Learn? |
-| **04** | Regression Trigger Detection | Medium | Can regressions be detected automatically? |
-| **05** | Shape Up Deep Dive | Low | How closely does Shape Up align with Shape/Formalize? |
+| Topic | Priority | Key Questions |
+|-------|----------|---------------|
+| SOD Template Research | High | What makes a good SOD? Minimum viable SOD? |
+| Sustain for Non-Code Domains | Medium | What does "sustain" mean for Create, Write, Learn? |
+| Regression Trigger Detection | Medium | Can regressions be detected automatically? |
+| Shape Up Deep Dive | Low | How closely does Shape Up align with Shape/Formalize? |
+
+## Reusable Artifacts
+
+### Stage Quick Reference
+
+| Stage | Definition | Key Framework |
+|-------|------------|---------------|
+| Capture | Collect raw inputs | GTD, Zettelkasten |
+| Sense | Convert to understanding | Weick Sensemaking |
+| Explore | Generate possibilities | Double Diamond, Ideate |
+| Shape | Converge on direction | Shape Up |
+| Formalize | Create SOD | IEEE SRS, Stage-Gate |
+| Commit | Explicitly decide | Stage-Gate, Betting |
+| Execute | Produce artifact | Agile/Scrum |
+| Sustain | Maintain and govern | ITIL |
+| Close | End intentionally | PMI, Retrospective |
+
+### Implementation-Ready Stories
+
+| Story | Size | Confidence |
+|-------|------|------------|
+| Add Weick reference to Sense | S | HIGH |
+| Add "abandonment safe" to Explore | S | HIGH |
+| Document Formalize hinge | S | HIGH |
+| Create SOD template | M | HIGH |
+| Add Commit go/no-go criteria | M | HIGH |
+| Add regression detection to validate | M | MEDIUM |
+
+## Sources
+
+### Design/Creativity
+1. Double Diamond (British Design Council)
+2. Design Thinking (IDEO, Tim Brown)
+3. Divergent/Convergent Thinking (Guilford)
+
+### Sensemaking
+4. Weick, K. (Organizations)
+5. Cynefin (Snowden)
+
+### Product
+6. Shape Up (Singer/Basecamp)
+7. Stage-Gate (Cooper)
+
+### Engineering
+8. SRS (IEEE)
+9. Agile/Scrum
+
+### Operations
+10. ITIL
+11. DevOps
+
+### Closure
+12. PMI
+13. After-Action Review
+14. Agile Retrospectives (Derby & Larsen)
+
+### Psychology
+15. Cialdini (Public Commitment)
 
 ---
 
-## Implementation-Ready Stories
-
-| Story | Size | Confidence | Description |
-|-------|------|------------|-------------|
-| Add Weick reference to Sense | S | HIGH | Citation to sensemaking theory |
-| Add "abandonment safe" to Explore | S | HIGH | Explicit permission differentiator |
-| Document Formalize hinge | S | HIGH | User guide section on hinge concept |
-| Create SOD template | M | HIGH | Canonical template with required/optional sections |
-| Add Commit go/no-go criteria | M | HIGH | Address "gates without teeth" anti-pattern |
-| Add regression detection to validate | M | MEDIUM | Detect scope expansion during Execute |
-
----
-
-## Proposed Order
-
-1. Quick wins: Weick reference, "abandonment safe" callout, Formalize hinge docs
-2. Foundation: SOD template
-3. Governance: Commit criteria, regression detection
-4. Research: Sustain for non-Code domains
-
----
-
-## Key Sources
-
-**Design/Creativity:** Double Diamond, Design Thinking, Divergent/Convergent Thinking  
-**Sensemaking:** Weick (Organizations), Cynefin (Snowden)  
-**Product:** Shape Up (Singer/Basecamp), Stage-Gate (Cooper)  
-**Engineering:** SRS (IEEE), Agile/Scrum, Definition of Done  
-**Operations:** ITIL, DevOps  
-**Closure:** PMI, After-Action Review, Retrospectives
-
----
-
-## Time Spent
-
-**Budget:** 60 min × 2 agents  
-**Combined:** ~100 min research, ~20 min synthesis  
-**Status:** Complete
+_Migrated from research/spec/lifecycle-research.md_
+_Approved: 2025-12-30_
