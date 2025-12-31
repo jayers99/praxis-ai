@@ -212,7 +212,12 @@ core/                    # Normative specifications (binding)
   roles/                 # Praxis Roles subsystem
 
 opinions/                # Advisory guidance (non-binding, by domain)
-research/                # Explanatory research (non-binding)
+research-library/        # Cataloged research with structured metadata
+  CATALOG.md             # Master index of all research artifacts
+  ai-guards/             # AI instruction files and guard design
+  foundations/           # Theoretical grounding, first principles
+  spec/                  # Research behind specifications
+  roles/                 # Roles subsystem research
 docs/guides/             # User-facing tutorials (user-guide.md, ai-setup.md)
 handoff/                 # Operational docs for agents
 adr/                     # Architecture Decision Records
@@ -300,11 +305,23 @@ poetry run praxis validate --help
 - `render-run` — AI image generation for Create domain
 - `template-python-cli` — Python CLI scaffolding for Code domain
 
-## Research workflow (default)
-When I say "research:" use subagent `research-librarian` with:
+**Research Library:**
+- [CATALOG.md](research-library/CATALOG.md) — Master index of all research artifacts
+- [AI Guards](research-library/ai-guards/_index.md) — AI instruction files, memory, guard design
+- [Foundations](research-library/foundations/_index.md) — Classical roots, library design, human-AI intent
+- [Spec Research](research-library/spec/_index.md) — Lifecycle stages, domains, sustain governance
+- [Roles Research](research-library/roles/_index.md) — Praxis roles architecture and rationale
+
+## Research Workflow
+
+When I say "research:" use subagent `researcher` with:
 - Timebox: 20 minutes unless I specify otherwise
-- Output: ONE report to `$PRAXIS_HOME/bench/research/`
+- Output: ONE report to `$PRAXIS_HOME/bench/research/` (staging area)
 - Include citations + consensus strength per major claim
 - Prefer primary/authoritative sources
 - I may include seed links; read those first
+
+After approval, use subagent `cataloger` to move approved research to `research-library/`.
+
+To find existing research, use subagent `librarian` which reads from `research-library/CATALOG.md`.
 
