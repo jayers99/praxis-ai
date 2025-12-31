@@ -1,7 +1,7 @@
 # Research Library Catalog
 
-_Last updated: 2025-12-30_
-_Total artifacts: 13_
+_Last updated: 2025-12-31_
+_Total artifacts: 14_
 
 ---
 
@@ -22,6 +22,7 @@ _Total artifacts: 13_
 | [spec-lifecycle-research-2025-12-28](spec/lifecycle-research.md) | Lifecycle Stage Research Report | spec | High | 2025-12-28 |
 | [spec-domains-research-2025-12-28](spec/domains-research.md) | Domain Definitions Research Report | spec | High | 2025-12-28 |
 | [spec-sustain-worked-example-2025-12-28](spec/sustain-worked-example.md) | Worked Example - Iteration vs Sustain Decision | spec | Medium | 2025-12-28 |
+| [foundations-knowledge-distillation-pipeline-2025-12-31](foundations/knowledge-distillation-pipeline.md) | Knowledge Distillation Pipeline - Epistemic Foundations | foundations | Medium-High | 2025-12-31 |
 
 ---
 
@@ -43,6 +44,7 @@ _Total artifacts: 13_
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | High | research-library, knowledge-management, findability, zettelkasten |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | High | philosophy, aristotle, plato, socrates, praxis, phronesis |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | Medium | human-ai-collaboration, intent-maintenance, cognitive-load |
+| [foundations-knowledge-distillation-pipeline-2025-12-31](foundations/knowledge-distillation-pipeline.md) | Knowledge Distillation Pipeline - Epistemic Foundations | Medium-High | knowledge-distillation, epistemology, validation, pkdp |
 
 ### Roles
 
@@ -81,6 +83,7 @@ _No artifacts yet_
 ### High Consensus
 
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md) — ai-guards — ai-memory, context-window, instruction-files
+- [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md) — foundations — knowledge-distillation, epistemology, pkdp _(medium-high)_
 - [Research Library Design Principles for AI Agents](foundations/research-library-design.md) — foundations — research-library, knowledge-management
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md) — foundations — philosophy, aristotle, plato
 - [Rationale for Praxis Roles Architecture](roles/rationale.md) — roles — praxis-roles, accountability
@@ -130,6 +133,9 @@ _No artifacts yet_
 ### domains
 - [Domain Definitions Research Report](spec/domains-research.md)
 
+### epistemology
+- [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
+
 ### findability
 - [Research Library Design Principles](foundations/research-library-design.md)
 
@@ -142,6 +148,9 @@ _No artifacts yet_
 ### intent-maintenance
 - [Human Intent vs AI Throughput Research](foundations/human-ai-intent-maintenance.md)
 
+### knowledge-distillation
+- [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
+
 ### knowledge-management
 - [Research Library Design Principles](foundations/research-library-design.md)
 
@@ -150,6 +159,9 @@ _No artifacts yet_
 
 ### philosophy
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md)
+
+### pkdp
+- [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
 
 ### phronesis
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md)
@@ -184,6 +196,9 @@ _No artifacts yet_
 ### token-budget
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md)
 
+### validation
+- [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
+
 ### zettelkasten
 - [Research Library Design Principles](foundations/research-library-design.md)
 
@@ -193,6 +208,7 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2025-12-31 | [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md) | foundations |
 | 2025-12-30 | [Research Library Design Principles for AI Agents](foundations/research-library-design.md) | foundations |
 | 2025-12-30 | Migration: 12 artifacts from research/ folder | various |
 | 2025-12-28 | [Classical Roots of Praxis-AI](foundations/classical-roots.md) | foundations |
