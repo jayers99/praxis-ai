@@ -30,8 +30,8 @@ praxis-ai/
 │   ├── write/
 │   ├── learn/
 │   └── observe/
-│
-├── research/               # Explanatory (non-binding)
+|
+├── research-library/       # Explanatory (non-binding)
 │   ├── foundations/        # Theoretical grounding
 │   ├── spec/               # Research behind specs
 │   ├── ai-guards/
@@ -40,7 +40,8 @@ praxis-ai/
 ├── docs/                   # User-facing
 │   └── guides/
 │       ├── user-guide.md   # Step-by-step walkthrough
-│       └── ai-setup.md     # Configure AI assistants
+│       ├── ai-setup.md     # Configure AI assistants
+│       └── pkdp.md         # Knowledge distillation pipeline
 │
 ├── handoff/                # Operational (for agents)
 │   └── roles/
@@ -50,13 +51,15 @@ praxis-ai/
 
 ## Entry Points
 
-| Starting Point | Location |
-|----------------|----------|
-| Main spec | `core/spec/sod.md` |
-| Lifecycle stages | `core/spec/lifecycle.md` |
-| Praxis Roles | `core/roles/index.md` |
-| User guide | `docs/guides/user-guide.md` |
-| Domain opinions | `opinions/` |
+| Starting Point   | Location                    |
+| ---------------- | --------------------------- |
+| Main spec        | `core/spec/sod.md`          |
+| Lifecycle stages | `core/spec/lifecycle.md`    |
+| Praxis Roles     | `core/roles/index.md`       |
+| User guide       | `docs/guides/user-guide.md` |
+| AI setup guide   | `docs/guides/ai-setup.md`   |
+| PKDP guide       | `docs/guides/pkdp.md`       |
+| Domain opinions  | `opinions/`                 |
 
 ## Layer Authority
 

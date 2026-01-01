@@ -66,16 +66,19 @@ This project follows Praxis governance. Before taking action:
 ## Stage-Specific Guidance
 
 ### Before Formalize (Capture → Shape)
+
 - Focus on discovery and exploration
 - It's OK to experiment and change direction
 - No permanent artifacts required yet
 
 ### At Formalize
+
 - Create `docs/sod.md` (Solution Overview Document)
 - Lock scope — document what we're building and what we're NOT building
 - This is the "hard boundary" before execution
 
 ### After Formalize (Commit → Sustain)
+
 - Scope is locked — work within the SOD constraints
 - If scope needs to change, regress to Formalize first
 - Run `praxis validate` before commits
@@ -132,15 +135,18 @@ Run `praxis validate .` before commits or stage transitions.
 For full context, the AI should have access to:
 
 ### Required
+
 - `praxis.yaml` — Current project state
 - `docs/sod.md` — Scope definition (if exists)
 
 ### Recommended
+
 - `docs/lifecycle.md` — Stage definitions and allowed transitions
 - `docs/domains.md` — Domain → artifact mappings
 - `docs/privacy.md` — Privacy constraints
 
 ### Optional
+
 - `docs/opinions/{domain}/` — Domain-specific quality guidance
 - Previous stage documents (`docs/capture.md`, `docs/sense.md`, etc.)
 
@@ -148,16 +154,16 @@ For full context, the AI should have access to:
 
 ## AI Behavior by Stage
 
-| Stage | AI Should... | AI Should NOT... |
-|-------|--------------|------------------|
-| Capture | Help collect raw inputs | Start designing |
-| Sense | Synthesize and clarify | Make implementation decisions |
-| Explore | Investigate options, prototype | Commit to a solution |
-| Shape | Define architecture | Write production code |
-| Formalize | Create SOD, lock scope | Skip the SOD |
-| Commit | Verify readiness | Execute without SOD |
-| Execute | Build per SOD spec | Change scope |
-| Sustain | Fix bugs, small enhancements | Add features without SOD update |
+| Stage     | AI Should...                   | AI Should NOT...                |
+| --------- | ------------------------------ | ------------------------------- |
+| Capture   | Help collect raw inputs        | Start designing                 |
+| Sense     | Synthesize and clarify         | Make implementation decisions   |
+| Explore   | Investigate options, prototype | Commit to a solution            |
+| Shape     | Define architecture            | Write production code           |
+| Formalize | Create SOD, lock scope         | Skip the SOD                    |
+| Commit    | Verify readiness               | Execute without SOD             |
+| Execute   | Build per SOD spec             | Change scope                    |
+| Sustain   | Fix bugs, small enhancements   | Add features without SOD update |
 
 ---
 
@@ -193,6 +199,7 @@ Instruct the AI to validate at transitions:
 ## In your CLAUDE.md:
 
 When I say "move to [stage]":
+
 1. Update praxis.yaml with the new stage
 2. Run `praxis validate .`
 3. If validation fails, fix the issue before proceeding
@@ -204,13 +211,31 @@ When I say "move to [stage]":
 
 The AI should respect privacy levels:
 
-| Privacy Level | AI Can... | AI Should NOT... |
-|---------------|-----------|------------------|
-| public | Use any cloud AI, share freely | — |
-| public-trusted | Share with known collaborators | Post publicly |
-| personal | Use cloud AI with care | Share raw content |
-| confidential | Use local AI preferred | Use cloud AI with raw data |
-| restricted | Local AI only | Send any data to cloud |
+| Privacy Level  | AI Can...                      | AI Should NOT...           |
+| -------------- | ------------------------------ | -------------------------- |
+| public         | Use any cloud AI, share freely | —                          |
+| public-trusted | Share with known collaborators | Post publicly              |
+| personal       | Use cloud AI with care         | Share raw content          |
+| confidential   | Use local AI preferred         | Use cloud AI with raw data |
+| restricted     | Local AI only                  | Send any data to cloud     |
+
+---
+
+## Knowledge Distillation (PKDP)
+
+If you want an AI assistant to help distill a messy corpus into reusable knowledge, use the **Praxis Knowledge Distillation Pipeline (PKDP)** via `praxis pipeline`.
+
+Typical flow:
+
+```bash
+praxis pipeline init --tier 1 --corpus path/to/corpus
+praxis pipeline run --all
+praxis pipeline status
+```
+
+PKDP writes pipeline state to `pipeline.yaml` and stores run outputs under `pipeline-runs/<pipeline_id>/` in the project.
+
+See [PKDP Guide](pkdp.md) for stages, tiers, and stage outputs.
 
 ---
 
@@ -223,7 +248,7 @@ praxis init
 
 # Interactive prompts:
 # Domain? [code/create/write/observe/learn]
-# Privacy level? [public/personal/confidential/restricted]
+# Privacy level? [public/public-trusted/personal/confidential/restricted]
 
 # Generates:
 # - praxis.yaml (configured)
@@ -270,5 +295,5 @@ Or instruct the AI to read `praxis.yaml` first.
 ## See Also
 
 - [User Guide](user-guide.md) — Full lifecycle walkthrough
-- [AI Guards](ai-guards.md) — Dynamic AI instruction generation (draft)
-- [Lifecycle](lifecycle.md) — Stage definitions
+- [AI Guards](../../research-library/ai-guards/_index.md) — Research notes on AI guardrails
+- [Lifecycle](../../core/spec/lifecycle.md) — Stage definitions

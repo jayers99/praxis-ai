@@ -24,6 +24,8 @@ Domain + Stage + Privacy + Environment → Behavior
 
 This repo contains the core framework. Examples and extensions are separate repos managed through `praxis examples add` and `praxis extensions add`.
 
+Praxis also includes the **Praxis Knowledge Distillation Pipeline (PKDP)**: a risk-tiered pipeline for turning raw inputs into validated, decision-grade knowledge artifacts.
+
 ## Philosophy
 
 ### Principles Guide — Contracts Bind — Formalize Arbitrates
@@ -50,7 +52,7 @@ Opinions  →  Governance  →  Execution
 
 This separation prevents principles from becoming dogma, governance from collapsing into bureaucracy, and execution from drifting without intent.
 
-Opinions are stored in `docs/opinions/` and resolved through inheritance:
+Opinions are stored in `opinions/` and resolved through inheritance:
 
 ```text
 _shared → domain/principles → domain/{stage} → subtype/principles → subtype/{stage}
@@ -107,19 +109,23 @@ Praxis treats your work as a lightweight “memory engine”:
 
 If you're new to Praxis:
 
-- [docs/user-guide.md](docs/user-guide.md) — step-by-step walkthrough with examples
-- [docs/ai-setup.md](docs/ai-setup.md) — configure AI assistants (CLAUDE.md, .cursorrules)
+- [docs/guides/user-guide.md](docs/guides/user-guide.md) — step-by-step walkthrough with examples
+- [docs/guides/ai-setup.md](docs/guides/ai-setup.md) — configure AI assistants (CLAUDE.md, .cursorrules)
 - [SECURITY.md](SECURITY.md) — how to report security vulnerabilities
 
 If you want to understand the framework:
 
-- [docs/sod.md](docs/sod.md) — main specification
-- [docs/lifecycle.md](docs/lifecycle.md) — stage definitions + regressions
-- [docs/domains.md](docs/domains.md) — domain → artifact types
-- [docs/privacy.md](docs/privacy.md) — privacy levels + enforcement intent
-- [docs/opinions-contract.md](docs/opinions-contract.md) — opinions framework specification
-- [docs/external-constraints.md](docs/external-constraints.md) — environmental authority
-- [docs/ai-guards.md](docs/ai-guards.md) — AI behavior governance (draft)
+- [core/spec/sod.md](core/spec/sod.md) — main specification
+- [core/spec/lifecycle.md](core/spec/lifecycle.md) — stage definitions + regressions
+- [core/spec/domains.md](core/spec/domains.md) — domain → artifact types
+- [core/spec/privacy.md](core/spec/privacy.md) — privacy levels + enforcement intent
+- [core/governance/opinions-contract.md](core/governance/opinions-contract.md) — opinions framework specification
+- [core/spec/external-constraints.md](core/spec/external-constraints.md) — environmental authority
+- [core/ai/ai-guards.md](core/ai/ai-guards.md) — AI behavior governance (draft)
+
+If you want to distill knowledge into durable research artifacts:
+
+- [docs/guides/pkdp.md](docs/guides/pkdp.md) — Praxis Knowledge Distillation Pipeline (PKDP)
 
 If you want to see Praxis applied in real projects:
 

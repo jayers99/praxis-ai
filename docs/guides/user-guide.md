@@ -8,17 +8,20 @@ This guide walks you through building a project using Praxis governance, from in
 
 1. Clone the praxis-ai repository
 2. Install the Praxis CLI:
+
    ```bash
    cd praxis-ai
    poetry install
    ```
 
 3. Verify installation:
+
    ```bash
    poetry run praxis --version
    ```
 
 4. **(Recommended) Create a wrapper script** so you can run `praxis` from any directory with tab completion support:
+
    ```bash
    # Create a wrapper script (adjust path to your clone location)
    mkdir -p ~/bin
@@ -30,11 +33,13 @@ This guide walks you through building a project using Praxis governance, from in
    ```
 
    Ensure `~/bin` is in your PATH (add to `~/.bashrc` or `~/.zshrc` if needed):
+
    ```bash
    export PATH="$HOME/bin:$PATH"
    ```
 
 5. **(Optional) Enable tab completion** for shell autocompletion of commands and options:
+
    ```bash
    praxis --install-completion
    ```
@@ -49,17 +54,17 @@ This guide walks you through building a project using Praxis governance, from in
 
 ### Lifecycle Stages
 
-| Stage | Purpose | Key Question |
-|-------|---------|--------------|
-| **Capture** | Collect raw inputs | What is this? |
-| **Sense** | Synthesize meaning | What do we understand? |
-| **Explore** | Investigate options | What are our choices? |
-| **Shape** | Define structure | How will this work? |
+| Stage         | Purpose                 | Key Question               |
+| ------------- | ----------------------- | -------------------------- |
+| **Capture**   | Collect raw inputs      | What is this?              |
+| **Sense**     | Synthesize meaning      | What do we understand?     |
+| **Explore**   | Investigate options     | What are our choices?      |
+| **Shape**     | Define structure        | How will this work?        |
 | **Formalize** | Lock scope (create SOD) | What are we committing to? |
-| **Commit** | Verify readiness | Are we ready to build? |
-| **Execute** | Build the thing | Does it work? |
-| **Sustain** | Maintain and evolve | Is it healthy? |
-| **Close** | Archive or sunset | Is this done? |
+| **Commit**    | Verify readiness        | Are we ready to build?     |
+| **Execute**   | Build the thing         | Does it work?              |
+| **Sustain**   | Maintain and evolve     | Is it healthy?             |
+| **Close**     | Archive or sunset       | Is this done?              |
 
 ---
 
@@ -73,15 +78,16 @@ Initialize a new Praxis project:
 praxis init [PATH] [OPTIONS]
 ```
 
-| Option | Description |
-|--------|-------------|
-| `PATH` | Project directory (default: `.`) |
-| `--domain`, `-d` | Project domain: code, create, write, observe, learn |
-| `--privacy`, `-p` | Privacy level: public, personal, confidential, restricted |
-| `--env`, `-e` | Environment: Home, Work (default: Home) |
-| `--force`, `-f` | Overwrite existing files |
+| Option            | Description                                                               |
+| ----------------- | ------------------------------------------------------------------------- |
+| `PATH`            | Project directory (default: `.`)                                          |
+| `--domain`, `-d`  | Project domain: code, create, write, observe, learn                       |
+| `--privacy`, `-p` | Privacy level: public, public-trusted, personal, confidential, restricted |
+| `--env`, `-e`     | Environment: Home, Work (default: Home)                                   |
+| `--force`, `-f`   | Overwrite existing files                                                  |
 
 **Creates:**
+
 - `praxis.yaml` — Governance configuration
 - `CLAUDE.md` — AI assistant instructions
 - `docs/capture.md` — First stage template
@@ -94,9 +100,9 @@ Validate a praxis.yaml configuration:
 praxis validate [PATH] [OPTIONS]
 ```
 
-| Option | Description |
-|--------|-------------|
-| `PATH` | Project directory (default: `.`) |
+| Option           | Description                       |
+| ---------------- | --------------------------------- |
+| `PATH`           | Project directory (default: `.`)  |
 | `--strict`, `-s` | Treat warnings as errors (exit 1) |
 
 **Exit codes:** 0 = valid, 1 = errors found
@@ -109,18 +115,20 @@ Transition project to a new lifecycle stage:
 praxis stage <NEW_STAGE> [PATH]
 ```
 
-| Argument | Description |
-|----------|-------------|
+| Argument    | Description                                                                               |
+| ----------- | ----------------------------------------------------------------------------------------- |
 | `NEW_STAGE` | Target stage (capture, sense, explore, shape, formalize, commit, execute, sustain, close) |
-| `PATH` | Project directory (default: `.`) |
+| `PATH`      | Project directory (default: `.`)                                                          |
 
 **Example:**
+
 ```bash
 praxis stage sense
 # ✓ Stage updated to 'sense'
 ```
 
 **Behavior:**
+
 - Updates `praxis.yaml` with new stage
 - Updates `CLAUDE.md` stage line (if present)
 - Warns if missing required artifact (e.g., SOD at commit+)
@@ -134,11 +142,12 @@ Show project status including stage, validation, and history:
 praxis status [PATH]
 ```
 
-| Argument | Description |
-|----------|-------------|
-| `PATH` | Project directory (default: `.`) |
+| Argument | Description                      |
+| -------- | -------------------------------- |
+| `PATH`   | Project directory (default: `.`) |
 
 **Example output:**
+
 ```
 Project: my-project
   Domain:  code
@@ -166,13 +175,40 @@ Check project against domain best practices:
 praxis audit [PATH] [OPTIONS]
 ```
 
-| Option | Description |
-|--------|-------------|
-| `PATH` | Project directory (default: `.`) |
-| `--json` | Output in JSON format for automation |
-| `--strict`, `-s` | Treat warnings as failures (exit 1) |
+| Option           | Description                          |
+| ---------------- | ------------------------------------ |
+| `PATH`           | Project directory (default: `.`)     |
+| `--json`         | Output in JSON format for automation |
+| `--strict`, `-s` | Treat warnings as failures (exit 1)  |
 
 See [Audit Command](#audit-command) for full details.
+
+---
+
+## Knowledge Distillation (PKDP)
+
+Praxis includes the **Praxis Knowledge Distillation Pipeline (PKDP)**: a risk-tiered pipeline for turning raw inputs into validated knowledge artifacts.
+
+PKDP is exposed via `praxis pipeline`.
+
+```bash
+# Initialize a pipeline (tier 0–3) using a corpus file or directory
+praxis pipeline init --tier 2 --corpus path/to/corpus
+
+# Run a specific stage, or all remaining required stages
+praxis pipeline run --stage rtc
+praxis pipeline run --all
+
+# Check progress
+praxis pipeline status
+
+# Record the HVA decision
+praxis pipeline accept --rationale "ready to ingest"
+praxis pipeline reject --rationale "insufficient evidence"
+praxis pipeline refine --to idas --rationale "need clearer questions"
+```
+
+See [PKDP Guide](pkdp.md) for stages, tiers, and artifacts.
 
 ---
 
@@ -191,6 +227,7 @@ praxis init --domain code --privacy personal
 ```
 
 This creates:
+
 - `praxis.yaml` — Governance configuration
 - `CLAUDE.md` — AI assistant instructions
 - `docs/capture.md` — First stage template
@@ -210,15 +247,18 @@ Edit `docs/capture.md` (created by `praxis init`) with your raw inputs:
 # Capture
 
 ## Intent
+
 Build a simple Python CLI that prints "Hello, World!"
 
 ## Constraints
+
 - Python 3.10+
 - Use Typer for CLI
 - Single command with optional --name argument
 
 ## Initial Ideas
-hello-world          → "Hello, World!"
+
+hello-world → "Hello, World!"
 hello-world --name X → "Hello, X!"
 ```
 
@@ -236,6 +276,7 @@ Create `docs/sense.md` — synthesize the capture inputs:
 # Sense
 
 ## Key Insights
+
 1. Simplicity is essential — Hello World is the right scope
 2. The journey matters more than the destination
 3. Validate at every stage transition
@@ -262,12 +303,15 @@ Create `docs/explore.md` — investigate options:
 # Explore
 
 ## Option A: Typer CLI
+
 Simple, matches Praxis patterns.
 
 ## Option B: Click CLI
+
 More explicit, but not consistent with existing code.
 
 ## Decision
+
 Use Typer for consistency.
 ```
 
@@ -285,12 +329,14 @@ Create `docs/shape.md` — define the architecture:
 # Shape
 
 ## Structure
+
 src/hello_world/
-├── __init__.py
-├── __main__.py
+├── **init**.py
+├── **main**.py
 └── cli.py
 
 ## Decisions
+
 - No layers needed (too simple)
 - Single test file
 - No BDD (unit tests sufficient)
@@ -310,24 +356,29 @@ Create `docs/sod.md` — the **Solution Overview Document**:
 # Solution Overview Document (SOD)
 
 ## Purpose
+
 Minimal CLI that prints a greeting.
 
 ## Scope
+
 - Single command: hello-world
 - Optional --name argument (default: "World")
 - Output: "Hello, {name}!"
 
 ## Out of Scope
+
 - Multiple commands
 - Configuration files
 - Logging
 
 ## Technical Design
+
 - Typer CLI
 - Poetry for packaging
 - pytest for testing
 
 ## Acceptance Criteria
+
 - [ ] hello-world prints "Hello, World!"
 - [ ] hello-world --name X prints "Hello, X!"
 - [ ] All tests pass
@@ -369,6 +420,7 @@ stage: execute
 Build the actual code:
 
 **pyproject.toml:**
+
 ```toml
 [tool.poetry]
 name = "hello-world"
@@ -384,6 +436,7 @@ hello-world = "hello_world.cli:app"
 ```
 
 **src/hello_world/cli.py:**
+
 ```python
 import typer
 
@@ -395,6 +448,7 @@ def hello(name: str = typer.Option("World", "--name", "-n")) -> None:
 ```
 
 **tests/test_cli.py:**
+
 ```python
 from typer.testing import CliRunner
 from hello_world.cli import app
@@ -449,12 +503,12 @@ The project is now in maintenance mode. Future changes follow the Sustain rules:
 
 The `praxis validate` CLI checks:
 
-| Rule | Severity | When |
-|------|----------|------|
-| Invalid domain/stage/privacy | Error | Always |
-| Missing SOD (Code domain) | Error | stage ≥ commit |
-| Invalid stage regression | Warning | When moving backward |
-| Privacy downgrade | Warning | When less restrictive |
+| Rule                         | Severity | When                  |
+| ---------------------------- | -------- | --------------------- |
+| Invalid domain/stage/privacy | Error    | Always                |
+| Missing SOD (Code domain)    | Error    | stage ≥ commit        |
+| Invalid stage regression     | Warning  | When moving backward  |
+| Privacy downgrade            | Warning  | When less restrictive |
 
 ### Example: Missing Artifact
 
@@ -492,13 +546,13 @@ Useful for CI pipelines or testing different contexts.
 
 Each domain requires a specific formalization artifact:
 
-| Domain | Artifact | Path |
-|--------|----------|------|
-| Code | SOD | `docs/sod.md` |
-| Create | Creative Brief | `docs/brief.md` |
-| Write | Writing Brief | `docs/brief.md` |
-| Learn | Learning Plan | `docs/plan.md` |
-| Observe | (none) | — |
+| Domain  | Artifact       | Path            |
+| ------- | -------------- | --------------- |
+| Code    | SOD            | `docs/sod.md`   |
+| Create  | Creative Brief | `docs/brief.md` |
+| Write   | Writing Brief  | `docs/brief.md` |
+| Learn   | Learning Plan  | `docs/plan.md`  |
+| Observe | (none)         | —               |
 
 ---
 
@@ -535,26 +589,26 @@ Summary: 9 passed, 0 warning(s), 0 failed
 
 ### Options
 
-| Flag | Description |
-|------|-------------|
-| `--json` | Output in JSON format for automation |
+| Flag       | Description                              |
+| ---------- | ---------------------------------------- |
+| `--json`   | Output in JSON format for automation     |
 | `--strict` | Treat warnings as failures (exit code 1) |
 
 ### Checks by Domain
 
 **Code Domain** (from `docs/opinions/code/cli-python.md`):
 
-| Category | Check | Description |
-|----------|-------|-------------|
-| Tooling | Poetry | pyproject.toml exists |
-| Tooling | Typer | typer in dependencies |
-| Tooling | ruff | ruff in dev dependencies |
-| Tooling | mypy | mypy in dev dependencies |
-| Structure | Hexagonal | domain/, application/, infrastructure/ dirs |
-| Structure | Console script | [tool.poetry.scripts] configured |
-| Structure | __main__.py | python -m support |
-| Testing | BDD tests | tests/features/*.feature exists |
-| Testing | pytest-bdd | pytest-bdd in dev dependencies |
+| Category  | Check          | Description                                 |
+| --------- | -------------- | ------------------------------------------- |
+| Tooling   | Poetry         | pyproject.toml exists                       |
+| Tooling   | Typer          | typer in dependencies                       |
+| Tooling   | ruff           | ruff in dev dependencies                    |
+| Tooling   | mypy           | mypy in dev dependencies                    |
+| Structure | Hexagonal      | domain/, application/, infrastructure/ dirs |
+| Structure | Console script | [tool.poetry.scripts] configured            |
+| Structure | **main**.py    | python -m support                           |
+| Testing   | BDD tests      | tests/features/\*.feature exists            |
+| Testing   | pytest-bdd     | pytest-bdd in dev dependencies              |
 
 ---
 
