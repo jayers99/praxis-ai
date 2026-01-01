@@ -51,16 +51,16 @@ praxis-ai/
 
 ## Entry Points
 
-| Starting Point   | Location                    |
-| ---------------- | --------------------------- |
-| Main spec        | `core/spec/sod.md`          |
-| Lifecycle stages | `core/spec/lifecycle.md`    |
-| Praxis Roles     | `core/roles/index.md`       |
-| User guide       | `docs/guides/user-guide.md` |
-| AI setup guide   | `docs/guides/ai-setup.md`   |
-| PKDP guide       | `docs/guides/pkdp.md`       |
+| Starting Point   | Location                         |
+| ---------------- | -------------------------------- |
+| Main spec        | `core/spec/sod.md`               |
+| Lifecycle stages | `core/spec/lifecycle.md`         |
+| Praxis Roles     | `core/roles/index.md`            |
+| User guide       | `docs/guides/user-guide.md`      |
+| AI setup guide   | `docs/guides/ai-setup.md`        |
+| PKDP guide       | `docs/guides/pkdp.md`            |
 | Stage templates  | `docs/guides/stage-templates.md` |
-| Domain opinions  | `opinions/`                 |
+| Domain opinions  | `opinions/`                      |
 
 ## Layer Authority
 

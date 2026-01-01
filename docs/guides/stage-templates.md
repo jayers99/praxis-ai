@@ -25,6 +25,7 @@ praxis templates render --force
 ```
 
 Notes:
+
 - Default behavior is non-destructive: existing files are skipped.
 - Use `--force` only when you explicitly want to overwrite.
 
