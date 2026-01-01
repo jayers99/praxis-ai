@@ -7,7 +7,12 @@ from pathlib import Path
 import pytest
 import yaml
 
-from praxis.application.pipeline import execute_idas, execute_rtc, init_pipeline
+from praxis.application.pipeline import (
+    execute_idas,
+    execute_rtc,
+    execute_sad,
+    init_pipeline,
+)
 from praxis.domain.pipeline import PipelineStage
 from praxis.infrastructure.pipeline import load_pipeline_state
 
@@ -170,6 +175,96 @@ class TestExecuteIDAS:
         result = execute_idas(initialized_pipeline)
         assert len(result.warnings) > 0
         assert "template" in result.warnings[0].lower()
+
+
+class TestExecuteSAD:
+    """Tests for execute_sad function."""
+
+    def test_fails_without_pipeline(self, praxis_project: Path) -> None:
+        """Fails when no pipeline exists."""
+        result = execute_sad(praxis_project)
+        assert not result.success
+        assert "No active pipeline" in result.errors
+
+    def test_fails_without_idas_completion(self, initialized_pipeline: Path) -> None:
+        """Fails when IDAS is not completed."""
+        execute_rtc(initialized_pipeline)
+        result = execute_sad(initialized_pipeline)
+        assert not result.success
+        assert "IDAS stage must be completed" in result.errors[0]
+
+    def test_succeeds_after_idas(self, initialized_pipeline: Path) -> None:
+        """Succeeds after IDAS is completed."""
+        execute_rtc(initialized_pipeline)
+        execute_idas(initialized_pipeline)
+        result = execute_sad(initialized_pipeline)
+        assert result.success
+
+    def test_creates_sad_dispatch_file(self, initialized_pipeline: Path) -> None:
+        """Creates sad-dispatch.md file."""
+        execute_rtc(initialized_pipeline)
+        execute_idas(initialized_pipeline)
+        result = execute_sad(initialized_pipeline)
+
+        assert result.output_path is not None
+        assert result.output_path.exists()
+        assert result.output_path.name == "sad-dispatch.md"
+
+    def test_creates_specialist_response_placeholders(
+        self, initialized_pipeline: Path
+    ) -> None:
+        """Creates placeholder files for specialist responses."""
+        execute_rtc(initialized_pipeline)
+        execute_idas(initialized_pipeline)
+        execute_sad(initialized_pipeline)
+
+        state = load_pipeline_state(initialized_pipeline)
+        assert state is not None
+
+        sad_responses = (
+            initialized_pipeline
+            / "pipeline-runs"
+            / state.config.pipeline_id
+            / "sad-responses"
+        )
+        assert sad_responses.exists()
+        # Code domain should have architect, security, testing, operations
+        assert (sad_responses / "architect-response.md").exists()
+
+    def test_marks_stage_completed(self, initialized_pipeline: Path) -> None:
+        """Marks SAD stage as completed."""
+        execute_rtc(initialized_pipeline)
+        execute_idas(initialized_pipeline)
+        execute_sad(initialized_pipeline)
+
+        state = load_pipeline_state(initialized_pipeline)
+        assert state is not None
+        assert state.is_stage_completed(PipelineStage.SAD)
+
+    def test_returns_next_stage(self, initialized_pipeline: Path) -> None:
+        """Returns CCR as next stage."""
+        execute_rtc(initialized_pipeline)
+        execute_idas(initialized_pipeline)
+        result = execute_sad(initialized_pipeline)
+        assert result.next_stage == PipelineStage.CCR
+
+    def test_accepts_custom_specialists(self, initialized_pipeline: Path) -> None:
+        """Accepts custom specialist types."""
+        execute_rtc(initialized_pipeline)
+        execute_idas(initialized_pipeline)
+        result = execute_sad(initialized_pipeline, specialist_types=["researcher"])
+        assert result.success
+
+        state = load_pipeline_state(initialized_pipeline)
+        assert state is not None
+
+        sad_responses = (
+            initialized_pipeline
+            / "pipeline-runs"
+            / state.config.pipeline_id
+            / "sad-responses"
+        )
+        assert (sad_responses / "researcher-response.md").exists()
 
 
 class TestSingleFileCorpus:

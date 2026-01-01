@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import shutil
+from collections.abc import Sequence
 from datetime import datetime
 from pathlib import Path
 
@@ -229,6 +230,189 @@ The corpus has been copied to `rtc-corpus/` for analysis in subsequent stages.
 ---
 
 *Stage completed. Proceed to IDAS (Inquiry-Driven Analytical Synthesis).*
+"""
+
+
+def execute_sad(
+    project_root: Path,
+    specialist_types: list[str] | None = None,
+) -> PipelineStageResult:
+    """
+    Execute Specialist Agent Dispatch stage.
+
+    1. Validate IDAS completed
+    2. Load IDAS research brief
+    3. Determine required specialists
+    4. Generate dispatch packets for each specialist
+    5. Write sad-dispatch.md
+
+    Args:
+        project_root: Project directory.
+        specialist_types: Optional override for specialist types.
+
+    Returns:
+        PipelineStageResult with execution outcome.
+    """
+    from praxis.domain.pipeline.specialists import (
+        DOMAIN_SPECIALISTS,
+        SpecialistType,
+        get_specialists_for_domain,
+    )
+    from praxis.infrastructure.yaml_loader import load_praxis_config
+
+    state = load_pipeline_state(project_root)
+    if state is None:
+        return PipelineStageResult(
+            success=False,
+            stage=PipelineStage.SAD,
+            errors=["No active pipeline"],
+        )
+
+    # Validate IDAS is completed
+    if not state.is_stage_completed(PipelineStage.IDAS):
+        return PipelineStageResult(
+            success=False,
+            stage=PipelineStage.SAD,
+            errors=["IDAS stage must be completed before SAD"],
+        )
+
+    config = state.config
+
+    # Mark stage as started
+    _mark_stage_started(state, PipelineStage.SAD)
+    save_pipeline_state(project_root, state)
+
+    # Determine specialists
+    if specialist_types:
+        try:
+            specialists = [SpecialistType(s) for s in specialist_types]
+        except ValueError as e:
+            return PipelineStageResult(
+                success=False,
+                stage=PipelineStage.SAD,
+                errors=[f"Invalid specialist type: {e}"],
+            )
+    else:
+        # Get domain from praxis.yaml
+        praxis_result = load_praxis_config(project_root)
+        if praxis_result.valid and praxis_result.config:
+            domain = praxis_result.config.domain
+            specialists = get_specialists_for_domain(domain)
+        else:
+            specialists = list(DOMAIN_SPECIALISTS.values())[0]
+
+    # Generate SAD output
+    run_dir = project_root / "pipeline-runs" / config.pipeline_id
+    idas_output = get_stage_output_path(
+        project_root, config.pipeline_id, PipelineStage.IDAS
+    )
+    output_path = get_stage_output_path(
+        project_root, config.pipeline_id, PipelineStage.SAD
+    )
+
+    output_content = _generate_sad_output(config, idas_output, specialists)
+    output_path.write_text(output_content)
+
+    # Create placeholder files for specialist responses
+    sad_responses_dir = run_dir / "sad-responses"
+    sad_responses_dir.mkdir(exist_ok=True)
+    for spec in specialists:
+        response_path = sad_responses_dir / f"{spec.value}-response.md"
+        if not response_path.exists():
+            response_path.write_text(
+                f"# {spec.value.title()} Specialist Response\n\n"
+                "*Awaiting specialist analysis...*\n"
+            )
+
+    # Mark stage as completed
+    _mark_stage_completed(state, PipelineStage.SAD, output_path)
+    save_pipeline_state(project_root, state)
+
+    return PipelineStageResult(
+        success=True,
+        stage=PipelineStage.SAD,
+        output_path=output_path,
+        next_stage=PipelineStage.CCR,
+        warnings=[
+            f"Dispatched to {len(specialists)} specialists. "
+            "Review sad-responses/ for each specialist's analysis."
+        ],
+    )
+
+
+def _generate_sad_output(
+    config: object,
+    idas_output: Path,
+    specialists: Sequence[object],
+) -> str:
+    """Generate SAD dispatch markdown."""
+    from praxis.domain.pipeline.models import PipelineConfig
+    from praxis.domain.pipeline.specialists import SpecialistType
+
+    if not isinstance(config, PipelineConfig):
+        raise TypeError("config must be a PipelineConfig")
+
+    specialist_sections = []
+    for spec in specialists:
+        if not isinstance(spec, SpecialistType):
+            continue
+        specialist_sections.append(f"""### {spec.value.title()} Specialist
+
+**Focus:** {spec.description}
+
+**Inquiry Packet:**
+
+1. Review the IDAS analysis at `{idas_output.name}`
+2. Apply your specialty lens to the research questions
+3. Identify domain-specific risks and opportunities
+4. Provide actionable recommendations
+
+**Expected Deliverables:**
+
+- Key observations from your perspective
+- Risks and concerns within your domain
+- Specific recommendations
+- Open questions for clarification
+
+**Output Location:** `sad-responses/{spec.value}-response.md`
+""")
+
+    specialists_md = "\n".join(specialist_sections)
+    specialist_list = ", ".join(
+        s.value for s in specialists if isinstance(s, SpecialistType)
+    )
+
+    return f"""# Specialist Agent Dispatch (SAD)
+
+## Metadata
+
+- **Pipeline ID:** {config.pipeline_id}
+- **Risk Tier:** {config.risk_tier.value} ({config.risk_tier.description})
+- **IDAS Source:** {idas_output}
+- **Dispatched At:** {datetime.now().isoformat()}
+
+## Dispatch Summary
+
+**Selected Specialists:** {specialist_list}
+
+This stage delegates bounded inquiry to appropriate specialist agents.
+Each specialist reviews the IDAS analysis from their domain perspective.
+
+---
+
+## Specialist Dispatch Packets
+
+{specialists_md}
+
+---
+
+## Next Steps
+
+1. Each specialist completes their analysis in `sad-responses/`
+2. Review all specialist outputs for completeness
+3. Proceed to CCR (Critical Challenge Review)
+
+*Specialists work independently to prevent groupthink.*
 """
 
 
