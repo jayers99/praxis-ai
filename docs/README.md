@@ -59,6 +59,7 @@ praxis-ai/
 | User guide       | `docs/guides/user-guide.md` |
 | AI setup guide   | `docs/guides/ai-setup.md`   |
 | PKDP guide       | `docs/guides/pkdp.md`       |
+| Stage templates  | `docs/guides/stage-templates.md` |
 | Domain opinions  | `opinions/`                 |
 
 ## Layer Authority
