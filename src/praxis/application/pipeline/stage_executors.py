@@ -416,6 +416,396 @@ Each specialist reviews the IDAS analysis from their domain perspective.
 """
 
 
+def execute_asr(project_root: Path) -> PipelineStageResult:
+    """
+    Execute Adjudicated Synthesis & Resolution stage.
+
+    1. Validate CCR completed (or SAD if CCR not required)
+    2. Load specialist outputs and CCR critiques
+    3. Generate synthesis template
+    4. Write asr-synthesis.md
+
+    Args:
+        project_root: Project directory.
+
+    Returns:
+        PipelineStageResult with execution outcome.
+    """
+    from praxis.domain.pipeline.risk_tiers import is_stage_required
+
+    state = load_pipeline_state(project_root)
+    if state is None:
+        return PipelineStageResult(
+            success=False,
+            stage=PipelineStage.ASR,
+            errors=["No active pipeline"],
+        )
+
+    config = state.config
+    tier = config.risk_tier
+
+    # Determine prerequisite stage
+    if is_stage_required(tier, PipelineStage.CCR):
+        if not state.is_stage_completed(PipelineStage.CCR):
+            return PipelineStageResult(
+                success=False,
+                stage=PipelineStage.ASR,
+                errors=["CCR stage must be completed before ASR"],
+            )
+    else:
+        if not state.is_stage_completed(PipelineStage.SAD):
+            return PipelineStageResult(
+                success=False,
+                stage=PipelineStage.ASR,
+                errors=["SAD stage must be completed before ASR"],
+            )
+
+    # Mark stage as started
+    _mark_stage_started(state, PipelineStage.ASR)
+    save_pipeline_state(project_root, state)
+
+    # Gather inputs
+    run_dir = project_root / "pipeline-runs" / config.pipeline_id
+    sad_responses_dir = run_dir / "sad-responses"
+    ccr_critiques_dir = run_dir / "ccr-critiques"
+
+    sad_outputs = (
+        list(sad_responses_dir.glob("*.md")) if sad_responses_dir.exists() else []
+    )
+    ccr_outputs = (
+        list(ccr_critiques_dir.glob("*.md")) if ccr_critiques_dir.exists() else []
+    )
+
+    # Generate ASR output
+    output_path = get_stage_output_path(
+        project_root, config.pipeline_id, PipelineStage.ASR
+    )
+    output_content = _generate_asr_output(config, sad_outputs, ccr_outputs)
+    output_path.write_text(output_content)
+
+    # Mark stage as completed
+    _mark_stage_completed(state, PipelineStage.ASR, output_path)
+    save_pipeline_state(project_root, state)
+
+    next_stage = (
+        PipelineStage.HVA if is_stage_required(tier, PipelineStage.HVA) else None
+    )
+
+    return PipelineStageResult(
+        success=True,
+        stage=PipelineStage.ASR,
+        output_path=output_path,
+        next_stage=next_stage,
+        warnings=["ASR synthesis is a template. Review and refine before HVA."],
+    )
+
+
+def execute_hva(
+    project_root: Path,
+    decision: str,
+    rationale: str,
+    refine_to_stage: str | None = None,
+) -> PipelineStageResult:
+    """
+    Execute Human Validation & Acceptance stage.
+
+    1. Validate ASR completed
+    2. Record decision: accept / refine / reject
+    3. Update pipeline state accordingly
+
+    Args:
+        project_root: Project directory.
+        decision: One of "accept", "refine", "reject".
+        rationale: Explanation for the decision.
+        refine_to_stage: If decision is "refine", which stage to return to.
+
+    Returns:
+        PipelineStageResult with execution outcome.
+    """
+
+    state = load_pipeline_state(project_root)
+    if state is None:
+        return PipelineStageResult(
+            success=False,
+            stage=PipelineStage.HVA,
+            errors=["No active pipeline"],
+        )
+
+    # Validate ASR is completed
+    if not state.is_stage_completed(PipelineStage.ASR):
+        return PipelineStageResult(
+            success=False,
+            stage=PipelineStage.HVA,
+            errors=["ASR stage must be completed before HVA"],
+        )
+
+    config = state.config
+
+    # Validate decision
+    valid_decisions = ["accept", "refine", "reject"]
+    if decision not in valid_decisions:
+        return PipelineStageResult(
+            success=False,
+            stage=PipelineStage.HVA,
+            errors=[f"Invalid decision: {decision}. Must be one of {valid_decisions}"],
+        )
+
+    # Mark stage as started
+    _mark_stage_started(state, PipelineStage.HVA)
+
+    # Generate HVA output
+    output_path = get_stage_output_path(
+        project_root, config.pipeline_id, PipelineStage.HVA
+    )
+
+    # Handle decision
+    if decision == "accept":
+        output_content = _generate_hva_accept_output(config, rationale)
+        _mark_stage_completed(state, PipelineStage.HVA, output_path)
+        warnings = ["Pipeline accepted. Ready for research-library ingestion."]
+    elif decision == "reject":
+        output_content = _generate_hva_reject_output(config, rationale)
+        _mark_stage_completed(state, PipelineStage.HVA, output_path)
+        warnings = ["Pipeline rejected. See rationale for details."]
+    else:  # refine
+        if not refine_to_stage:
+            return PipelineStageResult(
+                success=False,
+                stage=PipelineStage.HVA,
+                errors=["refine_to_stage required when decision is 'refine'"],
+            )
+        try:
+            target_stage = PipelineStage(refine_to_stage)
+        except ValueError:
+            return PipelineStageResult(
+                success=False,
+                stage=PipelineStage.HVA,
+                errors=[f"Invalid refine_to_stage: {refine_to_stage}"],
+            )
+
+        output_content = _generate_hva_refine_output(config, rationale, target_stage)
+        # Reset to target stage
+        state.config.current_stage = target_stage
+        warnings = [f"Pipeline returned to {target_stage.value} for refinement."]
+
+    output_path.write_text(output_content)
+    save_pipeline_state(project_root, state)
+
+    return PipelineStageResult(
+        success=True,
+        stage=PipelineStage.HVA,
+        output_path=output_path,
+        next_stage=None,
+        warnings=warnings,
+    )
+
+
+def _generate_asr_output(
+    config: object,
+    sad_outputs: list[Path],
+    ccr_outputs: list[Path],
+) -> str:
+    """Generate ASR synthesis markdown."""
+    from praxis.domain.pipeline.models import PipelineConfig
+
+    if not isinstance(config, PipelineConfig):
+        raise TypeError("config must be a PipelineConfig")
+
+    sad_files = "\n".join(f"- {p.name}" for p in sad_outputs) or "- (none)"
+    ccr_files = "\n".join(f"- {p.name}" for p in ccr_outputs) or "- (none)"
+
+    return f"""# Adjudicated Synthesis & Resolution (ASR)
+
+## Metadata
+
+- **Pipeline ID:** {config.pipeline_id}
+- **Risk Tier:** {config.risk_tier.value} ({config.risk_tier.description})
+- **Synthesized At:** {datetime.now().isoformat()}
+
+## Inputs Considered
+
+### Specialist Outputs
+{sad_files}
+
+### Challenger Critiques
+{ccr_files}
+
+---
+
+## Executive Knowledge Summary
+
+<!-- 1-2 paragraph summary of the validated knowledge position -->
+
+[Summary of the key findings and conclusions]
+
+---
+
+## Detailed Analytical Body
+
+### Key Findings
+
+1. **Finding 1:** [Description]
+   - Evidence: [Supporting data]
+   - Confidence: [High/Medium/Low]
+
+2. **Finding 2:** [Description]
+   - Evidence: [Supporting data]
+   - Confidence: [High/Medium/Low]
+
+### Tradeoffs Considered
+
+| Option | Pros | Cons | Recommendation |
+|--------|------|------|----------------|
+| Option A | [List] | [List] | [Rec] |
+| Option B | [List] | [List] | [Rec] |
+
+---
+
+## Responses to Challenges
+
+### Challenge 1: [From CCR]
+- **Challenge:** [What was raised]
+- **Response:** [How we addressed it]
+- **Resolution:** [Accept/Reject/Modify]
+
+### Challenge 2: [From CCR]
+- **Challenge:** [What was raised]
+- **Response:** [How we addressed it]
+- **Resolution:** [Accept/Reject/Modify]
+
+---
+
+## Open Questions
+
+### Critical (Must resolve before acceptance)
+- [ ] Question 1: [Blocking question]
+
+### Important (Should resolve)
+- [ ] Question 2: [Important question]
+
+### Close-Call (Nice to resolve)
+- [ ] Question 3: [Optional question]
+
+---
+
+## Confidence Assessment
+
+- **Overall Confidence:** [High/Medium/Low]
+- **Strongest Areas:** [Where we're most confident]
+- **Weakest Areas:** [Where uncertainty remains]
+
+---
+
+*This synthesis resolves competing claims through reasoned arbitration.*
+*Proceed to HVA for human validation.*
+"""
+
+
+def _generate_hva_accept_output(config: object, rationale: str) -> str:
+    """Generate HVA accept decision output."""
+    from praxis.domain.pipeline.models import PipelineConfig
+
+    if not isinstance(config, PipelineConfig):
+        raise TypeError("config must be a PipelineConfig")
+
+    return f"""# Human Validation & Acceptance (HVA) — ACCEPTED
+
+## Metadata
+
+- **Pipeline ID:** {config.pipeline_id}
+- **Risk Tier:** {config.risk_tier.value} ({config.risk_tier.description})
+- **Decision:** ACCEPTED
+- **Decided At:** {datetime.now().isoformat()}
+
+## Rationale
+
+{rationale}
+
+## Next Steps
+
+This pipeline has been accepted for research-library ingestion.
+
+1. Run `praxis pipeline ingest` to add to research-library
+2. The ASR synthesis will be the primary artifact
+3. Full provenance chain will be preserved
+
+---
+
+*Knowledge validated by human oversight.*
+"""
+
+
+def _generate_hva_reject_output(config: object, rationale: str) -> str:
+    """Generate HVA reject decision output."""
+    from praxis.domain.pipeline.models import PipelineConfig
+
+    if not isinstance(config, PipelineConfig):
+        raise TypeError("config must be a PipelineConfig")
+
+    return f"""# Human Validation & Acceptance (HVA) — REJECTED
+
+## Metadata
+
+- **Pipeline ID:** {config.pipeline_id}
+- **Risk Tier:** {config.risk_tier.value} ({config.risk_tier.description})
+- **Decision:** REJECTED
+- **Decided At:** {datetime.now().isoformat()}
+
+## Rationale
+
+{rationale}
+
+## Implications
+
+This pipeline has been rejected and will NOT be ingested into the research-library.
+
+The pipeline artifacts remain in `pipeline-runs/{config.pipeline_id}/` for reference.
+
+---
+
+*Knowledge rejected by human oversight.*
+"""
+
+
+def _generate_hva_refine_output(
+    config: object,
+    rationale: str,
+    target_stage: PipelineStage,
+) -> str:
+    """Generate HVA refine decision output."""
+    from praxis.domain.pipeline.models import PipelineConfig
+
+    if not isinstance(config, PipelineConfig):
+        raise TypeError("config must be a PipelineConfig")
+
+    return f"""# Human Validation & Acceptance (HVA) — REFINE
+
+## Metadata
+
+- **Pipeline ID:** {config.pipeline_id}
+- **Risk Tier:** {config.risk_tier.value} ({config.risk_tier.description})
+- **Decision:** REFINE
+- **Return To:** {target_stage.value} ({target_stage.full_name})
+- **Decided At:** {datetime.now().isoformat()}
+
+## Rationale
+
+{rationale}
+
+## Next Steps
+
+The pipeline has been returned to the {target_stage.full_name} stage.
+
+1. Address the issues identified in the rationale
+2. Re-execute from {target_stage.value} forward
+3. Return to HVA when ready
+
+---
+
+*Refinement requested by human oversight.*
+"""
+
+
 def _generate_idas_output(
     config: object,
     corpus_dir: Path,
