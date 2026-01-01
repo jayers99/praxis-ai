@@ -9,6 +9,7 @@ description = "Policy-driven AI workflow governance"
 authors = ["jayers"]
 readme = "README.md"
 packages = [{include = "praxis", from = "src"}]
+include = ["src/praxis/templates/**"]
 
 [tool.poetry.dependencies]
 python = ">=3.10"

@@ -47,10 +47,12 @@ app = typer.Typer(
 workspace_app = typer.Typer(help="Workspace management commands.")
 extensions_app = typer.Typer(help="Extension management commands.")
 examples_app = typer.Typer(help="Example management commands.")
+templates_app = typer.Typer(help="Template rendering commands.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
 app.add_typer(examples_app, name="examples")
+app.add_typer(templates_app, name="templates")
 
 
 def version_callback(value: bool) -> None:
@@ -78,6 +80,94 @@ def main(
 def help_cmd(ctx: typer.Context) -> None:
     """Show this help message."""
     typer.echo(ctx.parent.get_help())
+
+
+@templates_app.command("render")
+def templates_render_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    domain: str | None = typer.Option(
+        None,
+        "--domain",
+        "-d",
+        help="Project domain (code, create, write, observe, learn). Defaults to praxis.yaml.",
+    ),
+    subtype: str | None = typer.Option(
+        None,
+        "--subtype",
+        help="Optional subtype (e.g., api-backend).",
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Overwrite existing files.",
+    ),
+    template_root: list[Path] = typer.Option(
+        [],
+        "--template-root",
+        help="Additional template root to search (can be provided multiple times).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Render lifecycle stage docs and domain artifacts into a project."""
+    from praxis.application.templates import render_stage_templates
+    from praxis.domain.domains import Domain
+    from praxis.infrastructure.yaml_loader import load_praxis_config
+
+    project_root = path.resolve()
+
+    domain_value: str | None = domain
+    if domain_value is None:
+        load_result = load_praxis_config(project_root)
+        if load_result.valid and load_result.config is not None:
+            domain_value = load_result.config.domain.value
+
+    if domain_value is None:
+        typer.echo("Error: --domain is required (or provide a valid praxis.yaml)", err=True)
+        raise typer.Exit(1)
+
+    try:
+        domain_enum = Domain(domain_value)
+    except ValueError:
+        valid_domains = ", ".join(d.value for d in Domain)
+        typer.echo(f"Error: invalid domain '{domain_value}'. Valid: {valid_domains}", err=True)
+        raise typer.Exit(1)
+
+    result = render_stage_templates(
+        project_root=project_root,
+        domain=domain_enum,
+        subtype=subtype,
+        force=force,
+        extra_template_roots=template_root,
+    )
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        typer.echo("✓ Templates rendered")
+    else:
+        typer.echo("✗ Templates rendered with errors", err=True)
+
+    if result.created:
+        typer.echo(f"Created: {len(result.created)}")
+    if result.skipped:
+        typer.echo(f"Skipped: {len(result.skipped)}")
+    if result.overwritten:
+        typer.echo(f"Overwritten: {len(result.overwritten)}")
+
+    for err in result.errors:
+        typer.echo(f"Error: {err}", err=True)
+
+    raise typer.Exit(0 if result.success else 1)
 
 
 @app.command(name="init")

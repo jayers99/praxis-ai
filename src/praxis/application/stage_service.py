@@ -124,4 +124,34 @@ def transition_stage(
     # 7. Update CLAUDE.md (best effort, don't fail if it doesn't work)
     update_claude_md_stage(project_root, new_stage)
 
+    # 8. Render stage doc template for the new stage (best effort)
+    try:
+        from praxis.application.templates import render_stage_templates
+
+        template_result = render_stage_templates(
+            project_root=project_root,
+            domain=current_config.domain,
+            subtype=None,
+            stages=[new_stage],
+            force=False,
+        )
+
+        if not template_result.success:
+            for err in template_result.errors:
+                issues.append(
+                    ValidationIssue(
+                        rule="template_render_error",
+                        severity="warning",
+                        message=f"Template render warning: {err}",
+                    )
+                )
+    except Exception as e:
+        issues.append(
+            ValidationIssue(
+                rule="template_render_error",
+                severity="warning",
+                message=f"Template render warning: {e}",
+            )
+        )
+
     return StageResult(success=True, issues=issues)
