@@ -4,9 +4,9 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`). Extending with domain-specific features.
+**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`), stage templates (`templates`), and knowledge distillation pipeline (`pipeline`).
 
-**Workspace Model:** Praxis uses a workspace-based structure. User projects live in `$PRAXIS_HOME/projects/`, separate from this framework repo. See `scratch/praxis-structure-output-2025-12-29.md` for architecture details.
+**Workspace Model:** Praxis uses a workspace-based structure. User projects live in `$PRAXIS_HOME/projects/`, separate from this framework repo.
 
 ## Issue Workflow
 
@@ -78,6 +78,19 @@ praxis extensions update          # Update all installed extensions
 praxis examples list              # List available examples
 praxis examples add               # Interactive picker to install
 praxis examples add uat-praxis-code  # Install specific example
+
+# Template rendering
+praxis templates render           # Render stage docs to current project
+praxis templates render --stage formalize  # Render specific stage only
+praxis templates render --force   # Overwrite existing files
+
+# Knowledge distillation pipeline
+praxis pipeline init              # Initialize a new pipeline
+praxis pipeline status            # Show pipeline progress
+praxis pipeline run               # Execute pipeline stage(s)
+praxis pipeline accept            # Accept pipeline output (HVA stage)
+praxis pipeline reject            # Reject pipeline output (HVA stage)
+praxis pipeline refine            # Return to earlier stage for refinement
 
 # Opinions framework (planned)
 praxis opinions                   # Show applicable opinions for project
@@ -177,20 +190,28 @@ Run `praxis opinions --prompt` to get formatted context for AI assistants.
 
 ```
 src/praxis/              # Main CLI package
-  cli.py                 # Typer CLI entry point (includes workspace/extensions commands)
+  cli.py                 # Typer CLI entry point (all command groups)
   domain/                # Domain models and enums
     models.py            # Pydantic models (PraxisConfig, ValidationResult, etc.)
     stages.py            # Stage enum with comparison operators
     domains.py           # Domain enum
     privacy.py           # PrivacyLevel enum
     workspace.py         # Workspace, Extension, Example entities
+    audit_checks.py      # Audit check definitions
+    templates/           # Template domain models
+    pipeline/            # Pipeline models, risk tiers, specialists
   application/           # Application services
     validate_service.py  # Validation orchestration
     init_service.py      # Project initialization
+    stage_service.py     # Stage transition orchestration
+    audit_service.py     # Audit check orchestration
     workspace_service.py # Workspace init, info orchestration
     extension_service.py # Extension add/remove/list/update logic
+    templates/           # Template rendering service
+    pipeline/            # Pipeline orchestration (CCR)
   infrastructure/        # External concerns
     yaml_loader.py       # YAML parsing
+    yaml_writer.py       # YAML serialization
     artifact_checker.py  # File existence checks
     git_history.py       # Git operations (regression detection)
     env_resolver.py      # Environment variable handling
@@ -199,6 +220,11 @@ src/praxis/              # Main CLI package
     git_cloner.py        # Git clone/pull operations
     registry_loader.py   # Load extensions.yaml, examples.yaml
     workspace_config_repo.py  # Read/write workspace-config.yaml
+    pyproject_loader.py  # pyproject.toml parsing
+    claude_md_updater.py # CLAUDE.md update helper
+    tool_runner.py       # Tool execution (tests, lint, etc.)
+    stage_templates/     # Stage template resolution and rendering
+    pipeline/            # Pipeline state persistence
 
 tests/
   features/              # Gherkin feature files
@@ -215,9 +241,12 @@ opinions/                # Advisory guidance (non-binding, by domain)
 research-library/        # Cataloged research with structured metadata
   CATALOG.md             # Master index of all research artifacts
   ai-guards/             # AI instruction files and guard design
+  domain/                # Domain-specific research
   foundations/           # Theoretical grounding, first principles
+  patterns/              # Pattern library
   spec/                  # Research behind specifications
   roles/                 # Roles subsystem research
+  subagents/             # Subagent research
 docs/guides/             # User-facing tutorials (user-guide.md, ai-setup.md)
 handoff/                 # Operational docs for agents
 adr/                     # Architecture Decision Records
@@ -280,6 +309,8 @@ poetry run praxis validate --help
 **User-facing:**
 - [User Guide](docs/guides/user-guide.md) — Step-by-step walkthrough
 - [AI Setup](docs/guides/ai-setup.md) — CLAUDE.md templates and integration
+- [Stage Templates](docs/guides/stage-templates.md) — Template system usage
+- [PKDP Guide](docs/guides/pkdp.md) — Knowledge distillation pipeline
 
 **Specification (core/):**
 - [SOD](core/spec/sod.md) — Solution Overview Document
