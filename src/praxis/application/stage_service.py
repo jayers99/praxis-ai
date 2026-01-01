@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 from praxis.domain.domains import ARTIFACT_PATHS
@@ -123,5 +124,46 @@ def transition_stage(
 
     # 7. Update CLAUDE.md (best effort, don't fail if it doesn't work)
     update_claude_md_stage(project_root, new_stage)
+
+    # 8. Render stage doc template for the new stage (best effort)
+    try:
+        from praxis.application.templates import render_stage_templates
+
+        template_result = render_stage_templates(
+            project_root=project_root,
+            domain=current_config.domain,
+            subtype=None,
+            stages=[new_stage],
+            force=False,
+        )
+
+        if not template_result.success:
+            for err in template_result.errors:
+                issues.append(
+                    ValidationIssue(
+                        rule="template_render_error",
+                        severity="warning",
+                        message=f"Template render warning: {err}",
+                    )
+                )
+    except (FileNotFoundError, ValueError, OSError) as e:
+        issues.append(
+            ValidationIssue(
+                rule="template_render_error",
+                severity="warning",
+                message=f"Template render warning: {e}",
+            )
+        )
+    except Exception as e:
+        logging.getLogger(__name__).exception(
+            "Unexpected error during template rendering"
+        )
+        issues.append(
+            ValidationIssue(
+                rule="template_render_error",
+                severity="warning",
+                message=f"Template render warning: {e}",
+            )
+        )
 
     return StageResult(success=True, issues=issues)

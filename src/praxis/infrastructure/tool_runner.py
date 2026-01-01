@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import subprocess
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -69,6 +70,24 @@ def run_tool(
         )
 
 
+def _output_indicates_missing_tool(result: ToolResult) -> bool:
+    """Heuristic: detect cases where a wrapper exists but the underlying tool isn't available.
+
+    This module tries commands in a preferred order (e.g. `poetry run ...` then
+    `python -m ...` then bare executable). If a command fails because the underlying
+    tool isn't installed, we treat that failure as "try the next command" rather than
+    a hard failure.
+    """
+
+    combined = (result.output + "\n" + result.error).lower()
+    return (
+        "command not found" in combined
+        or "no module named" in combined
+        or "not installed" in combined
+        or "is not installed" in combined
+    )
+
+
 def run_pytest(project_root: Path) -> ToolResult:
     """Run pytest in the project directory.
 
@@ -81,13 +100,19 @@ def run_pytest(project_root: Path) -> ToolResult:
     # Try poetry run pytest first, fall back to pytest
     commands = [
         ["poetry", "run", "pytest", "--tb=short", "-q"],
+        [sys.executable, "-m", "pytest", "--tb=short", "-q"],
         ["pytest", "--tb=short", "-q"],
     ]
 
     for cmd in commands:
         result = run_tool(cmd, "pytest", project_root)
-        if result.return_code != -1:  # Tool was found
+        if result.return_code == -1:
+            continue
+        if result.success:
             return result
+        if _output_indicates_missing_tool(result):
+            continue
+        return result
 
     return ToolResult(
         tool="pytest",
@@ -109,13 +134,19 @@ def run_ruff(project_root: Path) -> ToolResult:
     """
     commands = [
         ["poetry", "run", "ruff", "check", "."],
+        [sys.executable, "-m", "ruff", "check", "."],
         ["ruff", "check", "."],
     ]
 
     for cmd in commands:
         result = run_tool(cmd, "ruff", project_root)
-        if result.return_code != -1:
+        if result.return_code == -1:
+            continue
+        if result.success:
             return result
+        if _output_indicates_missing_tool(result):
+            continue
+        return result
 
     return ToolResult(
         tool="ruff",
@@ -137,13 +168,19 @@ def run_mypy(project_root: Path) -> ToolResult:
     """
     commands = [
         ["poetry", "run", "mypy", "."],
+        [sys.executable, "-m", "mypy", "."],
         ["mypy", "."],
     ]
 
     for cmd in commands:
         result = run_tool(cmd, "mypy", project_root)
-        if result.return_code != -1:
+        if result.return_code == -1:
+            continue
+        if result.success:
             return result
+        if _output_indicates_missing_tool(result):
+            continue
+        return result
 
     return ToolResult(
         tool="mypy",
@@ -211,37 +248,50 @@ def run_coverage(project_root: Path, threshold: int) -> CoverageResult:
     # Try poetry run pytest with coverage first, fall back to pytest
     commands = [
         ["poetry", "run", "pytest", "--cov", "--cov-report=term", "-q"],
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "--cov",
+            "--cov-report=term",
+            "-q",
+        ],
         ["pytest", "--cov", "--cov-report=term", "-q"],
     ]
 
     for cmd in commands:
         result = run_tool(cmd, "coverage", project_root)
-        if result.return_code != -1:
-            # Tool was found, parse coverage
-            combined_output = result.output + result.error
-            coverage_pct = parse_coverage_percent(combined_output)
+        if result.return_code == -1:
+            continue
 
-            if coverage_pct is None:
-                return CoverageResult(
-                    tool="coverage",
-                    success=False,
-                    coverage_percent=None,
-                    threshold=threshold,
-                    output=result.output,
-                    error="Could not parse coverage percentage from output",
-                )
+        if not result.success and _output_indicates_missing_tool(result):
+            continue
 
-            meets_threshold = coverage_pct >= threshold
+        # Tool was found (or tests ran), parse coverage
+        combined_output = result.output + result.error
+        coverage_pct = parse_coverage_percent(combined_output)
+
+        if coverage_pct is None:
             return CoverageResult(
                 tool="coverage",
-                success=meets_threshold,
-                coverage_percent=coverage_pct,
+                success=False,
+                coverage_percent=None,
                 threshold=threshold,
                 output=result.output,
-                error="" if meets_threshold else (
-                    f"Coverage {coverage_pct:.0f}% is below threshold {threshold}%"
-                ),
+                error="Could not parse coverage percentage from output",
             )
+
+        meets_threshold = coverage_pct >= threshold
+        return CoverageResult(
+            tool="coverage",
+            success=meets_threshold,
+            coverage_percent=coverage_pct,
+            threshold=threshold,
+            output=result.output,
+            error="" if meets_threshold else (
+                f"Coverage {coverage_pct:.0f}% is below threshold {threshold}%"
+            ),
+        )
 
     return CoverageResult(
         tool="coverage",

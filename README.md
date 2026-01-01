@@ -111,6 +111,7 @@ If you're new to Praxis:
 
 - [docs/guides/user-guide.md](docs/guides/user-guide.md) — step-by-step walkthrough with examples
 - [docs/guides/ai-setup.md](docs/guides/ai-setup.md) — configure AI assistants (CLAUDE.md, .cursorrules)
+- [docs/guides/stage-templates.md](docs/guides/stage-templates.md) — scaffold stage docs with deterministic templates
 - [SECURITY.md](SECURITY.md) — how to report security vulnerabilities
 
 If you want to understand the framework:

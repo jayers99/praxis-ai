@@ -9,6 +9,7 @@ description = "Policy-driven AI workflow governance"
 authors = ["jayers"]
 readme = "README.md"
 packages = [{include = "praxis", from = "src"}]
+include = ["src/praxis/templates/**"]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -19,7 +20,7 @@ questionary = ">=2.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0"
-pytest-bdd = "^7.0"
+pytest-bdd = "^8.0"
 ruff = "^0.8"
 mypy = "^1.0"
 types-pyyaml = "^6.0"
