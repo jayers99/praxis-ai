@@ -71,7 +71,13 @@ def run_tool(
 
 
 def _output_indicates_missing_tool(result: ToolResult) -> bool:
-    """Heuristic: detect cases where the wrapper exists (e.g. Poetry) but the tool isn't installed."""
+    """Heuristic: detect cases where a wrapper exists but the underlying tool isn't available.
+
+    This module tries commands in a preferred order (e.g. `poetry run ...` then
+    `python -m ...` then bare executable). If a command fails because the underlying
+    tool isn't installed, we treat that failure as "try the next command" rather than
+    a hard failure.
+    """
 
     combined = (result.output + "\n" + result.error).lower()
     return (

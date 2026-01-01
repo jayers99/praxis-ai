@@ -9,12 +9,20 @@ from praxis.domain.domains import Domain
 from praxis.domain.stages import Stage
 
 _SUBTYPE_PATTERN = re.compile(r"^[a-z0-9-]+$")
+_ARTIFACT_PATTERN = re.compile(r"^[a-z0-9-]+$")
 
 
 def validate_subtype(subtype: str) -> None:
     if not _SUBTYPE_PATTERN.match(subtype):
         raise ValueError(
             "Invalid subtype. Use lowercase letters, numbers, and dashes only."
+        )
+
+
+def validate_artifact_name(artifact_name: str) -> None:
+    if not _ARTIFACT_PATTERN.match(artifact_name):
+        raise ValueError(
+            "Invalid artifact name. Use lowercase letters, numbers, and dashes only."
         )
 
 
@@ -38,6 +46,7 @@ def artifact_template_candidates(
     subtype: str | None,
 ) -> list[str]:
     candidates: list[str] = []
+    validate_artifact_name(artifact_name)
     if subtype:
         validate_subtype(subtype)
         candidates.append(

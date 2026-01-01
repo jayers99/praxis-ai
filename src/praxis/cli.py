@@ -99,6 +99,14 @@ def templates_render_cmd(
         "--subtype",
         help="Optional subtype (e.g., api-backend).",
     ),
+    stages: list[str] = typer.Option(
+        [],
+        "--stage",
+        help=(
+            "Only render these stages (can be provided multiple times). "
+            "Defaults to all stages."
+        ),
+    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -119,6 +127,7 @@ def templates_render_cmd(
     """Render lifecycle stage docs and domain artifacts into a project."""
     from praxis.application.templates import render_stage_templates
     from praxis.domain.domains import Domain
+    from praxis.domain.stages import Stage
     from praxis.infrastructure.yaml_loader import load_praxis_config
 
     project_root = path.resolve()
@@ -140,10 +149,25 @@ def templates_render_cmd(
         typer.echo(f"Error: invalid domain '{domain_value}'. Valid: {valid_domains}", err=True)
         raise typer.Exit(1)
 
+    stage_enums: list[Stage] | None = None
+    if stages:
+        stage_enums = []
+        for stage_str in stages:
+            try:
+                stage_enums.append(Stage(stage_str))
+            except ValueError:
+                valid_stages = ", ".join(s.value for s in Stage)
+                typer.echo(
+                    f"Error: invalid stage '{stage_str}'. Valid: {valid_stages}",
+                    err=True,
+                )
+                raise typer.Exit(1)
+
     result = render_stage_templates(
         project_root=project_root,
         domain=domain_enum,
         subtype=subtype,
+        stages=stage_enums,
         force=force,
         extra_template_roots=template_root,
     )

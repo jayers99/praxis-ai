@@ -10,6 +10,16 @@ from praxis.infrastructure.file_writer import write_file
 
 
 class _SafeFormatter(string.Formatter):
+    """A safe template formatter.
+
+    Design choice: missing keys are left as the original placeholder (e.g. `{unknown}`)
+    instead of raising.
+
+    Rationale: stage templates may contain placeholders that are populated later, or
+    braces that are meaningful to other tools. Treating missing keys as an error would
+    make template rendering brittle.
+    """
+
     def get_value(self, key: Any, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
         if isinstance(key, str) and key not in kwargs:
             return "{" + key + "}"
@@ -17,6 +27,10 @@ class _SafeFormatter(string.Formatter):
 
 
 def render_template_text(template_text: str, context: dict[str, Any]) -> str:
+    """Render a template string with partial rendering semantics.
+
+    Any placeholder missing from `context` is preserved as-is.
+    """
     formatter = _SafeFormatter()
     return formatter.vformat(template_text, args=(), kwargs=context)
 

@@ -28,6 +28,7 @@ Notes:
 
 - Default behavior is non-destructive: existing files are skipped.
 - Use `--force` only when you explicitly want to overwrite.
+- If you omit `--stage`, Praxis renders all lifecycle stage docs.
 
 ## Template locations (roots)
 

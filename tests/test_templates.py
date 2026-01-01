@@ -8,6 +8,7 @@ from praxis.domain.domains import Domain
 from praxis.domain.stages import Stage
 from praxis.domain.templates.models import TemplateRoot
 from praxis.infrastructure.stage_templates.template_resolver import TemplateResolver
+from praxis.infrastructure.stage_templates.template_renderer import render_template_text
 from praxis.infrastructure.stage_templates.template_renderer import render_template_to_file
 
 
@@ -87,6 +88,16 @@ def test_renderer_overwrites_with_force(tmp_path: Path) -> None:
     assert dest.read_text() == "hello"
 
 
+def test_render_template_text_substitutes_defined_variables() -> None:
+    rendered = render_template_text("Hello {name}!", {"name": "World"})
+    assert rendered == "Hello World!"
+
+
+def test_render_template_text_preserves_missing_variables() -> None:
+    rendered = render_template_text("Hello {name} {missing}", {"name": "World"})
+    assert rendered == "Hello World {missing}"
+
+
 def test_subtype_validation_rejects_path_traversal(tmp_path: Path) -> None:
     core = tmp_path / "core"
     (core / "stage").mkdir(parents=True)
@@ -99,4 +110,19 @@ def test_subtype_validation_rejects_path_traversal(tmp_path: Path) -> None:
             domain=Domain.CODE,
             stage=Stage.CAPTURE,
             subtype="../evil",
+        )
+
+
+def test_artifact_name_validation_rejects_path_traversal(tmp_path: Path) -> None:
+    core = tmp_path / "core"
+    (core / "domain" / "code" / "artifact").mkdir(parents=True)
+    (core / "domain" / "code" / "artifact" / "sod.md").write_text("core")
+
+    resolver = TemplateResolver([TemplateRoot(kind="core", path=core)])
+
+    with pytest.raises(ValueError):
+        resolver.resolve_artifact(
+            domain=Domain.CODE,
+            artifact_name="../evil",
+            subtype=None,
         )

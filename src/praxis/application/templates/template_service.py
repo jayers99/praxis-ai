@@ -40,12 +40,15 @@ def render_stage_templates(
     force: bool = False,
     extra_template_roots: list[Path] | None = None,
 ) -> TemplatesRenderResult:
-    """Render stage docs (and minimal domain artifacts) into a project.
+    """Render stage docs and associated domain-specific formalization artifacts into a project.
 
-    MVP inventory:
-    - Stage doc for every stage: docs/<stage>.md
-    - Code domain formalization artifact: docs/sod.md
-    """
+        MVP inventory:
+        - Stage doc for every stage: docs/<stage>.md
+        - Domain-specific formalization artifacts as applicable (Formalize+):
+            - Code: docs/sod.md
+            - Create/Write: docs/brief.md
+                - Learn: docs/plan.md
+            """
 
     roots = _default_template_roots(project_root, extra_roots=extra_template_roots)
     resolver = TemplateResolver(roots)
@@ -99,49 +102,7 @@ def render_stage_templates(
                 RenderedFile(destination=project_root, status="error", error=str(e))
             )
 
-    # Minimal domain artifact: Code domain SOD (generate at Formalize+)
-    should_render_sod = any(s >= Stage.FORMALIZE for s in stages_to_render)
-    if domain == Domain.CODE and should_render_sod:
-        try:
-            selection = resolver.resolve_artifact(
-                domain=domain,
-                artifact_name="sod",
-                subtype=subtype,
-            )
-            dest = project_root / "docs" / "sod.md"
-            ok, err, status = render_template_to_file(
-                template_path=selection.template_path,
-                destination=dest,
-                context=context,
-                force=force,
-            )
-
-            result.rendered.append(
-                RenderedFile(
-                    destination=dest,
-                    status=status,
-                    template_path=selection.template_path,
-                    provenance=selection.provenance,
-                    error=err,
-                )
-            )
-
-            if not ok:
-                result.success = False
-                if err:
-                    result.errors.append(err)
-            else:
-                if status == "created":
-                    result.created.append(dest)
-                elif status == "skipped":
-                    result.skipped.append(dest)
-                elif status == "overwritten":
-                    result.overwritten.append(dest)
-        except Exception as e:
-            result.success = False
-            result.errors.append(str(e))
-
-    _render_create_brief_if_needed(
+    _render_minimal_domain_artifact_if_needed(
         project_root=project_root,
         domain=domain,
         subtype=subtype,
@@ -155,7 +116,7 @@ def render_stage_templates(
     return result
 
 
-def _render_create_brief_if_needed(
+def _render_minimal_domain_artifact_if_needed(
     *,
     project_root: Path,
     domain: Domain,
@@ -166,17 +127,32 @@ def _render_create_brief_if_needed(
     context: dict[str, str],
     result: TemplatesRenderResult,
 ) -> None:
-    should_render_brief = any(s >= Stage.FORMALIZE for s in stages_to_render)
-    if domain != Domain.CREATE or not should_render_brief:
+    should_render_artifact = any(s >= Stage.FORMALIZE for s in stages_to_render)
+    if not should_render_artifact:
+        return
+
+    artifact_name: str | None
+    filename: str | None
+
+    if domain == Domain.CODE:
+        artifact_name = "sod"
+        filename = "sod.md"
+    elif domain in (Domain.CREATE, Domain.WRITE):
+        artifact_name = "brief"
+        filename = "brief.md"
+    elif domain == Domain.LEARN:
+        artifact_name = "plan"
+        filename = "plan.md"
+    else:
         return
 
     try:
         selection = resolver.resolve_artifact(
             domain=domain,
-            artifact_name="brief",
+            artifact_name=artifact_name,
             subtype=subtype,
         )
-        dest = project_root / "docs" / "brief.md"
+        dest = project_root / "docs" / filename
         ok, err, status = render_template_to_file(
             template_path=selection.template_path,
             destination=dest,

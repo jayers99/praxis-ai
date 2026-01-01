@@ -7,8 +7,8 @@
 ## Project
 
 - Title:
-- Client/Venue: Louie’s Bar (San Francisco)
-- Occasion: New Year’s Eve
+- Client/Venue:
+- Occasion:
 
 ## Goals
 
@@ -32,8 +32,8 @@
 
 ## Deliverables
 
-- Poster (sizes):
-- Social variants:
+- Primary deliverable(s) (e.g., poster, video, article, asset):
+- Additional formats/variants (e.g., sizes, platforms, channels):
 
 ## Success criteria
 

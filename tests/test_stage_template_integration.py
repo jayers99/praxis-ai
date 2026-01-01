@@ -73,3 +73,25 @@ def test_create_transition_to_formalize_does_not_overwrite_existing_brief(tmp_pa
     assert result.success
 
     assert brief_doc.read_text() == "EXISTING"
+
+
+def test_write_transition_to_formalize_creates_brief(tmp_path: Path) -> None:
+    _write_praxis_yaml(tmp_path, domain="write", stage="shape")
+
+    result = transition_stage(tmp_path, "formalize")
+    assert result.success
+
+    brief_doc = tmp_path / "docs" / "brief.md"
+    assert brief_doc.exists()
+    assert "# Writing Brief" in brief_doc.read_text()
+
+
+def test_learn_transition_to_formalize_creates_plan(tmp_path: Path) -> None:
+    _write_praxis_yaml(tmp_path, domain="learn", stage="shape")
+
+    result = transition_stage(tmp_path, "formalize")
+    assert result.success
+
+    plan_doc = tmp_path / "docs" / "plan.md"
+    assert plan_doc.exists()
+    assert "# Learning Plan" in plan_doc.read_text()

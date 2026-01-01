@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 from praxis.domain.domains import ARTIFACT_PATHS
@@ -145,7 +146,18 @@ def transition_stage(
                         message=f"Template render warning: {err}",
                     )
                 )
+    except (FileNotFoundError, ValueError, OSError) as e:
+        issues.append(
+            ValidationIssue(
+                rule="template_render_error",
+                severity="warning",
+                message=f"Template render warning: {e}",
+            )
+        )
     except Exception as e:
+        logging.getLogger(__name__).exception(
+            "Unexpected error during template rendering"
+        )
         issues.append(
             ValidationIssue(
                 rule="template_render_error",
