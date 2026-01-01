@@ -5,6 +5,7 @@ These tests cover core enums, models, and domain logic without file I/O.
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,17 @@ from pydantic import ValidationError
 
 from praxis.domain.domains import ARTIFACT_PATHS, Domain
 from praxis.domain.models import PraxisConfig, ValidationIssue
+from praxis.domain.pipeline import (
+    REQUIRED_STAGES,
+    AgentOutput,
+    PipelineConfig,
+    PipelineStage,
+    PipelineStageResult,
+    PipelineState,
+    RiskTier,
+    StageExecution,
+)
+from praxis.domain.pipeline.risk_tiers import get_next_required_stage, is_stage_required
 from praxis.domain.privacy import PrivacyLevel
 from praxis.domain.stages import ALLOWED_REGRESSIONS, REQUIRES_ARTIFACT, Stage
 
@@ -333,3 +345,224 @@ class TestValidationIssue:
                 severity="info",
                 message="Not allowed",
             )
+
+
+# ============================================================================
+# Pipeline Domain Tests
+# ============================================================================
+
+
+class TestPipelineStageEnum:
+    """Tests for PipelineStage enum and comparison operators."""
+
+    def test_stage_ordering(self) -> None:
+        """Pipeline stages are ordered RTC → HVA."""
+        expected_order = [
+            PipelineStage.RTC,
+            PipelineStage.IDAS,
+            PipelineStage.SAD,
+            PipelineStage.CCR,
+            PipelineStage.ASR,
+            PipelineStage.HVA,
+        ]
+        assert list(PipelineStage) == expected_order
+
+    def test_stage_count(self) -> None:
+        """There are exactly 6 pipeline stages."""
+        assert len(PipelineStage) == 6
+
+    def test_less_than(self) -> None:
+        """Earlier stages are less than later stages."""
+        assert PipelineStage.RTC < PipelineStage.IDAS
+        assert PipelineStage.IDAS < PipelineStage.SAD
+        assert PipelineStage.SAD < PipelineStage.CCR
+        assert PipelineStage.CCR < PipelineStage.ASR
+        assert PipelineStage.ASR < PipelineStage.HVA
+
+    def test_greater_than(self) -> None:
+        """Later stages are greater than earlier stages."""
+        assert PipelineStage.HVA > PipelineStage.ASR
+        assert PipelineStage.ASR > PipelineStage.CCR
+
+    def test_less_than_or_equal(self) -> None:
+        """Less than or equal works correctly."""
+        assert PipelineStage.RTC <= PipelineStage.RTC
+        assert PipelineStage.RTC <= PipelineStage.IDAS
+
+    def test_greater_than_or_equal(self) -> None:
+        """Greater than or equal works correctly."""
+        assert PipelineStage.HVA >= PipelineStage.HVA
+        assert PipelineStage.HVA >= PipelineStage.ASR
+
+    def test_comparison_with_non_stage_returns_not_implemented(self) -> None:
+        """Comparing with non-PipelineStage returns NotImplemented."""
+        assert PipelineStage.RTC.__lt__("rtc") is NotImplemented
+        assert PipelineStage.RTC.__le__("rtc") is NotImplemented
+        assert PipelineStage.RTC.__gt__("rtc") is NotImplemented
+        assert PipelineStage.RTC.__ge__("rtc") is NotImplemented
+
+    def test_next_stage(self) -> None:
+        """next_stage returns the following stage or None."""
+        assert PipelineStage.RTC.next_stage() == PipelineStage.IDAS
+        assert PipelineStage.ASR.next_stage() == PipelineStage.HVA
+        assert PipelineStage.HVA.next_stage() is None
+
+    def test_previous_stage(self) -> None:
+        """previous_stage returns the preceding stage or None."""
+        assert PipelineStage.IDAS.previous_stage() == PipelineStage.RTC
+        assert PipelineStage.HVA.previous_stage() == PipelineStage.ASR
+        assert PipelineStage.RTC.previous_stage() is None
+
+    def test_full_name(self) -> None:
+        """full_name returns the descriptive name."""
+        assert PipelineStage.RTC.full_name == "Raw Thought Capture"
+        assert PipelineStage.CCR.full_name == "Critical Challenge Review"
+        assert PipelineStage.HVA.full_name == "Human Validation & Acceptance"
+
+
+class TestRiskTierEnum:
+    """Tests for RiskTier enum."""
+
+    def test_tier_ordering(self) -> None:
+        """Risk tiers are ordered 0 → 3."""
+        assert RiskTier.TIER_0 < RiskTier.TIER_1
+        assert RiskTier.TIER_1 < RiskTier.TIER_2
+        assert RiskTier.TIER_2 < RiskTier.TIER_3
+
+    def test_tier_count(self) -> None:
+        """There are exactly 4 risk tiers."""
+        assert len(RiskTier) == 4
+
+    def test_tier_descriptions(self) -> None:
+        """Each tier has a description."""
+        assert RiskTier.TIER_0.description == "Disposable / Personal Notes"
+        assert RiskTier.TIER_3.description == "Foundational / Long-Lived Knowledge"
+
+
+class TestRequiredStages:
+    """Tests for REQUIRED_STAGES mapping."""
+
+    def test_tier_0_requires_rtc_and_idas(self) -> None:
+        """Tier 0 requires only RTC and IDAS."""
+        required = REQUIRED_STAGES[RiskTier.TIER_0]
+        assert required == [PipelineStage.RTC, PipelineStage.IDAS]
+
+    def test_tier_1_skips_ccr(self) -> None:
+        """Tier 1 includes SAD but skips CCR."""
+        required = REQUIRED_STAGES[RiskTier.TIER_1]
+        assert PipelineStage.SAD in required
+        assert PipelineStage.CCR not in required
+        assert PipelineStage.ASR in required
+
+    def test_tier_2_includes_ccr_but_not_hva(self) -> None:
+        """Tier 2 includes CCR but not HVA."""
+        required = REQUIRED_STAGES[RiskTier.TIER_2]
+        assert PipelineStage.CCR in required
+        assert PipelineStage.HVA not in required
+
+    def test_tier_3_requires_all_stages(self) -> None:
+        """Tier 3 requires all 6 stages."""
+        required = REQUIRED_STAGES[RiskTier.TIER_3]
+        assert len(required) == 6
+        assert required == list(PipelineStage)
+
+    def test_is_stage_required(self) -> None:
+        """is_stage_required correctly checks stage requirements."""
+        assert is_stage_required(RiskTier.TIER_0, PipelineStage.RTC)
+        assert is_stage_required(RiskTier.TIER_0, PipelineStage.IDAS)
+        assert not is_stage_required(RiskTier.TIER_0, PipelineStage.SAD)
+        assert not is_stage_required(RiskTier.TIER_1, PipelineStage.CCR)
+        assert is_stage_required(RiskTier.TIER_2, PipelineStage.CCR)
+
+    def test_get_next_required_stage(self) -> None:
+        """get_next_required_stage returns next required stage."""
+        # From None, get first required stage
+        assert get_next_required_stage(RiskTier.TIER_0, None) == PipelineStage.RTC
+        # After RTC in tier 0, get IDAS
+        assert (
+            get_next_required_stage(RiskTier.TIER_0, PipelineStage.RTC)
+            == PipelineStage.IDAS
+        )
+        # After IDAS in tier 0, get None (complete)
+        assert get_next_required_stage(RiskTier.TIER_0, PipelineStage.IDAS) is None
+        # Tier 1 skips CCR: after SAD, get ASR
+        assert (
+            get_next_required_stage(RiskTier.TIER_1, PipelineStage.SAD)
+            == PipelineStage.ASR
+        )
+
+
+class TestPipelineModels:
+    """Tests for pipeline Pydantic models."""
+
+    def test_agent_output_model(self) -> None:
+        """AgentOutput model creates successfully."""
+        output = AgentOutput(
+            agent_type="architect",
+            output_path=Path("/tmp/output.md"),
+            timestamp=datetime(2025, 1, 1, 12, 0, 0),
+        )
+        assert output.agent_type == "architect"
+        assert output.output_path == Path("/tmp/output.md")
+
+    def test_stage_execution_model(self) -> None:
+        """StageExecution model creates with defaults."""
+        execution = StageExecution(
+            stage=PipelineStage.RTC,
+            status="pending",
+        )
+        assert execution.stage == PipelineStage.RTC
+        assert execution.status == "pending"
+        assert execution.started_at is None
+        assert execution.agent_outputs == []
+
+    def test_pipeline_config_model(self) -> None:
+        """PipelineConfig model creates successfully."""
+        config = PipelineConfig(
+            pipeline_id="test-123",
+            risk_tier=RiskTier.TIER_2,
+            current_stage=PipelineStage.IDAS,
+            started_at=datetime(2025, 1, 1, 10, 0, 0),
+            source_corpus_path=Path("/tmp/corpus"),
+        )
+        assert config.pipeline_id == "test-123"
+        assert config.risk_tier == RiskTier.TIER_2
+        assert config.current_stage == PipelineStage.IDAS
+
+    def test_pipeline_state_model(self) -> None:
+        """PipelineState model tracks stage statuses."""
+        config = PipelineConfig(
+            pipeline_id="test-456",
+            risk_tier=RiskTier.TIER_1,
+            current_stage=PipelineStage.RTC,
+            started_at=datetime(2025, 1, 1, 10, 0, 0),
+            source_corpus_path=Path("/tmp/corpus"),
+        )
+        state = PipelineState(
+            config=config,
+            stages={
+                PipelineStage.RTC: StageExecution(
+                    stage=PipelineStage.RTC,
+                    status="completed",
+                    completed_at=datetime(2025, 1, 1, 10, 5, 0),
+                )
+            },
+        )
+        assert state.is_stage_completed(PipelineStage.RTC)
+        assert not state.is_stage_completed(PipelineStage.IDAS)
+        assert state.get_stage_status(PipelineStage.RTC) == "completed"
+        assert state.get_stage_status(PipelineStage.IDAS) == "pending"
+        assert state.get_completed_stages() == [PipelineStage.RTC]
+
+    def test_pipeline_stage_result_model(self) -> None:
+        """PipelineStageResult model creates successfully."""
+        result = PipelineStageResult(
+            success=True,
+            stage=PipelineStage.RTC,
+            output_path=Path("/tmp/output.md"),
+            next_stage=PipelineStage.IDAS,
+        )
+        assert result.success
+        assert result.stage == PipelineStage.RTC
+        assert result.next_stage == PipelineStage.IDAS
+        assert result.errors == []
