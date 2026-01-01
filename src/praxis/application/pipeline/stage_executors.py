@@ -254,7 +254,6 @@ def execute_sad(
         PipelineStageResult with execution outcome.
     """
     from praxis.domain.pipeline.specialists import (
-        DOMAIN_SPECIALISTS,
         SpecialistType,
         get_specialists_for_domain,
     )
@@ -299,7 +298,8 @@ def execute_sad(
             domain = praxis_result.config.domain
             specialists = get_specialists_for_domain(domain)
         else:
-            specialists = list(DOMAIN_SPECIALISTS.values())[0]
+            # Default to researcher when domain cannot be determined
+            specialists = [SpecialistType.RESEARCHER]
 
     # Generate SAD output
     run_dir = project_root / "pipeline-runs" / config.pipeline_id
@@ -723,11 +723,11 @@ def _generate_hva_accept_output(config: object, rationale: str) -> str:
 
 ## Next Steps
 
-This pipeline has been accepted for research-library ingestion.
+This pipeline has been accepted for potential research-library ingestion.
 
-1. Run `praxis pipeline ingest` to add to research-library
+1. Follow your process to ingest accepted pipelines into the research library
 2. The ASR synthesis will be the primary artifact
-3. Full provenance chain will be preserved
+3. Full provenance chain from this pipeline run should be preserved
 
 ---
 

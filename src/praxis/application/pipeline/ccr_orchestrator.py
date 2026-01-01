@@ -18,14 +18,6 @@ from praxis.infrastructure.pipeline.pipeline_state_repo import (
     save_pipeline_state,
 )
 
-# Challenger types for CCR
-CHALLENGER_TYPES = [
-    "architect",
-    "security",
-    "operations",
-    "devil_advocate",
-]
-
 # Challengers by risk tier (higher tiers get more challengers)
 CHALLENGERS_BY_TIER: dict[RiskTier, list[str]] = {
     RiskTier.TIER_0: [],  # No CCR for tier 0

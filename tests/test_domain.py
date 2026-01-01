@@ -5,6 +5,7 @@ These tests cover core enums, models, and domain logic without file I/O.
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,17 @@ from pydantic import ValidationError
 
 from praxis.domain.domains import ARTIFACT_PATHS, Domain
 from praxis.domain.models import PraxisConfig, ValidationIssue
+from praxis.domain.pipeline import (
+    REQUIRED_STAGES,
+    AgentOutput,
+    PipelineConfig,
+    PipelineStage,
+    PipelineStageResult,
+    PipelineState,
+    RiskTier,
+    StageExecution,
+)
+from praxis.domain.pipeline.risk_tiers import get_next_required_stage, is_stage_required
 from praxis.domain.privacy import PrivacyLevel
 from praxis.domain.stages import ALLOWED_REGRESSIONS, REQUIRES_ARTIFACT, Stage
 
@@ -338,21 +350,6 @@ class TestValidationIssue:
 # ============================================================================
 # Pipeline Domain Tests
 # ============================================================================
-
-
-from datetime import datetime
-
-from praxis.domain.pipeline import (
-    REQUIRED_STAGES,
-    AgentOutput,
-    PipelineConfig,
-    PipelineStage,
-    PipelineStageResult,
-    PipelineState,
-    RiskTier,
-    StageExecution,
-)
-from praxis.domain.pipeline.risk_tiers import get_next_required_stage, is_stage_required
 
 
 class TestPipelineStageEnum:
