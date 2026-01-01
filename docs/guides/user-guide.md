@@ -70,6 +70,37 @@ This guide walks you through building a project using Praxis governance, from in
 
 ## CLI Commands
 
+### praxis new
+
+Create a new project directory and initialize governance files:
+
+```bash
+praxis new <NAME> [OPTIONS]
+```
+
+| Option            | Description                                                               |
+| ----------------- | ------------------------------------------------------------------------- |
+| `NAME`            | Project name (directory will be created under the chosen location)        |
+| `--domain`, `-d`  | Project domain: code, create, write, observe, learn                       |
+| `--subtype`       | Optional subtype (e.g., cli, api, library)                                |
+| `--privacy`, `-p` | Privacy level: public, public-trusted, personal, confidential, restricted |
+| `--env`, `-e`     | Environment: Home, Work                                                   |
+| `--path`          | Parent directory where the project directory will be created              |
+| `--force`, `-f`   | Overwrite existing managed files                                          |
+| `--json`          | Output JSON format (no prompts)                                           |
+| `--quiet`, `-q`   | Suppress non-error output (no prompts)                                    |
+
+**Defaults:**
+
+- If `PRAXIS_HOME` is set, projects default under `$PRAXIS_HOME/projects/<domain>/`.
+- Otherwise, the current directory is used (interactive mode).
+
+**Creates:**
+
+- `praxis.yaml` — Governance configuration
+- `CLAUDE.md` — AI assistant instructions
+- `docs/capture.md` — First stage template
+
 ### praxis init
 
 Initialize a new Praxis project:

@@ -17,6 +17,7 @@ from praxis.infrastructure.templates import render_capture_md, render_claude_md
 def init_project(
     path: Path,
     domain: str,
+    subtype: str | None,
     privacy: str,
     environment: str,
     force: bool = False,
@@ -80,6 +81,7 @@ def init_project(
     # Generate praxis.yaml content
     praxis_config = {
         "domain": domain_enum.value,
+        **({"subtype": subtype} if subtype else {}),
         "stage": "capture",
         "privacy_level": privacy_enum.value,
         "environment": environment,
