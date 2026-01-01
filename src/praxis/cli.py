@@ -1046,5 +1046,317 @@ def examples_add_cmd(
     raise typer.Exit(0)
 
 
+# ============================================================================
+# Pipeline Commands
+# ============================================================================
+
+pipeline_app = typer.Typer(help="Knowledge distillation pipeline commands.")
+app.add_typer(pipeline_app, name="pipeline")
+
+
+@pipeline_app.command("init")
+def pipeline_init_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    tier: int = typer.Option(
+        2,
+        "--tier",
+        "-t",
+        help="Risk tier (0-3). Higher tiers require more stages.",
+    ),
+    corpus: Path = typer.Option(
+        ...,
+        "--corpus",
+        "-c",
+        help="Path to source corpus for RTC stage.",
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Replace existing active pipeline.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Initialize a new knowledge distillation pipeline."""
+    from praxis.application.pipeline import init_pipeline
+
+    result = init_pipeline(
+        project_root=path.resolve(),
+        risk_tier=tier,
+        source_corpus_path=corpus.resolve(),
+        force=force,
+    )
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+    else:
+        if result.success:
+            typer.echo(f"Pipeline initialized: {result.pipeline_id}")
+            typer.echo(f"Risk tier: {result.risk_tier.value}")
+            stages = ", ".join(s.value for s in result.required_stages)
+            typer.echo(f"Required stages: {stages}")
+        else:
+            for error in result.errors:
+                typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(1)
+
+
+@pipeline_app.command("status")
+def pipeline_status_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Show current pipeline status and progress."""
+    from praxis.application.pipeline import get_pipeline_status
+
+    status = get_pipeline_status(path.resolve())
+
+    if json_output:
+        typer.echo(status.model_dump_json(indent=2))
+    else:
+        if status.errors:
+            for error in status.errors:
+                typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(1)
+
+        typer.echo(f"Pipeline: {status.pipeline_id}")
+        typer.echo(f"Risk tier: {status.risk_tier.value}")
+        typer.echo(f"Current stage: {status.current_stage.value}")
+        typer.echo("")
+        typer.echo("Stage Progress:")
+        for progress in status.stage_progress:
+            marker = "✓" if progress.status == "completed" else "○"
+            req = "(required)" if progress.required else "(optional)"
+            typer.echo(f"  {marker} {progress.stage.value}: {progress.status} {req}")
+
+        if status.next_stage:
+            typer.echo(f"\nNext: {status.next_stage.value}")
+        elif status.is_complete:
+            typer.echo("\n✓ Pipeline complete")
+        elif status.awaiting_hva:
+            typer.echo("\n⏳ Awaiting HVA decision")
+
+
+@pipeline_app.command("run")
+def pipeline_run_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    stage: str = typer.Option(
+        None,
+        "--stage",
+        "-s",
+        help="Specific stage to run (rtc, idas, sad, ccr, asr).",
+    ),
+    all_stages: bool = typer.Option(
+        False,
+        "--all",
+        "-a",
+        help="Run all remaining stages.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Execute pipeline stage(s)."""
+    from praxis.application.pipeline import (
+        execute_asr,
+        execute_ccr,
+        execute_idas,
+        execute_rtc,
+        execute_sad,
+        get_pipeline_status,
+    )
+
+    executors = {
+        "rtc": execute_rtc,
+        "idas": execute_idas,
+        "sad": execute_sad,
+        "ccr": execute_ccr,
+        "asr": execute_asr,
+    }
+
+    project_root = path.resolve()
+
+    if stage:
+        if stage not in executors:
+            typer.echo(f"Invalid stage: {stage}", err=True)
+            raise typer.Exit(1)
+
+        result = executors[stage](project_root)
+
+        if json_output:
+            typer.echo(result.model_dump_json(indent=2))
+        else:
+            if result.success:
+                typer.echo(f"✓ {stage.upper()} completed")
+                if result.output_path:
+                    typer.echo(f"  Output: {result.output_path}")
+                for warning in result.warnings:
+                    typer.echo(f"  ⚠ {warning}")
+            else:
+                for error in result.errors:
+                    typer.echo(f"Error: {error}", err=True)
+                raise typer.Exit(1)
+
+    elif all_stages:
+        status = get_pipeline_status(project_root)
+        if status.errors:
+            for error in status.errors:
+                typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(1)
+
+        # Run stages in order until HVA
+        stage_order = ["rtc", "idas", "sad", "ccr", "asr"]
+        for stage_name in stage_order:
+            # Check if stage is required and not completed
+            progress = next(
+                (p for p in status.stage_progress if p.stage.value == stage_name),
+                None,
+            )
+            if progress and progress.required and progress.status != "completed":
+                typer.echo(f"Running {stage_name.upper()}...")
+                result = executors[stage_name](project_root)
+                if not result.success:
+                    for error in result.errors:
+                        typer.echo(f"Error: {error}", err=True)
+                    raise typer.Exit(1)
+                typer.echo(f"✓ {stage_name.upper()} completed")
+
+        typer.echo("\n✓ All stages completed. Ready for HVA decision.")
+
+    else:
+        typer.echo("Specify --stage or --all", err=True)
+        raise typer.Exit(1)
+
+
+@pipeline_app.command("accept")
+def pipeline_accept_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    rationale: str = typer.Option(
+        ...,
+        "--rationale",
+        "-r",
+        help="Rationale for accepting the pipeline.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Accept pipeline output (HVA stage)."""
+    from praxis.application.pipeline import execute_hva
+
+    result = execute_hva(path.resolve(), "accept", rationale)
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+    else:
+        if result.success:
+            typer.echo("✓ Pipeline accepted")
+            typer.echo("  Ready for research-library ingestion.")
+        else:
+            for error in result.errors:
+                typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(1)
+
+
+@pipeline_app.command("reject")
+def pipeline_reject_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    rationale: str = typer.Option(
+        ...,
+        "--rationale",
+        "-r",
+        help="Rationale for rejecting the pipeline.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Reject pipeline output (HVA stage)."""
+    from praxis.application.pipeline import execute_hva
+
+    result = execute_hva(path.resolve(), "reject", rationale)
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+    else:
+        if result.success:
+            typer.echo("✗ Pipeline rejected")
+            typer.echo("  See rationale in HVA decision file.")
+        else:
+            for error in result.errors:
+                typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(1)
+
+
+@pipeline_app.command("refine")
+def pipeline_refine_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    to_stage: str = typer.Option(
+        ...,
+        "--to",
+        "-t",
+        help="Stage to return to (rtc, idas, sad, ccr, asr).",
+    ),
+    rationale: str = typer.Option(
+        ...,
+        "--rationale",
+        "-r",
+        help="Rationale for requesting refinement.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Return pipeline to earlier stage for refinement (HVA stage)."""
+    from praxis.application.pipeline import execute_hva
+
+    result = execute_hva(path.resolve(), "refine", rationale, to_stage)
+
+    if json_output:
+        typer.echo(result.model_dump_json(indent=2))
+    else:
+        if result.success:
+            typer.echo(f"↩ Pipeline returned to {to_stage}")
+            typer.echo("  Address issues and re-run from that stage.")
+        else:
+            for error in result.errors:
+                typer.echo(f"Error: {error}", err=True)
+            raise typer.Exit(1)
+
+
 if __name__ == "__main__":
     app()
