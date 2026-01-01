@@ -17,9 +17,10 @@ from praxis.infrastructure.templates import render_capture_md, render_claude_md
 def init_project(
     path: Path,
     domain: str,
-    subtype: str | None,
     privacy: str,
     environment: str,
+    *,
+    subtype: str | None = None,
     force: bool = False,
 ) -> InitResult:
     """Initialize a Praxis project.
@@ -27,6 +28,7 @@ def init_project(
     Args:
         path: Project directory.
         domain: Project domain (code, create, write, observe, learn).
+        subtype: Optional subtype (e.g., cli, api, library).
         privacy: Privacy level (public, personal, confidential, restricted).
         environment: Environment (Home, Work).
         force: If True, overwrite existing files.

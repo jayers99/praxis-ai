@@ -92,8 +92,15 @@ praxis new <NAME> [OPTIONS]
 
 **Defaults:**
 
-- If `PRAXIS_HOME` is set, projects default under `$PRAXIS_HOME/projects/<domain>/`.
+- If `PRAXIS_HOME` is set and a `workspace-config.yaml` is present, projects default under `$PRAXIS_HOME/<projects_path>/<domain>/`.
+- If `PRAXIS_HOME` is set but no workspace config is available, projects default under `$PRAXIS_HOME/projects/<domain>/`.
 - Otherwise, the current directory is used (interactive mode).
+
+**Exit codes:**
+
+- `0` success
+- `1` error
+- `3` workspace context required (e.g., `--json/--quiet` without `PRAXIS_HOME` and without `--path`)
 
 **Creates:**
 

@@ -30,6 +30,7 @@ from praxis.application.workspace_service import (
 from praxis.domain.domains import Domain
 from praxis.domain.models import AuditCheck, CoverageCheckResult, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
+from praxis.infrastructure.stage_templates.template_paths import validate_subtype
 from praxis.infrastructure.tool_runner import (
     run_coverage,
     run_mypy,
@@ -265,7 +266,14 @@ def init_cmd(
                 type=click.Choice(privacy_choices),
             )
 
-    result = init_project(path, domain, None, privacy, environment, force)
+    result = init_project(
+        path,
+        domain,
+        privacy,
+        environment,
+        subtype=None,
+        force=force,
+    )
 
     if json_output:
         typer.echo(result.model_dump_json(indent=2))
@@ -425,13 +433,44 @@ def new_cmd(
     assert domain is not None
     assert privacy is not None
 
+    # Validate subtype early (matches template validation rules)
+    if subtype is not None:
+        try:
+            validate_subtype(subtype)
+        except ValueError as e:
+            error_msg = str(e)
+            if json_output:
+                typer.echo(
+                    json.dumps(
+                        {
+                            "success": False,
+                            "errors": [error_msg],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                typer.echo(f"✗ {error_msg}", err=True)
+            raise typer.Exit(1)
+
+    # Apply workspace defaults in automation mode (if not provided)
+    if environment is None:
+        environment = (
+            workspace_info.config.defaults.environment
+            if workspace_info is not None
+            else "Home"
+        )
+
     # Resolve parent directory
-    if path is None:
+    if path is not None:
+        parent_dir = path.expanduser()
+    else:
         if workspace_info is not None:
             default_parent = workspace_info.projects_path / domain
         elif workspace_path is not None:
             default_parent = workspace_path / "projects" / domain
         elif json_output or quiet:
+            # Keep exit code 3 consistent with workspace-related commands
             error_msg = "PRAXIS_HOME not set and --path not provided"
             if json_output:
                 typer.echo(
@@ -449,28 +488,31 @@ def new_cmd(
         else:
             default_parent = Path(".")
 
-        parent_str = typer.prompt(
-            "Location (parent directory)",
-            default=str(default_parent),
-        )
-        parent_dir = Path(parent_str).expanduser()
-    else:
-        parent_dir = path.expanduser()
+        if json_output or quiet:
+            # Automation modes must not prompt.
+            parent_dir = default_parent
+        else:
+            # Interactive mode always confirms the destination to avoid surprising
+            # users when workspace defaults are present.
+            parent_str = typer.prompt(
+                "Location (parent directory)",
+                default=str(default_parent),
+            )
+            parent_dir = Path(parent_str).expanduser()
 
     project_root = (parent_dir / name).resolve()
     if project_root.exists() and not project_root.is_dir():
         typer.echo(f"✗ Target exists and is not a directory: {project_root}", err=True)
         raise typer.Exit(1)
 
-    # Apply workspace defaults in automation mode (if not provided)
-    if environment is None:
-        environment = (
-            workspace_info.config.defaults.environment
-            if workspace_info is not None
-            else "Home"
-        )
-
-    result = init_project(project_root, domain, subtype, privacy, environment, force)
+    result = init_project(
+        project_root,
+        domain,
+        privacy,
+        environment,
+        subtype=subtype,
+        force=force,
+    )
 
     if json_output:
         typer.echo(
