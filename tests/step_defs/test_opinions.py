@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+import pytest
 from pytest_bdd import given, parsers, scenarios, then, when
 from typer.testing import CliRunner
 
@@ -16,11 +17,19 @@ scenarios("../features/opinions.feature")
 
 
 @given("I am in a temporary directory")
-def setup_temp_dir(tmp_path: Path, context: dict[str, Any]) -> None:
-    """Set up temporary directory."""
+def setup_temp_dir(
+    tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest
+) -> None:
+    """Set up temporary directory with cleanup."""
     context["project_root"] = tmp_path
-    context["original_dir"] = os.getcwd()
+    original_dir = os.getcwd()
     os.chdir(tmp_path)
+
+    # Ensure we restore the original directory even if test fails
+    def restore_cwd() -> None:
+        os.chdir(original_dir)
+
+    request.addfinalizer(restore_cwd)
 
 
 @given("I have an opinions directory structure")

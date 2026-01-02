@@ -121,14 +121,16 @@ def build_opinions_tree(opinions_root: Path) -> OpinionsTree:
         if "_templates" in parts:
             continue
 
-        relative_str = str(relative)
+        # Skip other underscore directories (except _shared)
+        if parts[0].startswith("_") and parts[0] != "_shared":
+            continue
+
+        # Use as_posix() for cross-platform path consistency
+        relative_str = relative.as_posix()
         total += 1
 
         if parts[0] == "_shared":
             shared.append(relative_str)
-        elif parts[0].startswith("_"):
-            # Skip other underscore directories
-            continue
         else:
             domain = parts[0]
             if domain not in domains:

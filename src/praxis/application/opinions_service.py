@@ -60,7 +60,8 @@ def compute_resolution_chain(
 
     # 4. Subtype chain (if provided)
     if subtype:
-        # Handle nested subtypes: "cli-python" or "cli.python" → ["cli", "python"]
+        # Handle nested subtypes per opinions-contract.md section 5.1:
+        # Both "cli-python" (hyphen) and "cli.python" (dot) → ["cli", "python"]
         segments = subtype.replace(".", "-").split("-")
         accumulated = f"{domain}/subtypes"
 
@@ -160,7 +161,7 @@ def format_prompt_output(resolved: ResolvedOpinions) -> str:
         lines.append(f"**Subtype:** {resolved.subtype}")
     lines.append("")
 
-    # Privacy guidance (per opinions contract section 7)
+    # AI guidelines for interpreting and applying these opinions
     lines.append("## AI Guidelines")
     lines.append("")
     lines.append("- Opinions are advisory guidance, not hard rules")
