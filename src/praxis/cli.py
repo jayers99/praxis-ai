@@ -22,6 +22,7 @@ from praxis.application.stage_service import transition_stage
 from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
 from praxis.application.workspace_service import (
+    get_praxis_home,
     get_workspace_info,
     init_workspace,
     require_praxis_home,
@@ -29,6 +30,7 @@ from praxis.application.workspace_service import (
 from praxis.domain.domains import Domain
 from praxis.domain.models import AuditCheck, CoverageCheckResult, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
+from praxis.infrastructure.stage_templates.template_paths import validate_subtype
 from praxis.infrastructure.tool_runner import (
     run_coverage,
     run_mypy,
@@ -264,7 +266,14 @@ def init_cmd(
                 type=click.Choice(privacy_choices),
             )
 
-    result = init_project(path, domain, privacy, environment, force)
+    result = init_project(
+        path,
+        domain,
+        privacy,
+        environment,
+        subtype=None,
+        force=force,
+    )
 
     if json_output:
         typer.echo(result.model_dump_json(indent=2))
@@ -273,6 +282,263 @@ def init_cmd(
     if result.success:
         if not quiet:
             typer.echo("✓ Praxis project initialized")
+            for f in result.files_created:
+                typer.echo(f"  Created: {f}")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+@app.command(name="new")
+def new_cmd(
+    name: str = typer.Argument(
+        ...,
+        help="Project name (directory will be created under the chosen location).",
+    ),
+    domain: str | None = typer.Option(
+        None,
+        "--domain",
+        "-d",
+        help="Project domain (code, create, write, observe, learn).",
+    ),
+    subtype: str | None = typer.Option(
+        None,
+        "--subtype",
+        help="Optional subtype (e.g., cli, api, library).",
+    ),
+    privacy: str | None = typer.Option(
+        None,
+        "--privacy",
+        "-p",
+        help=(
+            "Privacy level (public, public-trusted, personal, "
+            "confidential, restricted)."
+        ),
+    ),
+    environment: str | None = typer.Option(
+        None,
+        "--env",
+        "-e",
+        help="Environment (Home, Work). Defaults to workspace config when available.",
+    ),
+    path: Path | None = typer.Option(
+        None,
+        "--path",
+        help=(
+            "Parent directory where the project directory will be created. "
+            "Defaults to $PRAXIS_HOME/projects/<domain> when available, "
+            "otherwise current directory."
+        ),
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help=(
+            "Overwrite existing managed files (praxis.yaml, CLAUDE.md, "
+            "docs/capture.md)."
+        ),
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON (automation-friendly; no prompts).",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output (no prompts).",
+    ),
+) -> None:
+    """Create a new project directory and initialize Praxis governance files."""
+    import json
+
+    if "/" in name or "\\" in name:
+        typer.echo("✗ Project name must not contain path separators", err=True)
+        raise typer.Exit(1)
+
+    workspace_path = get_praxis_home()
+    workspace_info = None
+    if workspace_path is not None:
+        try:
+            workspace_info = get_workspace_info(workspace_path)
+        except Exception:
+            workspace_info = None
+
+    # Interactive prompts if flags not provided (disabled in json/quiet mode)
+    if json_output or quiet:
+        if domain is None or privacy is None:
+            error_msg = "--domain and --privacy required with --json or --quiet"
+            if json_output:
+                typer.echo(
+                    json.dumps(
+                        {
+                            "success": False,
+                            "errors": [error_msg],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                typer.echo(f"✗ {error_msg}", err=True)
+            raise typer.Exit(1)
+    else:
+        if domain is None:
+            domain_choices = [d.value for d in Domain]
+            domain = typer.prompt(
+                "Domain",
+                default="code",
+                show_choices=True,
+                type=click.Choice(domain_choices),
+            )
+
+        if subtype is None:
+            subtype_answer = typer.prompt(
+                "Subtype (optional)",
+                default="",
+                show_default=False,
+            )
+            subtype = subtype_answer.strip() or None
+
+        if privacy is None:
+            privacy_default = (
+                workspace_info.config.defaults.privacy.value
+                if workspace_info is not None
+                else "personal"
+            )
+            privacy_choices = [p.value for p in PrivacyLevel]
+            privacy = typer.prompt(
+                "Privacy level",
+                default=privacy_default,
+                show_choices=True,
+                type=click.Choice(privacy_choices),
+            )
+
+        if environment is None:
+            env_default = (
+                workspace_info.config.defaults.environment
+                if workspace_info is not None
+                else "Home"
+            )
+            environment = typer.prompt(
+                "Environment",
+                default=env_default,
+                show_choices=True,
+                type=click.Choice(["Home", "Work"]),
+            )
+
+    assert domain is not None
+    assert privacy is not None
+
+    # Validate subtype early (matches template validation rules)
+    if subtype is not None:
+        try:
+            validate_subtype(subtype)
+        except ValueError as e:
+            error_msg = str(e)
+            if json_output:
+                typer.echo(
+                    json.dumps(
+                        {
+                            "success": False,
+                            "errors": [error_msg],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                typer.echo(f"✗ {error_msg}", err=True)
+            raise typer.Exit(1)
+
+    # Apply workspace defaults in automation mode (if not provided)
+    if environment is None:
+        environment = (
+            workspace_info.config.defaults.environment
+            if workspace_info is not None
+            else "Home"
+        )
+
+    # Resolve parent directory
+    if path is not None:
+        parent_dir = path.expanduser()
+    else:
+        if workspace_info is not None:
+            default_parent = workspace_info.projects_path / domain
+        elif workspace_path is not None:
+            default_parent = workspace_path / "projects" / domain
+        elif json_output or quiet:
+            # Keep exit code 3 consistent with workspace-related commands
+            error_msg = "PRAXIS_HOME not set and --path not provided"
+            if json_output:
+                typer.echo(
+                    json.dumps(
+                        {
+                            "success": False,
+                            "errors": [error_msg],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                typer.echo(f"✗ {error_msg}", err=True)
+            raise typer.Exit(3)
+        else:
+            default_parent = Path(".")
+
+        if json_output or quiet:
+            # Automation modes must not prompt.
+            parent_dir = default_parent
+        else:
+            # Interactive mode always confirms the destination to avoid surprising
+            # users when workspace defaults are present.
+            parent_str = typer.prompt(
+                "Location (parent directory)",
+                default=str(default_parent),
+            )
+            parent_dir = Path(parent_str).expanduser()
+
+    project_root = (parent_dir / name).resolve()
+    if project_root.exists() and not project_root.is_dir():
+        typer.echo(f"✗ Target exists and is not a directory: {project_root}", err=True)
+        raise typer.Exit(1)
+
+    result = init_project(
+        project_root,
+        domain,
+        privacy,
+        environment,
+        subtype=subtype,
+        force=force,
+    )
+
+    if json_output:
+        typer.echo(
+            json.dumps(
+                {
+                    "success": result.success,
+                    "project_root": str(project_root),
+                    "options": {
+                        "domain": domain,
+                        "subtype": subtype,
+                        "privacy_level": privacy,
+                        "environment": environment,
+                        "force": force,
+                    },
+                    "files_created": result.files_created,
+                    "errors": result.errors,
+                },
+                indent=2,
+            )
+        )
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        if not quiet:
+            typer.echo("✓ Praxis project created")
+            typer.echo(f"  Path: {project_root}")
             for f in result.files_created:
                 typer.echo(f"  Created: {f}")
         raise typer.Exit(0)

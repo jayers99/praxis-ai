@@ -269,10 +269,8 @@ praxis examples add uat-praxis-code
 ### 7. Create a new project
 
 ```bash
-cd $PRAXIS_HOME/projects
-mkdir my-project && cd my-project
-praxis init --domain code --privacy personal
-# Creates: praxis.yaml, CLAUDE.md, docs/capture.md
+praxis new my-project --domain code --privacy personal
+# Creates: $PRAXIS_HOME/projects/code/my-project/{praxis.yaml,CLAUDE.md,docs/capture.md}
 ```
 
 ### Common commands

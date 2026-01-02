@@ -19,6 +19,8 @@ def init_project(
     domain: str,
     privacy: str,
     environment: str,
+    *,
+    subtype: str | None = None,
     force: bool = False,
 ) -> InitResult:
     """Initialize a Praxis project.
@@ -26,6 +28,7 @@ def init_project(
     Args:
         path: Project directory.
         domain: Project domain (code, create, write, observe, learn).
+        subtype: Optional subtype (e.g., cli, api, library).
         privacy: Privacy level (public, personal, confidential, restricted).
         environment: Environment (Home, Work).
         force: If True, overwrite existing files.
@@ -80,6 +83,7 @@ def init_project(
     # Generate praxis.yaml content
     praxis_config = {
         "domain": domain_enum.value,
+        **({"subtype": subtype} if subtype else {}),
         "stage": "capture",
         "privacy_level": privacy_enum.value,
         "environment": environment,

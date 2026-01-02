@@ -15,6 +15,10 @@ class PraxisConfig(BaseModel):
     """Configuration from praxis.yaml."""
 
     domain: Domain
+    subtype: str | None = Field(
+        default=None,
+        description="Optional subtype (domain-specific).",
+    )
     stage: Stage
     privacy_level: PrivacyLevel
     environment: str = Field(default="Home", pattern=r"^(Home|Work)$")
