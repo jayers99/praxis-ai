@@ -1,7 +1,7 @@
 # Foundations Research Index
 
-_Artifacts: 3_
-_Last updated: 2025-12-30_
+_Artifacts: 4_
+_Last updated: 2026-01-01_
 
 ## Purpose
 
@@ -14,6 +14,7 @@ Theoretical grounding, first principles, and foundational concepts that inform P
 | [Research Library Design Principles](research-library-design.md) | High | research-library, knowledge-management, findability, zettelkasten | Atomicity, findability via metadata, connections over collections, hybrid retrieval patterns for AI agent knowledge bases |
 | [Classical Roots of Praxis-AI](classical-roots.md) | High | philosophy, aristotle, plato, socrates, praxis, phronesis | Direct mapping from Aristotle (Praxis, Phronesis), Plato (Divided Line, Cave), Socrates (Elenchus). AI accelerates akrasia; Praxis is the defense. |
 | [Human Intent vs AI Throughput](human-ai-intent-maintenance.md) | Medium | human-ai-collaboration, intent-maintenance, cognitive-load | Academic research validating Praxis problem statement. Comfort-growth paradox, shared representations, dual black box problem. |
+| [Knowledge Distillation Pipeline](knowledge-distillation-pipeline.md) | Medium-High | knowledge-distillation, epistemology, validation, pkdp | Epistemic foundations for PKDP. Risk-tiered validation, specialist agent dispatch, adversarial review, human validation gates. |
 
 ## Key Themes
 

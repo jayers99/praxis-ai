@@ -92,7 +92,7 @@ praxis pipeline accept            # Accept pipeline output (HVA stage)
 praxis pipeline reject            # Reject pipeline output (HVA stage)
 praxis pipeline refine            # Return to earlier stage for refinement
 
-# Opinions framework (planned)
+# Opinions framework
 praxis opinions                   # Show applicable opinions for project
 praxis opinions --prompt          # Generate AI context with opinions
 praxis opinions --check           # Validate against quality gates

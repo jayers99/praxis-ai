@@ -195,7 +195,7 @@ Praxis requires a policy engine to:
 - validate reclassification
 - guarantee deterministic composition
 
-CUE is the current candidate for this role. See [ADR-001](adr/001-policy-engine.md) for trade-off analysis (status: exploratory).
+Pydantic with Python was selected for this role. See [ADR-001](../../adr/001-policy-engine.md) for trade-off analysis.
 
 This enables validation-first, order-independent governance of AI behavior.
 

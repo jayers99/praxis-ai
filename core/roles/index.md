@@ -66,7 +66,7 @@ praxis-ai/
 │           ├── 09-qa.md
 │           ├── 10-finops.md
 │           └── 11-sre.md
-├── research/
+├── research-library/
 │   └── roles/
 │       ├── rationale.md
 │       ├── decision-hats.md
@@ -78,5 +78,5 @@ praxis-ai/
 ```
 
 ## Related Documentation
-- **Research**: `../../research/roles/` — Rationale and design decisions
+- **Research**: `../../research-library/roles/` — Rationale and design decisions
 - **Handoff**: `../../handoff/roles/` — Operational migration docs

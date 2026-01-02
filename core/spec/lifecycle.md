@@ -4,7 +4,7 @@
 **Version:** v0.3
 **Purpose:** Capture the canonical Praxis lifecycle, the role of Formalize as the structural hinge, and the allowed regression model.
 
-> **Research basis:** Stage definitions and entry/exit criteria are grounded in established frameworks. See [Lifecycle Research](../../research/spec/lifecycle-research.md) for detailed citations and methodology alignments.
+> **Research basis:** Stage definitions and entry/exit criteria are grounded in established frameworks. See [Lifecycle Research](../../research-library/spec/lifecycle-research.md) for detailed citations and methodology alignments.
 
 ---
 
@@ -81,7 +81,7 @@ Every Formalize artifact MUST explicitly define:
 | **Code** | Solution Overview Document (SOD) | Locks intent and boundaries while remaining implementation-light |
 | **Create** | Creative Brief | Bounds creative intent without constraining exploration prematurely |
 | **Write** | Writing Brief | Fixes thesis, audience, and scope before drafting |
-| **Learn** | Competency Target | Turns curiosity into directed learning with verifiable evidence |
+| **Learn** | Learning Plan | Turns curiosity into directed learning with verifiable evidence |
 
 > **Reference:** See [sod.md](sod.md) for the complete SOD specification.
 

@@ -1,6 +1,6 @@
 # Praxis: Domain Definitions
 
-> **Research basis:** See [docs/research/domains-research.md](research/domains-research.md) for full prior art, sources, and rationale.
+> **Research basis:** See [Domains Research](../../research-library/spec/domains-research.md) for full prior art, sources, and rationale.
 
 ---
 
@@ -326,5 +326,5 @@ Domain classification enables:
 
 ## References
 
-- [Domains Research](research/domains-research.md) — Full prior art and sources
+- [Domains Research](../../research-library/spec/domains-research.md) — Full prior art and sources
 - [Lifecycle Stages](lifecycle.md) — Stage definitions

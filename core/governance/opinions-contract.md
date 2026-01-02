@@ -295,7 +295,7 @@ def resolve_opinions(praxis_yaml: dict) -> list[str]:
                 opinions.append(f"{accumulated}/{stage}.md")
 
     # Filter to existing files only
-    base_path = "docs/opinions"
+    base_path = "opinions"
     return [o for o in opinions if file_exists(f"{base_path}/{o}")]
 ```
 

@@ -32,7 +32,7 @@ This directory contains templates for creating Praxis opinion files. Each templa
 - When to Use — criteria for choosing this domain
 - Related Domains — cross-references
 
-**Location:** `docs/opinions/{domain}/README.md`
+**Location:** `opinions/{domain}/README.md`
 
 ---
 
@@ -49,7 +49,7 @@ This directory contains templates for creating Praxis opinion files. Each templa
 - AI Guidelines — permission table
 - Anti-Patterns — things to avoid
 
-**Location:** `docs/opinions/{domain}/principles.md`
+**Location:** `opinions/{domain}/principles.md`
 
 ---
 
@@ -69,7 +69,7 @@ This directory contains templates for creating Praxis opinion files. Each templa
 - Stage Transition Checklist — practical checklist
 - AI Guidance — what AI can/should/shouldn't do
 
-**Location:** `docs/opinions/{domain}/{stage}.md`
+**Location:** `opinions/{domain}/{stage}.md`
 
 ---
 
@@ -225,6 +225,6 @@ When using AI to generate opinion files:
 
 ## Related Files
 
-- [opinions-contract.md](../../opinions-contract.md) — Opinions framework specification
-- [lifecycle.md](../../lifecycle.md) — Stage definitions
-- [domains.md](../../domains.md) — Domain definitions
+- [opinions-contract.md](../../core/governance/opinions-contract.md) — Opinions framework specification
+- [lifecycle.md](../../core/spec/lifecycle.md) — Stage definitions
+- [domains.md](../../core/spec/domains.md) — Domain definitions

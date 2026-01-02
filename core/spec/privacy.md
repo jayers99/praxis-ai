@@ -151,10 +151,73 @@ Conservative defaults prevent accidental exposure. The cost of delayed AI proces
 
 ---
 
-## 8. Praxis Metadata Integration (Planned)
+## 8. Praxis Metadata Integration
 
-Each project should declare privacy explicitly, e.g.:
+Each project declares privacy explicitly in `praxis.yaml`:
 
 ```yaml
+domain: code
+stage: formalize
 privacy_level: confidential
+environment: Home
+```
 
+### Validation Rules
+
+| Rule | Severity | Trigger |
+|------|----------|---------|
+| Unknown privacy level | Error | Value not in allowed list |
+| Privacy downgrade | Warning | `privacy_level` decreased from prior commit |
+| Missing privacy declaration | Error | `privacy_level` field absent |
+
+### Environment Override
+
+The `PRAXIS_PRIVACY` environment variable can override the file-declared level for testing:
+
+```bash
+PRAXIS_PRIVACY=restricted praxis validate .
+```
+
+This is useful for CI pipelines that need to validate against stricter constraints.
+
+---
+
+## 9. AI Permission Modifiers by Privacy
+
+Privacy level modifies the default AI permissions from the domain:
+
+| Privacy Level | Effect on AI Permissions |
+|---------------|--------------------------|
+| Public | `generate`/`transform` → Ask, `publish` → Allowed |
+| Public-Trusted | Default permissions (no modification) |
+| Personal | Default permissions (no modification) |
+| Confidential | All operations → Ask |
+| Restricted | `generate`/`transform` → Blocked, `execute` → Blocked |
+
+### Practical Impact
+
+- **Public**: AI can suggest freely; publishing requires no special approval
+- **Confidential**: Every AI operation requires explicit human approval
+- **Restricted**: AI cannot generate or transform content; only suggest permitted
+
+---
+
+## 10. Summary
+
+Privacy in Praxis is:
+
+1. **Declared early** — no later than Explore stage
+2. **Enforced consistently** — same rules across all domains
+3. **Conservative by default** — unclassified material treated as Personal
+4. **Upgrade-friendly** — moving to more restrictive is straightforward
+5. **Downgrade-resistant** — moving to less restrictive requires explicit review
+
+The privacy model ensures that sensitive material is protected throughout the lifecycle, regardless of domain or stage.
+
+---
+
+## References
+
+- [Domains](domains.md) — Domain definitions and AI permissions
+- [Lifecycle](lifecycle.md) — Stage definitions
+- [SOD](sod.md) — Privacy and lifecycle interaction details
