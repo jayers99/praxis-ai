@@ -206,6 +206,15 @@ Scenario: Removing item from cart
 - [ ] Add property-based tests for input spaces
 - [ ] Validate tests fail without implementation
 
+### For TDD Discipline
+
+- [ ] Use VibeTDD batching or enforcement layers
+- [ ] Consider multi-agent context isolation
+- [ ] Verify red phase before green phase
+- [ ] Confirm AI didn't modify tests to pass
+- [ ] Keep cycles short (minutes, not hours)
+- [ ] Preserve test intent during refactoring
+
 ### Human Review Checklist for AI-Generated Tests
 
 | Check | Question | Red Flag |
