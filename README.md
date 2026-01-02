@@ -58,6 +58,9 @@ Opinions are stored in `opinions/` and resolved through inheritance:
 _shared → domain/principles → domain/{stage} → subtype/principles → subtype/{stage}
 ```
 
+Key opinions include:
+- **Testing methodology** (`opinions/code/testing.md`) — TDD/BDD guidance, AI test generation patterns, and practitioner checklists
+
 ### Formalize is the Structural Hinge
 
 Formalize converts intent into a bounded, executable plan with explicit constraints, so work can proceed without inventing requirements.
@@ -169,6 +172,8 @@ Domains tell Praxis what kinds of artifacts are valid and what "done" looks like
 | Write   | Structured thought           | Writing brief                    |
 | Observe | Raw capture                  | (none required)                  |
 | Learn   | Skill formation              | Learning plan                    |
+
+**Code domain SODs** include acceptance criteria in Given-When-Then (BDD) format for testable requirements.
 
 Each domain supports **subtypes** for more specific guidance:
 
@@ -331,16 +336,21 @@ Expected flow:
 
 ```text
 src/praxis/           CLI package (Typer + Pydantic)
-docs/                 Specifications (SOD, lifecycle, privacy, etc.)
-docs/adr/             Architecture Decision Records
-docs/opinions/        Domain-specific quality guidance (advisory)
+core/                 Normative specifications (binding)
+  spec/               System specs (sod.md, lifecycle.md, domains.md, privacy.md)
+  governance/         Decision surfaces (layer-model.md, opinions-contract.md)
+  ai/                 AI behavior controls (ai-guards.md)
+  roles/              Praxis Roles subsystem
+opinions/             Domain-specific quality guidance (advisory)
   _templates/         Templates for creating opinion files
-  _shared/            Cross-domain principles
-  code/               Code domain opinions
+  code/               Code domain opinions (incl. testing.md)
   create/             Create domain opinions
   write/              Write domain opinions
   learn/              Learn domain opinions
   observe/            Observe domain opinions
+research-library/     Cataloged research with structured metadata
+docs/guides/          User-facing tutorials
+adr/                  Architecture Decision Records
 tests/                BDD tests (pytest-bdd + Gherkin)
 extensions.yaml       Registry of available extensions
 examples.yaml         Registry of available examples

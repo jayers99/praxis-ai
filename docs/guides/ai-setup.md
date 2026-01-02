@@ -83,6 +83,12 @@ This project follows Praxis governance. Before taking action:
 - If scope needs to change, regress to Formalize first
 - Run `praxis validate` before commits
 
+### Testing Approach (Code Domain)
+
+- Write tests before implementation (TDD)
+- Use BDD acceptance criteria from SOD as test specifications
+- See `opinions/code/testing.md` for AI test generation patterns
+
 ## Validation
 
 Always validate at stage transitions:
@@ -154,16 +160,16 @@ For full context, the AI should have access to:
 
 ## AI Behavior by Stage
 
-| Stage     | AI Should...                   | AI Should NOT...                |
-| --------- | ------------------------------ | ------------------------------- |
-| Capture   | Help collect raw inputs        | Start designing                 |
-| Sense     | Synthesize and clarify         | Make implementation decisions   |
-| Explore   | Investigate options, prototype | Commit to a solution            |
-| Shape     | Define architecture            | Write production code           |
-| Formalize | Create SOD, lock scope         | Skip the SOD                    |
-| Commit    | Verify readiness               | Execute without SOD             |
-| Execute   | Build per SOD spec             | Change scope                    |
-| Sustain   | Fix bugs, small enhancements   | Add features without SOD update |
+| Stage     | AI Should...                              | AI Should NOT...                |
+| --------- | ----------------------------------------- | ------------------------------- |
+| Capture   | Help collect raw inputs                   | Start designing                 |
+| Sense     | Synthesize and clarify                    | Make implementation decisions   |
+| Explore   | Investigate options, prototype            | Commit to a solution            |
+| Shape     | Define architecture, draft test strategy  | Write production code           |
+| Formalize | Create SOD with BDD acceptance criteria   | Skip the SOD                    |
+| Commit    | Write tests from acceptance criteria      | Execute without SOD             |
+| Execute   | Build per SOD spec, TDD workflow          | Change scope                    |
+| Sustain   | Fix bugs, maintain tests                  | Add features without SOD update |
 
 ---
 
@@ -295,5 +301,6 @@ Or instruct the AI to read `praxis.yaml` first.
 ## See Also
 
 - [User Guide](user-guide.md) — Full lifecycle walkthrough
+- [Testing Methodology](../../opinions/code/testing.md) — TDD/BDD guidance and AI test generation patterns
 - [AI Guards](../../research-library/ai-guards/_index.md) — Research notes on AI guardrails
 - [Lifecycle](../../core/spec/lifecycle.md) — Stage definitions

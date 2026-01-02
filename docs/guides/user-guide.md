@@ -417,9 +417,26 @@ Minimal CLI that prints a greeting.
 
 ## Acceptance Criteria
 
-- [ ] hello-world prints "Hello, World!"
-- [ ] hello-world --name X prints "Hello, X!"
-- [ ] All tests pass
+Use Given-When-Then format for testable criteria (see [testing.md](../../opinions/code/testing.md)):
+
+​```gherkin
+Feature: Hello World CLI
+
+  Scenario: Default greeting
+    Given the CLI is installed
+    When the user runs hello-world with no arguments
+    Then the output should be "Hello, World!"
+
+  Scenario: Custom greeting
+    Given the CLI is installed
+    When the user runs hello-world --name "Praxis"
+    Then the output should be "Hello, Praxis!"
+
+  Scenario: Invalid argument
+    Given the CLI is installed
+    When the user runs hello-world with an unknown flag
+    Then an error message should be displayed
+​```
 ```
 
 **Important:** The SOD locks scope. This is the "hard boundary" — no execution without formalization.
@@ -656,11 +673,15 @@ Summary: 9 passed, 0 warning(s), 0 failed
 
 2. **Write the SOD before coding** — The SOD forces you to think before building
 
-3. **Keep stage docs lightweight** — Not every stage needs a full document
+3. **Use BDD acceptance criteria** — Write Given-When-Then scenarios in your SOD; they become your test specifications (see [testing.md](../../opinions/code/testing.md))
 
-4. **Use Sustain properly** — Bug fixes stay in Sustain; scope changes regress to Formalize
+4. **Write tests before implementation** — Tests provide explicit targets for AI code generation and catch regressions early
 
-5. **Trust the process** — The stages feel slow at first but prevent expensive rework
+5. **Keep stage docs lightweight** — Not every stage needs a full document
+
+6. **Use Sustain properly** — Bug fixes stay in Sustain; scope changes regress to Formalize
+
+7. **Trust the process** — The stages feel slow at first but prevent expensive rework
 
 ---
 
