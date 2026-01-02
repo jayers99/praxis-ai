@@ -9,6 +9,13 @@ import typer
 
 from praxis import __version__
 from praxis.application.audit_service import audit_project
+from praxis.application.opinions_service import (
+    format_json_output,
+    format_list_output,
+    format_prompt_output,
+    get_opinions_tree,
+    resolve_opinions,
+)
 from praxis.application.extension_service import (
     add_example,
     add_extension,
@@ -50,11 +57,13 @@ workspace_app = typer.Typer(help="Workspace management commands.")
 extensions_app = typer.Typer(help="Extension management commands.")
 examples_app = typer.Typer(help="Example management commands.")
 templates_app = typer.Typer(help="Template rendering commands.")
+opinions_app = typer.Typer(help="Opinions resolution and export.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
 app.add_typer(examples_app, name="examples")
 app.add_typer(templates_app, name="templates")
+app.add_typer(opinions_app, name="opinions")
 
 
 def version_callback(value: bool) -> None:
@@ -1736,6 +1745,152 @@ def pipeline_refine_cmd(
             for error in result.errors:
                 typer.echo(f"Error: {error}", err=True)
             raise typer.Exit(1)
+
+
+# -----------------------------------------------------------------------------
+# Opinions commands
+# -----------------------------------------------------------------------------
+
+
+@opinions_app.callback(invoke_without_command=True)
+def opinions_cmd(
+    ctx: typer.Context,
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    domain: str | None = typer.Option(
+        None,
+        "--domain",
+        "-d",
+        help="Domain (code, create, write, learn, observe). Overrides praxis.yaml.",
+    ),
+    stage: str | None = typer.Option(
+        None,
+        "--stage",
+        "-s",
+        help="Lifecycle stage. Overrides praxis.yaml.",
+    ),
+    subtype: str | None = typer.Option(
+        None,
+        "--subtype",
+        "-t",
+        help="Subtype (e.g., cli, library). Overrides praxis.yaml.",
+    ),
+    prompt: bool = typer.Option(
+        False,
+        "--prompt",
+        "-p",
+        help="Output as AI-ready prompt context.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    list_all: bool = typer.Option(
+        False,
+        "--list",
+        "-l",
+        help="List all available opinion files.",
+    ),
+) -> None:
+    """Resolve and display applicable opinions for a project.
+
+    By default, reads domain/stage/subtype from praxis.yaml in the project
+    directory. Use --domain, --stage, --subtype to override or query without
+    a praxis.yaml file.
+
+    Examples:
+        praxis opinions                    # Show resolved opinions
+        praxis opinions --prompt           # AI-ready context
+        praxis opinions --json             # Machine-readable
+        praxis opinions --list             # All available files
+        praxis opinions --domain code --stage capture
+    """
+    import json as json_module
+
+    from praxis.infrastructure.yaml_loader import load_praxis_config
+
+    # Handle --list separately (doesn't need domain/stage)
+    if list_all:
+        tree, warning = get_opinions_tree(start_path=path.resolve())
+        if tree is None:
+            typer.echo(f"Warning: {warning}", err=True)
+            raise typer.Exit(0)
+        typer.echo(format_list_output(tree))
+        return
+
+    # If subcommand was invoked, let it handle
+    if ctx.invoked_subcommand is not None:
+        return
+
+    # Load from praxis.yaml if flags not provided
+    resolved_domain = domain
+    resolved_stage = stage
+    resolved_subtype = subtype
+
+    if resolved_domain is None:
+        # Try to load from praxis.yaml
+        yaml_path = path.resolve() / "praxis.yaml"
+        if yaml_path.exists():
+            result = load_praxis_config(yaml_path)
+            if result.valid and result.config:
+                resolved_domain = result.config.domain.value
+                resolved_stage = resolved_stage or result.config.stage.value
+                resolved_subtype = resolved_subtype or result.config.subtype
+        else:
+            typer.echo(
+                "Error: No praxis.yaml found and --domain not specified.",
+                err=True,
+            )
+            raise typer.Exit(1)
+
+    if resolved_domain is None:
+        typer.echo(
+            "Error: Could not determine domain. Use --domain or create praxis.yaml.",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    # Resolve opinions
+    resolved = resolve_opinions(
+        domain=resolved_domain,
+        stage=resolved_stage,
+        subtype=resolved_subtype,
+        start_path=path.resolve(),
+    )
+
+    # Output warnings
+    for warning in resolved.warnings:
+        typer.echo(f"Warning: {warning}", err=True)
+
+    # Format output
+    if json_output:
+        typer.echo(json_module.dumps(format_json_output(resolved), indent=2))
+    elif prompt:
+        typer.echo(format_prompt_output(resolved))
+    else:
+        # Default: show provenance list
+        typer.echo(f"Applicable opinions for {resolved.domain}", nl=False)
+        if resolved.stage:
+            typer.echo(f" × {resolved.stage}", nl=False)
+        if resolved.subtype:
+            typer.echo(f" ({resolved.subtype})", nl=False)
+        typer.echo(":")
+        typer.echo()
+
+        if not resolved.existing_files:
+            typer.echo("  (no opinion files found)")
+        else:
+            for i, f in enumerate(resolved.existing_files, 1):
+                status = ""
+                if f.frontmatter:
+                    status = f" [{f.frontmatter.status.value}]"
+                typer.echo(f"  {i}. {f.path}{status}")
+
+        typer.echo()
+        typer.echo(f"Total: {len(resolved.existing_files)} files")
 
 
 if __name__ == "__main__":

@@ -308,13 +308,14 @@ praxis audit                      # Check tooling, structure, testing
 praxis audit --strict             # Fail on warnings
 ```
 
-Work with domain opinions (planned):
+Work with domain opinions:
 
 ```bash
 praxis opinions                   # Show applicable opinions for project
 praxis opinions --prompt          # Generate AI context with opinions
-praxis opinions --check           # Validate against quality gates
+praxis opinions --json            # Machine-readable JSON output
 praxis opinions --list            # List all available opinion files
+praxis opinions --domain code --stage capture  # Query without praxis.yaml
 ```
 
 ## Quick Start (Using an Agent)
@@ -360,7 +361,7 @@ examples.yaml         Registry of available examples
 
 ## Status
 
-Core CLI is functional with project commands (`init`, `validate`, `stage`, `status`, `audit`) and workspace management (`workspace`, `extensions`, `examples`). Code domain is fully supported.
+Core CLI is functional with project commands (`init`, `validate`, `stage`, `status`, `audit`, `opinions`) and workspace management (`workspace`, `extensions`, `examples`). Code domain is fully supported with opinions framework for deterministic guidance resolution.
 
 ## License
 
