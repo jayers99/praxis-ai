@@ -1,7 +1,7 @@
 # Research Library Catalog
 
 _Last updated: 2026-01-01_
-_Total artifacts: 17_
+_Total artifacts: 18_
 
 ---
 
@@ -26,6 +26,7 @@ _Total artifacts: 17_
 | [patterns-git-ai-first-principles-2026-01-01](patterns/git-ai-first-principles.md) | Git + AI Workflow First Principles | patterns | Medium | 2026-01-01 |
 | [patterns-git-ai-tool-ecosystem-2026-01-01](patterns/git-ai-tool-ecosystem.md) | Git + AI Tool Ecosystem Survey | patterns | Medium | 2026-01-01 |
 | [patterns-git-ai-review-optimization-2026-01-01](patterns/git-ai-review-optimization.md) | AI Code Review Optimization Patterns | patterns | Medium | 2026-01-01 |
+| [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | patterns | Medium | 2026-01-01 |
 
 ---
 
@@ -72,6 +73,7 @@ _Total artifacts: 17_
 | [patterns-git-ai-first-principles-2026-01-01](patterns/git-ai-first-principles.md) | Git + AI Workflow First Principles | Medium | git, ai-assisted, gates, drift, human-oversight, review-bandwidth |
 | [patterns-git-ai-tool-ecosystem-2026-01-01](patterns/git-ai-tool-ecosystem.md) | Git + AI Tool Ecosystem Survey | Medium | git, mcp, claude-code, heredoc, workflow, security |
 | [patterns-git-ai-review-optimization-2026-01-01](patterns/git-ai-review-optimization.md) | AI Code Review Optimization Patterns | Medium | code-review, copilot, ai-agents, severity-classification, uat |
+| [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | Medium | ai-assisted, code-review, verification, trust-calibration, workflow, solo-developer |
 
 ### Subagents
 
@@ -108,6 +110,7 @@ _No artifacts yet_
 - [Git + AI Workflow First Principles](patterns/git-ai-first-principles.md) — patterns — git, gates, drift, human-oversight
 - [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md) — patterns — mcp, heredoc, security
 - [AI Code Review Optimization Patterns](patterns/git-ai-review-optimization.md) — patterns — copilot, severity, uat
+- [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md) — patterns — verification, trust-calibration, solo-developer
 
 ### Low Consensus (use with caution)
 
@@ -238,6 +241,9 @@ _No artifacts yet_
 ### socrates
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md)
 
+### solo-developer
+- [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md)
+
 ### stage-gate
 - [Lifecycle Stage Research Report](spec/lifecycle-research.md)
 
@@ -250,14 +256,21 @@ _No artifacts yet_
 ### token-budget
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md)
 
+### trust-calibration
+- [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md)
+
 ### uat
 - [AI Code Review Optimization Patterns](patterns/git-ai-review-optimization.md)
 
 ### validation
 - [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
 
+### verification
+- [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md)
+
 ### workflow
 - [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md)
+- [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md)
 
 ### zettelkasten
 - [Research Library Design Principles](foundations/research-library-design.md)
@@ -268,6 +281,7 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2026-01-01 | [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md) | patterns |
 | 2026-01-01 | [Git + AI Workflow First Principles](patterns/git-ai-first-principles.md) | patterns |
 | 2026-01-01 | [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md) | patterns |
 | 2026-01-01 | [AI Code Review Optimization Patterns](patterns/git-ai-review-optimization.md) | patterns |
