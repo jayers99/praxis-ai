@@ -12,11 +12,14 @@ Praxis is a policy-driven AI workflow system that governs how ideas evolve into 
 
 **See [CONTRIBUTING.md](CONTRIBUTING.md)** for the full issue framework.
 
-**Quick reference for batching work:**
-```bash
-# Find ready-to-implement issues
+**Quick reference for batching work (prefer MCP tools):**
+```
+# Find ready-to-implement issues using MCP GitHub tools
+mcp__MCP_DOCKER__list_issues(owner, repo, labels: ["maturity: shaped", "size: small"])
+mcp__MCP_DOCKER__list_issues(owner, repo, labels: ["maturity: formalized", "type: feature"])
+
+# Fallback: gh CLI
 gh issue list --label "maturity: shaped" --label "size: small"
-gh issue list --label "maturity: formalized" --label "type: feature"
 ```
 
 **Labels:**
