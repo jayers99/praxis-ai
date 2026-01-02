@@ -599,7 +599,13 @@ Useful for CI pipelines or testing different contexts.
 
 ## Domain Artifacts
 
-Each domain requires a specific formalization artifact:
+Each domain requires a specific formalization artifact. All templates implement the **Formalize Spine** (see [lifecycle.md](../../core/spec/lifecycle.md)):
+
+1. **Intent & Outcome** — Problem/thesis, audience, success criteria, why now
+2. **Scope & Boundaries** — In scope, out of scope, assumptions, dependencies
+3. **Constraints** — Domain constraints, environment, privacy, tooling limits
+4. **Execution Framing** — First increment, risks & mitigations, open questions
+5. **Commit Criteria** — Unambiguous success definition
 
 | Domain  | Artifact       | Path            |
 | ------- | -------------- | --------------- |
@@ -608,6 +614,8 @@ Each domain requires a specific formalization artifact:
 | Write   | Writing Brief  | `docs/brief.md` |
 | Learn   | Learning Plan  | `docs/plan.md`  |
 | Observe | (none)         | —               |
+
+Each template includes inline comments with "what good looks like" examples to guide authors.
 
 ---
 
