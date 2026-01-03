@@ -4,7 +4,7 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`), stage templates (`templates`), and knowledge distillation pipeline (`pipeline`).
+**Current Phase:** Core CLI complete (`init`, `new`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`), stage templates (`templates`), knowledge distillation pipeline (`pipeline`), and opinions framework (`opinions`).
 
 **Workspace Model:** Praxis uses a workspace-based structure. User projects live in `$PRAXIS_HOME/projects/`, separate from this framework repo.
 
@@ -42,7 +42,12 @@ gh issue list --label "maturity: formalized" --label "type: feature"
 ## CLI Commands
 
 ```bash
-# Initialize a new project (run from within a project directory)
+# Create a new project (creates directory and initializes)
+praxis new my-project --domain code --privacy personal
+praxis new my-app --domain code --subtype cli  # With subtype
+praxis new my-art --domain create --path ./custom/location
+
+# Initialize an existing directory as a Praxis project
 praxis init --domain code --privacy personal
 
 # Validate governance configuration
@@ -95,8 +100,10 @@ praxis pipeline refine            # Return to earlier stage for refinement
 # Opinions framework
 praxis opinions                   # Show applicable opinions for project
 praxis opinions --prompt          # Generate AI context with opinions
-praxis opinions --check           # Validate against quality gates
 praxis opinions --list            # List all available opinion files
+praxis opinions --json            # Output as JSON
+praxis opinions -d code -s formalize  # Override domain/stage
+praxis opinions -t cli            # Override subtype
 ```
 
 ## Key Concepts
@@ -198,6 +205,7 @@ src/praxis/              # Main CLI package
     privacy.py           # PrivacyLevel enum
     workspace.py         # Workspace, Extension, Example entities
     audit_checks.py      # Audit check definitions
+    opinions.py          # Opinion resolution domain models
     templates/           # Template domain models
     pipeline/            # Pipeline models, risk tiers, specialists
   application/           # Application services
@@ -207,6 +215,7 @@ src/praxis/              # Main CLI package
     audit_service.py     # Audit check orchestration
     workspace_service.py # Workspace init, info orchestration
     extension_service.py # Extension add/remove/list/update logic
+    opinions_service.py  # Opinions resolution and export
     templates/           # Template rendering service
     pipeline/            # Pipeline orchestration (CCR)
   infrastructure/        # External concerns
@@ -223,6 +232,7 @@ src/praxis/              # Main CLI package
     pyproject_loader.py  # pyproject.toml parsing
     claude_md_updater.py # CLAUDE.md update helper
     tool_runner.py       # Tool execution (tests, lint, etc.)
+    opinions_loader.py   # Opinion file discovery and loading
     stage_templates/     # Stage template resolution and rendering
     pipeline/            # Pipeline state persistence
 
@@ -340,6 +350,7 @@ poetry run praxis validate --help
 - [CATALOG.md](research-library/CATALOG.md) — Master index of all research artifacts
 - [AI Guards](research-library/ai-guards/_index.md) — AI instruction files, memory, guard design
 - [Foundations](research-library/foundations/_index.md) — Classical roots, library design, human-AI intent
+- [Patterns](research-library/patterns/_index.md) — TDD/BDD verification, AI code workflows, git integration
 - [Spec Research](research-library/spec/_index.md) — Lifecycle stages, domains, sustain governance
 - [Roles Research](research-library/roles/_index.md) — Praxis roles architecture and rationale
 
