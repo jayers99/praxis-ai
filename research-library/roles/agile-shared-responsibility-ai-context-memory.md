@@ -371,3 +371,84 @@ Every AI session should:
 - [The Decision Lab - Human-AI Collaboration](https://thedecisionlab.com/reference-guide/computer-science/human-ai-collaboration)
 - [The Valuable Dev - Cognitive Load Theory](https://thevaluable.dev/cognitive-load-theory-software-developer/)
 - [Tribe AI - Context-Aware Memory Systems](https://www.tribe.ai/applied-ai/beyond-the-bubble-how-context-aware-memory-systems-are-changing-the-game-in-2025)
+
+---
+
+## CCR Review (Red Team Critique)
+
+**Reviewer:** Red Team
+**Date:** 2026-01-02
+**Verdict:** SUGGEST
+
+### Strengths
+
+1. **Core thesis is sound** — The fundamental tension (stateless AI agents vs. continuous-context agile practices) is real, well-articulated, and supported by credible sources
+2. **Comprehensive source coverage** — Triangulates from practitioner sources, vendor documentation, academic research, and industry analysts
+3. **Anti-patterns section particularly valuable** — Catalog of failure modes (self-reinforcing hallucinations, context drift, infinite handoff loops) provides actionable warnings
+4. **"Amnesiac pair partner" reframe is useful** — Mental model correctly sets expectations and drives appropriate workflow design
+5. **Layered memory architecture is practical** — Four-layer model (session, project, domain, organizational) provides workable taxonomy
+6. **Tests as "objective memory" is elegant** — Leverages existing infrastructure to solve a new problem
+
+### Challenges (Assumptions Questioned)
+
+1. **"AI agents lack persistent memory" is increasingly dated** — This is changing rapidly (Claude persistent memory, OpenAI GPTs, tool-augmented agents). Should distinguish between intrinsic model limitations, deployment architecture choices, and augmented memory systems. Risk: readers may over-invest in workarounds for problems tooling is solving.
+
+2. **Collective ownership assumes equal capability** — XP assumes roughly equivalent human capabilities. AI agents have asymmetric strengths (pattern matching, consistency) and weaknesses (ambiguity resolution, stakeholder negotiation). May need "capability-weighted responsibility" rather than peer treatment.
+
+3. **4-5 item working memory claim is oversimplified** — Expert chunking increases effective capacity. Token count ≠ "item count." Context window utilization differs fundamentally from human memory.
+
+4. **RAG "30% error reduction" claim needs context** — What baseline? What task domain? "Up to" suggests best-case. No citation to specific OpenAI publication.
+
+5. **ISACA "Shared Responsibility Model" conflation** — The cited article addresses AI vendor/customer liability boundaries (cloud-style), not team-level agile ownership. Confusing conflation.
+
+### Blind Spots
+
+1. **No cost-benefit trade-offs** — Vector DB + graph DB + key-value store + memory banks has significant infrastructure/maintenance/latency costs. When do simpler approaches suffice?
+2. **No acknowledgment of successful stateless workflows** — Many teams use AI effectively without elaborate memory. When is statelessness acceptable?
+3. **Memory corruption and poisoning unaddressed** — What prevents hallucinated "facts" entering long-term memory? Accumulation of contradictions? Adversarial injection?
+4. **Security implications absent** — Who has read/write access? How is sensitive data handled? Attack surfaces?
+5. **No quantitative success criteria** — What continuity threshold is "adequate"? How measure memory system effectiveness?
+6. **Cultural/organizational change ignored** — Requires developer discipline, process changes, new roles. Mentioned in Open Questions but no guidance.
+
+### Risks
+
+1. **Over-engineering for simple projects** — Solo developer on small CLI doesn't need four-layer memory architecture
+2. **Memory maintenance becomes burden** — Uncurated memory banks accumulate stale/contradictory information
+3. **False confidence from "externalized memory"** — Presence doesn't guarantee retrieval or utilization
+4. **Handoff protocol friction** — Structured start/end protocols add cognitive overhead; risk of abandonment under pressure
+5. **Accountability diffusion, not resolution** — "Human remains accountable" is philosophically correct but operationally vague
+
+### Suggested Revisions
+
+**Structural:**
+1. Add "When to Apply" decision tree — Help readers assess project needs
+2. Split recommendations by project scale — Solo dev vs. small team vs. enterprise
+3. Add memory governance section — Who writes, reads, validates, deprecates
+
+**Content:**
+4. Temper statelessness framing — Acknowledge it's architectural, not intrinsic
+5. Remove or hedge RAG 30% claim — No specific citation
+6. Clarify ISACA reference — Explain relevance or find better source
+7. Add security considerations — Access control, injection risks, sensitive data
+8. Provide success metrics — What does "adequate continuity" look like?
+
+**Editorial:**
+9. Verify Springer citation DOI — `978-3-032-04190-6` likely should be `978-3-031-...`
+10. Standardize citation format — Mix of inline links and bracketed references
+
+### Consensus Assessment
+
+| Claim | Strength | Notes |
+|-------|----------|-------|
+| AI agents operate statelessly by default | Strong | Multiple sources; empirically verifiable |
+| Context windows function as working memory | Strong | Widely accepted analogy |
+| TDD provides persistent validation | Strong | Well-established practice |
+| Handoffs are critical failure points | Strong | Multiple sources |
+| Human oversight remains essential | Strong | Expert consensus |
+| RAG provides 30% error reduction | Weak | No specific citation; "up to" qualifier |
+| 4-5 item working memory parallel | Moderate | Oversimplified |
+| Layered memory is the right architecture | Speculative | Not empirically validated for AI-human teams |
+
+---
+
+*CCR performed by Red Team role, 2026-01-02*
