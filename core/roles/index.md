@@ -1,5 +1,5 @@
 # Praxis Roles Index
-**Canonical Entry Point (v1.0)**
+**Canonical Entry Point (v1.1)**
 
 This is the **authoritative entry point** for the Praxis Roles subsystem.
 All other READMEs defer to this document.
@@ -32,13 +32,23 @@ All other READMEs defer to this document.
 | SRE | Operability, SLOs, monitoring | `definitions/11-sre.md` |
 
 ## Governance Documents
+
+### Core Governance
 | Document | Purpose |
 |----------|---------|
-| `lifecycle-matrix.md` | Which roles are active/forbidden by phase |
+| `lifecycle-matrix.md` | Which roles are active/forbidden by phase; Praxis stage mapping |
 | `invocation-syntax.md` | Grammar for activating roles in prompts |
 | `kickback-rubrics.md` | Structured rejection standards by role |
 | `system-prompt-bundle.md` | Ready-to-use prompts for each role |
 | `../authority-and-change-control.md` | Conflict resolution and change rules |
+
+### Extended Governance
+| Document | Purpose |
+|----------|---------|
+| `role-composition-patterns.md` | Common patterns for combining roles in reviews |
+| `subagent-mapping.md` | Mapping roles to AI subagent implementations |
+| `domain-variants.md` | Role adaptations for Create, Write, Learn, Observe domains |
+| `metrics-framework.md` | Metrics for tracking role effectiveness (advisory) |
 
 ## File Layout
 
@@ -47,25 +57,29 @@ praxis-ai/
 ├── core/
 │   ├── authority-and-change-control.md
 │   └── roles/
-│       ├── index.md               # THIS FILE (canonical entry)
-│       ├── README.md              # Layer description
-│       ├── lifecycle-matrix.md    # Phase → role mapping
-│       ├── invocation-syntax.md   # Role activation grammar
-│       ├── kickback-rubrics.md    # Rejection standards
-│       ├── system-prompt-bundle.md# Agent prompts
+│       ├── index.md                    # THIS FILE (canonical entry)
+│       ├── README.md                   # Layer description
+│       ├── lifecycle-matrix.md         # Phase → role mapping + Praxis stages
+│       ├── invocation-syntax.md        # Role activation grammar
+│       ├── kickback-rubrics.md         # Rejection standards
+│       ├── system-prompt-bundle.md     # Agent prompts
+│       ├── role-composition-patterns.md # Multi-role review patterns
+│       ├── subagent-mapping.md         # Role → subagent mapping
+│       ├── domain-variants.md          # Domain-specific role adaptations
+│       ├── metrics-framework.md        # Role effectiveness metrics
 │       └── definitions/
-│           ├── 00-research-librarian.md
-│           ├── 01-product-owner.md
-│           ├── 02-red-team.md
-│           ├── 03-synthesis.md
-│           ├── 04-scrum-master.md
-│           ├── 05-developer.md
-│           ├── 06-stakeholder-proxy.md
-│           ├── 07-architect.md
-│           ├── 08-security.md
-│           ├── 09-qa.md
-│           ├── 10-finops.md
-│           └── 11-sre.md
+│           ├── 00-research-librarian.md  # v1.1
+│           ├── 01-product-owner.md       # v1.1
+│           ├── 02-red-team.md            # v1.1
+│           ├── 03-synthesis.md           # v1.1
+│           ├── 04-scrum-master.md        # v1.1
+│           ├── 05-developer.md           # v1.1
+│           ├── 06-stakeholder-proxy.md   # v1.1
+│           ├── 07-architect.md           # v1.1
+│           ├── 08-security.md            # v1.1
+│           ├── 09-qa.md                  # v1.1
+│           ├── 10-finops.md              # v1.1
+│           └── 11-sre.md                 # v1.1
 ├── research-library/
 │   └── roles/
 │       ├── rationale.md
