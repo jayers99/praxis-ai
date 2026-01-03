@@ -26,14 +26,49 @@ Feature: Praxis Audit CLI
     Then the output should contain "checks"
     And the output should contain "project_name"
 
-  Scenario: Non-code domain shows no checks
-    Given a project with domain "observe"
+  Scenario: Observe domain shows domain-specific checks
+    Given a project with domain "observe" at stage "capture"
     When I run praxis audit
     Then the exit code should be 0
-    And the output should contain "0 passed"
+    And the output should contain "Organization"
 
   Scenario: Invalid config shows failed check
     Given a project with invalid praxis.yaml
     When I run praxis audit
     Then the exit code should be 1
     And the output should contain "Invalid or missing praxis.yaml"
+
+  # Multi-domain audit scenarios (from issue requirements)
+
+  Scenario: Create project shows Create-specific checks
+    Given a create project at stage "formalize"
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Brief"
+    And the output should contain "Assets"
+
+  Scenario: Learn project with subtype skill shows practice_log check
+    Given a learn project with subtype "skill"
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Practice log"
+
+  Scenario: Write project at capture stage skips brief_present check
+    Given a write project at stage "capture"
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should not contain "Brief not found"
+
+  Scenario: JSON output includes check metadata
+    Given a create project at stage "capture"
+    When I run praxis audit --json
+    Then the output should contain "name"
+    And the output should contain "category"
+    And the output should contain "status"
+
+  Scenario: Project with no subtype runs domain-level checks only
+    Given an observe project without subtype
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Captures"
+    And the output should contain "Index"

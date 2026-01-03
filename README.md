@@ -186,6 +186,7 @@ praxis status --json                  # Machine-readable output
 praxis validate                       # Check governance configuration
 praxis validate --check-all           # Include tests, lint, types
 praxis audit                          # Domain best practices check
+praxis audit --strict                 # Fail on warnings
 
 # Workspace management
 praxis workspace init                 # Initialize workspace

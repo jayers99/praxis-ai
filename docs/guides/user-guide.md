@@ -756,7 +756,11 @@ Summary: 9 passed, 0 warning(s), 0 failed
 
 ### Checks by Domain
 
-**Code Domain** (from `docs/opinions/code/cli-python.md`):
+Audit checks support stage-aware and subtype-aware filtering:
+- **min_stage**: Check only applies at this stage or later (skipped otherwise)
+- **subtypes**: Check only applies to listed subtypes (skipped for other subtypes)
+
+**Code Domain**:
 
 | Category  | Check          | Description                                 |
 | --------- | -------------- | ------------------------------------------- |
@@ -769,6 +773,86 @@ Summary: 9 passed, 0 warning(s), 0 failed
 | Structure | **main**.py    | python -m support                           |
 | Testing   | BDD tests      | tests/features/\*.feature exists            |
 | Testing   | pytest-bdd     | pytest-bdd in dev dependencies              |
+
+**Create Domain**:
+
+| Category     | Check             | Stage      | Subtypes          | Description                          |
+| ------------ | ----------------- | ---------- | ----------------- | ------------------------------------ |
+| Artifact     | brief_present     | formalize+ | all               | docs/brief.md exists                 |
+| Organization | assets_organized  | any        | all               | assets/ directory exists             |
+| Workflow     | prompts_documented| any        | generative        | prompts/ or docs/prompts.md exists   |
+| Workflow     | references_present| any        | visual, design    | references/ or inspiration/ exists   |
+
+**Write Domain**:
+
+| Category     | Check           | Stage      | Subtypes              | Description                          |
+| ------------ | --------------- | ---------- | --------------------- | ------------------------------------ |
+| Artifact     | brief_present   | formalize+ | all                   | docs/brief.md exists                 |
+| Workflow     | outline_present | shape+     | all                   | docs/outline.md or outline.md exists |
+| Organization | drafts_organized| any        | all                   | drafts/ directory exists             |
+| Workflow     | citations_present| any       | academic, journalistic| citations/bibliography file exists   |
+
+**Learn Domain**:
+
+| Category     | Check               | Stage      | Subtypes           | Description                               |
+| ------------ | ------------------- | ---------- | ------------------ | ----------------------------------------- |
+| Artifact     | plan_present        | formalize+ | all                | docs/plan.md exists                       |
+| Workflow     | resources_documented| any        | all                | docs/resources.md or reading-list.md      |
+| Workflow     | practice_log_present| any        | skill, practice    | docs/practice-log.md or practice/         |
+| Workflow     | progress_tracked    | any        | course, exploration| docs/progress.md or log.md exists         |
+
+**Observe Domain**:
+
+| Category     | Check             | Stage | Subtypes | Description                          |
+| ------------ | ----------------- | ----- | -------- | ------------------------------------ |
+| Organization | captures_organized| any   | all      | captures/ or inbox/ directory exists |
+| Organization | index_present     | any   | all      | index.md or catalog.md exists        |
+
+### Domain-Specific Examples
+
+**Create domain (generative subtype)**:
+```bash
+$ praxis audit my-generative-art-project
+Auditing: my-generative-art-project (domain: create)
+
+Artifact:
+  ⚠ Brief not found. Create docs/brief.md to formalize your creative vision.
+
+Organization:
+  ⚠ Assets not organized. Create an assets/ directory for your creative outputs.
+
+Workflow:
+  ⚠ Prompts not documented. Create prompts/ directory or docs/prompts.md...
+
+Summary: 0 passed, 3 warning(s), 0 failed
+```
+
+**Write domain (at capture stage)**:
+```bash
+$ praxis audit my-writing-project
+Auditing: my-writing-project (domain: write)
+
+Organization:
+  ⚠ Drafts not organized. Create a drafts/ directory for your work-in-progress.
+
+Summary: 0 passed, 1 warning(s), 0 failed
+```
+
+Note: At capture stage, `brief_present` (min_stage: formalize) and `outline_present` (min_stage: shape) are skipped.
+
+**Learn domain (skill subtype)**:
+```bash
+$ praxis audit my-skill-project
+Auditing: my-skill-project (domain: learn)
+
+Workflow:
+  ⚠ Resources not documented. Create docs/resources.md or reading-list.md...
+  ⚠ Practice log not found. Create docs/practice-log.md or practice/...
+
+Summary: 0 passed, 2 warning(s), 0 failed
+```
+
+Note: `progress_tracked` is skipped because it only applies to "course" or "exploration" subtypes.
 
 ---
 
