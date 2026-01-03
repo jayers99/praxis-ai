@@ -1,4 +1,16 @@
-# Praxis-AI
+# Praxis AI
+
+**A governance framework that makes human intent durable enough to survive AI's speed.**
+
+Praxis provides deterministic behavior resolution for AI-assisted work:
+
+```
+Domain + Stage + Privacy + Environment → Behavior
+```
+
+Whether you're building software, creating art, writing documents, or learning skills—Praxis gives you lifecycle governance, domain-specific guidance, and the structure to maintain coherent intent as AI accelerates your output.
+
+---
 
 ## The Problem
 
@@ -14,17 +26,18 @@ Your capacity for intent-maintenance is fixed. AI volume is not. Praxis provides
 
 ---
 
-Praxis is a governance framework for AI-assisted work—moving ideas through a structured lifecycle into durable, governed outcomes.
+## Core Concepts at a Glance
 
-Behavior is resolved deterministically by:
+| Concept | What It Does |
+|---------|--------------|
+| **Lifecycle** | Nine stages from Capture to Close, with Formalize as the structural hinge |
+| **Domains** | Five work types (Code, Create, Write, Learn, Observe) with specific artifacts |
+| **Privacy** | Five levels that constrain how data flows, not just who sees it |
+| **Opinions** | Domain-specific guidance that biases decisions without enforcing them |
+| **Roles** | Twelve governance roles with clear decision rights and lifecycle responsibilities |
+| **PKDP** | Risk-tiered pipeline for distilling raw input into validated knowledge |
 
-```text
-Domain + Stage + Privacy + Environment → Behavior
-```
-
-This repo contains the core framework. Examples and extensions are separate repos managed through `praxis examples add` and `praxis extensions add`.
-
-Praxis also includes the **Praxis Knowledge Distillation Pipeline (PKDP)**: a risk-tiered pipeline for turning raw inputs into validated, decision-grade knowledge artifacts.
+---
 
 ## Philosophy
 
@@ -42,24 +55,15 @@ Tension between principles and execution is intentional and necessary. Formalize
 
 Praxis separates what you believe from how you decide from how you execute.
 
-```text
+```
 Opinions  →  Governance  →  Execution
 ```
 
-- **Opinions:** Domain-specific guidance that biases decisions. Advisory, never enforced mechanically. Organized by domain, stage, and subtype with inheritance from general to specific.
+- **Opinions:** Domain-specific guidance that biases decisions. Advisory, never enforced mechanically.
 - **Governance:** The mechanism by which conflicts are resolved. Procedural authority.
 - **Execution:** The work itself. Governed by formalization contracts.
 
 This separation prevents principles from becoming dogma, governance from collapsing into bureaucracy, and execution from drifting without intent.
-
-Opinions are stored in `opinions/` and resolved through inheritance:
-
-```text
-_shared → domain/principles → domain/{stage} → subtype/principles → subtype/{stage}
-```
-
-Key opinions include:
-- **Testing methodology** (`opinions/code/testing.md`) — TDD/BDD guidance, AI test generation patterns, and practitioner checklists
 
 ### Formalize is the Structural Hinge
 
@@ -69,14 +73,12 @@ At Formalize, the question is:
 
 > "Given our principles, what constraints must we now accept to make progress?"
 
-Formalize exists to reduce ambiguity, freeze selected decisions, and enable safe execution. It is not bureaucracy; it is intentional commitment.
-
 **Formalize also marks where the nature of iteration changes:**
 
 - **Before Formalize (Discovery):** Iteration reshapes _what_ you're building. Cheap to change. Safe to abandon.
 - **After Formalize (Refinement):** Iteration improves _how well_ you're building it. Scope is locked. Changes are costly.
 
-Recognizing which mode you're in prevents wasted effort (polishing undefined things) and expensive rework (discovering scope mid-execution).
+Recognizing which mode you're in prevents wasted effort and expensive rework.
 
 ### Privacy is a Real Constraint
 
@@ -86,140 +88,231 @@ Privacy defines how information may be stored, shared, processed, and externaliz
 - Enforceable through deterministic rules
 - Reclassifiable mid-project with explicit migration steps
 
-Higher privacy requires greater abstraction and tighter controls.
-
 ### Sustain is Active Governance
 
 Sustain is not a holding pattern—it's active governance of living work.
 
 The question in Sustain: Does this change alter the contract I formalized, or does it extend/refine the implementation of that contract?
 
-- **Contract change** → New iteration
-- **Implementation extension** → Sustain
+- **Contract change** → New iteration (regress to Formalize)
+- **Implementation extension** → Sustain continues
 
-## What Praxis Optimizes For
+---
 
-AI-assisted creation is fast, but it’s easy to lose what actually worked.
+## The Four Canonical Dimensions
 
-Praxis treats your work as a lightweight “memory engine”:
+### 1. Domain — What Kind of Work?
 
-- Capture what you tried (prompts, constraints, artifacts, decisions)
-- Keep what reliably produces the outcome you want
-- Cut what doesn’t
-- Make the workflow reusable across future projects in the same domain
+| Domain | Purpose | Formalize Artifact |
+|--------|---------|-------------------|
+| **Code** | Functional systems and tools | `docs/sod.md` (Solution Overview Document) |
+| **Create** | Aesthetic and expressive output | `docs/brief.md` (Creative brief) |
+| **Write** | Structured externalized thought | `docs/brief.md` (Writing brief) |
+| **Learn** | Internal skill and model formation | `docs/plan.md` (Learning plan) |
+| **Observe** | Raw capture without interpretation | (none required) |
+
+Each domain supports **subtypes** for specialized guidance:
+
+| Domain | Subtypes |
+|--------|----------|
+| Code | cli, library, api, webapp, infrastructure, script |
+| Create | visual, audio, video, interactive, generative, design |
+| Write | technical, business, narrative, academic, journalistic |
+| Learn | skill, concept, practice, course, exploration |
+| Observe | notes, bookmarks, clips, logs, captures |
+
+### 2. Lifecycle Stage — Where is the Work?
+
+Nine stages form the canonical lifecycle:
+
+```
+Capture → Sense → Explore → Shape → Formalize → Commit → Execute → Sustain → Close
+```
+
+| Stage | Purpose |
+|-------|---------|
+| **Capture** | Collect raw inputs without judgment |
+| **Sense** | Synthesize meaning from captured material |
+| **Explore** | Investigate options and alternatives |
+| **Shape** | Define structure and boundaries |
+| **Formalize** | Lock scope, create binding artifacts |
+| **Commit** | Explicitly decide to proceed |
+| **Execute** | Build the thing |
+| **Sustain** | Maintain and evolve living work |
+| **Close** | Archive or sunset |
+
+**Critical Rule:** Formalize is a hard boundary. No execution without formalization artifacts.
+
+**Allowed Regressions:**
+
+| From | Can Regress To |
+|------|----------------|
+| Execute | Commit, Formalize |
+| Sustain | Execute, Commit |
+| Close | Capture |
+
+### 3. Privacy Level — How Restricted?
+
+Five levels from least to most restrictive:
+
+1. **Public** — Open sharing, public AI allowed
+2. **Public–Trusted** — Collaborators only, vetted AI tools
+3. **Personal** — Individual use, local AI preferred
+4. **Confidential** — Need-to-know, air-gapped AI only
+5. **Restricted** — Maximum control, no AI processing
+
+Privacy is mutable: upgrades require sanitization, downgrades are discouraged.
+
+### 4. Environment — What Context?
+
+- **Home** — Personal context, informal tone
+- **Work** — Professional context, formal tone
+
+Environment affects presentation and formality, not data handling.
+
+---
+
+## Key Features
+
+### CLI Commands
+
+```bash
+# Project lifecycle
+praxis new my-project --domain code --privacy personal
+praxis init                           # Initialize existing directory
+praxis stage formalize                # Transition stages
+praxis status                         # Current state and history
+praxis validate                       # Check governance configuration
+praxis validate --check-all           # Include tests, lint, types
+praxis audit                          # Domain best practices check
+
+# Workspace management
+praxis workspace init                 # Initialize workspace
+praxis extensions add render-run      # Install extensions
+praxis examples add uat-praxis-code   # Install examples
+
+# Opinions and templates
+praxis opinions                       # Show applicable opinions
+praxis opinions --prompt              # Generate AI context
+praxis templates render               # Scaffold stage documentation
+
+# Knowledge distillation pipeline
+praxis pipeline init --tier 2         # Initialize pipeline
+praxis pipeline run                   # Execute pipeline stage
+praxis pipeline accept                # Accept output (HVA gate)
+```
+
+### Opinions Framework
+
+Domain-specific guidance organized hierarchically with inheritance:
+
+```
+_shared/ → {domain}/principles.md → {domain}/{stage}.md → subtypes/
+```
+
+Opinions are advisory—they bias decisions without mechanical enforcement. Use `praxis opinions --prompt` to generate AI-ready context for your project.
+
+Key opinions include:
+- **Testing methodology** (`opinions/code/testing.md`) — TDD/BDD guidance for Code domain
+- **Stage quality gates** — What "done" means at each stage
+- **AI permissions** — What AI operations are allowed per domain
+
+### Praxis Knowledge Distillation Pipeline (PKDP)
+
+A risk-tiered pipeline for turning raw inputs into validated, decision-grade knowledge:
+
+| Stage | Purpose |
+|-------|---------|
+| **RTC** | Raw Thought Capture |
+| **IDAS** | Inquiry-Driven Analytical Synthesis |
+| **SAD** | Specialist Agent Dispatch |
+| **CCR** | Critical Challenge Review |
+| **ASR** | Adjudicated Synthesis & Resolution |
+| **HVA** | Human Validation & Acceptance |
+
+**Risk Tiers** determine validation depth:
+- Tier 0: RTC → IDAS (minimal validation)
+- Tier 1: RTC → IDAS → SAD → ASR
+- Tier 2: RTC → IDAS → SAD → CCR → ASR
+- Tier 3: Full pipeline including HVA gate
+
+### Roles Subsystem
+
+Twelve governance roles with lifecycle-aware responsibilities:
+
+| Role | Responsibility |
+|------|----------------|
+| **Product Owner** | Value decisions, backlog priority |
+| **Developer** | Produces "Done" increments |
+| **Research Librarian** | Epistemic backbone, knowledge validation |
+| **Red Team** | Constructive adversarial challenge |
+| **Synthesis** | Resolve conflicting inputs into direction |
+| **Scrum Master** | Cadence and flow management |
+
+Plus supporting roles: Stakeholder, Architect, Security, QA, FinOps, SRE.
+
+Each role has defined decision rights, lifecycle activity by stage, and success criteria. See `core/roles/` for complete definitions.
+
+### Stage Templates
+
+Automatic generation of lifecycle documentation:
+
+```bash
+praxis templates render                  # Render docs for current stage
+praxis templates render --stage formalize  # Specific stage
+praxis templates render --force          # Overwrite existing
+```
+
+Templates provide domain-appropriate scaffolding for each lifecycle stage.
+
+---
 
 ## Start Here
 
-If you're new to Praxis:
+**New to Praxis:**
+- [User Guide](docs/guides/user-guide.md) — Step-by-step walkthrough
+- [AI Setup](docs/guides/ai-setup.md) — Configure AI assistants
+- [Stage Templates](docs/guides/stage-templates.md) — Scaffold lifecycle docs
 
-- [docs/guides/user-guide.md](docs/guides/user-guide.md) — step-by-step walkthrough with examples
-- [docs/guides/ai-setup.md](docs/guides/ai-setup.md) — configure AI assistants (CLAUDE.md, .cursorrules)
-- [docs/guides/stage-templates.md](docs/guides/stage-templates.md) — scaffold stage docs with deterministic templates
-- [SECURITY.md](SECURITY.md) — how to report security vulnerabilities
+**Understanding the framework:**
+- [SOD Specification](core/spec/sod.md) — Main specification
+- [Lifecycle](core/spec/lifecycle.md) — Stage definitions and regressions
+- [Domains](core/spec/domains.md) — Domain → artifact mappings
+- [Privacy](core/spec/privacy.md) — Privacy levels and enforcement
+- [Opinions Contract](core/governance/opinions-contract.md) — Opinions framework spec
+- [Roles Index](core/roles/index.md) — Role definitions
 
-If you want to understand the framework:
+**Knowledge distillation:**
+- [PKDP Guide](docs/guides/pkdp.md) — Knowledge pipeline walkthrough
 
-- [core/spec/sod.md](core/spec/sod.md) — main specification
-- [core/spec/lifecycle.md](core/spec/lifecycle.md) — stage definitions + regressions
-- [core/spec/domains.md](core/spec/domains.md) — domain → artifact types
-- [core/spec/privacy.md](core/spec/privacy.md) — privacy levels + enforcement intent
-- [core/governance/opinions-contract.md](core/governance/opinions-contract.md) — opinions framework specification
-- [core/spec/external-constraints.md](core/spec/external-constraints.md) — environmental authority
-- [core/ai/ai-guards.md](core/ai/ai-guards.md) — AI behavior governance (draft)
+**Security:**
+- [SECURITY.md](SECURITY.md) — Reporting vulnerabilities
 
-If you want to distill knowledge into durable research artifacts:
+---
 
-- [docs/guides/pkdp.md](docs/guides/pkdp.md) — Praxis Knowledge Distillation Pipeline (PKDP)
+## Quick Start
 
-If you want to see Praxis applied in real projects:
-
-```bash
-# Install examples to your workspace
-praxis examples add uat-praxis-code      # Hello-world CLI with full lifecycle docs
-praxis examples add opinions-framework   # Opinions framework research (Write domain)
-
-# Install extensions
-praxis extensions add template-python-cli  # Production CLI template (Code domain)
-praxis extensions add render-run           # AI image generation (Create domain)
-```
-
-## How Praxis Works (Short Version)
-
-### Lifecycle
-
-All work progresses through nine stages:
-
-1. Capture
-2. Sense
-3. Explore
-4. Shape
-5. Formalize
-6. Commit
-7. Execute
-8. Sustain
-9. Close
-
-Formalize is the structural hinge: you don’t “execute” without durable intent.
-
-### Domains
-
-Domains tell Praxis what kinds of artifacts are valid and what "done" looks like.
-
-| Domain  | Intent                       | Typical formalize artifact       |
-| ------- | ---------------------------- | -------------------------------- |
-| Code    | Functional systems and tools | SOD (Solution Overview Document) |
-| Create  | Aesthetic output             | Creative brief / prompt set      |
-| Write   | Structured thought           | Writing brief                    |
-| Observe | Raw capture                  | (none required)                  |
-| Learn   | Skill formation              | Learning plan                    |
-
-**Code domain SODs** include acceptance criteria in Given-When-Then (BDD) format for testable requirements.
-
-Each domain supports **subtypes** for more specific guidance:
-
-| Domain  | Subtypes                                               |
-| ------- | ------------------------------------------------------ |
-| Code    | cli, library, api, webapp, infrastructure, script      |
-| Create  | visual, audio, video, interactive, generative, design  |
-| Write   | technical, business, narrative, academic, journalistic |
-| Observe | notes, bookmarks, clips, logs, captures                |
-| Learn   | skill, concept, practice, course, exploration          |
-
-### Privacy
-
-Privacy is declared in `praxis.yaml` and should be treated as a real constraint (not a note).
-
-## Quick Start (CLI)
-
-### 1. Create a workspace
+### 1. Install
 
 ```bash
-# Create and enter workspace directory
-mkdir ~/praxis-workspace
-cd ~/praxis-workspace
-
 # Clone the framework
 git clone https://github.com/jayers99/praxis-ai.git
+cd praxis-ai
 
 # Install dependencies
-cd praxis-ai
 poetry install
-cd ..
 ```
 
-### 2. Configure your shell
+### 2. Configure shell
 
-Add to your `~/.bashrc`, `~/.zshrc`, or shell config:
+Add to `~/.zshrc` or `~/.bashrc`:
 
 ```bash
-# Set workspace root
 export PRAXIS_HOME="$HOME/praxis-workspace"
-
-# Ensure ~/bin is in PATH
 export PATH="$HOME/bin:$PATH"
 ```
 
-Create a wrapper script (enables tab completion):
+Create CLI wrapper:
 
 ```bash
 mkdir -p ~/bin
@@ -230,138 +323,146 @@ EOF
 chmod +x ~/bin/praxis
 ```
 
-Then reload your shell:
-
-```bash
-source ~/.zshrc  # or ~/.bashrc
-```
-
-### 3. Enable tab completion (optional)
-
-```bash
-praxis --install-completion
-```
-
-Restart your shell, then use `<tab><tab>` to see available commands and options.
-
-### 4. Verify installation
-
-```bash
-praxis --help
-```
-
-### 5. Initialize your workspace
+### 3. Initialize workspace
 
 ```bash
 praxis workspace init
 # Creates: extensions/, examples/, projects/, workspace-config.yaml
 ```
 
-### 6. Install extensions and examples (optional)
-
-```bash
-# List available extensions and examples
-praxis extensions list
-praxis examples list
-
-# Install an extension
-praxis extensions add template-python-cli
-
-# Install a worked example
-praxis examples add uat-praxis-code
-```
-
-### 7. Create a new project
+### 4. Create a project
 
 ```bash
 praxis new my-project --domain code --privacy personal
-# Creates: $PRAXIS_HOME/projects/code/my-project/{praxis.yaml,CLAUDE.md,docs/capture.md}
+# Creates: $PRAXIS_HOME/projects/code/my-project/
 ```
 
-### Common commands
-
-Validate a project's governance configuration:
+### 5. Work through the lifecycle
 
 ```bash
-praxis validate                   # Validate current directory
-praxis validate --strict          # Treat warnings as errors (for CI)
-praxis validate --check-all       # Run tests, lint, types, coverage
+cd $PRAXIS_HOME/projects/code/my-project
+
+# Check status
+praxis status
+
+# Move through stages
+praxis stage sense
+praxis stage explore
+praxis stage shape
+praxis stage formalize  # Creates docs/sod.md template
+
+# Validate before execution
+praxis validate --strict
+praxis stage commit
+praxis stage execute
 ```
 
-Transition lifecycle stages:
+---
 
-```bash
-praxis stage formalize            # Move to formalize stage
-praxis stage execute              # Move to execute (requires docs/sod.md)
+## Project Configuration
+
+Projects are governed by `praxis.yaml`:
+
+```yaml
+domain: code                    # code|create|write|learn|observe
+stage: capture                  # Current lifecycle stage
+privacy_level: personal         # public|public-trusted|personal|confidential|restricted
+environment: Home               # Home|Work
+subtype: cli                    # Optional: enables subtype opinions
+coverage_threshold: 80          # Optional: minimum test coverage %
 ```
 
-Check project status:
-
-```bash
-praxis status                     # Current state, next steps, history
-```
-
-Audit against domain best practices:
-
-```bash
-praxis audit                      # Check tooling, structure, testing
-praxis audit --strict             # Fail on warnings
-```
-
-Work with domain opinions:
-
-```bash
-praxis opinions                   # Show applicable opinions for project
-praxis opinions --prompt          # Generate AI context with opinions
-praxis opinions --json            # Machine-readable JSON output
-praxis opinions --list            # List all available opinion files
-praxis opinions --domain code --stage capture  # Query without praxis.yaml
-```
-
-## Quick Start (Using an Agent)
-
-From a project directory, start an agentic session (Copilot, Claude Code, etc.) and prompt:
-
-```text
-Start a new Praxis project for building a Python CLI tool.
-```
-
-Expected flow:
-
-- The agent initializes `praxis.yaml` (domain, stage, privacy, environment)
-- You capture raw inputs
-- The agent guides you through stages
-- Formalize produces the durable artifact(s) required before Execute
+---
 
 ## Repo Layout
 
-```text
-src/praxis/           CLI package (Typer + Pydantic)
+```
+src/praxis/           CLI package (Typer + Pydantic, hexagonal architecture)
+  domain/             Pure business logic (models, enums, validation rules)
+  application/        Orchestration services
+  infrastructure/     External concerns (files, git, env vars)
+
 core/                 Normative specifications (binding)
   spec/               System specs (sod.md, lifecycle.md, domains.md, privacy.md)
   governance/         Decision surfaces (layer-model.md, opinions-contract.md)
-  ai/                 AI behavior controls (ai-guards.md)
-  roles/              Praxis Roles subsystem
-opinions/             Domain-specific quality guidance (advisory)
-  _templates/         Templates for creating opinion files
-  code/               Code domain opinions (incl. testing.md)
-  create/             Create domain opinions
-  write/              Write domain opinions
-  learn/              Learn domain opinions
-  observe/            Observe domain opinions
+  ai/                 AI behavior controls (ai-guards.md, model-selection-matrix.md)
+  roles/              Praxis Roles subsystem (12 roles with lifecycle matrices)
+
+opinions/             Domain-specific quality guidance (advisory, not binding)
+  _shared/            Cross-domain principles
+  code/               Code domain (fully specified with subtypes)
+  create/, write/, learn/, observe/
+
 research-library/     Cataloged research with structured metadata
+  CATALOG.md          Master index (33+ artifacts)
+  ai-guards/          AI instruction and memory research
+  foundations/        Classical roots, epistemology
+  patterns/           Git+AI, TDD/BDD, code verification
+  roles/              Role definitions and DORA analysis
+  subagents/          Multi-agent design patterns
+
 docs/guides/          User-facing tutorials
 adr/                  Architecture Decision Records
 tests/                BDD tests (pytest-bdd + Gherkin)
+
 extensions.yaml       Registry of available extensions
 examples.yaml         Registry of available examples
 ```
 
-**Workspace Structure:** User projects live at `$PRAXIS_HOME/projects/`, not inside this repo. See [User Guide](docs/user-guide.md) for workspace setup.
+**Workspace structure:** User projects live at `$PRAXIS_HOME/projects/`, not inside this repo.
+
+---
+
+## Tech Stack
+
+- **Language:** Python 3.12+
+- **CLI:** Typer
+- **Validation:** Pydantic v2
+- **Testing:** pytest + pytest-bdd (BDD with Gherkin)
+- **Package Manager:** Poetry
+- **Linting:** ruff
+- **Type Checking:** mypy
+
+---
+
+## Extensions and Examples
+
+```bash
+# List available
+praxis extensions list
+praxis examples list
+
+# Install
+praxis extensions add template-python-cli   # Python CLI scaffolding
+praxis extensions add render-run            # AI image generation
+praxis examples add uat-praxis-code         # Hello-world CLI example
+praxis examples add opinions-framework      # Opinions research (Write domain)
+```
+
+---
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the issue workflow, labels, and development guidelines.
+
+Run before committing:
+
+```bash
+poetry run pytest && poetry run ruff check . && poetry run mypy .
+```
+
+---
 
 ## Status
 
-Core CLI is functional with project commands (`init`, `validate`, `stage`, `status`, `audit`, `opinions`) and workspace management (`workspace`, `extensions`, `examples`). Code domain is fully supported with opinions framework for deterministic guidance resolution.
+Core CLI is functional with:
+- Project commands: `init`, `new`, `validate`, `stage`, `status`, `audit`
+- Workspace management: `workspace`, `extensions`, `examples`
+- Opinions framework: `opinions` with inheritance and AI context generation
+- Stage templates: `templates render` for lifecycle documentation
+- Knowledge pipeline: `pipeline` for risk-tiered distillation
+
+Code domain is fully specified. Other domains have foundational opinions in place.
 
 ## License
 
