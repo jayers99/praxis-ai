@@ -108,17 +108,24 @@ class TestRequiresArtifact:
         assert Stage.SUSTAIN in REQUIRES_ARTIFACT
         assert Stage.CLOSE in REQUIRES_ARTIFACT
 
-    def test_pre_commit_stages_do_not_require_artifact(self) -> None:
-        """Capture through formalize do not require artifacts."""
+    def test_pre_formalize_stages_do_not_require_artifact(self) -> None:
+        """Capture through shape do not require artifacts."""
         assert Stage.CAPTURE not in REQUIRES_ARTIFACT
         assert Stage.SENSE not in REQUIRES_ARTIFACT
         assert Stage.EXPLORE not in REQUIRES_ARTIFACT
         assert Stage.SHAPE not in REQUIRES_ARTIFACT
-        assert Stage.FORMALIZE not in REQUIRES_ARTIFACT
+
+    def test_formalize_and_post_stages_require_artifact(self) -> None:
+        """Formalize and later stages require artifacts."""
+        assert Stage.FORMALIZE in REQUIRES_ARTIFACT
+        assert Stage.COMMIT in REQUIRES_ARTIFACT
+        assert Stage.EXECUTE in REQUIRES_ARTIFACT
+        assert Stage.SUSTAIN in REQUIRES_ARTIFACT
+        assert Stage.CLOSE in REQUIRES_ARTIFACT
 
     def test_requires_artifact_count(self) -> None:
-        """Exactly 4 stages require artifacts."""
-        assert len(REQUIRES_ARTIFACT) == 4
+        """Exactly 5 stages require artifacts (formalize+)."""
+        assert len(REQUIRES_ARTIFACT) == 5
 
 
 class TestAllowedRegressions:
