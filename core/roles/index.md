@@ -24,7 +24,7 @@ All other READMEs defer to this document.
 ### Supporting Roles (invoked as needed)
 | Role | Purpose | Definition |
 |------|---------|------------|
-| Stakeholder | User needs and acceptance language | `definitions/06-stakeholder-proxy.md` |
+| Stakeholder | User needs and acceptance language | `definitions/06-stakeholder.md` |
 | Architect | Coherence and boundaries | `definitions/07-architect.md` |
 | Security | Threats, controls, mitigations | `definitions/08-security.md` |
 | QA | Risk-based validation strategy | `definitions/09-qa.md` |
@@ -74,7 +74,7 @@ praxis-ai/
 │           ├── 03-synthesis.md           # v1.1
 │           ├── 04-scrum-master.md        # v1.1
 │           ├── 05-developer.md           # v1.1
-│           ├── 06-stakeholder-proxy.md   # v1.1
+│           ├── 06-stakeholder.md         # v1.1
 │           ├── 07-architect.md           # v1.1
 │           ├── 08-security.md            # v1.1
 │           ├── 09-qa.md                  # v1.1

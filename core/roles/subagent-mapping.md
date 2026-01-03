@@ -26,7 +26,7 @@ This document is **normative** for subagent naming and invocation. Subagent impl
 
 | Role | Subagent ID | Invocation | Output Location |
 |------|-------------|------------|-----------------|
-| Stakeholder | `stakeholder-proxy` | `[SUBAGENT: stakeholder-proxy]` | Inline / User stories |
+| Stakeholder | `stakeholder` | `[SUBAGENT: stakeholder]` | Inline / User stories |
 | Architect | `architect` | `[SUBAGENT: architect]` | ADRs / Design docs |
 | Security | `security` | `[SUBAGENT: security]` | Threat models / Review comments |
 | QA | `qa` | `[SUBAGENT: qa]` | Test plans / Review comments |
