@@ -6,7 +6,11 @@ from pathlib import Path
 
 from praxis.domain.domains import Domain
 from praxis.domain.stages import Stage
-from praxis.domain.templates.models import TemplateProvenance, TemplateRoot, TemplateSelection
+from praxis.domain.templates.models import (
+    TemplateProvenance,
+    TemplateRoot,
+    TemplateSelection,
+)
 from praxis.infrastructure.stage_templates.template_paths import (
     artifact_template_candidates,
     ensure_within_root,

@@ -7,9 +7,11 @@ import pytest
 from praxis.domain.domains import Domain
 from praxis.domain.stages import Stage
 from praxis.domain.templates.models import TemplateRoot
+from praxis.infrastructure.stage_templates.template_renderer import (
+    render_template_text,
+    render_template_to_file,
+)
 from praxis.infrastructure.stage_templates.template_resolver import TemplateResolver
-from praxis.infrastructure.stage_templates.template_renderer import render_template_text
-from praxis.infrastructure.stage_templates.template_renderer import render_template_to_file
 
 
 def test_resolver_is_deterministic(tmp_path: Path) -> None:
