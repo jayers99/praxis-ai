@@ -2,7 +2,7 @@
 
 **Research Report**
 **Date:** 2026-01-02
-**Status:** Draft
+**Status:** Draft → Revised (CCR feedback applied)
 
 ---
 
@@ -69,6 +69,13 @@ It fails or underperforms when:
 
 > "Multi-agent experiments were found to be much more cost-effective in long-context scenarios... Multi-agent systems begin to outperform single-agent baselines beyond the 30K token range."
 > — [Snorkel AI](https://snorkel.ai/blog/multi-agents-in-the-context-of-enterprise-tool-use/)
+
+**Important caveat:** The ~30K threshold is derived from specific benchmarks on specific models (circa 2025). This threshold is likely:
+- **Model-dependent**: Different models have different context handling characteristics
+- **Time-bound**: As context windows expand (Claude 3: 200K, GPT-4 Turbo: 128K), this crossover point may shift
+- **Task-dependent**: Complex reasoning tasks may hit degradation earlier than retrieval tasks
+
+**Recommendation:** Measure your own crossover point for your specific model, task type, and quality requirements rather than treating 30K as a universal constant.
 
 ### When It Works
 
@@ -231,6 +238,25 @@ From [arXiv:2503.13657](https://arxiv.org/abs/2503.13657) analysis of 1600+ trac
 | **Siloed context** | Agents lack full picture | Shared memory stores |
 | **Action confusion** | Agent thinks it did what another did | Action attribution |
 
+### 5.6 Security Considerations
+
+Multi-agent systems introduce attack surfaces not present in single-agent systems:
+
+| Risk | Description | Mitigation |
+|------|-------------|------------|
+| **Prompt injection propagation** | A compromised subagent can poison the orchestrator's context | Input validation, sandboxing, output filtering |
+| **Trust boundary violations** | Agents may implicitly trust outputs from other agents | Explicit trust policies, verification layers |
+| **Audit trail complexity** | Distributed responsibility obscures accountability | Trace IDs, action attribution, centralized logging |
+| **Credential leakage** | Agents with tool access may expose secrets in handoffs | Credential isolation, minimal privilege per agent |
+| **State poisoning** | Malicious inputs corrupt shared memory stores | Write validation, memory integrity checks |
+
+**Recommendations:**
+1. **Define trust boundaries explicitly**: Which agents can invoke which tools? Which can write to shared state?
+2. **Implement output validation**: Don't blindly trust subagent outputs; validate against schemas
+3. **Maintain audit trails**: Every handoff should include trace_id, timestamp, and agent attribution
+4. **Apply least privilege**: Each agent should have only the tools/access required for its role
+5. **Monitor for anomalies**: Detect unusual patterns (excessive handoffs, tool abuse, context inflation)
+
 ---
 
 ## 6. The Alternative: Context Engineering
@@ -250,6 +276,86 @@ This suggests that **minimal, focused context** may outperform both bloated sing
 ---
 
 ## 7. Synthesis: When Role Specialization Works
+
+### Decision Tree: Should I Use Multi-Agent?
+
+```
+START: Is the task complex enough to justify coordination overhead?
+│
+├─ NO → Use single agent
+│
+└─ YES → Does the task exceed ~30K tokens of context?
+         │
+         ├─ NO → Can you reduce context via summarization/RAG?
+         │       │
+         │       ├─ YES → Use single agent with context engineering
+         │       └─ NO → Consider multi-agent (but measure ROI)
+         │
+         └─ YES → Can the task be decomposed into independent subtasks?
+                  │
+                  ├─ NO → Multi-agent may not help (tight coupling)
+                  │
+                  └─ YES → Does task value justify 15x token cost?
+                           │
+                           ├─ NO → Accept single-agent quality degradation
+                           │       or reduce scope
+                           │
+                           └─ YES → Is the ticket "well-shaped"?
+                                    │
+                                    ├─ NO → Shape the ticket first
+                                    │
+                                    └─ YES → Use multi-agent with
+                                             structured handoffs
+```
+
+**Default position:** Start with single-agent. Escalate to multi-agent only when you have measured evidence that single-agent is insufficient.
+
+### What Is a "Well-Shaped Ticket"?
+
+A ticket is "well-shaped" for multi-agent execution when it meets these criteria:
+
+| Criterion | Description | How to Verify |
+|-----------|-------------|---------------|
+| **Past Formalize stage** | Has explicit formalization artifacts | `docs/sod.md` or equivalent exists |
+| **Clear acceptance criteria** | Testable conditions for "done" | Given-When-Then scenarios defined |
+| **Bounded scope** | Single feature, not epic | Can be completed in one sprint |
+| **Decomposable** | Natural subtask boundaries exist | Can identify 2-4 distinct work units |
+| **Explicit interfaces** | Inputs/outputs for each subtask | API contracts or data schemas defined |
+| **Low cross-cutting concerns** | Subtasks don't require full codebase context | Each subtask touches ≤3 files |
+
+**Mapping to Praxis Lifecycle:**
+- **Pre-Formalize (Capture → Shape)**: NOT suitable for multi-agent—scope is still fluid
+- **Formalize → Commit**: Suitable IF acceptance criteria are complete
+- **Execute**: Ideal—scope is locked, artifacts exist
+- **Sustain**: May work for well-isolated maintenance tasks
+
+**Red flags (ticket is NOT well-shaped):**
+- "Refactor the authentication system" (unbounded)
+- "Improve performance" (no acceptance criteria)
+- "Add feature X and also fix Y" (multiple concerns)
+- "Make it work like the old system" (implicit requirements)
+
+### Model Selection Guidance
+
+Different agent roles have different requirements. Match models to roles:
+
+| Role | Recommended Model Tier | Rationale |
+|------|------------------------|-----------|
+| **Orchestrator** | Fast, cheap (e.g., Haiku, GPT-4o-mini) | Routing decisions, not deep reasoning |
+| **Architect** | Capable (e.g., Sonnet, GPT-4o) | System design requires nuance |
+| **Developer** | Capable to Frontier (e.g., Sonnet, Opus) | Code generation quality matters |
+| **QA/Reviewer** | Capable (e.g., Sonnet, GPT-4o) | Pattern matching, not generation |
+| **Research** | Frontier (e.g., Opus, o1) | Deep reasoning, synthesis |
+
+**Token economics example:**
+
+| Configuration | Model Cost | Est. Tokens | Total |
+|---------------|------------|-------------|-------|
+| Single Opus agent | High | 50K | $$$ |
+| Haiku orchestrator + 3 Sonnet specialists | Mixed | 75K (15x overhead) | $$ |
+| All Opus multi-agent | High | 75K | $$$$ |
+
+**Recommendation:** Use the cheapest model that meets quality requirements for each role. Don't use frontier models for routing.
 
 ### Optimal Conditions
 
@@ -355,7 +461,14 @@ See also: [agile-shared-responsibility-ai-context-memory.md](agile-shared-respon
 
 **Reviewer:** Red Team
 **Date:** 2026-01-02
-**Verdict:** SUGGEST
+**Verdict:** SUGGEST → REVISED
+
+**Revisions Applied (2026-01-03):**
+- ✅ Added "What Is a Well-Shaped Ticket?" with operational criteria (Section 7)
+- ✅ Added Model Selection Guidance table (Section 7)
+- ✅ Added Decision Tree: "Should I Use Multi-Agent?" (Section 7)
+- ✅ Added Security Considerations section (Section 5.6)
+- ✅ Contextualized 30K threshold with model/time caveats (Section 1)
 
 ### Strengths
 

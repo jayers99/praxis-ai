@@ -2,7 +2,7 @@
 
 **Research Report**
 **Date:** 2026-01-02
-**Status:** Draft
+**Status:** Draft → Revised (CCR feedback applied)
 
 ---
 
@@ -24,13 +24,24 @@ Extreme Programming defines [collective code ownership](https://agilealliance.or
 
 The principle rests on a cognitive foundation: **working memory and long-term memory work together**. Per [cognitive load theory](https://thevaluable.dev/cognitive-load-theory-software-developer/), developers build mental schemas over time—patterns, conventions, and domain knowledge that reduce cognitive load for future tasks.
 
-### 1.2 AI Agents Are Stateless by Default
+### 1.2 AI Agents Are Stateless by Default (But This Is Changing)
 
-Contemporary AI agents operate in what researchers call a **stateless manner**—each query processes in isolation without inherent reference to previous interactions. This directly conflicts with the agile assumption of continuous context.
+Contemporary AI agents typically operate in what researchers call a **stateless manner**—each query processes in isolation without inherent reference to previous interactions. This directly conflicts with the agile assumption of continuous context.
 
 Per [Tribe AI research](https://www.tribe.ai/applied-ai/beyond-the-bubble-how-context-aware-memory-systems-are-changing-the-game-in-2025):
 
 > "The vast majority of contemporary AI tools operate in a stateless manner... No information from past exchanges is automatically preserved or incorporated into new responses without explicit instruction."
+
+**Important nuance:** Statelessness is increasingly an **architectural choice**, not an intrinsic limitation:
+
+| Approach | Persistence | Example |
+|----------|-------------|---------|
+| **Stateless API** | None (default) | Raw API calls |
+| **Session memory** | Within conversation | ChatGPT, Claude.ai |
+| **Persistent memory** | Cross-session | Claude Projects, Custom GPTs |
+| **Tool-augmented** | External stores | RAG, vector DBs, knowledge graphs |
+
+**Implication:** Teams should evaluate their tooling before investing heavily in workarounds. Some "memory problems" are already solved by deployment architecture choices.
 
 ### 1.3 The Working Memory Parallel
 
@@ -129,7 +140,9 @@ AI pair programming inherits this model but breaks it: the AI "partner" forgets 
 
 ### 3.2 RAG Systems
 
-[RAG (Retrieval-Augmented Generation)](https://www.ibm.com/think/topics/agentic-rag) emerged to ground LLM responses in factual retrieval. OpenAI reports RAG implementations show **up to 30% reduction in factual errors**.
+[RAG (Retrieval-Augmented Generation)](https://www.ibm.com/think/topics/agentic-rag) emerged to ground LLM responses in factual retrieval. Industry reports suggest RAG implementations can significantly reduce factual errors, though exact improvements vary widely by task domain, retrieval quality, and baseline model capability.
+
+**Note:** Claims of specific error reduction percentages should be evaluated carefully—they are typically derived from narrow benchmarks and may not generalize to your use case.
 
 Evolution:
 1. **Naive RAG** — Fixed retrieval before generation
@@ -285,6 +298,48 @@ When AI agents "share" responsibility without memory, this risk amplifies.
 
 ## 7. Synthesis: Recommendations
 
+### When to Apply: Decision Tree
+
+```
+START: Are you using AI agents in a collaborative development workflow?
+│
+├─ NO → These recommendations don't apply
+│
+└─ YES → What is your project scale?
+         │
+         ├─ SOLO DEVELOPER
+         │   └─ Minimal approach:
+         │      • CLAUDE.md or equivalent project context file
+         │      • Tests as persistent memory
+         │      • Session summaries optional
+         │      → Skip to Section 7.1, 7.4
+         │
+         ├─ SMALL TEAM (2-5)
+         │   └─ Moderate approach:
+         │      • Memory banks (structured docs)
+         │      • Handoff protocols (start/end rituals)
+         │      • Tests + code review as validation
+         │      → Apply Sections 7.1-7.5
+         │
+         └─ ENTERPRISE / LARGE TEAM
+             └─ Full approach:
+                • Layered memory architecture
+                • Memory governance policies
+                • Four-eyes principle for high-stakes
+                • Metrics and monitoring
+                → Apply all sections + Section 7.7
+```
+
+### Recommendations by Project Scale
+
+| Scale | Memory Infra | Governance | Handoff Protocol | Monitoring |
+|-------|--------------|------------|------------------|------------|
+| **Solo** | CLAUDE.md, tests | Self (implicit) | Optional session notes | Manual review |
+| **Small Team** | Memory banks, shared docs | Team agreement | Start/end rituals | PR review |
+| **Enterprise** | Vector DB + knowledge graph | Explicit policies | Structured schemas | Automated metrics |
+
+**Key insight:** Don't over-engineer for your context. A solo developer on a CLI tool doesn't need vector databases and knowledge graphs—a well-maintained CLAUDE.md file may suffice.
+
 ### 7.1 Reframe AI as "Amnesiac Pair Partner"
 
 Accept that AI agents are **amnesiac by default**. Design workflows that:
@@ -323,6 +378,49 @@ Every AI session should:
 [CloudBabble](https://www.cloudbabble.co.uk/2025-12-06-preventing-agent-hallucinations-defence-in-depth/) recommends:
 
 > "For high-stakes workflows, an adversarial 'LLM as a Judge' pattern can be implemented, creating a 'Four-Eyes Principle' for AI: one agent drafts the response, and a separate, isolated agent must approve it."
+
+### 7.7 Memory Governance
+
+As AI memory systems scale, governance becomes critical. Without explicit policies, memory stores accumulate stale, contradictory, or low-value information.
+
+#### Who Writes to Memory?
+
+| Memory Type | Write Access | Validation |
+|-------------|--------------|------------|
+| **Session context** | AI agent (automatic) | None required |
+| **Project memory** | Human or AI (with review) | PR-style review for changes |
+| **Domain memory** | Human (curated) | Subject matter expert approval |
+| **Organizational memory** | Designated role | Governance committee |
+
+#### Memory Lifecycle
+
+| Phase | Action | Owner |
+|-------|--------|-------|
+| **Creation** | New knowledge added | Writer (per table above) |
+| **Validation** | Accuracy verified | Reviewer or SME |
+| **Active use** | Retrieved and applied | AI agents |
+| **Deprecation** | Marked as outdated | Curator role |
+| **Archival** | Moved to cold storage | System automation |
+| **Deletion** | Permanently removed | Governance approval |
+
+#### Preventing Memory Corruption
+
+| Risk | Mitigation |
+|------|------------|
+| **Hallucinated facts** | Human review before long-term storage |
+| **Stale information** | TTL (time-to-live) on memory entries |
+| **Contradictions** | Conflict detection on write |
+| **Sensitive data** | Access controls, PII filtering |
+| **Over-accumulation** | Periodic pruning, relevance scoring |
+
+#### Metrics for Memory Health
+
+| Metric | What It Measures | Target |
+|--------|------------------|--------|
+| **Retrieval hit rate** | % of queries that find relevant memory | >80% |
+| **Stale entry rate** | % of entries past TTL | <10% |
+| **Contradiction rate** | Conflicting facts per 1000 entries | <5 |
+| **Memory utilization** | AI agent actually uses retrieved context | >70% |
 
 ---
 
@@ -378,7 +476,14 @@ Every AI session should:
 
 **Reviewer:** Red Team
 **Date:** 2026-01-02
-**Verdict:** SUGGEST
+**Verdict:** SUGGEST → REVISED
+
+**Revisions Applied (2026-01-03):**
+- ✅ Added "When to Apply" decision tree (Section 7)
+- ✅ Added "Recommendations by Project Scale" table (Section 7)
+- ✅ Added "Memory Governance" section with lifecycle, access control, and metrics (Section 7.7)
+- ✅ Tempered statelessness framing—now acknowledges architectural choices (Section 1.2)
+- ✅ Hedged RAG error reduction claim—removed unsupported percentage (Section 3.2)
 
 ### Strengths
 
