@@ -4,13 +4,15 @@
 
 Praxis is a policy-driven AI workflow system that governs how ideas evolve into maintained outcomes. It provides deterministic behavior resolution based on Domain + Stage + Privacy + Environment.
 
-**Current Phase:** Core CLI complete (`init`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`), stage templates (`templates`), and knowledge distillation pipeline (`pipeline`).
+**Current Phase:** Core CLI complete (`init`, `new`, `validate`, `stage`, `status`, `audit`) plus workspace management (`workspace`, `extensions`, `examples`), stage templates (`templates`), knowledge distillation pipeline (`pipeline`), and opinions resolution (`opinions`).
 
 **Workspace Model:** Praxis uses a workspace-based structure. User projects live in `$PRAXIS_HOME/projects/`, separate from this framework repo.
 
 ## Issue Workflow
 
 **See [CONTRIBUTING.md](CONTRIBUTING.md)** for the full issue framework.
+
+**Ticket Refinement Runbook:** `$PRAXIS_HOME/bench/backlog/_templates/ticket-refinement-runbook.md` — Structured workflow to refine backlog ideas into GitHub issues using CCR→ASR multi-role review.
 
 **Quick reference for batching work:**
 ```bash
@@ -42,7 +44,12 @@ gh issue list --label "maturity: formalized" --label "type: feature"
 ## CLI Commands
 
 ```bash
-# Initialize a new project (run from within a project directory)
+# Create a new project (idea → project wizard)
+praxis new my-project              # Interactive wizard
+praxis new my-project --domain code --privacy personal  # With options
+praxis new my-project --json       # Machine-readable output, no prompts
+
+# Initialize an existing directory as a Praxis project
 praxis init --domain code --privacy personal
 
 # Validate governance configuration
@@ -198,6 +205,7 @@ src/praxis/              # Main CLI package
     privacy.py           # PrivacyLevel enum
     workspace.py         # Workspace, Extension, Example entities
     audit_checks.py      # Audit check definitions
+    opinions.py          # Opinion resolution models
     templates/           # Template domain models
     pipeline/            # Pipeline models, risk tiers, specialists
   application/           # Application services
@@ -207,6 +215,7 @@ src/praxis/              # Main CLI package
     audit_service.py     # Audit check orchestration
     workspace_service.py # Workspace init, info orchestration
     extension_service.py # Extension add/remove/list/update logic
+    opinions_service.py  # Opinion resolution and formatting
     templates/           # Template rendering service
     pipeline/            # Pipeline orchestration (CCR)
   infrastructure/        # External concerns
@@ -223,6 +232,7 @@ src/praxis/              # Main CLI package
     pyproject_loader.py  # pyproject.toml parsing
     claude_md_updater.py # CLAUDE.md update helper
     tool_runner.py       # Tool execution (tests, lint, etc.)
+    opinions_loader.py   # YAML frontmatter parsing, opinion file loading
     stage_templates/     # Stage template resolution and rendering
     pipeline/            # Pipeline state persistence
 
