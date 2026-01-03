@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from pytest_bdd import given, parsers, scenarios, when
+from pytest_bdd import given, parsers, scenarios, then, when
 from typer.testing import CliRunner
 
 from praxis.cli import app
@@ -85,17 +85,17 @@ environment: Home
     )
 
 
-@given(parsers.parse('a project with domain "{domain}"'))
-def project_with_domain(
-    tmp_path: Path, context: dict[str, Any], domain: str
+@given(parsers.parse('a project with domain "{domain}" at stage "{stage}"'))
+def project_with_domain_and_stage(
+    tmp_path: Path, context: dict[str, Any], domain: str, stage: str
 ) -> None:
-    """Create a project with specified domain."""
+    """Create a project with specified domain and stage."""
     context["project_root"] = tmp_path
 
     praxis_yaml = tmp_path / "praxis.yaml"
     praxis_yaml.write_text(
         f"""domain: {domain}
-stage: capture
+stage: {stage}
 privacy_level: personal
 environment: Home
 """
@@ -111,6 +111,76 @@ def invalid_praxis_yaml(tmp_path: Path, context: dict[str, Any]) -> None:
     praxis_yaml.write_text(
         """domain: invalid_domain
 stage: capture
+"""
+    )
+
+
+# New step definitions for multi-domain audit scenarios
+
+
+@given(parsers.parse('a create project at stage "{stage}"'))
+def create_project_at_stage(
+    tmp_path: Path, context: dict[str, Any], stage: str
+) -> None:
+    """Create a Create domain project at specified stage."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        f"""domain: create
+stage: {stage}
+privacy_level: personal
+environment: Home
+"""
+    )
+
+
+@given(parsers.parse('a learn project with subtype "{subtype}"'))
+def learn_project_with_subtype(
+    tmp_path: Path, context: dict[str, Any], subtype: str
+) -> None:
+    """Create a Learn domain project with specified subtype."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        f"""domain: learn
+stage: capture
+subtype: {subtype}
+privacy_level: personal
+environment: Home
+"""
+    )
+
+
+@given(parsers.parse('a write project at stage "{stage}"'))
+def write_project_at_stage(
+    tmp_path: Path, context: dict[str, Any], stage: str
+) -> None:
+    """Create a Write domain project at specified stage."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        f"""domain: write
+stage: {stage}
+privacy_level: personal
+environment: Home
+"""
+    )
+
+
+@given("an observe project without subtype")
+def observe_project_no_subtype(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create an Observe domain project without subtype."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        """domain: observe
+stage: capture
+privacy_level: personal
+environment: Home
 """
     )
 
@@ -137,3 +207,12 @@ def run_audit_json(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     project_root = context["project_root"]
     result = cli_runner.invoke(app, ["audit", str(project_root), "--json"])
     context["result"] = result
+
+
+@then(parsers.parse('the output should not contain "{text}"'))
+def check_output_not_contains(context: dict[str, Any], text: str) -> None:
+    """Verify the output does not contain expected text."""
+    result = context["result"]
+    assert text not in result.output, (
+        f"Did not expect '{text}' in output. Got: {result.output}"
+    )
