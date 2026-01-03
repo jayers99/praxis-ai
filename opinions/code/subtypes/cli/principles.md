@@ -44,7 +44,7 @@ author: human
 
 - **Statement:** Treat backwards compatibility as a first-class concern
 - **Rationale:** CLI tools embedded in automation must not break
-- **Source:** Semantic versioning principles
+- **Source:** Semantic Versioning principles
 - **Severity:** must-have
 
 ### 6. Actionable Errors

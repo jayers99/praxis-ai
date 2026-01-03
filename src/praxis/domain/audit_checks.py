@@ -142,7 +142,12 @@ CODE_CHECKS: list[CheckDefinition] = [
 
 
 def _cli_has_entry_point(project_root: Path) -> bool:
-    """Check for CLI entry point (console script or __main__.py)."""
+    """Check for CLI entry point (console script or __main__.py).
+
+    A CLI entry point is considered present if:
+    - pyproject.toml contains [tool.poetry.scripts] entries, OR
+    - A __main__.py file exists in the main package under src/
+    """
     # Check for console script
     if get_poetry_scripts(project_root):
         return True
@@ -183,7 +188,8 @@ def _cli_has_help_flag(project_root: Path) -> bool:
             content = cli_file.read_text().lower()
             if any(pattern in content for pattern in help_patterns):
                 return True
-        except Exception:
+        except (OSError, UnicodeDecodeError):
+            # Skip files that can't be read (permissions, encoding issues)
             continue
 
     return False
@@ -206,7 +212,7 @@ def _cli_has_version_flag(project_root: Path) -> bool:
     if not cli_files:
         return False
 
-    # Check for version-related patterns
+    # Check for version-related patterns (pre-lowercase for efficiency)
     version_patterns = [
         "--version",
         "version_callback",
@@ -217,9 +223,10 @@ def _cli_has_version_flag(project_root: Path) -> bool:
     for cli_file in cli_files:
         try:
             content = cli_file.read_text().lower()
-            if any(pattern.lower() in content for pattern in version_patterns):
+            if any(pattern in content for pattern in version_patterns):
                 return True
-        except Exception:
+        except (OSError, UnicodeDecodeError):
+            # Skip files that can't be read (permissions, encoding issues)
             continue
 
     return False
