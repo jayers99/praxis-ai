@@ -7,15 +7,23 @@ from pathlib import Path
 
 from praxis.domain.domains import Domain
 from praxis.domain.stages import Stage
-from praxis.domain.templates.models import RenderedFile, TemplateRoot, TemplatesRenderResult
-from praxis.infrastructure.stage_templates.template_renderer import render_template_to_file
+from praxis.domain.templates.models import (
+    RenderedFile,
+    TemplateRoot,
+    TemplatesRenderResult,
+)
+from praxis.infrastructure.stage_templates.template_renderer import (
+    render_template_to_file,
+)
 from praxis.infrastructure.stage_templates.template_resolver import (
     TemplateResolver,
     get_core_templates_root,
 )
 
 
-def _default_template_roots(project_root: Path, extra_roots: list[Path] | None = None) -> list[TemplateRoot]:
+def _default_template_roots(
+    project_root: Path, extra_roots: list[Path] | None = None
+) -> list[TemplateRoot]:
     roots: list[TemplateRoot] = []
 
     project_local = project_root / ".praxis" / "templates"
@@ -40,15 +48,15 @@ def render_stage_templates(
     force: bool = False,
     extra_template_roots: list[Path] | None = None,
 ) -> TemplatesRenderResult:
-    """Render stage docs and associated domain-specific formalization artifacts into a project.
+    """Render stage docs and domain-specific formalization artifacts.
 
-        MVP inventory:
-        - Stage doc for every stage: docs/<stage>.md
-        - Domain-specific formalization artifacts as applicable (Formalize+):
-            - Code: docs/sod.md
-            - Create/Write: docs/brief.md
-                - Learn: docs/plan.md
-            """
+    MVP inventory:
+    - Stage doc for every stage: docs/<stage>.md
+    - Domain-specific formalization artifacts as applicable (Formalize+):
+        - Code: docs/sod.md
+        - Create/Write: docs/brief.md
+        - Learn: docs/plan.md
+    """
 
     roots = _default_template_roots(project_root, extra_roots=extra_template_roots)
     resolver = TemplateResolver(roots)
@@ -65,7 +73,9 @@ def render_stage_templates(
 
     for stage in stages_to_render:
         try:
-            selection = resolver.resolve_stage(domain=domain, stage=stage, subtype=subtype)
+            selection = resolver.resolve_stage(
+                domain=domain, stage=stage, subtype=subtype
+            )
             dest = project_root / "docs" / f"{stage.value}.md"
             ok, err, status = render_template_to_file(
                 template_path=selection.template_path,
@@ -143,6 +153,14 @@ def _render_minimal_domain_artifact_if_needed(
     elif domain == Domain.LEARN:
         artifact_name = "plan"
         filename = "plan.md"
+    elif domain == Domain.OBSERVE:
+        # Observe domain has no formalize artifact
+        msg = (
+            "Observe domain has no formalize artifact. "
+            "Observe is for raw capture and does not cross into execution."
+        )
+        result.info.append(msg)
+        return
     else:
         return
 

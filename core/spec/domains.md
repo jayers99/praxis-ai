@@ -4,6 +4,22 @@
 
 ---
 
+## Canonical Formalize Artifact Paths
+
+Each domain requires a specific formalize artifact at stage >= Commit. These artifacts implement the Formalize Spine from [lifecycle.md](lifecycle.md).
+
+| Domain | Artifact Name | Path | Description |
+|--------|---------------|------|-------------|
+| Code | Solution Overview Document (SOD) | `docs/sod.md` | Locks intent and boundaries while remaining implementation-light |
+| Create | Creative Brief | `docs/brief.md` | Bounds creative intent without constraining exploration prematurely |
+| Write | Writing Brief | `docs/brief.md` | Fixes thesis, audience, and scope before drafting |
+| Learn | Learning Plan | `docs/plan.md` | Turns curiosity into directed learning with verifiable evidence |
+| Observe | _(none)_ | — | Observe is for raw capture and does not cross into execution |
+
+**Generation:** Use `praxis templates render --stage formalize` to generate the appropriate artifact for your domain.
+
+---
+
 ## 1. Code
 
 **Intent:** Functional systems and tools  

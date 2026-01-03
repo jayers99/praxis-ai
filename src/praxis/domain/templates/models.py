@@ -7,7 +7,6 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-
 TemplateRootKind = Literal["project", "extension", "core", "custom"]
 
 
@@ -52,3 +51,4 @@ class TemplatesRenderResult(BaseModel):
     overwritten: list[Path] = Field(default_factory=list)
     rendered: list[RenderedFile] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
+    info: list[str] = Field(default_factory=list)

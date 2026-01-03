@@ -9,13 +9,6 @@ import typer
 
 from praxis import __version__
 from praxis.application.audit_service import audit_project
-from praxis.application.opinions_service import (
-    format_json_output,
-    format_list_output,
-    format_prompt_output,
-    get_opinions_tree,
-    resolve_opinions,
-)
 from praxis.application.extension_service import (
     add_example,
     add_extension,
@@ -25,6 +18,13 @@ from praxis.application.extension_service import (
     update_all_extensions,
 )
 from praxis.application.init_service import init_project
+from praxis.application.opinions_service import (
+    format_json_output,
+    format_list_output,
+    format_prompt_output,
+    get_opinions_tree,
+    resolve_opinions,
+)
 from praxis.application.stage_service import transition_stage
 from praxis.application.status_service import get_status
 from praxis.application.validate_service import validate
@@ -103,7 +103,10 @@ def templates_render_cmd(
         None,
         "--domain",
         "-d",
-        help="Project domain (code, create, write, observe, learn). Defaults to praxis.yaml.",
+        help=(
+            "Project domain (code, create, write, observe, learn). "
+            "Defaults to praxis.yaml."
+        ),
     ),
     subtype: str | None = typer.Option(
         None,
@@ -150,14 +153,20 @@ def templates_render_cmd(
             domain_value = load_result.config.domain.value
 
     if domain_value is None:
-        typer.echo("Error: --domain is required (or provide a valid praxis.yaml)", err=True)
+        typer.echo(
+            "Error: --domain is required (or provide a valid praxis.yaml)",
+            err=True,
+        )
         raise typer.Exit(1)
 
     try:
         domain_enum = Domain(domain_value)
     except ValueError:
         valid_domains = ", ".join(d.value for d in Domain)
-        typer.echo(f"Error: invalid domain '{domain_value}'. Valid: {valid_domains}", err=True)
+        typer.echo(
+            f"Error: invalid domain '{domain_value}'. Valid: {valid_domains}",
+            err=True,
+        )
         raise typer.Exit(1)
 
     stage_enums: list[Stage] | None = None
@@ -192,12 +201,24 @@ def templates_render_cmd(
     else:
         typer.echo("✗ Templates rendered with errors", err=True)
 
-    if result.created:
-        typer.echo(f"Created: {len(result.created)}")
-    if result.skipped:
-        typer.echo(f"Skipped: {len(result.skipped)}")
-    if result.overwritten:
-        typer.echo(f"Overwritten: {len(result.overwritten)}")
+    # Show detailed file-by-file status
+    for rendered in result.rendered:
+        if rendered.destination.is_relative_to(project_root):
+            rel_path = rendered.destination.relative_to(project_root)
+        else:
+            rel_path = rendered.destination
+
+        if rendered.status == "created":
+            typer.echo(f"  Created {rel_path}")
+        elif rendered.status == "skipped":
+            typer.echo(f"  Skipping {rel_path} — file already exists")
+        elif rendered.status == "overwritten":
+            typer.echo(f"  Overwritten {rel_path}")
+        elif rendered.status == "error" and rendered.error:
+            typer.echo(f"  Error: {rendered.error}", err=True)
+
+    for info_msg in result.info:
+        typer.echo(f"ℹ {info_msg}")
 
     for err in result.errors:
         typer.echo(f"Error: {err}", err=True)
