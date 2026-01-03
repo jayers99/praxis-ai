@@ -371,10 +371,12 @@ poetry run praxis validate --help
 **Research Library:**
 - [CATALOG.md](research-library/CATALOG.md) — Master index of all research artifacts
 - [AI Guards](research-library/ai-guards/_index.md) — AI instruction files, memory, guard design
+- [Domain](research-library/domain/_index.md) — Domain-specific research by area
 - [Foundations](research-library/foundations/_index.md) — Classical roots, library design, human-AI intent
 - [Patterns](research-library/patterns/_index.md) — TDD/BDD verification, AI code workflows, git integration
 - [Spec Research](research-library/spec/_index.md) — Lifecycle stages, domains, sustain governance
 - [Roles Research](research-library/roles/_index.md) — Praxis roles architecture and rationale
+- [Subagents](research-library/subagents/_index.md) — Subagent design, patterns, and implementation
 
 ## Research Workflow
 
