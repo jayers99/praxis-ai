@@ -10,6 +10,7 @@ from pydantic import BaseModel, Field
 from praxis.application.validate_service import validate
 from praxis.domain.domains import ARTIFACT_PATHS
 from praxis.domain.models import PraxisConfig, ValidationResult
+from praxis.domain.next_steps import NextStep
 from praxis.domain.stages import REQUIRES_ARTIFACT, Stage
 from praxis.infrastructure.yaml_loader import load_praxis_config
 
@@ -42,6 +43,9 @@ class ProjectStatus(BaseModel):
 
     # Validation
     validation: ValidationResult
+
+    # Next steps guidance
+    next_steps: list[NextStep] = Field(default_factory=list)
 
     # History
     stage_history: list[StageHistoryEntry] = Field(default_factory=list)
@@ -197,6 +201,8 @@ def get_status(path: Path) -> ProjectStatus:
     Returns:
         ProjectStatus with all status information.
     """
+    from praxis.application.next_steps_service import get_next_steps
+
     errors: list[str] = []
     project_root = path.resolve()
     project_name = project_root.name
@@ -205,6 +211,8 @@ def get_status(path: Path) -> ProjectStatus:
     load_result = load_praxis_config(project_root)
 
     if not load_result.valid or load_result.config is None:
+        # Generate next steps even for invalid config
+        next_steps = get_next_steps(None, load_result, project_root)
         return ProjectStatus(
             project_name=project_name,
             config=None,
@@ -215,6 +223,7 @@ def get_status(path: Path) -> ProjectStatus:
             artifact_path=None,
             artifact_exists=False,
             validation=load_result,
+            next_steps=next_steps,
             stage_history=[],
             errors=[i.message for i in load_result.issues],
         )
@@ -241,6 +250,9 @@ def get_status(path: Path) -> ProjectStatus:
     # Validation
     validation = validate(project_root)
 
+    # Next steps guidance
+    next_steps = get_next_steps(config, validation, project_root)
+
     # History
     history = get_stage_history(project_root)
 
@@ -254,6 +266,7 @@ def get_status(path: Path) -> ProjectStatus:
         artifact_path=artifact_path,
         artifact_exists=artifact_exists,
         validation=validation,
+        next_steps=next_steps,
         stage_history=history,
         errors=errors,
     )

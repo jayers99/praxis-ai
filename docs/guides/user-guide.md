@@ -227,35 +227,79 @@ praxis stage sense
 
 ### praxis status
 
-Show project status including stage, validation, and history:
+Show project status including stage, validation, next steps, and history:
 
 ```bash
-praxis status [PATH]
+praxis status [PATH] [OPTIONS]
 ```
 
 | Argument | Description                      |
 | -------- | -------------------------------- |
 | `PATH`   | Project directory (default: `.`) |
 
+| Option           | Description                          |
+| ---------------- | ------------------------------------ |
+| `--json`         | Output in JSON format for automation |
+| `--quiet`, `-q`  | Suppress non-error output            |
+
 **Example output:**
 
 ```
 Project: my-project
   Domain:  code
-  Stage:   execute (7/9)
+  Stage:   formalize (5/9)
   Privacy: personal
   Env:     Home
 
-Next Stage: sustain
-  - Complete initial implementation
+Next Stage: commit
+  - Create docs/sod.md
+  - Verify readiness to build
 
-Artifact: ✓ docs/sod.md
+Artifact: ✗ docs/sod.md
 
-Validation: ✓ Valid
+Validation: ✗ Invalid (1 error(s))
+  ✗ Stage 'formalize' requires formalization artifact at 'docs/sod.md', but file not found
+
+Next Steps:
+  ! Fix praxis.yaml (Stage 'formalize' requires formalization artifact)
+  + Create docs/sod.md (Solution Overview Document)
+  ? Review docs/sod.md (Review SOD completeness)
+
+Legend: + create  ~ edit  ▶ run  ? review  ! fix
 
 Stage History:
-  2025-12-27 execute    abc1234 feat: implement core feature
-  2025-12-27 commit     def5678 ready to build
+  2025-12-27 formalize abc1234 move to formalize stage
+```
+
+**Next Steps Legend:**
+
+| Icon | Action | Description |
+|------|--------|-------------|
+| `+`  | create | Generate new artifact |
+| `~`  | edit   | Modify existing content |
+| `▶`  | run    | Execute CLI command |
+| `?`  | review | Human inspection required |
+| `!`  | fix    | Address blocking error |
+
+**JSON output:**
+
+When `--json` is specified, output includes `next_steps` array:
+
+```json
+{
+  "project_name": "my-project",
+  "config": { ... },
+  "next_steps": [
+    {
+      "action": "create",
+      "priority": 1,
+      "description": "Solution Overview Document",
+      "target": "docs/sod.md",
+      "reason": "Lock intent, scope, constraints, and success criteria"
+    }
+  ],
+  ...
+}
 ```
 
 ### praxis audit

@@ -181,7 +181,8 @@ Environment affects presentation and formality, not data handling.
 praxis new my-project --domain code --privacy personal
 praxis init                           # Initialize existing directory
 praxis stage formalize                # Transition stages
-praxis status                         # Current state and history
+praxis status                         # Current state, next steps, history
+praxis status --json                  # Machine-readable output
 praxis validate                       # Check governance configuration
 praxis validate --check-all           # Include tests, lint, types
 praxis audit                          # Domain best practices check
@@ -342,8 +343,14 @@ praxis new my-project --domain code --privacy personal
 ```bash
 cd $PRAXIS_HOME/projects/code/my-project
 
-# Check status
+# Check status and get guided next steps
 praxis status
+# Output includes:
+#   Next Steps:
+#     + Create docs/capture.md (Capture document)
+#     ▶ Run `praxis stage sense` (Advance to Sense stage)
+#
+#   Legend: + create  ~ edit  ▶ run  ? review  ! fix
 
 # Move through stages
 praxis stage sense
