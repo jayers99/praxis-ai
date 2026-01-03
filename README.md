@@ -301,6 +301,13 @@ Check project status:
 praxis status                     # Current state, next steps, history
 ```
 
+Render stage documents and formalize artifacts:
+
+```bash
+praxis templates render           # Generate all stage docs
+praxis templates render --stage formalize  # Generate formalize artifact only
+```
+
 Audit against domain best practices:
 
 ```bash
