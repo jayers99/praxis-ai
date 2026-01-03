@@ -842,7 +842,15 @@ def status_cmd(
         help="Suppress non-error output.",
     ),
 ) -> None:
-    """Show project status including stage, validation, and history."""
+    """Show project status including stage, validation, and next steps.
+
+    Displays 1-3 actionable next steps based on domain and stage.
+
+    Step Types:
+      + create  ~ edit  ▶ run  ? review  ! fix
+    """
+    from praxis.application.next_steps_service import format_next_steps_human
+
     status = get_status(path)
 
     if json_output:
@@ -854,6 +862,10 @@ def status_cmd(
         typer.echo(f"Project: {status.project_name}", err=True)
         for err in status.errors:
             typer.echo(f"\u2717 {err}", err=True)
+        # Still show next steps for fixing errors
+        if status.next_steps:
+            typer.echo("")
+            typer.echo(format_next_steps_human(status.next_steps))
         raise typer.Exit(1)
 
     if quiet:
@@ -900,6 +912,10 @@ def status_cmd(
         typer.echo(f"Validation: \u2717 Invalid ({err_count} error(s))")
         for issue in status.validation.errors:
             typer.echo(f"  \u2717 {issue.message}", err=True)
+
+    # Next steps guidance
+    typer.echo("")
+    typer.echo(format_next_steps_human(status.next_steps))
 
     # Stage history
     typer.echo("")
