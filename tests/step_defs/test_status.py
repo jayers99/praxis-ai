@@ -192,11 +192,17 @@ def output_includes_action_for_target(
     )
 
 
+# Alias to handle "an" vs "a" article grammar in Gherkin steps
+# (e.g., "an edit action" vs "a create action")
 @then(parsers.parse('the output includes an "{action}" action for "{target}"'))
 def output_includes_an_action_for_target(
     context: dict[str, Any], action: str, target: str
 ) -> None:
-    """Check that output includes a specific action for a target (alias)."""
+    """Check that output includes a specific action for a target.
+
+    This is an alias for 'the output includes a "{action}" action for "{target}"'
+    to handle proper grammar with actions that start with vowels (e.g., "edit").
+    """
     output_includes_action_for_target(context, action, target)
 
 

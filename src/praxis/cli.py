@@ -18,6 +18,7 @@ from praxis.application.extension_service import (
     update_all_extensions,
 )
 from praxis.application.init_service import init_project
+from praxis.application.next_steps_service import format_next_steps_human
 from praxis.application.opinions_service import (
     format_json_output,
     format_list_output,
@@ -849,8 +850,6 @@ def status_cmd(
     Step Types:
       + create  ~ edit  ▶ run  ? review  ! fix
     """
-    from praxis.application.next_steps_service import format_next_steps_human
-
     status = get_status(path)
 
     if json_output:

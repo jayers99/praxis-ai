@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import TypedDict
 
 from praxis.domain.domains import ARTIFACT_PATHS, Domain
 from praxis.domain.models import PraxisConfig, ValidationResult
@@ -16,6 +16,17 @@ from praxis.domain.stages import Stage
 
 # Maximum number of next steps to show
 MAX_NEXT_STEPS = 3
+
+
+class StepGuidance(TypedDict, total=False):
+    """Type definition for stage guidance entries."""
+
+    action: ActionType
+    description: str
+    target: str | None
+    reason: str | None
+    command: str | None
+    artifact: bool  # Mark as domain artifact
 
 
 def _artifact_exists(project_root: Path, domain: Domain) -> bool:
@@ -46,8 +57,7 @@ def _get_artifact_description(domain: Domain) -> str:
 # Stage-specific next steps by domain
 # Mapping: (domain, stage) -> list of potential next steps
 # Steps are generated conditionally based on project state
-# Using Any for dict values as they have mixed types (str, ActionType, bool)
-STAGE_GUIDANCE: dict[tuple[Domain, Stage], list[dict[str, Any]]] = {
+STAGE_GUIDANCE: dict[tuple[Domain, Stage], list[StepGuidance]] = {
     # Code domain - Capture through Formalize
     (Domain.CODE, Stage.CAPTURE): [
         {
