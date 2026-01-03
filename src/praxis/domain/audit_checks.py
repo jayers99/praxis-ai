@@ -136,6 +136,135 @@ CODE_CHECKS: list[CheckDefinition] = [
 ]
 
 
+# =============================================================================
+# CLI Subtype Checks (code.cli)
+# =============================================================================
+
+
+def _cli_has_entry_point(project_root: Path) -> bool:
+    """Check for CLI entry point (console script or __main__.py).
+
+    A CLI entry point is considered present if:
+    - pyproject.toml contains [tool.poetry.scripts] entries, OR
+    - A __main__.py file exists in the main package under src/
+    """
+    # Check for console script
+    if get_poetry_scripts(project_root):
+        return True
+    # Check for __main__.py
+    return _has_main_module(project_root)
+
+
+def _cli_has_help_flag(project_root: Path) -> bool:
+    """Check for --help flag support in CLI files.
+
+    This is a heuristic check that looks for common patterns indicating
+    help flag support (Typer, argparse, click). A more thorough check
+    would require running the CLI, but this gives a good signal.
+    """
+    src_dir = project_root / "src"
+    if not src_dir.exists():
+        return False
+
+    # Look for CLI files
+    cli_files: list[Path] = []
+    for pattern in ["**/cli.py", "**/__main__.py"]:
+        cli_files.extend(src_dir.glob(pattern))
+
+    if not cli_files:
+        return False
+
+    # Check for patterns that indicate help support
+    help_patterns = [
+        "typer",  # Typer auto-generates help
+        "argparse",  # argparse has default help
+        "click",  # click has default help
+        "--help",  # Explicit help flag
+        "help=",  # Help parameter
+    ]
+
+    for cli_file in cli_files:
+        try:
+            content = cli_file.read_text().lower()
+            if any(pattern in content for pattern in help_patterns):
+                return True
+        except (OSError, UnicodeDecodeError):
+            # Skip files that can't be read (permissions, encoding issues)
+            continue
+
+    return False
+
+
+def _cli_has_version_flag(project_root: Path) -> bool:
+    """Check for --version flag support.
+
+    Looks for patterns indicating version flag is implemented.
+    """
+    src_dir = project_root / "src"
+    if not src_dir.exists():
+        return False
+
+    # Look for CLI files
+    cli_files: list[Path] = []
+    for pattern in ["**/cli.py", "**/__main__.py"]:
+        cli_files.extend(src_dir.glob(pattern))
+
+    if not cli_files:
+        return False
+
+    # Check for version-related patterns (pre-lowercase for efficiency)
+    version_patterns = [
+        "--version",
+        "version_callback",
+        "__version__",
+        "version=",
+    ]
+
+    for cli_file in cli_files:
+        try:
+            content = cli_file.read_text().lower()
+            if any(pattern in content for pattern in version_patterns):
+                return True
+        except (OSError, UnicodeDecodeError):
+            # Skip files that can't be read (permissions, encoding issues)
+            continue
+
+    return False
+
+
+CLI_CHECKS: list[CheckDefinition] = [
+    CheckDefinition(
+        name="cli_entry_point_exists",
+        category="cli",
+        check_fn=_cli_has_entry_point,
+        pass_message="CLI entry point exists (console script or __main__.py)",
+        fail_message=(
+            "CLI entry point not found. Add [tool.poetry.scripts] or __main__.py"
+        ),
+        subtypes=["cli"],
+    ),
+    CheckDefinition(
+        name="cli_help_present",
+        category="cli",
+        check_fn=_cli_has_help_flag,
+        pass_message="--help flag support detected",
+        fail_message="--help flag support not detected (add Typer, argparse, or click)",
+        subtypes=["cli"],
+    ),
+    CheckDefinition(
+        name="cli_version_flag",
+        category="cli",
+        check_fn=_cli_has_version_flag,
+        pass_message="--version flag support detected",
+        fail_message="--version flag not detected (add version callback or flag)",
+        subtypes=["cli"],
+    ),
+]
+
+# Add CLI checks to CODE_CHECKS
+CODE_CHECKS.extend(CLI_CHECKS)
+
+
 CHECKS_BY_DOMAIN: dict[Domain, list[CheckDefinition]] = {
     Domain.CODE: CODE_CHECKS,
     # Other domains can be added as opinions are defined

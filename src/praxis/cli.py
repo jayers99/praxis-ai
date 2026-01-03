@@ -38,6 +38,7 @@ from praxis.application.workspace_service import (
 from praxis.domain.domains import Domain
 from praxis.domain.models import AuditCheck, CoverageCheckResult, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
+from praxis.domain.subtypes import SubtypeValidationError, validate_subtype_for_domain
 from praxis.infrastructure.stage_templates.template_paths import validate_subtype
 from praxis.infrastructure.tool_runner import (
     run_coverage,
@@ -148,10 +149,15 @@ def templates_render_cmd(
     project_root = path.resolve()
 
     domain_value: str | None = domain
-    if domain_value is None:
-        load_result = load_praxis_config(project_root)
-        if load_result.valid and load_result.config is not None:
+    subtype_value: str | None = subtype
+    load_result = load_praxis_config(project_root)
+
+    # Load domain and subtype from praxis.yaml if not provided
+    if load_result.valid and load_result.config is not None:
+        if domain_value is None:
             domain_value = load_result.config.domain.value
+        if subtype_value is None:
+            subtype_value = load_result.config.subtype
 
     if domain_value is None:
         typer.echo(
@@ -187,7 +193,7 @@ def templates_render_cmd(
     result = render_stage_templates(
         project_root=project_root,
         domain=domain_enum,
-        subtype=subtype,
+        subtype=subtype_value,
         stages=stage_enums,
         force=force,
         extra_template_roots=template_root,
@@ -464,11 +470,31 @@ def new_cmd(
     assert domain is not None
     assert privacy is not None
 
-    # Validate subtype early (matches template validation rules)
+    # Validate subtype format early (matches template validation rules)
     if subtype is not None:
         try:
             validate_subtype(subtype)
         except ValueError as e:
+            error_msg = str(e)
+            if json_output:
+                typer.echo(
+                    json.dumps(
+                        {
+                            "success": False,
+                            "errors": [error_msg],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                typer.echo(f"✗ {error_msg}", err=True)
+            raise typer.Exit(1)
+
+        # Also validate subtype is valid for this domain
+        try:
+            domain_enum = Domain(domain)
+            validate_subtype_for_domain(subtype, domain_enum)
+        except SubtypeValidationError as e:
             error_msg = str(e)
             if json_output:
                 typer.echo(

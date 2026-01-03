@@ -72,3 +72,21 @@ Feature: Praxis Audit CLI
     Then the exit code should be 0
     And the output should contain "Captures"
     And the output should contain "Index"
+
+  # CLI subtype-specific audit scenarios
+
+  Scenario: CLI subtype project shows CLI-specific checks
+    Given a code project with subtype "cli"
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Cli:"
+    And the output should contain "CLI entry point"
+    And the output should contain "--help flag"
+    And the output should contain "--version flag"
+
+  Scenario: Code project without subtype does not show CLI checks
+    Given a code project without subtype
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should not contain "Cli:"
+    And the output should not contain "CLI entry point"

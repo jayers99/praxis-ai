@@ -23,11 +23,18 @@ Feature: Praxis New CLI
     When I run praxis new "my-project" again with --force
     Then the exit code should be 0
 
-  Scenario: Invalid subtype fails fast
+  Scenario: Invalid subtype format fails fast
     Given an empty directory
-    When I run praxis new "my-project" with invalid subtype
+    When I run praxis new "my-project" with invalid subtype format
     Then the exit code should be 1
     And the output should contain "Invalid subtype"
+
+  Scenario: Invalid subtype for domain fails fast
+    Given an empty directory
+    When I run praxis new "my-project" with subtype "visual" and domain "code"
+    Then the exit code should be 1
+    And the output should contain "Invalid subtype 'visual' for domain 'code'"
+    And the output should contain "Valid subtypes: cli, library, api, webapp, infrastructure, script"
 
   Scenario: New --json succeeds with PRAXIS_HOME defaults
     Given PRAXIS_HOME is set with a workspace config
