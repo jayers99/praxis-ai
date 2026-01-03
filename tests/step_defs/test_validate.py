@@ -272,7 +272,8 @@ def check_json_version(context: dict[str, Any], version: str) -> None:
     try:
         output_data = json.loads(result.output)
         assert "version" in output_data, (
-            f"Expected 'version' key in JSON output. Got keys: {list(output_data.keys())}"
+            f"Expected 'version' key in JSON output. "
+            f"Got keys: {list(output_data.keys())}"
         )
         assert output_data["version"] == version, (
             f"Expected version '{version}', got '{output_data['version']}'"
