@@ -212,6 +212,7 @@ src/praxis/              # Main CLI package
     validate_service.py  # Validation orchestration
     init_service.py      # Project initialization
     stage_service.py     # Stage transition orchestration
+    status_service.py    # Project status reporting
     audit_service.py     # Audit check orchestration
     workspace_service.py # Workspace init, info orchestration
     extension_service.py # Extension add/remove/list/update logic
@@ -242,10 +243,31 @@ tests/
   conftest.py            # Shared fixtures
 
 core/                    # Normative specifications (binding)
-  spec/                  # System specs (sod.md, lifecycle.md, domains.md, privacy.md)
-  governance/            # Decision surfaces (layer-model.md, opinions-contract.md)
-  ai/                    # AI behavior controls (ai-guards.md, models/)
+  spec/                  # System specs
+    sod.md               # Solution Overview Document
+    lifecycle.md         # Stage definitions, transitions
+    domains.md           # Domain → artifact mappings
+    privacy.md           # Privacy levels and enforcement
+  governance/            # Decision surfaces
+    layer-model.md       # Authority layer model
+    opinions-contract.md # Opinions framework specification
+    commit-readiness.md  # Commit stage requirements
+    decision-arbitration.md  # Conflict resolution
+    external-constraints.md  # External dependencies
+    guardrails.md        # Safety guardrails
+  ai/                    # AI behavior controls
+    ai-guards.md         # AI guardrails specification
+    model-selection-matrix.md  # Model selection criteria
+    models/              # Model-specific configurations
   roles/                 # Praxis Roles subsystem
+    index.md             # Role definitions overview
+    definitions/         # Individual role definitions
+    lifecycle-matrix.md  # Role × stage matrix
+    domain-variants.md   # Domain-specific role behavior
+    metrics-framework.md # Role performance metrics
+    role-composition-patterns.md  # Role combination patterns
+    subagent-mapping.md  # Role → subagent mapping
+    system-prompt-bundle.md  # Role prompt templates
 
 opinions/                # Advisory guidance (non-binding, by domain)
 research-library/        # Cataloged research with structured metadata
