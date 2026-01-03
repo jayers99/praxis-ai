@@ -216,3 +216,39 @@ def check_output_not_contains(context: dict[str, Any], text: str) -> None:
     assert text not in result.output, (
         f"Did not expect '{text}' in output. Got: {result.output}"
     )
+
+
+# CLI subtype-specific audit scenarios
+
+
+@given(parsers.parse('a code project with subtype "{subtype}"'))
+def code_project_with_subtype(
+    tmp_path: Path, context: dict[str, Any], subtype: str
+) -> None:
+    """Create a Code domain project with specified subtype."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        f"""domain: code
+stage: capture
+subtype: {subtype}
+privacy_level: personal
+environment: Home
+"""
+    )
+
+
+@given("a code project without subtype")
+def code_project_without_subtype(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create a Code domain project without subtype."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        """domain: code
+stage: capture
+privacy_level: personal
+environment: Home
+"""
+    )

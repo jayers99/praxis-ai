@@ -10,6 +10,7 @@ import yaml
 from praxis.domain.domains import Domain
 from praxis.domain.models import InitResult
 from praxis.domain.privacy import PrivacyLevel
+from praxis.domain.subtypes import SubtypeValidationError, validate_subtype_for_domain
 from praxis.infrastructure.file_writer import check_files_exist, write_file
 from praxis.infrastructure.templates import render_capture_md, render_claude_md
 
@@ -63,6 +64,14 @@ def init_project(
             f"Invalid environment: '{environment}'. Valid options: Home, Work"
         )
         return InitResult(success=False, errors=errors)
+
+    # Validate subtype against domain (if provided)
+    if subtype is not None:
+        try:
+            validate_subtype_for_domain(subtype, domain_enum)
+        except SubtypeValidationError as e:
+            errors.append(str(e))
+            return InitResult(success=False, errors=errors)
 
     # Resolve paths
     project_root = path.resolve()

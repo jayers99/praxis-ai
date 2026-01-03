@@ -38,6 +38,7 @@ from praxis.application.workspace_service import (
 from praxis.domain.domains import Domain
 from praxis.domain.models import AuditCheck, CoverageCheckResult, ToolCheckResult
 from praxis.domain.privacy import PrivacyLevel
+from praxis.domain.subtypes import SubtypeValidationError, validate_subtype_for_domain
 from praxis.infrastructure.stage_templates.template_paths import validate_subtype
 from praxis.infrastructure.tool_runner import (
     run_coverage,
@@ -464,11 +465,31 @@ def new_cmd(
     assert domain is not None
     assert privacy is not None
 
-    # Validate subtype early (matches template validation rules)
+    # Validate subtype format early (matches template validation rules)
     if subtype is not None:
         try:
             validate_subtype(subtype)
         except ValueError as e:
+            error_msg = str(e)
+            if json_output:
+                typer.echo(
+                    json.dumps(
+                        {
+                            "success": False,
+                            "errors": [error_msg],
+                        },
+                        indent=2,
+                    )
+                )
+            else:
+                typer.echo(f"✗ {error_msg}", err=True)
+            raise typer.Exit(1)
+
+        # Also validate subtype is valid for this domain
+        try:
+            domain_enum = Domain(domain)
+            validate_subtype_for_domain(subtype, domain_enum)
+        except SubtypeValidationError as e:
             error_msg = str(e)
             if json_output:
                 typer.echo(

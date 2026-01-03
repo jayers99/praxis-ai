@@ -320,6 +320,111 @@ See [Audit Command](#audit-command) for full details.
 
 ---
 
+## Project Subtypes
+
+Subtypes provide domain-specific guidance for different project shapes. When you specify a subtype, Praxis provides:
+
+- **Subtype-specific templates** — Tailored stage documents for your project type
+- **Subtype-specific opinions** — Best practices and quality gates for your subtype
+- **Subtype-specific audit checks** — Validation rules specific to your project shape
+
+### Available Subtypes by Domain
+
+| Domain | Subtypes |
+|--------|----------|
+| **code** | cli, library, api, webapp, infrastructure, script |
+| **create** | visual, audio, video, interactive, generative, design |
+| **write** | technical, business, narrative, academic, journalistic |
+| **learn** | skill, concept, practice, course, exploration |
+| **observe** | notes, bookmarks, clips, logs, captures |
+
+### Using Subtypes
+
+Specify a subtype when creating a new project:
+
+```bash
+praxis new my-cli --domain code --subtype cli
+```
+
+Or add a subtype to an existing praxis.yaml:
+
+```yaml
+domain: code
+subtype: cli
+stage: capture
+privacy_level: personal
+environment: Home
+```
+
+### Nested Subtypes
+
+Subtypes can be nested to provide more specific guidance. Use hyphens or dots to separate levels:
+
+```bash
+# Python CLI with all CLI + Python-specific guidance
+praxis new my-cli --domain code --subtype cli-python
+```
+
+Nested subtypes inherit from their parent:
+- `cli-python` inherits all `cli` opinions and adds Python-specific ones
+- Templates resolve most-specific-first: `cli/python/` → `cli/` → domain default
+
+### CLI Subtype (code.cli)
+
+The CLI subtype provides guidance for building production-quality command-line tools:
+
+**Templates:** CLI-specific stage documents that guide you through:
+- Command design (flags, subcommands, exit codes)
+- Pipeline safety (stdout/stderr conventions)
+- Help and version flags
+- Testing strategies
+
+**Opinions:** Advisory guidance following Unix philosophy:
+- Do one thing well
+- Composability in pipelines
+- Predictable behavior
+- Backwards compatibility
+
+**Audit Checks:**
+| Check | Description |
+|-------|-------------|
+| `cli_entry_point_exists` | Console script in pyproject.toml or `__main__.py` |
+| `cli_help_present` | `--help` flag support detected (Typer, argparse, click) |
+| `cli_version_flag` | `--version` flag support detected |
+
+### Viewing Subtype Opinions
+
+Use the opinions command to see applicable guidance for your subtype:
+
+```bash
+praxis opinions --domain code --stage capture --subtype cli
+```
+
+Output:
+```
+Applicable opinions for code × capture (cli):
+
+  1. _shared/first-principles.md [active]
+  2. code/README.md [draft]
+  3. code/principles.md [draft]
+  4. code/capture.md [draft]
+  5. code/subtypes/cli/README.md [active]
+  6. code/subtypes/cli/principles.md [active]
+
+Total: 6 files
+```
+
+### Subtype Validation
+
+Invalid subtypes are rejected at project creation:
+
+```bash
+praxis new my-project --domain code --subtype visual
+# ✗ Invalid subtype 'visual' for domain 'code'. Valid subtypes: cli, library, api, webapp, infrastructure, script
+```
+
+---
+
 ## Knowledge Distillation (PKDP)
 
 Praxis includes the **Praxis Knowledge Distillation Pipeline (PKDP)**: a risk-tiered pipeline for turning raw inputs into validated knowledge artifacts.

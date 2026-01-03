@@ -176,12 +176,12 @@ def run_new_again_with_force(
     context["result"] = result
 
 
-@when('I run praxis new "my-project" with invalid subtype')
-def run_new_invalid_subtype(
+@when('I run praxis new "my-project" with invalid subtype format')
+def run_new_invalid_subtype_format(
     cli_runner: CliRunner,
     context: dict[str, Any],
 ) -> None:
-    """Run praxis new with an invalid subtype (should fail fast)."""
+    """Run praxis new with an invalid subtype format (should fail fast)."""
     parent_dir: Path = context["parent_dir"]
     result = cli_runner.invoke(
         app,
@@ -192,6 +192,35 @@ def run_new_invalid_subtype(
             "code",
             "--subtype",
             "Bad_Subtype",
+            "--privacy",
+            "personal",
+            "--env",
+            "Home",
+            "--path",
+            str(parent_dir),
+        ],
+    )
+    context["result"] = result
+
+
+@when(parsers.parse('I run praxis new "my-project" with subtype "{subtype}" and domain "{domain}"'))
+def run_new_invalid_subtype_for_domain(
+    cli_runner: CliRunner,
+    context: dict[str, Any],
+    subtype: str,
+    domain: str,
+) -> None:
+    """Run praxis new with a subtype invalid for the domain (should fail fast)."""
+    parent_dir: Path = context["parent_dir"]
+    result = cli_runner.invoke(
+        app,
+        [
+            "new",
+            "my-project",
+            "--domain",
+            domain,
+            "--subtype",
+            subtype,
             "--privacy",
             "personal",
             "--env",
