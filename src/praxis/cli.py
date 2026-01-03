@@ -149,10 +149,15 @@ def templates_render_cmd(
     project_root = path.resolve()
 
     domain_value: str | None = domain
-    if domain_value is None:
-        load_result = load_praxis_config(project_root)
-        if load_result.valid and load_result.config is not None:
+    subtype_value: str | None = subtype
+    load_result = load_praxis_config(project_root)
+
+    # Load domain and subtype from praxis.yaml if not provided
+    if load_result.valid and load_result.config is not None:
+        if domain_value is None:
             domain_value = load_result.config.domain.value
+        if subtype_value is None:
+            subtype_value = load_result.config.subtype
 
     if domain_value is None:
         typer.echo(
@@ -188,7 +193,7 @@ def templates_render_cmd(
     result = render_stage_templates(
         project_root=project_root,
         domain=domain_enum,
-        subtype=subtype,
+        subtype=subtype_value,
         stages=stage_enums,
         force=force,
         extra_template_roots=template_root,
