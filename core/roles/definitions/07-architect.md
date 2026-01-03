@@ -79,6 +79,6 @@ The Architect reviews issue drafts to ensure system coherence, boundary clarity,
 
 - Works with **Product Owner** to right-size scope to architectural complexity
 - Works with **Security** on trust boundaries and data flow
-- Works with **Lead Developer** on feasibility and implementation approach
+- Works with **Developer** on feasibility and implementation approach
 - Works with **QA** on testability of architectural boundaries
 - Defers to **Synthesis** role for final adjudication when roles conflict

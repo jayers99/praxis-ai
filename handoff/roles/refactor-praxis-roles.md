@@ -1,4 +1,6 @@
-# Handoff: Refactor Praxis Roles Structure
+# Handoff: Refactor Praxis Roles Structure — COMPLETED
+
+> **Status:** This refactoring was completed. Retained for historical reference.
 
 ## Objective
 Refactor the praxis-ai repository to adopt the new Praxis Roles structure.

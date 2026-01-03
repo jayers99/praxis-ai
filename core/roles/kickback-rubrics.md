@@ -51,7 +51,7 @@ All kickbacks must include:
 - Missing iteration plan
 - Impediments untracked
 
-### Stakeholder Proxy
+### Stakeholder
 - User language not grounded in evidence
 - Jobs-to-be-done vague or assumed
 - Acceptance feedback missing

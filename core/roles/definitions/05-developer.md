@@ -1,4 +1,4 @@
-# Lead Developer Role (v1.1)
+# Developer Role (v1.1)
 
 **Purpose**: Ensure technical feasibility, produce Done increments, and maintain code quality.
 
@@ -27,7 +27,7 @@
 
 ## Issue Draft Review (CCR)
 
-The Lead Developer reviews issue drafts to ensure technical feasibility, appropriate scoping, and implementation clarity.
+The Developer reviews issue drafts to ensure technical feasibility, appropriate scoping, and implementation clarity.
 
 ### When to Invoke
 

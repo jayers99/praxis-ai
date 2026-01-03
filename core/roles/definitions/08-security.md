@@ -80,6 +80,6 @@ The Security Engineer reviews issue drafts to identify security implications and
 
 - Works with **Architect** on trust boundaries and secure design patterns
 - Works with **Product Owner** to balance security vs. usability tradeoffs
-- Works with **Lead Developer** on secure implementation patterns
+- Works with **Developer** on secure implementation patterns
 - Works with **QA** on security testing requirements
 - Defers to **Synthesis** role for final adjudication when roles conflict

@@ -69,7 +69,7 @@ The Scrum Master reviews issue drafts to ensure proper sizing, sequencing, and w
 ## Collaboration Notes
 
 - Works with **Product Owner** to ensure backlog is properly ordered
-- Works with **Lead Developer** on realistic sizing and capacity
+- Works with **Developer** on sizing and capacity
 - Works with **Architect** on dependency mapping
 - Works with **QA** on Definition of Done alignment
 - Defers to **Synthesis** role for final adjudication when roles conflict

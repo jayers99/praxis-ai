@@ -27,7 +27,7 @@
 
 ## Adjudicated Synthesis & Resolution (ASR)
 
-After CCR reviewers (Product Owner, Scrum Master, Architect, Security, Lead Developer, QA) have provided their verdicts, the Synthesis role performs ASR to produce a unified resolution.
+After CCR reviewers (Product Owner, Scrum Master, Architect, Security, Developer, QA) have provided their verdicts, the Synthesis role performs ASR to produce a unified resolution.
 
 ### When to Invoke
 
@@ -59,7 +59,7 @@ After CCR reviewers (Product Owner, Scrum Master, Architect, Security, Lead Deve
 | Scrum Master | APPROVE/KICKBACK/SUGGEST | [1-line summary] |
 | Architect | APPROVE/KICKBACK/SUGGEST | [1-line summary] |
 | Security | APPROVE/KICKBACK/SUGGEST | [1-line summary] |
-| Lead Developer | APPROVE/KICKBACK/SUGGEST | [1-line summary] |
+| Developer | APPROVE/KICKBACK/SUGGEST | [1-line summary] |
 | QA | APPROVE/KICKBACK/SUGGEST | [1-line summary] |
 
 ### Conflicts Identified
@@ -93,7 +93,7 @@ After CCR reviewers (Product Owner, Scrum Master, Architect, Security, Lead Deve
 
 1. **Safety first** — Security KICKBACK generally wins unless risk is explicitly accepted
 2. **Value clarity** — Product Owner concerns about value/scope take precedence over nice-to-haves
-3. **Feasibility matters** — Lead Developer KICKBACK on feasibility requires scope adjustment
+3. **Feasibility matters** — Developer KICKBACK on feasibility requires scope adjustment
 4. **Architecture coherence** — Architect concerns about boundaries should not be dismissed
 5. **Quality gates** — QA KICKBACK on testability must be addressed
 6. **Explicit tradeoffs** — Never hide a tradeoff; document what was sacrificed and why
@@ -110,7 +110,7 @@ After CCR reviewers (Product Owner, Scrum Master, Architect, Security, Lead Deve
 
 ## Collaboration Notes
 
-- Receives input from all CCR roles (PO, SM, Architect, Security, Lead Dev, QA)
+- Receives input from all CCR roles (PO, SM, Architect, Security, Developer, QA)
 - Does not override roles—synthesizes and adjudicates conflicts
 - Human has final authority at Gate C; ASR prepares the decision
 - May request clarification from roles before adjudicating

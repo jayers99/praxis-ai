@@ -72,7 +72,7 @@ The Praxis lifecycle defines 9 stages. This matrix uses 5 phases that map to tho
 | Role | Status |
 |------|--------|
 | Research Librarian | Primary |
-| Stakeholder / Customer Proxy | Primary |
+| Stakeholder | Primary |
 | Product Owner | Consulted |
 | Red Team | Consulted |
 | Architect | Forbidden |
@@ -105,7 +105,7 @@ The Praxis lifecycle defines 9 stages. This matrix uses 5 phases that map to tho
 | Red Team | Primary |
 | Research Librarian | Consulted |
 | Architect | Consulted |
-| Stakeholder / Customer Proxy | Consulted |
+| Stakeholder | Consulted |
 | Synthesis | Consulted |
 | Security | Consulted |
 | Developer | Forbidden |
@@ -179,7 +179,7 @@ The Praxis lifecycle defines 9 stages. This matrix uses 5 phases that map to tho
 | FinOps | Consulted |
 | Red Team | Forbidden |
 | Research Librarian | Forbidden |
-| Stakeholder Proxy | Consulted |
+| Stakeholder | Consulted |
 
 **Constraints**:
 - No scope debate
@@ -218,7 +218,7 @@ Then: Stop work, document findings, regress to Decide phase for re-formalization
 | QA | Consulted |
 | Security | Consulted |
 | Architect | Consulted |
-| Stakeholder Proxy | Consulted |
+| Stakeholder | Consulted |
 
 **Constraints**:
 - Update canonical knowledge

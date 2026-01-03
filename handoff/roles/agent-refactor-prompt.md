@@ -1,5 +1,7 @@
 # Agent Prompt: Migrate Praxis Roles to praxis-ai
-**Handoff Artifact (v1.1)**
+**Handoff Artifact (v1.1)** — **COMPLETED**
+
+> **Status:** This migration was completed. The Praxis Roles subsystem now lives in `praxis-ai/core/roles/`. This document is retained for historical reference.
 
 ## Use
 Copy/paste this entire prompt into your agentic coding tool.

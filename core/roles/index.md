@@ -11,7 +11,7 @@ All other READMEs defer to this document.
 
 ## Quick Reference
 
-### Core Roles (always active)
+### Core Roles
 | Role | Purpose | Definition |
 |------|---------|------------|
 | Research Librarian | Epistemic backbone; curates truth and provenance | `definitions/00-research-librarian.md` |
@@ -24,7 +24,7 @@ All other READMEs defer to this document.
 ### Supporting Roles (invoked as needed)
 | Role | Purpose | Definition |
 |------|---------|------------|
-| Stakeholder Proxy | User needs and acceptance language | `definitions/06-stakeholder-proxy.md` |
+| Stakeholder | User needs and acceptance language | `definitions/06-stakeholder-proxy.md` |
 | Architect | Coherence and boundaries | `definitions/07-architect.md` |
 | Security | Threats, controls, mitigations | `definitions/08-security.md` |
 | QA | Risk-based validation strategy | `definitions/09-qa.md` |

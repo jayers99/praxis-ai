@@ -1,4 +1,4 @@
-# Stakeholder / Customer Proxy Role (v1.1)
+# Stakeholder Role (v1.1)
 
 **Purpose**: Represent real user needs and translate between user language and system language.
 
@@ -31,7 +31,7 @@
 
 ## Issue Draft Review (CCR)
 
-The Stakeholder Proxy reviews issue drafts to ensure user needs are grounded in evidence and acceptance criteria speak in user language.
+The Stakeholder reviews issue drafts to ensure user needs are grounded in evidence and acceptance criteria speak in user language.
 
 ### When to Invoke
 

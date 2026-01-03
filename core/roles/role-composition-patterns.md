@@ -97,12 +97,12 @@ Individual roles have focused expertise. Complex decisions often require multipl
 
 ### Pattern 3: User Validation Composition
 
-**Roles:** Stakeholder Proxy + QA + Product Owner
+**Roles:** Stakeholder + QA + Product Owner
 
 **Use Case:** Ensuring features serve real user needs with testable acceptance criteria.
 
 **Workflow:**
-1. **Stakeholder Proxy** validates user need is grounded
+1. **Stakeholder** validates user need is grounded
 2. **QA** reviews acceptance criteria for testability
 3. **Product Owner** confirms value alignment
 4. **Synthesis** produces validation verdict
@@ -265,7 +265,7 @@ Review the proposed authentication changes.
 ### Role Order
 
 Unless otherwise specified, roles review in this order:
-1. Information-gathering roles first (Research Librarian, Stakeholder Proxy)
+1. Information-gathering roles first (Research Librarian, Stakeholder)
 2. Domain expert roles next (Architect, Security, Developer)
 3. Challenge roles (Red Team, QA)
 4. Decision roles last (Product Owner, Synthesis)

@@ -26,7 +26,7 @@ This document is **normative** for subagent naming and invocation. Subagent impl
 
 | Role | Subagent ID | Invocation | Output Location |
 |------|-------------|------------|-----------------|
-| Stakeholder Proxy | `stakeholder-proxy` | `[SUBAGENT: stakeholder-proxy]` | Inline / User stories |
+| Stakeholder | `stakeholder-proxy` | `[SUBAGENT: stakeholder-proxy]` | Inline / User stories |
 | Architect | `architect` | `[SUBAGENT: architect]` | ADRs / Design docs |
 | Security | `security` | `[SUBAGENT: security]` | Threat models / Review comments |
 | QA | `qa` | `[SUBAGENT: qa]` | Test plans / Review comments |
@@ -254,6 +254,69 @@ Research OAuth 2.0 PKCE flow for CLI applications.
 - Balance cost vs value
 
 **System Prompt Reference:** `system-prompt-bundle.md#finops`
+
+---
+
+### Scrum Master Subagent
+
+**Role:** Scrum Master / Flow Facilitator
+**Default Timebox:** 10 minutes
+**Default Output:** Inline / Process notes
+
+**Capabilities:**
+- Issue sizing review
+- Dependency identification
+- Workflow hygiene checks
+- Iteration planning support
+
+**Constraints:**
+- Protect iteration stability
+- No value decisions (that's Product Owner)
+- Surface impediments early
+
+**System Prompt Reference:** `system-prompt-bundle.md#scrum-master`
+
+---
+
+### Developer Subagent
+
+**Role:** Developer
+**Default Timebox:** 15 minutes
+**Default Output:** Code / PR / Review comments
+
+**Capabilities:**
+- Technical feasibility review
+- Effort estimation
+- Implementation approach suggestions
+- Code quality assessment
+
+**Constraints:**
+- Honest estimates with confidence levels
+- No scope expansion without approval
+- Surface blockers early
+
+**System Prompt Reference:** `system-prompt-bundle.md#developer`
+
+---
+
+### Stakeholder Subagent
+
+**Role:** Stakeholder
+**Default Timebox:** 10 minutes
+**Default Output:** User stories / Review comments
+
+**Capabilities:**
+- User need validation
+- JTBD articulation
+- User language translation
+- Acceptance criteria review
+
+**Constraints:**
+- Ground claims in evidence
+- Do not override Product Owner
+- Distinguish user types
+
+**System Prompt Reference:** `system-prompt-bundle.md#stakeholder`
 
 ---
 
