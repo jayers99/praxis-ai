@@ -65,8 +65,9 @@ praxis status                     # Current state, next steps, history
 praxis status --json
 
 # Audit against domain best practices
-praxis audit                      # Check tooling, structure, testing
+praxis audit                      # Domain-specific checks (stage/subtype aware)
 praxis audit --strict             # Fail on warnings
+praxis audit --json               # Machine-readable output
 
 # Workspace management (requires PRAXIS_HOME env var)
 praxis workspace init             # Initialize a new workspace
