@@ -50,13 +50,13 @@ def render_stage_templates(
 ) -> TemplatesRenderResult:
     """Render stage docs and domain-specific formalization artifacts.
 
-        MVP inventory:
-        - Stage doc for every stage: docs/<stage>.md
-        - Domain-specific formalization artifacts as applicable (Formalize+):
-            - Code: docs/sod.md
-            - Create/Write: docs/brief.md
-                - Learn: docs/plan.md
-            """
+    MVP inventory:
+    - Stage doc for every stage: docs/<stage>.md
+    - Domain-specific formalization artifacts as applicable (Formalize+):
+        - Code: docs/sod.md
+        - Create/Write: docs/brief.md
+        - Learn: docs/plan.md
+    """
 
     roots = _default_template_roots(project_root, extra_roots=extra_template_roots)
     resolver = TemplateResolver(roots)

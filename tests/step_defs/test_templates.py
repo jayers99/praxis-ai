@@ -37,6 +37,7 @@ def file_already_exists(context: dict[str, Any], filename: str) -> None:
     file_path.parent.mkdir(parents=True, exist_ok=True)
     file_path.write_text("existing content")
     context["original_content"] = "existing content"
+    context["existing_file"] = filename  # Store for later verification
 
 
 @given(parsers.parse('"{filename}" does not exist'))
@@ -95,7 +96,9 @@ def file_should_be_created(context: dict[str, Any], filename: str) -> None:
 def existing_file_not_modified(context: dict[str, Any]) -> None:
     """Verify existing file was not modified."""
     project_root = context["project_root"]
-    file_path = project_root / "docs" / "brief.md"
+    # Get the file path from context if available, otherwise use brief.md
+    file_name = context.get("existing_file", "docs/brief.md")
+    file_path = project_root / file_name
     current_content = file_path.read_text()
     assert (
         current_content == context["original_content"]
