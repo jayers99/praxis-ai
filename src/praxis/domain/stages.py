@@ -45,8 +45,9 @@ class Stage(str, Enum):
         return self == other or self > other
 
 
-# Stages that require formalization artifacts (stage >= commit)
+# Stages that require formalization artifacts (stage >= formalize)
 REQUIRES_ARTIFACT: frozenset[Stage] = frozenset({
+    Stage.FORMALIZE,
     Stage.COMMIT,
     Stage.EXECUTE,
     Stage.SUSTAIN,

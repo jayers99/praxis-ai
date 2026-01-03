@@ -743,6 +743,7 @@ def validate_cmd(
     if json_output:
         # Build combined JSON output
         output = result.model_dump()
+        output["version"] = "1.0"
         output["tool_checks"] = [t.model_dump() for t in tool_results]
         if coverage_result:
             output["coverage_check"] = coverage_result.model_dump()

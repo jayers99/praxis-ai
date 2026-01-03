@@ -78,3 +78,48 @@ Feature: Praxis Validate CLI
     Given a valid project with coverage threshold 50
     When I run praxis validate --check-all
     Then the output should contain "coverage"
+
+  Scenario: Missing SOD at Formalize stage fails
+    Given a project with domain "code" and stage "formalize"
+    And no docs/sod.md file exists
+    When I run praxis validate
+    Then the exit code should be 1
+    And the output should contain "ERROR"
+    And the output should contain "docs/sod.md"
+
+  Scenario: Valid SOD at Formalize stage passes
+    Given a project with domain "code" and stage "formalize"
+    And a docs/sod.md file exists
+    When I run praxis validate
+    Then the exit code should be 0
+    And the output should contain "passed"
+
+  Scenario: Missing brief at Formalize stage for Create domain fails
+    Given a project with domain "create" and stage "formalize"
+    And no docs/brief.md file exists
+    When I run praxis validate
+    Then the exit code should be 1
+    And the output should contain "ERROR"
+    And the output should contain "docs/brief.md"
+
+  Scenario: Missing plan at Formalize stage for Learn domain fails
+    Given a project with domain "learn" and stage "formalize"
+    And no docs/plan.md file exists
+    When I run praxis validate
+    Then the exit code should be 1
+    And the output should contain "ERROR"
+    And the output should contain "docs/plan.md"
+
+  Scenario: Observe domain has no artifact requirement at Formalize
+    Given a project with domain "observe" and stage "formalize"
+    When I run praxis validate
+    Then the exit code should be 0
+    And the output should contain "passed"
+
+  Scenario: JSON output includes version field
+    Given a project with domain "code" and stage "execute"
+    And a docs/sod.md file exists
+    When I run praxis validate --json
+    Then the exit code should be 0
+    And the JSON output should contain "version"
+    And the JSON version should be "1.0"

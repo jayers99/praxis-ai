@@ -138,12 +138,65 @@ Validate a praxis.yaml configuration:
 praxis validate [PATH] [OPTIONS]
 ```
 
-| Option           | Description                       |
-| ---------------- | --------------------------------- |
-| `PATH`           | Project directory (default: `.`)  |
-| `--strict`, `-s` | Treat warnings as errors (exit 1) |
+| Option              | Description                                          |
+| ------------------- | ---------------------------------------------------- |
+| `PATH`              | Project directory (default: `.`)                     |
+| `--strict`, `-s`    | Treat warnings as errors (exit 1)                    |
+| `--check-tests`     | Run pytest and fail if tests fail                    |
+| `--check-lint`      | Run ruff and fail if lint errors exist               |
+| `--check-types`     | Run mypy and fail if type errors exist               |
+| `--check-all`       | Run all checks (tests, lint, types, coverage)        |
+| `--check-coverage`  | Run coverage check (requires coverage_threshold)     |
+| `--json`            | Output JSON format (includes version field)          |
+| `--quiet`, `-q`     | Suppress non-error output                            |
 
-**Exit codes:** 0 = valid, 1 = errors found
+**Exit codes:**
+
+- `0` — Validation passed (all checks successful)
+- `1` — Validation failed (errors found or tool checks failed)
+- `2` — Usage error (invalid arguments)
+
+**Validation checks:**
+
+1. **Schema validation** — Ensures praxis.yaml has valid domain, stage, privacy_level
+2. **Artifact existence** — Checks required formalization artifacts for stage ≥ formalize:
+   - Code: `docs/sod.md`
+   - Create: `docs/brief.md`
+   - Write: `docs/brief.md`
+   - Learn: `docs/plan.md`
+   - Observe: (no artifact required)
+3. **Regression detection** — Warns on invalid stage regressions (vs previous commit)
+4. **Privacy downgrade** — Warns if privacy_level decreased from previous commit
+
+**JSON output:**
+
+When `--json` is specified, output includes a version field for schema stability:
+
+```json
+{
+  "version": "1.0",
+  "valid": true,
+  "config": { ... },
+  "issues": [],
+  "tool_checks": []
+}
+```
+
+**Examples:**
+
+```bash
+# Basic validation
+praxis validate .
+
+# Strict mode (warnings = errors)
+praxis validate --strict
+
+# Run all checks (tests, lint, types, coverage if configured)
+praxis validate --check-all
+
+# JSON output for CI/automation
+praxis validate --json
+```
 
 ### praxis stage
 
@@ -169,7 +222,7 @@ praxis stage sense
 
 - Updates `praxis.yaml` with new stage
 - Updates `CLAUDE.md` stage line (if present)
-- Warns if missing required artifact (e.g., SOD at commit+)
+- Warns if missing required artifact (e.g., SOD at formalize+)
 - Prompts for confirmation on non-standard regressions
 
 ### praxis status

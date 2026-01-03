@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from pytest_bdd import given, parsers, scenarios, when
+from pytest_bdd import given, parsers, scenarios, then, when
 from typer.testing import CliRunner
 
 from praxis.cli import app
@@ -49,6 +49,44 @@ def ensure_no_sod(context: dict[str, Any]) -> None:
     sod_path = project_root / "docs" / "sod.md"
     if sod_path.exists():
         sod_path.unlink()
+
+
+@given("a docs/brief.md file exists")
+def create_brief(context: dict[str, Any]) -> None:
+    """Create the brief artifact file."""
+    project_root = context["project_root"]
+    docs_dir = project_root / "docs"
+    docs_dir.mkdir(exist_ok=True)
+    brief_path = docs_dir / "brief.md"
+    brief_path.write_text("# Creative Brief\n")
+
+
+@given("no docs/brief.md file exists")
+def ensure_no_brief(context: dict[str, Any]) -> None:
+    """Ensure no brief file exists (no-op, just documenting the state)."""
+    project_root = context["project_root"]
+    brief_path = project_root / "docs" / "brief.md"
+    if brief_path.exists():
+        brief_path.unlink()
+
+
+@given("a docs/plan.md file exists")
+def create_plan(context: dict[str, Any]) -> None:
+    """Create the plan artifact file."""
+    project_root = context["project_root"]
+    docs_dir = project_root / "docs"
+    docs_dir.mkdir(exist_ok=True)
+    plan_path = docs_dir / "plan.md"
+    plan_path.write_text("# Learning Plan\n")
+
+
+@given("no docs/plan.md file exists")
+def ensure_no_plan(context: dict[str, Any]) -> None:
+    """Ensure no plan file exists (no-op, just documenting the state)."""
+    project_root = context["project_root"]
+    plan_path = project_root / "docs" / "plan.md"
+    if plan_path.exists():
+        plan_path.unlink()
 
 
 @given("a valid project with passing tests")
@@ -209,4 +247,37 @@ def run_validate_with_flags(
     result = cli_runner.invoke(app, args)
     context["result"] = result
 
+
+@then(parsers.parse('the JSON output should contain "{key}"'))
+def check_json_contains_key(context: dict[str, Any], key: str) -> None:
+    """Verify the JSON output contains the specified key."""
+    import json
+
+    result = context["result"]
+    try:
+        output_data = json.loads(result.output)
+        assert key in output_data, (
+            f"Expected key '{key}' in JSON output. Got keys: {list(output_data.keys())}"
+        )
+    except json.JSONDecodeError as e:
+        raise AssertionError(f"Invalid JSON output: {e}. Output: {result.output}")
+
+
+@then(parsers.parse('the JSON version should be "{version}"'))
+def check_json_version(context: dict[str, Any], version: str) -> None:
+    """Verify the JSON output version field matches expected value."""
+    import json
+
+    result = context["result"]
+    try:
+        output_data = json.loads(result.output)
+        assert "version" in output_data, (
+            f"Expected 'version' key in JSON output. "
+            f"Got keys: {list(output_data.keys())}"
+        )
+        assert output_data["version"] == version, (
+            f"Expected version '{version}', got '{output_data['version']}'"
+        )
+    except json.JSONDecodeError as e:
+        raise AssertionError(f"Invalid JSON output: {e}. Output: {result.output}")
 
