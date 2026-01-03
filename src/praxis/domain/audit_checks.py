@@ -23,9 +23,7 @@ class CheckDefinition:
     fail_message: str
     severity: Literal["warning", "failed"] = "warning"
     min_stage: Stage | None = None  # Check only applies at this stage or later
-    subtypes: list[str] | None = field(
-        default=None
-    )  # Check only applies to these subtypes; None = all
+    subtypes: list[str] | None = field(default=None)  # Only for these subtypes
 
 
 def _has_hexagonal_dirs(project_root: Path) -> bool:
