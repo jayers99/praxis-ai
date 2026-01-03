@@ -90,3 +90,56 @@ Feature: Praxis Audit CLI
     Then the exit code should be 0
     And the output should not contain "Cli:"
     And the output should not contain "CLI entry point"
+
+  # Library subtype-specific audit scenarios
+
+  Scenario: Library subtype project shows library-specific checks
+    Given a code project with subtype "library"
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Library:"
+    And the output should contain "exports"
+    And the output should contain "Version"
+    And the output should contain "Changelog"
+
+  Scenario: Library project with exports defined passes check
+    Given a code project with subtype "library"
+    And __all__ is defined in __init__.py
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Library exports defined"
+
+  Scenario: Library project without exports shows warning
+    Given a code project with subtype "library"
+    And __all__ is not defined in __init__.py
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Library exports not defined"
+
+  Scenario: Library project without changelog shows warning
+    Given a code project with subtype "library"
+    And CHANGELOG.md does not exist
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Changelog not found"
+
+  Scenario: Library project at formalize checks docstrings
+    Given a code project with subtype "library" at stage "formalize"
+    And public API has docstrings
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Public API documented"
+
+  Scenario: Library project at commit requires docs site
+    Given a code project with subtype "library" at stage "commit"
+    And docs site is configured
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should contain "Documentation site configured"
+
+  Scenario: Library project at formalize without docs site does not show docs site check
+    Given a code project with subtype "library" at stage "formalize"
+    When I run praxis audit
+    Then the exit code should be 0
+    And the output should not contain "Documentation site"
+

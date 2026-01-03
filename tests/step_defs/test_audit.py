@@ -252,3 +252,82 @@ privacy_level: personal
 environment: Home
 """
     )
+
+
+# Library subtype-specific step definitions
+
+
+@given(parsers.parse('a code project with subtype "{subtype}" at stage "{stage}"'))
+def code_project_with_subtype_and_stage(
+    tmp_path: Path, context: dict[str, Any], subtype: str, stage: str
+) -> None:
+    """Create a Code domain project with specified subtype and stage."""
+    context["project_root"] = tmp_path
+
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        f"""domain: code
+stage: {stage}
+subtype: {subtype}
+privacy_level: personal
+environment: Home
+"""
+    )
+
+
+@given("__all__ is defined in __init__.py")
+def init_with_all(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create package structure with __all__ defined."""
+    src_dir = tmp_path / "src" / "test_lib"
+    src_dir.mkdir(parents=True)
+    init_file = src_dir / "__init__.py"
+    init_file.write_text('__all__ = ["example_function"]\n\ndef example_function():\n    """Example function."""\n    pass\n')
+
+
+@given("__all__ is not defined in __init__.py")
+def init_without_all(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create package structure without __all__."""
+    src_dir = tmp_path / "src" / "test_lib"
+    src_dir.mkdir(parents=True)
+    init_file = src_dir / "__init__.py"
+    init_file.write_text('def example_function():\n    pass\n')
+
+
+@given("CHANGELOG.md does not exist")
+def no_changelog(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Ensure CHANGELOG.md does not exist."""
+    # Nothing to do - it doesn't exist by default
+    pass
+
+
+@given("public API has docstrings")
+def init_with_docstrings(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create package with docstrings on public API."""
+    src_dir = tmp_path / "src" / "test_lib"
+    src_dir.mkdir(parents=True)
+    init_file = src_dir / "__init__.py"
+    init_file.write_text(
+        '''"""Test library package."""
+
+__all__ = ["example_function", "ExampleClass"]
+
+def example_function():
+    """Example function with docstring."""
+    pass
+
+class ExampleClass:
+    """Example class with docstring."""
+    pass
+'''
+    )
+
+
+@given("docs site is configured")
+def docs_site_configured(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create documentation site configuration."""
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    # Create sphinx conf.py
+    (docs_dir / "conf.py").write_text("# Sphinx configuration\n")
+    (docs_dir / "index.rst").write_text("Welcome\n=======\n")
+
