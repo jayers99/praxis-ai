@@ -192,12 +192,21 @@ def templates_render_cmd(
     else:
         typer.echo("✗ Templates rendered with errors", err=True)
 
-    if result.created:
-        typer.echo(f"Created: {len(result.created)}")
-    if result.skipped:
-        typer.echo(f"Skipped: {len(result.skipped)}")
-    if result.overwritten:
-        typer.echo(f"Overwritten: {len(result.overwritten)}")
+    # Show detailed file-by-file status
+    for rendered in result.rendered:
+        rel_path = rendered.destination.relative_to(project_root) if rendered.destination.is_relative_to(project_root) else rendered.destination
+        
+        if rendered.status == "created":
+            typer.echo(f"  Created {rel_path}")
+        elif rendered.status == "skipped":
+            typer.echo(f"  Skipping {rel_path} — file already exists")
+        elif rendered.status == "overwritten":
+            typer.echo(f"  Overwritten {rel_path}")
+        elif rendered.status == "error" and rendered.error:
+            typer.echo(f"  Error: {rendered.error}", err=True)
+
+    for info_msg in result.info:
+        typer.echo(f"ℹ {info_msg}")
 
     for err in result.errors:
         typer.echo(f"Error: {err}", err=True)

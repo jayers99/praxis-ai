@@ -143,6 +143,14 @@ def _render_minimal_domain_artifact_if_needed(
     elif domain == Domain.LEARN:
         artifact_name = "plan"
         filename = "plan.md"
+    elif domain == Domain.OBSERVE:
+        # Observe domain has no formalize artifact
+        msg = (
+            "Observe domain has no formalize artifact. "
+            "Observe is for raw capture and does not cross into execution."
+        )
+        result.info.append(msg)
+        return
     else:
         return
 
