@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import subprocess
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -15,13 +14,14 @@ from praxis.domain.stages import REQUIRES_ARTIFACT, Stage
 from praxis.infrastructure.yaml_loader import load_praxis_config
 
 
-class StageHistoryEntry(BaseModel):
-    """A single stage change in history."""
+class StageHistoryDisplay(BaseModel):
+    """Stage history entry for display in status output."""
 
-    stage: str
-    commit_hash: str
-    commit_date: str
-    commit_message: str
+    timestamp: str
+    from_stage: str
+    to_stage: str
+    contract_id: str | None = None
+    reason: str | None = None
 
 
 class ProjectStatus(BaseModel):
@@ -52,84 +52,36 @@ class ProjectStatus(BaseModel):
     next_steps: list[NextStep] = Field(default_factory=list)
 
     # History
-    stage_history: list[StageHistoryEntry] = Field(default_factory=list)
+    stage_history: list[StageHistoryDisplay] = Field(default_factory=list)
 
     # Errors
     errors: list[str] = Field(default_factory=list)
 
 
-def get_stage_history(project_root: Path, limit: int = 10) -> list[StageHistoryEntry]:
-    """Get history of stage changes from git log.
+def get_stage_history_from_config(
+    config: PraxisConfig, limit: int = 10
+) -> list[StageHistoryDisplay]:
+    """Get stage history from praxis.yaml config.
 
     Args:
-        project_root: Project directory.
+        config: Current praxis config.
         limit: Maximum number of entries to return.
 
     Returns:
         List of stage history entries, most recent first.
     """
-    history: list[StageHistoryEntry] = []
-
-    try:
-        # Get git log for praxis.yaml changes
-        result = subprocess.run(
-            [
-                "git", "log",
-                f"-{limit}",
-                "--format=%H|%ad|%s",
-                "--date=short",
-                "--follow",
-                "--",
-                "praxis.yaml",
-            ],
-            cwd=project_root,
-            capture_output=True,
-            text=True,
-            check=False,
+    # Return history in reverse order (most recent first)
+    history_entries = config.history[-limit:] if config.history else []
+    return [
+        StageHistoryDisplay(
+            timestamp=entry.timestamp,
+            from_stage=entry.from_stage,
+            to_stage=entry.to_stage,
+            contract_id=entry.contract_id,
+            reason=entry.reason,
         )
-
-        if result.returncode != 0:
-            return history
-
-        for line in result.stdout.strip().split("\n"):
-            if not line:
-                continue
-
-            parts = line.split("|", 2)
-            if len(parts) != 3:
-                continue
-
-            commit_hash, commit_date, commit_message = parts
-
-            # Get the stage value at this commit
-            stage_result = subprocess.run(
-                ["git", "show", f"{commit_hash}:praxis.yaml"],
-                cwd=project_root,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-
-            if stage_result.returncode == 0:
-                import yaml
-                try:
-                    data = yaml.safe_load(stage_result.stdout)
-                    if data and "stage" in data:
-                        history.append(
-                            StageHistoryEntry(
-                                stage=data["stage"],
-                                commit_hash=commit_hash[:7],
-                                commit_date=commit_date,
-                                commit_message=commit_message[:50],
-                            )
-                        )
-                except yaml.YAMLError:
-                    pass
-
-    except subprocess.SubprocessError:
-        pass
-
-    return history
+        for entry in reversed(history_entries)
+    ]
 
 
 def get_next_stage(current: Stage) -> Stage | None:
@@ -288,8 +240,8 @@ def get_status(path: Path) -> ProjectStatus:
     # Next steps guidance
     next_steps = get_next_steps(config, validation, project_root)
 
-    # History
-    history = get_stage_history(project_root)
+    # History from praxis.yaml
+    history = get_stage_history_from_config(config)
 
     return ProjectStatus(
         project_name=project_name,

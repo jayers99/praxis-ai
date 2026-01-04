@@ -11,6 +11,22 @@ from praxis.domain.privacy import PrivacyLevel
 from praxis.domain.stages import Stage
 
 
+class StageHistoryEntry(BaseModel):
+    """A single stage transition in project history."""
+
+    timestamp: str = Field(description="ISO8601 timestamp of transition")
+    from_stage: str = Field(description="Stage before transition")
+    to_stage: str = Field(description="Stage after transition")
+    contract_id: str | None = Field(
+        default=None,
+        description="Contract ID for Formalize transitions",
+    )
+    reason: str | None = Field(
+        default=None,
+        description="Rationale for non-standard regressions",
+    )
+
+
 class PraxisConfig(BaseModel):
     """Configuration from praxis.yaml."""
 
@@ -27,6 +43,10 @@ class PraxisConfig(BaseModel):
         ge=0,
         le=100,
         description="Minimum test coverage percentage (0-100). Optional.",
+    )
+    history: list[StageHistoryEntry] = Field(
+        default_factory=list,
+        description="Stage transition history (most recent last).",
     )
 
 
