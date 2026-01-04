@@ -11,6 +11,7 @@ from praxis.domain.workspace import (
     ExtensionManifest,
     ManifestLoadResult,
     OpinionContribution,
+    TemplateContribution,
 )
 
 # Supported manifest versions (semver MAJOR.MINOR)
@@ -101,6 +102,7 @@ def load_extension_manifest(
     try:
         contributions_data = data.get("contributions", {})
         opinions_data = contributions_data.get("opinions", [])
+        templates_data = contributions_data.get("templates", [])
 
         opinions = []
         for opinion_data in opinions_data:
@@ -112,7 +114,32 @@ def load_extension_manifest(
                 )
             opinions.append(OpinionContribution(**opinion_data))
 
-        contributions = ExtensionContributions(opinions=opinions)
+        templates = []
+        warnings = []
+        for template_data in templates_data:
+            if not isinstance(template_data, dict):
+                return ManifestLoadResult(
+                    success=False,
+                    extension_name=extension_name,
+                    error=f"Invalid template contribution: {template_data}",
+                )
+
+            # Parse the template contribution
+            template_contrib = TemplateContribution(**template_data)
+
+            # Validate that the source file exists
+            source_path = extension_path / template_contrib.source
+            if not source_path.exists():
+                warning = (
+                    f"Template source not found: {template_contrib.source} "
+                    f"(skipping contribution to {template_contrib.target})"
+                )
+                warnings.append(warning)
+                continue  # Skip this invalid contribution
+
+            templates.append(template_contrib)
+
+        contributions = ExtensionContributions(opinions=opinions, templates=templates)
 
         manifest = ExtensionManifest(
             manifest_version=manifest_version,
@@ -121,11 +148,17 @@ def load_extension_manifest(
             contributions=contributions,
         )
 
-        return ManifestLoadResult(
+        result = ManifestLoadResult(
             success=True,
             extension_name=extension_name,
             manifest=manifest,
         )
+
+        # Add warning if any template sources were missing
+        if warnings:
+            result.warning = "; ".join(warnings)
+
+        return result
 
     except Exception as e:
         return ManifestLoadResult(
