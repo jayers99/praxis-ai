@@ -219,16 +219,26 @@ def resolve_opinions(
     )
 
 
-def format_prompt_output(resolved: ResolvedOpinions) -> str:
+def format_prompt_output(
+    resolved: ResolvedOpinions,
+    privacy_level: str | None = None,
+    redact: bool = False,
+) -> tuple[str, list[str]]:
     """Format resolved opinions as a copy-pasteable AI context block.
 
     Args:
         resolved: The resolved opinions
+        privacy_level: Optional privacy level to embed constraints
+        redact: Whether to apply redaction to content
 
     Returns:
-        Markdown-formatted string suitable for AI context
+        Tuple of (formatted markdown string, list of redaction warnings)
     """
+    from praxis.domain.privacy import PrivacyLevel
+    from praxis.domain.privacy_guard import PrivacyGuard
+
     lines: list[str] = []
+    redaction_warnings: list[str] = []
 
     # Header
     lines.append("# Praxis Opinions Context")
@@ -239,6 +249,19 @@ def format_prompt_output(resolved: ResolvedOpinions) -> str:
     if resolved.subtype:
         lines.append(f"**Subtype:** {resolved.subtype}")
     lines.append("")
+
+    # Privacy constraints (if privacy level provided)
+    if privacy_level:
+        try:
+            privacy_enum = PrivacyLevel(privacy_level)
+            constraint = PrivacyGuard.get_constraint(privacy_enum)
+            if constraint.constraint_text:
+                lines.append("## Privacy Constraints")
+                lines.append("")
+                lines.append(f"⚠️  **{constraint.constraint_text}**")
+                lines.append("")
+        except (ValueError, KeyError):
+            pass  # Invalid privacy level, skip constraints
 
     # AI guidelines for interpreting and applying these opinions
     lines.append("## AI Guidelines")
@@ -265,14 +288,21 @@ def format_prompt_output(resolved: ResolvedOpinions) -> str:
         lines.append(f"## {opinion.path}")
         lines.append("")
         if opinion.content:
-            lines.append(opinion.content)
+            content = opinion.content
+            # Apply redaction if requested
+            if redact:
+                redacted_content, patterns_found = PrivacyGuard.redact_content(content)
+                if patterns_found:
+                    redaction_warnings.extend(patterns_found)
+                content = redacted_content
+            lines.append(content)
         else:
             lines.append("*(No content)*")
         lines.append("")
         lines.append("---")
         lines.append("")
 
-    return "\n".join(lines)
+    return "\n".join(lines), redaction_warnings
 
 
 def format_json_output(resolved: ResolvedOpinions) -> dict[str, Any]:
