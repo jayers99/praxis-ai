@@ -1911,6 +1911,11 @@ def opinions_cmd(
         "-l",
         help="List all available opinion files.",
     ),
+    redact: bool = typer.Option(
+        False,
+        "--redact",
+        help="Apply pattern-based redaction to sensitive content (defense-in-depth).",
+    ),
 ) -> None:
     """Resolve and display applicable opinions for a project.
 
@@ -1946,6 +1951,7 @@ def opinions_cmd(
     resolved_domain = domain
     resolved_stage = stage
     resolved_subtype = subtype
+    privacy_level: str | None = None
 
     if resolved_domain is None:
         # Try to load from praxis.yaml
@@ -1956,6 +1962,7 @@ def opinions_cmd(
                 resolved_domain = result.config.domain.value
                 resolved_stage = resolved_stage or result.config.stage.value
                 resolved_subtype = resolved_subtype or result.config.subtype
+                privacy_level = result.config.privacy_level.value
         else:
             typer.echo(
                 "Error: No praxis.yaml found and --domain not specified.",
@@ -1982,11 +1989,34 @@ def opinions_cmd(
     for warning in resolved.warnings:
         typer.echo(f"Warning: {warning}", err=True)
 
+    # Privacy warnings (only for --prompt)
+    if prompt and privacy_level:
+        from praxis.domain.privacy import PrivacyLevel
+        from praxis.domain.privacy_guard import PrivacyGuard
+
+        try:
+            privacy_enum = PrivacyLevel(privacy_level)
+            if PrivacyGuard.should_warn(privacy_enum):
+                constraint = PrivacyGuard.get_constraint(privacy_enum)
+                if constraint.warning_text:
+                    typer.echo(constraint.warning_text, err=True)
+        except (ValueError, KeyError):
+            pass  # Invalid privacy level, skip warning
+
     # Format output
     if json_output:
         typer.echo(json_module.dumps(format_json_output(resolved), indent=2))
     elif prompt:
-        typer.echo(format_prompt_output(resolved))
+        output, redaction_warnings = format_prompt_output(
+            resolved, privacy_level=privacy_level, redact=redact
+        )
+        if redaction_warnings:
+            patterns_str = ", ".join(set(redaction_warnings))
+            typer.echo(
+                f"ℹ️  Redaction applied: {patterns_str}",
+                err=True,
+            )
+        typer.echo(output)
     else:
         # Default: show provenance list
         typer.echo(f"Applicable opinions for {resolved.domain}", nl=False)
