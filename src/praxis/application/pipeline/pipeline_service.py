@@ -21,6 +21,7 @@ from praxis.domain.pipeline.risk_tiers import (
     is_stage_required,
 )
 from praxis.domain.pipeline.stages import PipelineStage
+from praxis.infrastructure.librarian import search_library
 from praxis.infrastructure.pipeline.pipeline_state_repo import (
     create_pipeline_run_directory,
     get_stage_output_path,
@@ -35,6 +36,9 @@ def init_pipeline(
     risk_tier: int,
     source_corpus_path: Path,
     force: bool = False,
+    run_precheck: bool = True,
+    prior_run_id: str | None = None,
+    rerun_reason: str | None = None,
 ) -> PipelineInitResult:
     """Initialize a new knowledge distillation pipeline.
 
@@ -43,9 +47,12 @@ def init_pipeline(
         risk_tier: Risk tier (0-3) determining required stages.
         source_corpus_path: Path to the source corpus for RTC stage.
         force: If True, replace existing active pipeline.
+        run_precheck: If True, search research library for relevant prior work.
+        prior_run_id: Optional reference to a prior pipeline run (for reruns).
+        rerun_reason: Optional reason for rerun (changed assumptions, etc.).
 
     Returns:
-        PipelineInitResult with pipeline_id and required stages.
+        PipelineInitResult with pipeline_id, required stages, and precheck matches.
     """
     errors: list[str] = []
 
@@ -79,6 +86,42 @@ def init_pipeline(
         )
         return PipelineInitResult(success=False, errors=errors)
 
+    # Run library precheck if enabled
+    precheck_matches: list[dict[str, str | float]] = []
+    search_query: str | None = None
+
+    if run_precheck:
+        # Extract topic from source corpus path
+        # Simple heuristic: use the filename or parent directory name
+        if source_corpus_path.is_file():
+            search_query = source_corpus_path.stem
+        else:
+            search_query = source_corpus_path.name
+
+        # Look for research-library/CATALOG.md relative to project root
+        catalog_path = project_root / "research-library" / "CATALOG.md"
+
+        if catalog_path.exists():
+            matches = search_library(
+                query=search_query,
+                catalog_path=catalog_path,
+            )
+
+            # Convert to serializable format
+            for match in matches:
+                precheck_matches.append(
+                    {
+                        "id": match.id,
+                        "title": match.title,
+                        "path": str(match.path),
+                        "topic": match.topic,
+                        "consensus": match.consensus,
+                        "date": match.date,
+                        "keywords": ",".join(match.keywords),
+                        "relevance_score": match.relevance_score,
+                    }
+                )
+
     # Generate pipeline ID
     pipeline_id = str(uuid.uuid4())[:8]
 
@@ -89,6 +132,9 @@ def init_pipeline(
         current_stage=PipelineStage.RTC,
         started_at=datetime.now(),
         source_corpus_path=source_corpus_path.resolve(),
+        prior_run_id=prior_run_id,
+        rerun_reason=rerun_reason,
+        search_query=search_query,
     )
 
     # Initialize stage executions for all required stages
@@ -114,6 +160,7 @@ def init_pipeline(
         pipeline_id=pipeline_id,
         risk_tier=tier,
         required_stages=required_stages,
+        precheck_matches=precheck_matches,
     )
 
 
