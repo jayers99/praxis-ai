@@ -151,6 +151,8 @@ Capture → Sense → Explore → Shape → Formalize → Commit → Execute →
 | Sustain | Execute, Commit |
 | Close | Capture |
 
+**Regression UX:** Non-standard regressions that cross the Formalize boundary (e.g., Execute → Explore) display enhanced warnings showing which contract will be voided and the implications of moving from execution back to discovery mode.
+
 ### 3. Privacy Level — How Restricted?
 
 Five levels from least to most restrictive:
