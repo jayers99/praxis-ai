@@ -9,6 +9,7 @@ import typer
 
 from praxis import __version__
 from praxis.application.audit_service import audit_project
+from praxis.application.context_service import get_context
 from praxis.application.extension_service import (
     add_example,
     add_extension,
@@ -1005,6 +1006,85 @@ def status_cmd(
             typer.echo(f"{line} {entry.commit_message}")
     else:
         typer.echo("Stage History: (no history found)")
+
+    raise typer.Exit(0)
+
+
+@app.command(name="context")
+def context_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output JSON format.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Generate deterministic AI context bundle for the project.
+
+    Produces a reproducible context bundle containing:
+    - Project configuration (domain, stage, privacy, environment)
+    - Resolved opinions for current domain and stage
+    - Formalize artifact excerpt (if applicable)
+
+    Use --json for machine-readable output with stable schema.
+    """
+    bundle = get_context(path.resolve())
+
+    # Handle errors
+    if bundle.errors:
+        if json_output:
+            typer.echo(bundle.model_dump_json(indent=2))
+        else:
+            for error in bundle.errors:
+                typer.echo(f"✗ {error}", err=True)
+        raise typer.Exit(1)
+
+    # JSON output
+    if json_output:
+        typer.echo(bundle.model_dump_json(indent=2))
+        raise typer.Exit(0)
+
+    # Quiet mode
+    if quiet:
+        raise typer.Exit(0)
+
+    # Human-readable output
+    typer.echo(f"Project: {bundle.project_name}")
+    typer.echo(f"  Domain:  {bundle.domain}")
+    typer.echo(f"  Stage:   {bundle.stage}")
+    typer.echo(f"  Privacy: {bundle.privacy_level}")
+    typer.echo(f"  Env:     {bundle.environment}")
+    if bundle.subtype:
+        typer.echo(f"  Subtype: {bundle.subtype}")
+
+    typer.echo("")
+    typer.echo("Opinions:")
+    if bundle.opinions:
+        for opinion_path in bundle.opinions:
+            typer.echo(f"  - {opinion_path}")
+    else:
+        typer.echo("  (no opinions found)")
+
+    typer.echo("")
+    typer.echo("Formalize Artifact:")
+    if bundle.formalize_artifact.get("path"):
+        artifact_path = bundle.formalize_artifact["path"]
+        typer.echo(f"  Path: {artifact_path}")
+        if bundle.formalize_artifact.get("excerpt"):
+            typer.echo("  Excerpt: (first 100 lines)")
+        else:
+            typer.echo("  Status: not found")
+    else:
+        typer.echo("  (none required for this stage)")
 
     raise typer.Exit(0)
 

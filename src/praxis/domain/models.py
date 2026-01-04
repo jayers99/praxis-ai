@@ -122,3 +122,33 @@ class AuditResult(BaseModel):
     def failed(self) -> list[AuditCheck]:
         """Return only failed checks."""
         return [c for c in self.checks if c.status == "failed"]
+
+
+class ContextBundle(BaseModel):
+    """Deterministic AI context bundle for a Praxis project."""
+
+    schema_version: str = Field(
+        default="1.0",
+        description="Schema version for backwards compatibility tracking",
+    )
+    project_name: str = Field(description="Project name from directory")
+    domain: str = Field(description="Project domain (code, create, write, etc.)")
+    stage: str = Field(description="Current lifecycle stage")
+    privacy_level: str = Field(description="Privacy level of the project")
+    environment: str = Field(description="Environment (Home, Work)")
+    subtype: str | None = Field(
+        default=None,
+        description="Optional subtype (e.g., cli, library, api)",
+    )
+    opinions: list[str] = Field(
+        default_factory=list,
+        description="Resolved opinion file paths in resolution order",
+    )
+    formalize_artifact: dict[str, str | None] = Field(
+        default_factory=dict,
+        description="Formalize artifact info (path and excerpt)",
+    )
+    errors: list[str] = Field(
+        default_factory=list,
+        description="Any errors encountered during context generation",
+    )

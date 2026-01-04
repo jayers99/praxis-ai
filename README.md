@@ -183,6 +183,8 @@ praxis init                           # Initialize existing directory
 praxis stage formalize                # Transition stages
 praxis status                         # Current state, next steps, history
 praxis status --json                  # Machine-readable output
+praxis context                        # Generate AI context bundle
+praxis context --json                 # Machine-readable context
 praxis validate                       # Check governance configuration
 praxis validate --check-all           # Include tests, lint, types
 praxis audit                          # Domain best practices check
