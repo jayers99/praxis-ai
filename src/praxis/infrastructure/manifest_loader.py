@@ -1,0 +1,167 @@
+"""Infrastructure for loading and validating extension manifests."""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import yaml
+
+from praxis.domain.workspace import (
+    ExtensionContributions,
+    ExtensionManifest,
+    ManifestLoadResult,
+    OpinionContribution,
+)
+
+# Supported manifest versions (semver MAJOR.MINOR)
+SUPPORTED_MANIFEST_VERSIONS = ["0.1"]
+
+
+def load_extension_manifest(
+    extension_path: Path, extension_name: str
+) -> ManifestLoadResult:
+    """Load and validate an extension manifest.
+
+    Args:
+        extension_path: Path to extension directory
+        extension_name: Expected name of the extension
+
+    Returns:
+        ManifestLoadResult with parsed manifest or error details
+    """
+    manifest_path = extension_path / "praxis-extension.yaml"
+
+    # Check if manifest exists
+    if not manifest_path.exists():
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error=f"No praxis-extension.yaml found in {extension_path}",
+        )
+
+    # Parse YAML
+    try:
+        with open(manifest_path, encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+    except yaml.YAMLError as e:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error=f"Invalid YAML in manifest: {e}",
+        )
+    except Exception as e:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error=f"Failed to read manifest: {e}",
+        )
+
+    if not isinstance(data, dict):
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error="Manifest must be a YAML dictionary",
+        )
+
+    # Validate manifest_version
+    manifest_version = data.get("manifest_version")
+    if not manifest_version:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error="Missing required field: manifest_version",
+        )
+
+    if manifest_version not in SUPPORTED_MANIFEST_VERSIONS:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error=f"Unsupported manifest version '{manifest_version}'. "
+            f"Supported versions: {', '.join(SUPPORTED_MANIFEST_VERSIONS)}",
+        )
+
+    # Validate name matches directory
+    manifest_name = data.get("name")
+    if not manifest_name:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error="Missing required field: name",
+        )
+
+    if manifest_name != extension_name:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error=f"Manifest name '{manifest_name}' does not match "
+            f"extension directory name '{extension_name}'",
+        )
+
+    # Parse contributions
+    try:
+        contributions_data = data.get("contributions", {})
+        opinions_data = contributions_data.get("opinions", [])
+
+        opinions = []
+        for opinion_data in opinions_data:
+            if not isinstance(opinion_data, dict):
+                return ManifestLoadResult(
+                    success=False,
+                    extension_name=extension_name,
+                    error=f"Invalid opinion contribution: {opinion_data}",
+                )
+            opinions.append(OpinionContribution(**opinion_data))
+
+        contributions = ExtensionContributions(opinions=opinions)
+
+        manifest = ExtensionManifest(
+            manifest_version=manifest_version,
+            name=manifest_name,
+            description=data.get("description"),
+            contributions=contributions,
+        )
+
+        return ManifestLoadResult(
+            success=True,
+            extension_name=extension_name,
+            manifest=manifest,
+        )
+
+    except Exception as e:
+        return ManifestLoadResult(
+            success=False,
+            extension_name=extension_name,
+            error=f"Failed to parse manifest: {e}",
+        )
+
+
+def discover_extension_manifests(
+    extensions_path: Path, installed_extensions: list[str]
+) -> list[ManifestLoadResult]:
+    """Discover and load manifests for all installed extensions.
+
+    Args:
+        extensions_path: Path to workspace extensions directory
+        installed_extensions: List of installed extension names
+
+    Returns:
+        List of ManifestLoadResult for each installed extension
+    """
+    results: list[ManifestLoadResult] = []
+
+    for ext_name in installed_extensions:
+        ext_path = extensions_path / ext_name
+        if not ext_path.exists():
+            results.append(
+                ManifestLoadResult(
+                    success=False,
+                    extension_name=ext_name,
+                    error=f"Extension directory not found: {ext_path}",
+                )
+            )
+            continue
+
+        result = load_extension_manifest(ext_path, ext_name)
+        results.append(result)
+
+    return results

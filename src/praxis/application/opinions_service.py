@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Any
 
@@ -10,11 +11,60 @@ from praxis.domain.opinions import (
     OpinionsTree,
     ResolvedOpinions,
 )
+from praxis.infrastructure.manifest_loader import discover_extension_manifests
 from praxis.infrastructure.opinions_loader import (
     build_opinions_tree,
+    build_opinions_tree_with_extensions,
     find_opinions_root,
     load_opinion_file,
+    merge_opinions_with_extensions,
 )
+from praxis.infrastructure.workspace_config_repo import load_workspace_config
+
+
+def _get_extension_manifests(
+    start_path: Path,
+) -> list[tuple[Path, Any]] | None:
+    """Discover extension manifests from workspace.
+
+    Args:
+        start_path: Starting path to search for workspace
+
+    Returns:
+        List of (extension_path, manifest) tuples, or None if no workspace found
+    """
+    # Try to find workspace by looking for PRAXIS_HOME env var
+    praxis_home = os.environ.get("PRAXIS_HOME")
+    if not praxis_home:
+        return None
+
+    workspace_path = Path(praxis_home)
+    if not workspace_path.exists():
+        return None
+
+    # Load workspace config
+    try:
+        config = load_workspace_config(workspace_path)
+    except Exception:
+        return None
+
+    # Discover extension manifests
+    extensions_path = workspace_path / "extensions"
+    if not extensions_path.exists():
+        return None
+
+    manifest_results = discover_extension_manifests(
+        extensions_path, config.installed_extensions
+    )
+
+    # Filter to successful manifests only
+    manifests: list[tuple[Path, Any]] = []
+    for result in manifest_results:
+        if result.success and result.manifest:
+            ext_path = extensions_path / result.extension_name
+            manifests.append((ext_path, result.manifest))
+
+    return manifests if manifests else None
 
 
 def compute_resolution_chain(
@@ -84,6 +134,8 @@ def resolve_opinions(
 ) -> ResolvedOpinions:
     """Resolve applicable opinions for a project context.
 
+    Includes extension contributions if workspace is available.
+
     Args:
         domain: The domain (code, create, write, learn, observe)
         stage: Optional lifecycle stage
@@ -112,24 +164,51 @@ def resolve_opinions(
             warnings=warnings,
         )
 
+    # Get extension manifests (if workspace available)
+    extension_manifests = _get_extension_manifests(start_path or Path.cwd())
+
+    # Merge opinions from core and extensions
+    if extension_manifests:
+        merged, merge_warnings = merge_opinions_with_extensions(
+            opinions_root, extension_manifests
+        )
+        warnings.extend(merge_warnings)
+    else:
+        # No extensions - just load core opinions
+        merged = {}
+        for path in opinions_root.rglob("*.md"):
+            relative = path.relative_to(opinions_root)
+            parts = relative.parts
+            if "_templates" in parts:
+                continue
+            if parts[0].startswith("_") and parts[0] != "_shared":
+                continue
+            relative_str = relative.as_posix()
+            merged[relative_str] = load_opinion_file(
+                opinions_root, relative_str, source="core"
+            )
+
     # Compute resolution chain
     chain = compute_resolution_chain(domain, stage, subtype)
 
-    # Load each file in order
+    # Load files in resolution order
     files: list[OpinionFile] = []
-    for path in chain:
-        opinion_file = load_opinion_file(opinions_root, path)
-        if opinion_file.exists:
-            files.append(opinion_file)
-            # Check for parse errors
-            if opinion_file.parse_error:
-                warnings.append(f"Parse error in {path}: {opinion_file.parse_error}")
-            # Check for deprecated status
-            if (
-                opinion_file.frontmatter
-                and opinion_file.frontmatter.status.value == "deprecated"
-            ):
-                warnings.append(f"Deprecated opinion file: {path}")
+    for file_path in chain:
+        if file_path in merged:
+            opinion_file = merged[file_path]
+            if opinion_file.exists:
+                files.append(opinion_file)
+                # Check for parse errors
+                if opinion_file.parse_error:
+                    warnings.append(
+                        f"Parse error in {file_path}: {opinion_file.parse_error}"
+                    )
+                # Check for deprecated status
+                if (
+                    opinion_file.frontmatter
+                    and opinion_file.frontmatter.status.value == "deprecated"
+                ):
+                    warnings.append(f"Deprecated opinion file: {file_path}")
 
     return ResolvedOpinions(
         domain=domain,
@@ -230,7 +309,7 @@ def format_list_output(tree: OpinionsTree) -> str:
         tree: The opinions tree
 
     Returns:
-        Tree-formatted string
+        Tree-formatted string with provenance information
     """
     lines: list[str] = []
 
@@ -243,7 +322,10 @@ def format_list_output(tree: OpinionsTree) -> str:
             # Extract filename from path
             filename = path.split("/")[-1]
             prefix = "│   └── " if i == len(tree.shared) - 1 else "│   ├── "
-            lines.append(f"{prefix}{filename}")
+            # Add provenance if available
+            source = tree.provenance.get(path, "core")
+            source_label = f" [{source}]" if source != "core" else ""
+            lines.append(f"{prefix}{filename}{source_label}")
 
     # Domain files
     domain_list = list(tree.domains.items())
@@ -260,10 +342,21 @@ def format_list_output(tree: OpinionsTree) -> str:
             # Get path relative to domain
             rel_path = filepath.split("/", 1)[1] if "/" in filepath else filepath
             file_prefix = "└── " if is_last_file else "├── "
-            lines.append(f"{subdir_prefix}{file_prefix}{rel_path}")
+            # Add provenance if available
+            source = tree.provenance.get(filepath, "core")
+            source_label = f" [{source}]" if source != "core" else ""
+            lines.append(f"{subdir_prefix}{file_prefix}{rel_path}{source_label}")
 
     lines.append("")
     lines.append(f"Total: {tree.total_files} opinion files")
+
+    # Show extension contributions summary if any
+    if tree.extension_contributions:
+        lines.append("")
+        lines.append("Extension contributions:")
+        for ext_name in sorted(tree.extension_contributions.keys()):
+            count = len(tree.extension_contributions[ext_name])
+            lines.append(f"  • {ext_name}: {count} file(s)")
 
     return "\n".join(lines)
 
@@ -289,5 +382,12 @@ def get_opinions_tree(
     if opinions_root is None or not opinions_root.exists():
         return None, "No opinions directory found"
 
-    tree = build_opinions_tree(opinions_root)
+    # Get extension manifests (if workspace available)
+    extension_manifests = _get_extension_manifests(start_path or Path.cwd())
+
+    if extension_manifests:
+        tree = build_opinions_tree_with_extensions(opinions_root, extension_manifests)
+    else:
+        tree = build_opinions_tree(opinions_root)
+
     return tree, None

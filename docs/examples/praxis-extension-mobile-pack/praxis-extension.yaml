@@ -1,0 +1,8 @@
+manifest_version: "0.1"
+name: mobile-pack
+description: Mobile development opinions for iOS, Android, and cross-platform projects
+
+contributions:
+  opinions:
+    - source: opinions/code/subtypes/mobile/principles.md
+      target: code/subtypes/mobile/principles.md
