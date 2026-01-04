@@ -280,6 +280,284 @@ Missing template files generate warnings but don't fail manifest loading.
 
 ---
 
+## Audit Check Contributions
+
+### 1. Overview
+
+Extensions can contribute domain-specific audit checks that automatically appear in `praxis audit` output for matching projects.
+
+**Example Use Cases:**
+- Mobile-specific checks (e.g., validate mobile.json exists)
+- Library-specific checks (e.g., check for CHANGELOG.md)
+- Platform-specific checks (e.g., verify deployment configs)
+
+### 2. Basic Structure
+
+Add audit contributions to your manifest:
+
+```yaml
+manifest_version: "0.1"
+name: mobile-pack
+description: Mobile development audit checks
+
+contributions:
+  audits:
+    - domain: "code"
+      subtypes: ["mobile"]
+      checks:
+        - name: "mobile_manifest_exists"
+          category: "structure"
+          check_type: "file_exists"
+          path: "mobile.json"
+          pass_message: "Mobile manifest exists (mobile.json)"
+          fail_message: "Mobile manifest missing (create mobile.json)"
+          severity: "warning"
+```
+
+### 3. Supported Check Types
+
+| Check Type | Parameters | Description |
+|------------|------------|-------------|
+| `file_exists` | `path` | Checks if a file exists at the specified path |
+| `dir_exists` | `path` | Checks if a directory exists at the specified path |
+| `file_contains` | `path`, `pattern` | Checks if file contains regex pattern |
+
+**Example - File Exists:**
+```yaml
+- name: "readme_exists"
+  category: "documentation"
+  check_type: "file_exists"
+  path: "README.md"
+  pass_message: "README exists"
+  fail_message: "README not found"
+  severity: "warning"
+```
+
+**Example - Directory Exists:**
+```yaml
+- name: "tests_directory"
+  category: "testing"
+  check_type: "dir_exists"
+  path: "tests"
+  pass_message: "Tests directory exists"
+  fail_message: "Tests directory not found"
+  severity: "warning"
+```
+
+**Example - File Contains (with regex):**
+```yaml
+- name: "version_in_pyproject"
+  category: "configuration"
+  check_type: "file_contains"
+  path: "pyproject.toml"
+  pattern: 'version\s*=\s*"[0-9]+\.[0-9]+"'
+  pass_message: "Version specified in pyproject.toml"
+  fail_message: "Version not specified"
+  severity: "warning"
+```
+
+### 4. Filtering
+
+**Domain Filtering:**
+```yaml
+audits:
+  - domain: "code"  # Only applies to code domain projects
+    checks: [...]
+  
+  - domain: "create"  # Only applies to create domain projects
+    checks: [...]
+```
+
+**Subtype Filtering:**
+```yaml
+audits:
+  - domain: "code"
+    subtypes: ["mobile"]  # Only for mobile projects
+    checks: [...]
+  
+  - domain: "code"
+    subtypes: []  # All code projects (empty = no filter)
+    checks: [...]
+```
+
+**Stage Filtering:**
+```yaml
+checks:
+  - name: "docs_site_exists"
+    check_type: "dir_exists"
+    path: "docs"
+    min_stage: "formalize"  # Only at formalize stage or later
+    pass_message: "Documentation site exists"
+    fail_message: "Documentation site not found"
+    severity: "warning"
+```
+
+### 5. Check Fields Reference
+
+**Required Fields:**
+- `name` (string): Unique check name within the extension
+- `category` (string): Check category (e.g., "structure", "tooling", "documentation")
+- `check_type` (string): Type of check (`file_exists`, `dir_exists`, `file_contains`)
+- `path` (string): File or directory path (relative to project root)
+- `pass_message` (string): Message when check passes
+- `fail_message` (string): Message when check fails
+
+**Optional Fields:**
+- `pattern` (string): Regex pattern (required for `file_contains` checks)
+- `severity` (string): `"warning"` or `"failed"` (default: `"warning"`)
+- `min_stage` (string): Minimum lifecycle stage (e.g., `"formalize"`, `"commit"`)
+
+### 6. Provenance and Naming
+
+Extension checks are automatically prefixed with the extension name for provenance:
+
+```yaml
+# In manifest:
+name: "mobile_manifest_exists"
+
+# In audit output:
+# Check is registered as: "mobile-pack:mobile_manifest_exists"
+```
+
+This prevents naming conflicts between extensions.
+
+### 7. Best Practices
+
+**✅ Do:**
+- Use descriptive check names that explain what's being validated
+- Provide helpful pass/fail messages that guide users
+- Use appropriate severity levels (`warning` for best practices, `failed` for requirements)
+- Use `min_stage` to avoid noise in early stages
+- Group related checks by category
+
+**❌ Don't:**
+- Create checks that require external tools or network access
+- Use overly complex regex patterns that are hard to maintain
+- Duplicate core checks (check what exists first)
+- Create checks that only apply to your organization (keep extensions general)
+
+### 8. Example: Complete Audit Contribution
+
+```yaml
+manifest_version: "0.1"
+name: mobile-pack
+description: Mobile development best practices
+
+contributions:
+  audits:
+    - domain: "code"
+      subtypes: ["mobile"]
+      checks:
+        # Structure checks (all stages)
+        - name: "mobile_manifest_exists"
+          category: "structure"
+          check_type: "file_exists"
+          path: "mobile.json"
+          pass_message: "Mobile manifest exists (mobile.json)"
+          fail_message: "Mobile manifest missing (create mobile.json)"
+          severity: "warning"
+        
+        - name: "mobile_source_directory"
+          category: "structure"
+          check_type: "dir_exists"
+          path: "src/mobile"
+          pass_message: "Mobile source directory exists (src/mobile/)"
+          fail_message: "Mobile source directory missing"
+          severity: "warning"
+        
+        # Documentation checks (formalize+)
+        - name: "native_bridge_documented"
+          category: "documentation"
+          check_type: "file_exists"
+          path: "docs/native-bridge.md"
+          pass_message: "Native bridge documented"
+          fail_message: "Native bridge not documented"
+          severity: "warning"
+          min_stage: "formalize"
+        
+        # Configuration checks (formalize+)
+        - name: "platform_target_specified"
+          category: "configuration"
+          check_type: "file_contains"
+          path: "mobile.json"
+          pattern: '"platforms"\s*:\s*\['
+          pass_message: "Platform targets specified"
+          fail_message: "Platform targets not specified"
+          severity: "warning"
+          min_stage: "formalize"
+```
+
+### 9. Testing Your Checks
+
+**Local Testing:**
+1. Install your extension in a workspace
+2. Create a test project with matching domain/subtype
+3. Run `praxis audit` to see your checks
+
+```bash
+# In your workspace
+export PRAXIS_HOME=$HOME/praxis-workspace
+
+# Install extension
+cp -r praxis-extension-yourname $PRAXIS_HOME/extensions/
+
+# Update workspace-config.yaml
+# Add 'yourname' to installed_extensions list
+
+# Create test project
+mkdir test-project
+cd test-project
+cat > praxis.yaml << EOF
+domain: code
+stage: capture
+subtype: mobile
+privacy_level: personal
+environment: Home
+EOF
+
+# Run audit
+praxis audit
+```
+
+**Expected Output:**
+- Your extension checks should appear in the output
+- Check names prefixed with extension name
+- Checks respect domain, subtype, and stage filters
+
+### 10. Error Handling
+
+Praxis gracefully handles malformed audit contributions:
+
+**Invalid check type:**
+```yaml
+checks:
+  - name: "bad_check"
+    check_type: "custom_eval"  # Not supported
+    # ⚠️ Warning: Unsupported check_type, check skipped
+```
+
+**Invalid regex:**
+```yaml
+checks:
+  - name: "regex_check"
+    check_type: "file_contains"
+    pattern: "[unclosed"  # Invalid regex
+    # ⚠️ Warning: Invalid regex pattern, check skipped
+```
+
+**Missing required fields:**
+```yaml
+checks:
+  - name: "incomplete_check"
+    check_type: "file_contains"
+    # Missing 'pattern' field
+    # ⚠️ Warning: Missing required field, check skipped
+```
+
+Malformed checks generate warnings but don't prevent other checks from running.
+
+---
+
 ## Opinion File Guidelines
 
 ### 1. Frontmatter Requirements
