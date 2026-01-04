@@ -93,7 +93,7 @@ def project_with_history(
         },
     ]
 
-    praxis_yaml.write_text(yaml.dump(content, default_flow_style=False, sort_keys=False))
+    praxis_yaml.write_text(yaml.safe_dump(content, default_flow_style=False, sort_keys=False))
 
 
 @when(parsers.parse('I run praxis stage "{new_stage}"'))

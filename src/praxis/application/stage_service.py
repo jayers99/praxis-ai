@@ -76,7 +76,7 @@ def transition_stage(
         allowed = ALLOWED_REGRESSIONS.get(current_config.stage, frozenset())
         if new_stage not in allowed:
             # This is a non-standard regression - requires rationale
-            # If reason is provided, treat as forced with confirmation
+            # If reason is provided, proceed automatically
             if reason is not None:
                 force = True
             if not force:
@@ -87,10 +87,10 @@ def transition_stage(
                         f"Regression from '{current_config.stage.value}' to "
                         f"'{new_stage.value}' is not standard. "
                         f"Allowed: {', '.join(s.value for s in allowed) or 'none'}. "
-                        f"Provide --reason or use --force to proceed."
+                        f"Provide --reason to document rationale."
                     ),
                 )
-            # If force, require reason
+            # Force mode requires reason for auditability
             if reason is None:
                 return StageResult(
                     success=False,

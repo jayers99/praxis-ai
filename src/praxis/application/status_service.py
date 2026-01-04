@@ -70,8 +70,11 @@ def get_stage_history_from_config(
     Returns:
         List of stage history entries, most recent first.
     """
-    # Return history in reverse order (most recent first)
-    history_entries = config.history[-limit:] if config.history else []
+    # Get last N entries in reverse order (most recent first)
+    if not config.history:
+        return []
+
+    history_entries = config.history[-limit:][::-1]
     return [
         StageHistoryDisplay(
             timestamp=entry.timestamp,
@@ -80,7 +83,7 @@ def get_stage_history_from_config(
             contract_id=entry.contract_id,
             reason=entry.reason,
         )
-        for entry in reversed(history_entries)
+        for entry in history_entries
     ]
 
 
