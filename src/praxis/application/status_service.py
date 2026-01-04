@@ -41,6 +41,10 @@ class ProjectStatus(BaseModel):
     artifact_path: str | None = None
     artifact_exists: bool = False
 
+    # Checklist info
+    checklist_path: str | None = None
+    checklist_addendum_path: str | None = None
+
     # Validation
     validation: ValidationResult
 
@@ -192,6 +196,32 @@ def get_next_stage_requirements(
     return requirements
 
 
+def resolve_checklist_paths(
+    stage: Stage,
+    domain: str,
+) -> tuple[str | None, str | None]:
+    """Resolve checklist paths for the current stage and domain.
+
+    Args:
+        stage: Current lifecycle stage.
+        domain: Project domain.
+
+    Returns:
+        Tuple of (base_checklist_path, addendum_path).
+        Both paths are relative to the project root.
+        Returns None for addendum if no domain-specific checklist exists.
+    """
+    # Base checklist path
+    base_path = f"core/checklists/{stage.value}.md"
+
+    # Domain addendum path (if it exists)
+    addendum_path = f"core/checklists/{stage.value}-{domain}.md"
+
+    # We don't check file existence here - that happens in the CLI layer
+    # This service just provides the canonical paths
+    return (base_path, addendum_path)
+
+
 def get_status(path: Path) -> ProjectStatus:
     """Get complete project status.
 
@@ -242,6 +272,11 @@ def get_status(path: Path) -> ProjectStatus:
     if artifact_path_obj:
         artifact_exists = (project_root / artifact_path_obj).exists()
 
+    # Checklist info
+    checklist_base, checklist_addendum = resolve_checklist_paths(
+        config.stage, config.domain.value
+    )
+
     # Requirements
     requirements = get_next_stage_requirements(
         config.stage, next_stage, config, project_root
@@ -265,6 +300,8 @@ def get_status(path: Path) -> ProjectStatus:
         next_stage_requirements=requirements,
         artifact_path=artifact_path,
         artifact_exists=artifact_exists,
+        checklist_path=checklist_base,
+        checklist_addendum_path=checklist_addendum,
         validation=validation,
         next_steps=next_steps,
         stage_history=history,

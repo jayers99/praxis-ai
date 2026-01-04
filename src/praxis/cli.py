@@ -958,6 +958,23 @@ def status_cmd(
     else:
         typer.echo("Artifact: (none required for this domain)")
 
+    # Checklist references
+    typer.echo("")
+    if status.checklist_path:
+        typer.echo(f"Checklist: {status.checklist_path}")
+        # Check if addendum exists (framework repo root relative)
+        if status.checklist_addendum_path:
+            # Try to find the framework root (where core/ is)
+            # We're in a user project, so we need to check if the addendum exists
+            # in the praxis framework installation
+            import importlib.util
+            praxis_spec = importlib.util.find_spec("praxis")
+            if praxis_spec and praxis_spec.origin:
+                framework_root = Path(praxis_spec.origin).parent.parent.parent
+                addendum_full = framework_root / status.checklist_addendum_path
+                if addendum_full.exists():
+                    typer.echo(f"           {status.checklist_addendum_path}")
+
     # Validation
     typer.echo("")
     if status.validation.valid and not status.validation.warnings:

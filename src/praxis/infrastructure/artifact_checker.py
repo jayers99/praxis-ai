@@ -34,12 +34,17 @@ def check_artifact_exists(
 
     full_path = project_root / artifact_path
     if not full_path.exists():
+        # Determine checklist reference based on stage
+        # For missing artifacts, reference the Formalize checklist
+        checklist_ref = "core/checklists/formalize.md"
+        
         return ValidationIssue(
             rule="missing_artifact",
             severity="error",
             message=(
                 f"Stage '{config.stage.value}' requires formalization artifact "
-                f"at '{artifact_path}', but file not found"
+                f"at '{artifact_path}', but file not found. "
+                f"See checklist: {checklist_ref}"
             ),
         )
 
