@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import os
 import re
+from collections.abc import Callable
 from pathlib import Path
 
 from praxis.domain.audit_checks import CHECKS_BY_DOMAIN, CheckDefinition
 from praxis.domain.domains import Domain
 from praxis.domain.models import AuditCheck, AuditResult, PraxisConfig
 from praxis.domain.stages import Stage
-from praxis.domain.workspace import AuditCheckContribution, AuditContribution
+from praxis.domain.workspace import AuditCheckContribution
 from praxis.infrastructure.audit_contribution_runners import (
     run_dir_exists_check,
     run_file_contains_check,
@@ -48,7 +49,7 @@ def _check_applies(check: CheckDefinition, config: PraxisConfig) -> bool:
 
 def _create_check_function(
     check_contrib: AuditCheckContribution,
-) -> tuple[callable, list[str]]:
+) -> tuple[Callable[[Path], bool], list[str]]:
     """Create a check function from an audit check contribution.
 
     Args:
@@ -125,7 +126,8 @@ def register_extension_checks() -> list[str]:
 
     try:
         workspace_config = load_workspace_config(workspace_path)
-        installed_extensions = sorted(workspace_config.installed_extensions)  # Sort for determinism
+        # Sort extensions for deterministic check ordering
+        installed_extensions = sorted(workspace_config.installed_extensions)
     except (FileNotFoundError, ValueError):
         return warnings  # No valid workspace config
 
@@ -138,15 +140,17 @@ def register_extension_checks() -> list[str]:
     for manifest_result in manifest_results:
         if not manifest_result.success or not manifest_result.manifest:
             if manifest_result.error:
+                error_msg = manifest_result.error
                 warnings.append(
-                    f"Extension '{manifest_result.extension_name}': {manifest_result.error}"
+                    f"Extension '{manifest_result.extension_name}': {error_msg}"
                 )
             continue
 
         # Add manifest loading warnings
         if manifest_result.warning:
+            warn_msg = manifest_result.warning
             warnings.append(
-                f"Extension '{manifest_result.extension_name}': {manifest_result.warning}"
+                f"Extension '{manifest_result.extension_name}': {warn_msg}"
             )
 
         manifest = manifest_result.manifest
@@ -158,8 +162,9 @@ def register_extension_checks() -> list[str]:
             try:
                 domain = Domain(audit_contrib.domain)
             except ValueError:
+                domain_name = audit_contrib.domain
                 warnings.append(
-                    f"Extension '{extension_name}': invalid domain '{audit_contrib.domain}'"
+                    f"Extension '{extension_name}': invalid domain '{domain_name}'"
                 )
                 continue
 
@@ -178,14 +183,18 @@ def register_extension_checks() -> list[str]:
                     try:
                         min_stage = Stage(check_contrib.min_stage)
                     except ValueError:
+                        stage_name = check_contrib.min_stage
                         warnings.append(
-                            f"Extension '{extension_name}': check '{check_contrib.name}': "
-                            f"invalid min_stage '{check_contrib.min_stage}'"
+                            f"Extension '{extension_name}': "
+                            f"check '{check_contrib.name}': "
+                            f"invalid min_stage '{stage_name}'"
                         )
                         continue
 
-                # Parse subtypes (inherit from audit contribution, or use check-specific)
-                subtypes = audit_contrib.subtypes if audit_contrib.subtypes else None
+                # Parse subtypes (inherit from audit contribution)
+                subtypes = (
+                    audit_contrib.subtypes if audit_contrib.subtypes else None
+                )
 
                 # Create CheckDefinition with prefixed name for provenance
                 check_def = CheckDefinition(
@@ -244,7 +253,7 @@ def audit_project(path: Path) -> AuditResult:
     check_defs = CHECKS_BY_DOMAIN.get(config.domain, [])
 
     results: list[AuditCheck] = []
-    
+
     # Add any extension loading warnings as info checks
     for warning in extension_warnings:
         results.append(

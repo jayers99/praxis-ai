@@ -49,14 +49,14 @@ def run_file_contains_check(project_root: Path, path: str, pattern: str) -> bool
         re.error: If the pattern is invalid regex syntax.
     """
     file_path = project_root / path
-    
+
     if not file_path.is_file():
         return False
-    
+
     try:
         # Compile the pattern to validate it
         compiled_pattern = re.compile(pattern)
-        
+
         # Read file and search for pattern
         content = file_path.read_text(encoding="utf-8", errors="ignore")
         return compiled_pattern.search(content) is not None

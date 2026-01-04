@@ -168,7 +168,9 @@ class AuditCheckContribution(BaseModel):
     check_type: str = Field(
         description="Type of check (file_exists, dir_exists, file_contains)"
     )
-    path: str = Field(description="File or directory path to check (relative to project root)")
+    path: str = Field(
+        description="File or directory path to check (relative to project root)"
+    )
     pattern: str | None = Field(
         default=None,
         description="Regex pattern for file_contains check type",
