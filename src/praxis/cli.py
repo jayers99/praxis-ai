@@ -1012,7 +1012,10 @@ def status_cmd(
         typer.echo("Stage History:")
         for entry in status.stage_history[:5]:  # Show last 5
             # Format timestamp (just date part)
-            timestamp_date = entry.timestamp.split("T")[0] if "T" in entry.timestamp else entry.timestamp
+            if "T" in entry.timestamp:
+                timestamp_date = entry.timestamp.split("T")[0]
+            else:
+                timestamp_date = entry.timestamp
             transition = f"{entry.from_stage} → {entry.to_stage}"
             line = f"  {timestamp_date} {transition:25}"
             if entry.contract_id:
