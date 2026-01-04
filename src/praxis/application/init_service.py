@@ -89,6 +89,13 @@ def init_project(
         errors.append("Use --force to overwrite existing files.")
         return InitResult(success=False, errors=errors)
 
+    # Generate metadata from project directory name
+    from praxis.infrastructure.slug_helpers import slugify, title_case_name
+
+    project_dir_name = project_root.name
+    generated_slug = slugify(project_dir_name)
+    generated_name = title_case_name(generated_slug)
+
     # Generate praxis.yaml content
     praxis_config = {
         "domain": domain_enum.value,
@@ -96,6 +103,10 @@ def init_project(
         "stage": "capture",
         "privacy_level": privacy_enum.value,
         "environment": environment,
+        "name": generated_name,
+        "slug": generated_slug,
+        "description": "",
+        "tags": [],
     }
     praxis_yaml_content = yaml.dump(
         praxis_config, default_flow_style=False, sort_keys=False
