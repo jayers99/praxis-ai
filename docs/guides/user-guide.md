@@ -257,8 +257,11 @@ Next Stage: commit
 
 Artifact: ✗ docs/sod.md
 
+Checklist: core/checklists/formalize.md
+           core/checklists/formalize-code.md
+
 Validation: ✗ Invalid (1 error(s))
-  ✗ Stage 'formalize' requires formalization artifact at 'docs/sod.md', but file not found
+  ✗ Stage 'formalize' requires formalization artifact at 'docs/sod.md', but file not found. See checklist: core/checklists/formalize.md
 
 Next Steps:
   ! Fix praxis.yaml (Stage 'formalize' requires formalization artifact)
@@ -270,6 +273,31 @@ Legend: + create  ~ edit  ▶ run  ? review  ! fix
 Stage History:
   2025-12-27 formalize abc1234 move to formalize stage
 ```
+
+**Lifecycle Checklists:**
+
+Each lifecycle stage has a canonical checklist at `core/checklists/{stage}.md` that defines:
+- **Entry Criteria:** What must be true before entering this stage
+- **Exit Criteria:** What must be complete to advance to the next stage
+- **Guidance:** Stage-specific responsibilities and best practices
+- **References:** Links to relevant specs and documentation
+
+Domain-specific addenda (e.g., `formalize-code.md`, `sustain-code.md`) provide additional context for specific domains. Use `praxis status` to see applicable checklists for your current stage.
+
+**Available Checklists:**
+- `capture.md` — Collect raw inputs with minimal friction
+- `sense.md` — Convert inputs into understanding
+- `explore.md` — Generate possibilities without obligation
+- `shape.md` — Converge toward a viable direction
+- `formalize.md` — Convert shaped thinking into durable artifacts
+- `commit.md` — Explicitly decide to proceed
+- `execute.md` — Produce the artifact
+- `sustain.md` — Maintain and govern delivered work
+- `close.md` — End work intentionally and capture leverage
+
+**Domain Addenda:**
+- `formalize-code.md` — Code-specific formalization guidance (SOD creation)
+- `sustain-code.md` — Code-specific sustainment guidance (maintenance, monitoring)
 
 **Next Steps Legend:**
 

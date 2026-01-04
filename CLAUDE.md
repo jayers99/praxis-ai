@@ -117,6 +117,8 @@ praxis opinions -t cli            # Override subtype
 
 **Iteration Mode:** Formalize is where iteration changes meaning. Before: _discovery_ (what is this?). After: _refinement_ (how good can it be?). Detecting scope change during Execute means regression to Formalize.
 
+**Lifecycle Checklists:** Each stage has a canonical checklist at `core/checklists/{stage}.md` defining entry/exit criteria and guidance. Domain-specific addenda (e.g., `formalize-code.md`) provide additional context. Use `praxis status` to see applicable checklists for your current stage.
+
 **Allowed Regressions (from `lifecycle.md`):**
 
 | From | Allowed To |
