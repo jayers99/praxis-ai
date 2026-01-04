@@ -142,6 +142,12 @@ def templates_render_cmd(
         "--json",
         help="Output as JSON.",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
 ) -> None:
     """Render lifecycle stage docs and domain artifacts into a project."""
     import os
@@ -239,6 +245,9 @@ def templates_render_cmd(
 
     if json_output:
         typer.echo(result.model_dump_json(indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if quiet:
         raise typer.Exit(0 if result.success else 1)
 
     if result.success:
@@ -1250,6 +1259,12 @@ def workspace_info_cmd(
         "--json",
         help="Output JSON format.",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
 ) -> None:
     """Show workspace information."""
     try:
@@ -1282,6 +1297,9 @@ def workspace_info_cmd(
         import json
 
         typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0)
+
+    if quiet:
         raise typer.Exit(0)
 
     typer.echo(f"Workspace: {info.path}")
@@ -1724,6 +1742,12 @@ def pipeline_status_cmd(
         "--json",
         help="Output as JSON.",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
 ) -> None:
     """Show current pipeline status and progress."""
     from praxis.application.pipeline import get_pipeline_status
@@ -1732,28 +1756,32 @@ def pipeline_status_cmd(
 
     if json_output:
         typer.echo(status.model_dump_json(indent=2))
-    else:
-        if status.errors:
-            for error in status.errors:
-                typer.echo(f"Error: {error}", err=True)
-            raise typer.Exit(1)
+        raise typer.Exit(0 if not status.errors else 1)
 
-        typer.echo(f"Pipeline: {status.pipeline_id}")
-        typer.echo(f"Risk tier: {status.risk_tier.value}")
-        typer.echo(f"Current stage: {status.current_stage.value}")
-        typer.echo("")
-        typer.echo("Stage Progress:")
-        for progress in status.stage_progress:
-            marker = "✓" if progress.status == "completed" else "○"
-            req = "(required)" if progress.required else "(optional)"
-            typer.echo(f"  {marker} {progress.stage.value}: {progress.status} {req}")
+    if status.errors:
+        for error in status.errors:
+            typer.echo(f"Error: {error}", err=True)
+        raise typer.Exit(1)
 
-        if status.next_stage:
-            typer.echo(f"\nNext: {status.next_stage.value}")
-        elif status.is_complete:
-            typer.echo("\n✓ Pipeline complete")
-        elif status.awaiting_hva:
-            typer.echo("\n⏳ Awaiting HVA decision")
+    if quiet:
+        raise typer.Exit(0)
+
+    typer.echo(f"Pipeline: {status.pipeline_id}")
+    typer.echo(f"Risk tier: {status.risk_tier.value}")
+    typer.echo(f"Current stage: {status.current_stage.value}")
+    typer.echo("")
+    typer.echo("Stage Progress:")
+    for progress in status.stage_progress:
+        marker = "✓" if progress.status == "completed" else "○"
+        req = "(required)" if progress.required else "(optional)"
+        typer.echo(f"  {marker} {progress.stage.value}: {progress.status} {req}")
+
+    if status.next_stage:
+        typer.echo(f"\nNext: {status.next_stage.value}")
+    elif status.is_complete:
+        typer.echo("\n✓ Pipeline complete")
+    elif status.awaiting_hva:
+        typer.echo("\n⏳ Awaiting HVA decision")
 
 
 @pipeline_app.command("run")

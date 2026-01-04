@@ -73,3 +73,21 @@ Feature: CLI Automation Flags
     When I run praxis audit --quiet
     Then the exit code should be 0
     And the output should be empty
+
+  Scenario: Workspace info with --quiet suppresses output
+    Given a workspace exists
+    When I run praxis workspace info --quiet
+    Then the exit code should be 0
+    And the output should be empty
+
+  Scenario: Pipeline status with --quiet suppresses output
+    Given a project with an active pipeline
+    When I run praxis pipeline status --quiet
+    Then the exit code should be 0
+    And the output should be empty
+
+  Scenario: Templates render with --quiet suppresses output
+    Given a valid praxis project at capture stage
+    When I run praxis templates render --quiet
+    Then the exit code should be 0
+    And the output should be empty
