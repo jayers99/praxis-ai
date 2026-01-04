@@ -125,7 +125,7 @@ def register_extension_checks() -> list[str]:
 
     try:
         workspace_config = load_workspace_config(workspace_path)
-        installed_extensions = workspace_config.installed_extensions
+        installed_extensions = sorted(workspace_config.installed_extensions)  # Sort for determinism
     except (FileNotFoundError, ValueError):
         return warnings  # No valid workspace config
 
