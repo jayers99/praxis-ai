@@ -97,6 +97,35 @@ Always validate at stage transitions:
 poetry run praxis validate .
 ```
 
+## AI Context Bundle (New!)
+
+Generate a deterministic context bundle for AI assistants:
+
+```bash
+# Human-readable format
+praxis context
+
+# Machine-readable JSON (recommended for AI prompts)
+praxis context --json
+```
+
+The context bundle includes:
+- Project metadata (domain, stage, privacy, environment)
+- Resolved opinions for current domain and stage
+- Formalize artifact excerpt (if applicable)
+
+**Use this at the start of new AI sessions** to ensure the assistant has accurate, complete context. The JSON output is deterministic—identical runs produce identical results.
+
+Example workflow:
+```bash
+# At session start, generate context and include in prompt
+praxis context --json > ai-context.json
+
+# Or pipe directly to your AI assistant
+praxis context --json | pbcopy  # macOS
+praxis context --json | xclip   # Linux
+```
+
 ## Key References
 
 - [Praxis Lifecycle](https://github.com/jayers99/praxis-ai/blob/main/core/spec/lifecycle.md)
