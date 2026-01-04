@@ -414,17 +414,17 @@ def check_mobile_template_not_used(context: dict[str, Any]) -> None:
     assert "Mobile-specific" not in content
 
 
-@then("the core template is used")
-def check_core_template_used(context: dict[str, Any]) -> None:
-    """Verify core template was used instead of extension."""
+@then("the extension template is used")
+def check_extension_template_used(context: dict[str, Any]) -> None:
+    """Verify extension template was used."""
     result = context["result"]
     assert result.exit_code == 0
     project_root = context["project_root"]
     formalize_doc = project_root / "docs" / "formalize.md"
     assert formalize_doc.exists()
     content = formalize_doc.read_text()
-    # Should not contain extension override text
-    assert "Extension Override" not in content
+    # Should contain extension override text (extensions come before core)
+    assert "Extension Override" in content
 
 
 @then("the contributed template is available for rendering")

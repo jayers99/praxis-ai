@@ -83,12 +83,13 @@ def _default_template_roots(
         for p in extra_roots:
             roots.append(TemplateRoot(kind="custom", path=p))
 
-    # 3. Core bundled templates (take precedence over extensions)
-    roots.append(TemplateRoot(kind="core", path=get_core_templates_root()))
-
-    # 4. Extension roots (alphabetically sorted, after core)
+    # 3. Extension roots (alphabetically sorted, before core)
+    # Extensions can provide domain/subtype-specific templates
     if extension_roots:
         roots.extend(extension_roots)
+
+    # 4. Core bundled templates (fallback for generic templates)
+    roots.append(TemplateRoot(kind="core", path=get_core_templates_root()))
 
     return roots
 

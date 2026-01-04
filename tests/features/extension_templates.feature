@@ -27,13 +27,13 @@ Feature: Extension Template Contributions
     When I run "praxis templates render --stage formalize"
     Then the mobile-only template is not used
 
-  Scenario: Core templates take precedence over extension templates
+  Scenario: Extension templates used when more specific than core
     Given an installed extension "override-pack" with praxis-extension.yaml
     And the manifest declares a template contribution that overlaps with core
     And the extension has a template file at the same path as core
     And I have a project with domain "code" and subtype "cli"
     When I run "praxis templates render --stage formalize"
-    Then the core template is used
+    Then the extension template is used
 
   Scenario: Extension template without subtype filter applies to all subtypes
     Given an installed extension "universal-pack" with praxis-extension.yaml
