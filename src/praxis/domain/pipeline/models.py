@@ -39,6 +39,9 @@ class PipelineConfig(BaseModel):
     current_stage: PipelineStage
     started_at: datetime
     source_corpus_path: Path  # RTC input location
+    prior_run_id: str | None = None  # Reference to prior pipeline run (for reruns)
+    rerun_reason: str | None = None  # Reason for rerun (changed assumptions, etc.)
+    search_query: str | None = None  # Query used for library precheck
 
 
 class PipelineState(BaseModel):
@@ -85,6 +88,9 @@ class PipelineInitResult(BaseModel):
     risk_tier: RiskTier | None = None
     required_stages: list[PipelineStage] = Field(default_factory=list)
     errors: list[str] = Field(default_factory=list)
+    precheck_matches: list[dict[str, str | float]] = Field(
+        default_factory=list
+    )  # Library precheck results
 
 
 class StageProgress(BaseModel):

@@ -56,6 +56,35 @@ praxis pipeline init --tier 2 --corpus path/to/corpus
 - `--corpus` can be a file or directory
 - Use `--force` to replace an existing active pipeline
 
+**Research Library Precheck:**
+
+When you initialize a pipeline, PKDP automatically searches the research library (`research-library/CATALOG.md`) for relevant prior work based on the corpus topic. This helps you:
+
+- Avoid duplicate research effort
+- Build on existing knowledge
+- Identify relevant context before starting
+
+The precheck results are advisory only — you can proceed with the pipeline regardless of what it finds.
+
+To disable the precheck:
+
+```bash
+praxis pipeline init --tier 2 --corpus path/to/corpus --no-precheck
+```
+
+**Rerun Support:**
+
+If you're iterating on prior research with changed assumptions or new search parameters, you can link the new run to the previous one:
+
+```bash
+praxis pipeline init --tier 2 --corpus path/to/corpus \
+  --prior-run <pipeline-id> \
+  --rerun-reason "Changed assumptions about X" \
+  --force
+```
+
+This creates a traceable chain of research iterations.
+
 ### Check pipeline status
 
 ```bash

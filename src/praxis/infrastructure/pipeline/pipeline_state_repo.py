@@ -174,6 +174,14 @@ def _serialize_pipeline_state(state: PipelineState) -> dict[str, Any]:
         "stages": {},
     }
 
+    # Add optional rerun fields if present
+    if config.prior_run_id:
+        data["prior_run_id"] = config.prior_run_id
+    if config.rerun_reason:
+        data["rerun_reason"] = config.rerun_reason
+    if config.search_query:
+        data["search_query"] = config.search_query
+
     for stage, execution in state.stages.items():
         stage_data: dict[str, Any] = {
             "status": execution.status,
@@ -210,6 +218,9 @@ def _deserialize_pipeline_state(
         current_stage=PipelineStage(data["current_stage"]),
         started_at=datetime.fromisoformat(data["started_at"]),
         source_corpus_path=Path(data["source_corpus_path"]),
+        prior_run_id=data.get("prior_run_id"),
+        rerun_reason=data.get("rerun_reason"),
+        search_query=data.get("search_query"),
     )
 
     stages: dict[PipelineStage, StageExecution] = {}
