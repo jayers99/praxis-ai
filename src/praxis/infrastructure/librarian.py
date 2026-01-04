@@ -5,7 +5,38 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
+
+CoverageLevel = Literal["good", "partial", "limited", "none"]
+
+# Stop words for basic keyword extraction
+STOP_WORDS = {
+    "what",
+    "is",
+    "are",
+    "the",
+    "a",
+    "an",
+    "how",
+    "why",
+    "where",
+    "when",
+    "do",
+    "does",
+    "can",
+    "could",
+    "would",
+    "should",
+    "about",
+    "for",
+    "in",
+    "on",
+    "to",
+    "of",
+    "and",
+    "or",
+    "with",
+}
 
 
 @dataclass
@@ -20,6 +51,39 @@ class LibraryMatch:
     date: str  # e.g., "2025-12-28"
     keywords: list[str]  # e.g., ["praxis-roles", "accountability"]
     relevance_score: float  # 0.0-1.0
+
+
+@dataclass
+class Citation:
+    """A citation for a library artifact."""
+
+    artifact_id: str
+    title: str
+    path: Path
+    consensus: str
+    date: str
+    key_finding: str
+
+
+@dataclass
+class CoverageAssessment:
+    """Assessment of how well the library covers a topic."""
+
+    level: CoverageLevel
+    match_count: int
+    avg_relevance: float
+    reasoning: str
+
+
+@dataclass
+class LibraryResponse:
+    """Response from a library query."""
+
+    query: str
+    coverage: CoverageAssessment
+    summary: str
+    sources: list[Citation]
+    gaps: list[str]
 
 
 def parse_catalog(catalog_path: Path) -> list[dict[str, Any]]:
@@ -220,3 +284,266 @@ def search_library(
     matches.sort(key=lambda m: m.relevance_score, reverse=True)
 
     return matches
+
+
+def extract_keywords(question: str) -> list[str]:
+    """Extract searchable keywords from a question.
+
+    Removes stop words and short words (< 3 characters).
+
+    Args:
+        question: Natural language question.
+
+    Returns:
+        List of keywords extracted from the question.
+    """
+    # Remove punctuation and split into words
+    words = re.sub(r"[^\w\s]", " ", question.lower()).split()
+    return [w for w in words if w not in STOP_WORDS and len(w) > 2]
+
+
+def get_artifact_summary(artifact_id: str, library_path: Path) -> str:
+    """Extract executive summary from artifact.
+
+    Args:
+        artifact_id: Artifact identifier.
+        library_path: Path to research library root (containing CATALOG.md).
+
+    Returns:
+        Content from the Executive Summary section.
+        Returns empty string if artifact not found or no summary section.
+    """
+    # First, find the artifact path from the catalog
+    catalog_path = library_path / "CATALOG.md"
+    artifacts = parse_catalog(catalog_path)
+
+    artifact_path = None
+    for artifact in artifacts:
+        if artifact["id"] == artifact_id:
+            artifact_path = library_path / artifact["path"]
+            break
+
+    if not artifact_path or not artifact_path.exists():
+        return ""
+
+    try:
+        content = artifact_path.read_text(encoding="utf-8")
+    except Exception:
+        return ""
+
+    # Find the Executive Summary section
+    # Pattern: ## Executive Summary followed by content until next ##
+    pattern = r"## Executive Summary\s*\n(.*?)(?=\n##|\Z)"
+    match = re.search(pattern, content, re.DOTALL)
+
+    if match:
+        summary = match.group(1).strip()
+        return summary
+
+    return ""
+
+
+def assess_coverage(query: str, library_path: Path) -> CoverageAssessment:
+    """Assess how well the library covers a topic.
+
+    Coverage thresholds:
+    - good: 3+ matches, avg relevance >= 0.6
+    - partial: 1-2 matches, avg relevance >= 0.4
+    - limited: 1+ matches, avg relevance < 0.4
+    - none: 0 matches
+
+    Args:
+        query: Search query or topic.
+        library_path: Path to research library root (containing CATALOG.md).
+
+    Returns:
+        CoverageAssessment with level and reasoning.
+    """
+    catalog_path = library_path / "CATALOG.md"
+    keywords = extract_keywords(query)
+
+    # Use search_library with extracted keywords
+    search_query = " ".join(keywords) if keywords else query
+    matches = search_library(search_query, catalog_path, min_score=0.1)
+
+    match_count = len(matches)
+    if match_count > 0:
+        avg_relevance = sum(m.relevance_score for m in matches) / match_count
+    else:
+        avg_relevance = 0.0
+
+    # Determine coverage level based on thresholds
+    if match_count == 0:
+        level: CoverageLevel = "none"
+        reasoning = f"No matching artifacts found for query: {query}"
+    elif match_count >= 3 and avg_relevance >= 0.6:
+        level = "good"
+        reasoning = (
+            f"Found {match_count} highly relevant artifacts "
+            f"(avg relevance: {avg_relevance:.2f})"
+        )
+    elif (match_count >= 1 and match_count <= 2 and avg_relevance >= 0.4) or (
+        match_count >= 3 and avg_relevance >= 0.4
+    ):
+        level = "partial"
+        reasoning = (
+            f"Found {match_count} moderately relevant artifact(s) "
+            f"(avg relevance: {avg_relevance:.2f})"
+        )
+    else:
+        level = "limited"
+        reasoning = (
+            f"Found {match_count} artifact(s) with low relevance "
+            f"(avg relevance: {avg_relevance:.2f})"
+        )
+
+    return CoverageAssessment(
+        level=level,
+        match_count=match_count,
+        avg_relevance=avg_relevance,
+        reasoning=reasoning,
+    )
+
+
+def get_citations(artifact_id: str, library_path: Path) -> list[Citation]:
+    """Get formatted citations for an artifact.
+
+    Args:
+        artifact_id: Artifact identifier.
+        library_path: Path to research library root (containing CATALOG.md).
+
+    Returns:
+        List containing a single Citation for the artifact.
+        Returns empty list if artifact not found.
+    """
+    catalog_path = library_path / "CATALOG.md"
+    artifacts = parse_catalog(catalog_path)
+
+    for artifact in artifacts:
+        if artifact["id"] == artifact_id:
+            # Extract a key finding from the summary
+            summary = get_artifact_summary(artifact_id, library_path)
+            # Use first line or first sentence as key finding
+            key_finding = ""
+            if summary:
+                lines = summary.split("\n")
+                # Find first non-empty line
+                for line in lines:
+                    stripped = line.strip()
+                    if stripped and not stripped.startswith("-"):
+                        key_finding = stripped
+                        break
+                # If still empty, use first bullet point
+                if not key_finding:
+                    for line in lines:
+                        stripped = line.strip()
+                        if stripped.startswith("-"):
+                            key_finding = stripped[1:].strip()
+                            break
+
+            citation = Citation(
+                artifact_id=artifact["id"],
+                title=artifact["title"],
+                path=Path(artifact["path"]),
+                consensus=artifact["consensus"],
+                date=artifact["date"],
+                key_finding=key_finding,
+            )
+            return [citation]
+
+    return []
+
+
+def query_library(question: str, library_path: Path) -> LibraryResponse:
+    """Answer a question using library artifacts.
+
+    Args:
+        question: Natural language question.
+        library_path: Path to research library root (containing CATALOG.md).
+
+    Returns:
+        LibraryResponse with coverage assessment, summary, sources, and gaps.
+    """
+    # Handle empty query
+    if not question or not question.strip():
+        return LibraryResponse(
+            query="",
+            coverage=CoverageAssessment(
+                level="none",
+                match_count=0,
+                avg_relevance=0.0,
+                reasoning="Empty query provided",
+            ),
+            summary="",
+            sources=[],
+            gaps=[],
+        )
+
+    # Extract keywords from question
+    keywords = extract_keywords(question)
+    search_query = " ".join(keywords) if keywords else question
+
+    # Search library
+    catalog_path = library_path / "CATALOG.md"
+    matches = search_library(search_query, catalog_path, min_score=0.1)
+
+    # Assess coverage
+    coverage = assess_coverage(question, library_path)
+
+    # Build response based on coverage
+    if coverage.level == "none":
+        return LibraryResponse(
+            query=question,
+            coverage=coverage,
+            summary="",
+            sources=[],
+            gaps=[question],
+        )
+
+    # Extract summaries from top matches (up to 3)
+    top_matches = matches[:3]
+    summaries = []
+    sources = []
+
+    for match in top_matches:
+        summary = get_artifact_summary(match.id, library_path)
+        if summary:
+            summaries.append(summary)
+
+        # Create citation
+        citation = Citation(
+            artifact_id=match.id,
+            title=match.title,
+            path=match.path,
+            consensus=match.consensus,
+            date=match.date,
+            key_finding=summary.split("\n")[0].strip() if summary else "",
+        )
+        sources.append(citation)
+
+    # Combine summaries
+    combined_summary = "\n\n".join(summaries) if summaries else ""
+
+    # Identify gaps (topics mentioned but not well covered)
+    gaps = []
+    if coverage.level in ["limited", "partial"]:
+        # Extract topics that may not be well covered
+        for keyword in keywords:
+            # Check if this keyword has low coverage
+            keyword_lower = keyword.lower()
+            keyword_matches = [
+                m
+                for m in matches
+                if keyword_lower in m.title.lower()
+                or keyword_lower in " ".join(m.keywords).lower()
+            ]
+            if len(keyword_matches) < 2:
+                gaps.append(keyword)
+
+    return LibraryResponse(
+        query=question,
+        coverage=coverage,
+        summary=combined_summary,
+        sources=sources,
+        gaps=gaps,
+    )
