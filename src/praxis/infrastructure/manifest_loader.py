@@ -159,7 +159,7 @@ def load_extension_manifest(
                         warning = f"Invalid audit check (not a dict): {check_data}"
                         warnings.append(warning)
                         continue
-                    
+
                     try:
                         check_contrib = AuditCheckContribution(**check_data)
                         checks.append(check_contrib)

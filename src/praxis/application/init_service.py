@@ -97,7 +97,7 @@ def init_project(
     generated_name = title_case_name(generated_slug)
 
     # Generate praxis.yaml content
-    praxis_config = {
+    praxis_config: dict[str, str | list[str]] = {
         "domain": domain_enum.value,
         **({"subtype": subtype} if subtype else {}),
         "stage": "capture",

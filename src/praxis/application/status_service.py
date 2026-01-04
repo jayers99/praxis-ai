@@ -190,10 +190,10 @@ def get_status(path: Path) -> ProjectStatus:
 
     errors: list[str] = []
     project_root = path.resolve()
-    
+
     # Load config first to get project name from config if available
     load_result = load_praxis_config(project_root)
-    
+
     # Use config.name if present, otherwise fall back to directory name
     if load_result.valid and load_result.config and load_result.config.name:
         project_name = load_result.config.name

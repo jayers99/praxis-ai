@@ -37,7 +37,7 @@ def check_artifact_exists(
         # Determine checklist reference based on stage
         # For missing artifacts, reference the Formalize checklist
         checklist_ref = "core/checklists/formalize.md"
-        
+
         return ValidationIssue(
             rule="missing_artifact",
             severity="error",
