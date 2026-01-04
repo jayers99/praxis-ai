@@ -121,6 +121,21 @@ class OpinionContribution(BaseModel):
     )
 
 
+class TemplateContribution(BaseModel):
+    """A single template file contribution from an extension."""
+
+    source: str = Field(
+        description="Relative path in extension (e.g., 'templates/formalize/mobile-sod.md')"
+    )
+    target: str = Field(
+        description="Target path in template tree (e.g., 'code/formalize/mobile-sod.md')"
+    )
+    subtypes: list[str] = Field(
+        default_factory=list,
+        description="Subtypes this template applies to (empty = all subtypes)",
+    )
+
+
 class ExtensionManifest(BaseModel):
     """Manifest for extension contributions (praxis-extension.yaml).
 
@@ -143,7 +158,8 @@ class ExtensionContributions(BaseModel):
     """Contributions that an extension provides."""
 
     opinions: list[OpinionContribution] = Field(default_factory=list)
-    # templates and audits will be added in Stories 2 and 3
+    templates: list[TemplateContribution] = Field(default_factory=list)
+    # audits will be added in Story 3
 
 
 class ManifestLoadResult(BaseModel):

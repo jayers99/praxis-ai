@@ -141,9 +141,13 @@ def templates_render_cmd(
     ),
 ) -> None:
     """Render lifecycle stage docs and domain artifacts into a project."""
+    import os
+    
     from praxis.application.templates import render_stage_templates
     from praxis.domain.domains import Domain
     from praxis.domain.stages import Stage
+    from praxis.infrastructure.manifest_loader import discover_extension_manifests
+    from praxis.infrastructure.workspace_config_repo import load_workspace_config
     from praxis.infrastructure.yaml_loader import load_praxis_config
 
     project_root = path.resolve()
@@ -190,6 +194,32 @@ def templates_render_cmd(
                 )
                 raise typer.Exit(1)
 
+    # Load extension manifests if workspace exists
+    extension_manifests = None
+    praxis_home = os.environ.get("PRAXIS_HOME")
+    if praxis_home:
+        workspace_path = Path(praxis_home)
+        if workspace_path.exists():
+            try:
+                config = load_workspace_config(workspace_path)
+                extensions_path = workspace_path / "extensions"
+                if extensions_path.exists() and config.installed_extensions:
+                    manifest_results = discover_extension_manifests(
+                        extensions_path, config.installed_extensions
+                    )
+                    # Filter to successful manifests with template contributions
+                    extension_manifests = []
+                    for result in manifest_results:
+                        if result.success and result.manifest:
+                            ext_path = extensions_path / result.extension_name
+                            extension_manifests.append((ext_path, result.manifest))
+                            # Log warnings if any
+                            if result.warning:
+                                typer.echo(f"Warning: {result.warning}", err=True)
+            except Exception:
+                # Silently ignore workspace loading errors
+                pass
+
     result = render_stage_templates(
         project_root=project_root,
         domain=domain_enum,
@@ -197,6 +227,7 @@ def templates_render_cmd(
         stages=stage_enums,
         force=force,
         extra_template_roots=template_root,
+        extension_manifests=extension_manifests,
     )
 
     if json_output:

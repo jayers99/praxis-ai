@@ -12,6 +12,7 @@ from praxis.domain.templates.models import (
     TemplateRoot,
     TemplatesRenderResult,
 )
+from praxis.domain.workspace import ExtensionManifest, TemplateContribution
 from praxis.infrastructure.stage_templates.template_renderer import (
     render_template_to_file,
 )
@@ -21,19 +22,72 @@ from praxis.infrastructure.stage_templates.template_resolver import (
 )
 
 
+def _build_extension_template_roots(
+    extension_manifests: list[tuple[Path, ExtensionManifest]],
+    subtype: str | None,
+) -> list[TemplateRoot]:
+    """Build TemplateRoot entries for extension template contributions.
+
+    Extensions should have templates following the standard structure.
+    The manifest's template contributions are used for subtype filtering.
+
+    Args:
+        extension_manifests: List of (extension_path, manifest) tuples
+        subtype: Current project subtype (for filtering)
+
+    Returns:
+        List of TemplateRoot entries, sorted alphabetically by extension name
+    """
+    roots: list[TemplateRoot] = []
+
+    # Sort extensions alphabetically for deterministic precedence
+    sorted_manifests = sorted(extension_manifests, key=lambda x: x[1].name)
+
+    for ext_path, manifest in sorted_manifests:
+        # Check if this extension contributes any templates
+        if not manifest.contributions.templates:
+            continue
+
+        # Check if any templates apply to this subtype
+        has_applicable_template = False
+        for template in manifest.contributions.templates:
+            # Empty subtypes list means applies to all subtypes
+            if not template.subtypes or (subtype and subtype in template.subtypes):
+                has_applicable_template = True
+                break
+
+        if has_applicable_template:
+            # Extensions organize templates in a templates/ subdirectory
+            # following the standard template structure
+            templates_dir = ext_path / "templates"
+            if templates_dir.exists():
+                roots.append(TemplateRoot(kind="extension", path=templates_dir))
+
+    return roots
+
+
 def _default_template_roots(
-    project_root: Path, extra_roots: list[Path] | None = None
+    project_root: Path,
+    extra_roots: list[Path] | None = None,
+    extension_roots: list[TemplateRoot] | None = None,
 ) -> list[TemplateRoot]:
     roots: list[TemplateRoot] = []
 
+    # 1. Project-local templates (.praxis/templates/)
     project_local = project_root / ".praxis" / "templates"
     if project_local.exists():
         roots.append(TemplateRoot(kind="project", path=project_local))
 
+    # 2. Custom/extra roots (--template-root CLI arg)
     if extra_roots:
         for p in extra_roots:
             roots.append(TemplateRoot(kind="custom", path=p))
 
+    # 3. Extension roots (alphabetically sorted)
+    if extension_roots:
+        roots.extend(extension_roots)
+
+    # 4. Core bundled templates
     roots.append(TemplateRoot(kind="core", path=get_core_templates_root()))
 
     return roots
@@ -47,6 +101,7 @@ def render_stage_templates(
     stages: list[Stage] | None = None,
     force: bool = False,
     extra_template_roots: list[Path] | None = None,
+    extension_manifests: list[tuple[Path, ExtensionManifest]] | None = None,
 ) -> TemplatesRenderResult:
     """Render stage docs and domain-specific formalization artifacts.
 
@@ -56,9 +111,29 @@ def render_stage_templates(
         - Code: docs/sod.md
         - Create/Write: docs/brief.md
         - Learn: docs/plan.md
+
+    Args:
+        project_root: Path to project directory
+        domain: Project domain
+        subtype: Optional project subtype
+        stages: Optional list of specific stages to render (defaults to all)
+        force: Whether to overwrite existing files
+        extra_template_roots: Additional template directories from CLI
+        extension_manifests: List of (extension_path, manifest) tuples
     """
 
-    roots = _default_template_roots(project_root, extra_roots=extra_template_roots)
+    # Build extension template roots with subtype filtering
+    extension_roots: list[TemplateRoot] | None = None
+    if extension_manifests:
+        extension_roots = _build_extension_template_roots(
+            extension_manifests, subtype
+        )
+
+    roots = _default_template_roots(
+        project_root, 
+        extra_roots=extra_template_roots,
+        extension_roots=extension_roots,
+    )
     resolver = TemplateResolver(roots)
 
     stages_to_render = stages if stages is not None else list(Stage)
