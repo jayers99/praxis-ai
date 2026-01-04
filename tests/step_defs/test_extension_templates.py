@@ -227,7 +227,9 @@ def create_mobile_template(context: dict[str, Any]) -> None:
     ext_dir = context[f"ext_{ext_name}_dir"]
     template_file = ext_dir / "templates/domain/code/subtype/mobile/stage/formalize.md"
     template_file.parent.mkdir(parents=True, exist_ok=True)
-    template_file.write_text("# Mobile Formalize\n\nMobile-specific formalize template.")
+    template_file.write_text(
+        "# Mobile Formalize\n\nMobile-specific formalize template."
+    )
 
 
 @given("the manifest declares a template contribution that overlaps with core")
@@ -374,7 +376,7 @@ privacy_level: personal
 environment: Home
 """
         )
-    
+
     result = cli_runner.invoke(
         app,
         ["templates", "render", str(project_root), "--stage", "formalize"],
@@ -389,7 +391,10 @@ def check_command_success(context: dict[str, Any]) -> None:
     assert result.exit_code == 0, f"Command failed: {result.output}"
 
 
-@then('the output contains "extension:mobile-pack" or shows the contributed template was used')
+@then(
+    'the output contains "extension:mobile-pack" '
+    "or shows the contributed template was used"
+)
 def check_extension_provenance(context: dict[str, Any]) -> None:
     """Check that extension provenance is visible or template was used."""
     result = context["result"]
@@ -448,7 +453,6 @@ def check_warning_logged(context: dict[str, Any]) -> None:
 @then("the invalid contribution is skipped")
 def check_contribution_skipped(context: dict[str, Any]) -> None:
     """Verify the invalid contribution was skipped."""
-    result = context["result"]
     # Command should still succeed despite invalid contribution
     # The warning should have been logged, but rendering continues
     # Check that other templates were still rendered

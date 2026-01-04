@@ -11,7 +11,7 @@ This guide explains how to create Praxis extensions that contribute opinions, te
 Praxis extensions enable domain-specific customization:
 
 - **Opinions:** Add guidance for specialized subtypes (e.g., mobile, embedded, ML)
-- **Templates:** Provide scaffolding for new project types (Story 2)
+- **Templates:** Provide scaffolding for new project types
 - **Audits:** Add domain-specific quality checks (Story 3)
 
 Extensions are discovered from installed extensions in a Praxis workspace and loaded automatically.
@@ -69,7 +69,39 @@ last_reviewed: 2026-01-04
 Your guidance content here...
 ```
 
-### 4. Test Locally
+### 4. Add Template Files (Optional)
+
+If contributing templates, create the template directory structure:
+
+```bash
+mkdir -p templates/domain/code/subtype/yourtype/stage
+```
+
+Create `templates/domain/code/subtype/yourtype/stage/formalize.md`:
+
+```markdown
+# Formalize Stage - {{subtype}}
+
+**Date:** {{today}}
+**Domain:** {{domain}}
+**Stage:** {{stage}}
+
+## Your Subtype-Specific Formalization
+
+Your template content here...
+```
+
+Update your manifest to include the template contribution:
+
+```yaml
+contributions:
+  templates:
+    - source: templates/domain/code/subtype/yourtype/stage/formalize.md
+      target: domain/code/subtype/yourtype/stage/formalize.md
+      subtypes: ["yourtype"]
+```
+
+### 5. Test Locally
 
 Install your extension in a workspace:
 
@@ -91,6 +123,12 @@ Verify it loads:
 cd /path/to/any/project
 praxis opinions --list
 # Should show: code/subtypes/yourtype.md [yourname]
+
+# Test template rendering (if you added templates)
+praxis new test-project --domain code --subtype yourtype
+cd test-project
+praxis templates render --stage formalize
+# Should use your extension's template
 ```
 
 ---
@@ -119,15 +157,126 @@ contributions:
   opinions:
     - source: opinions/path/in/extension.md
       target: path/in/opinions/tree.md
+  
+  templates:  # NEW in Story 2
+    - source: templates/domain/code/subtype/mobile/stage/formalize.md
+      target: domain/code/subtype/mobile/stage/formalize.md
+      subtypes: ["mobile"]  # Optional: restrict to specific subtypes
 ```
 
 **Opinion Contribution Fields:**
 - `source`: Relative path to opinion file in your extension directory
 - `target`: Target path in the global opinions tree (e.g., `code/subtypes/mobile.md`)
 
-**Coming in Story 2 & 3:**
-- `templates`: Template file contributions
+**Template Contribution Fields:**
+- `source`: Relative path to template file in your extension directory
+- `target`: Target path in template tree (for documentation)
+- `subtypes`: (Optional) List of subtypes this template applies to. Empty list = all subtypes.
+
+**Coming in Story 3:**
 - `audits`: Audit check contributions
+
+---
+
+## Template File Guidelines
+
+### 1. Template Directory Structure
+
+Extensions contribute templates by following the standard template directory structure:
+
+```
+praxis-extension-yourname/
+└── templates/                    # Template root
+    ├── stage/                    # Generic stage templates
+    │   └── formalize.md
+    ├── domain/                   # Domain-specific templates
+    │   └── code/
+    │       ├── stage/            # Domain stage templates
+    │       │   └── formalize.md
+    │       ├── artifact/         # Domain artifacts
+    │       │   └── sod.md
+    │       └── subtype/          # Subtype-specific templates
+    │           └── mobile/
+    │               ├── stage/
+    │               │   └── formalize.md
+    │               └── artifact/
+    │                   └── sod.md
+```
+
+### 2. Template Content
+
+Templates use simple variable substitution:
+
+```markdown
+# {{stage}} Stage - {{subtype}}
+
+**Date:** {{today}}
+**Domain:** {{domain}}
+
+Your template content here...
+```
+
+**Available Variables:**
+- `{{today}}`: Current date (ISO format)
+- `{{domain}}`: Project domain
+- `{{subtype}}`: Project subtype (or empty string)
+- `{{stage}}`: Stage name (for stage templates)
+
+### 3. Subtype Filtering
+
+Control which projects can use your templates:
+
+```yaml
+contributions:
+  templates:
+    # Mobile-specific template (only for mobile projects)
+    - source: templates/domain/code/subtype/mobile/stage/formalize.md
+      target: domain/code/subtype/mobile/stage/formalize.md
+      subtypes: ["mobile"]
+    
+    # Universal template (all projects)
+    - source: templates/stage/capture.md
+      target: stage/capture.md
+      subtypes: []  # Empty list = all subtypes
+```
+
+### 4. Template Precedence
+
+Templates are resolved in order of specificity:
+
+1. **Project-local** (`.praxis/templates/`)
+2. **Custom** (`--template-root` CLI arg)
+3. **Extension** (alphabetically sorted by extension name)
+4. **Core** (fallback)
+
+**Example:** For a `mobile` project at `formalize` stage:
+1. Check for `domain/code/subtype/mobile/stage/formalize.md` (most specific)
+2. Check for `domain/code/stage/formalize.md` (domain-specific)
+3. Check for `stage/formalize.md` (generic)
+
+Extensions come before core, so extension templates will be used if available.
+
+### 5. Validation
+
+When loading the manifest, Praxis validates that template source files exist:
+
+```bash
+# ✅ Valid - file exists
+contributions:
+  templates:
+    - source: templates/domain/code/subtype/mobile/stage/formalize.md
+      target: domain/code/subtype/mobile/stage/formalize.md
+      subtypes: ["mobile"]
+
+# ❌ Warning - file missing (contribution skipped)
+contributions:
+  templates:
+    - source: templates/missing.md  # File doesn't exist!
+      target: stage/missing.md
+      subtypes: []
+```
+
+Missing template files generate warnings but don't fail manifest loading.
 
 ---
 
@@ -232,6 +381,8 @@ code/subtypes/mobile.md [mobile-pack]  # Extension
 - [ ] YAML syntax is valid
 - [ ] Opinion source paths exist in extension directory
 - [ ] Opinion files have valid frontmatter
+- [ ] Template source paths exist in extension directory (if contributing templates)
+- [ ] Template files use valid variable substitution (if contributing templates)
 
 ### Common Errors
 
@@ -241,6 +392,7 @@ code/subtypes/mobile.md [mobile-pack]  # Extension
 | "Manifest name 'foo' does not match extension directory name 'bar'" | Name mismatch | Rename directory or update manifest |
 | "Invalid YAML in manifest" | Syntax error | Fix YAML syntax |
 | "Contribution source not found" | Missing opinion file | Create the file at the specified path |
+| "Template source not found: ..." | Missing template file | Create the template file or remove from manifest |
 | "Missing required field: name" | No name field | Add `name: yourname` |
 
 ### Silent Skips
@@ -311,10 +463,19 @@ praxis-extension-yourname/
 ├── praxis-extension.yaml         # Extension manifest
 ├── LICENSE                       # License for your extension
 ├── .gitignore
-└── opinions/                     # Opinion contributions
-    └── code/
-        └── subtypes/
-            └── yourtype.md
+├── opinions/                     # Opinion contributions
+│   └── code/
+│       └── subtypes/
+│           └── yourtype.md
+└── templates/                    # Template contributions (optional)
+    └── domain/
+        └── code/
+            └── subtype/
+                └── yourtype/
+                    ├── stage/
+                    │   └── formalize.md
+                    └── artifact/
+                        └── sod.md
 ```
 
 ### Installation Instructions
@@ -392,12 +553,11 @@ See `praxis-extension-mobile-pack` for a complete working example:
 ### Current (v0.1)
 
 - ✅ Opinion contributions
-- ❌ Template contributions (Story 2)
+- ✅ Template contributions (Story 2)
 - ❌ Audit contributions (Story 3)
 
 ### Coming Soon
 
-- Template contributions (Story 2)
 - Audit contributions (Story 3)
 - `praxis extensions verify` command
 - Extension dependency resolution (if needed)
