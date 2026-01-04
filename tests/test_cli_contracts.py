@@ -36,12 +36,12 @@ def workspace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Create a valid workspace."""
     workspace_path = tmp_path / "workspace"
     workspace_path.mkdir()
-    
+
     # Create workspace structure
     (workspace_path / "extensions").mkdir()
     (workspace_path / "examples").mkdir()
     (workspace_path / "projects").mkdir()
-    
+
     # Create workspace config
     config_path = workspace_path / "workspace-config.yaml"
     config_path.write_text(
@@ -52,7 +52,7 @@ defaults:
   environment: Home
 """
     )
-    
+
     monkeypatch.setenv("PRAXIS_HOME", str(workspace_path))
     return workspace_path
 
@@ -66,9 +66,9 @@ class TestStatusContract:
         """Status JSON output has required top-level fields."""
         result = cli_runner.invoke(app, ["status", str(valid_project), "--json"])
         assert result.exit_code == 0
-        
+
         data = json.loads(result.output)
-        
+
         # Required top-level fields
         assert "project_name" in data
         assert "config" in data
@@ -80,19 +80,19 @@ class TestStatusContract:
         assert "artifact_exists" in data
         assert "validation" in data
         assert "next_steps" in data
-        
+
         # Config structure
         config = data["config"]
         assert "domain" in config
         assert "stage" in config
         assert "privacy_level" in config
         assert "environment" in config
-        
+
         # Validation structure
         validation = data["validation"]
         assert "valid" in validation
         assert "issues" in validation
-        
+
     def test_quiet_suppresses_output(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
@@ -111,32 +111,32 @@ class TestValidateContract:
         """Validate JSON output has required fields."""
         result = cli_runner.invoke(app, ["validate", str(valid_project), "--json"])
         assert result.exit_code == 0
-        
+
         data = json.loads(result.output)
-        
+
         # Required fields
         assert "valid" in data
         assert "config" in data
         assert "issues" in data
         assert "version" in data
         assert "tool_checks" in data
-        
+
         # Version field
         assert data["version"] == "1.0"
-        
+
         # Config structure
         config = data["config"]
         assert "domain" in config
         assert "stage" in config
         assert "privacy_level" in config
-        
+
     def test_exit_code_on_valid_config(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
         """Validate exits 0 for valid config."""
         result = cli_runner.invoke(app, ["validate", str(valid_project)])
         assert result.exit_code == 0
-        
+
     def test_exit_code_on_invalid_config(
         self, cli_runner: CliRunner, tmp_path: Path
     ) -> None:
@@ -148,10 +148,10 @@ class TestValidateContract:
 stage: capture
 """
         )
-        
+
         result = cli_runner.invoke(app, ["validate", str(tmp_path)])
         assert result.exit_code == 1
-        
+
     def test_quiet_suppresses_output_on_success(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
@@ -159,7 +159,7 @@ stage: capture
         result = cli_runner.invoke(app, ["validate", str(valid_project), "--quiet"])
         assert result.exit_code == 0
         assert result.output.strip() == ""
-        
+
     def test_quiet_suppresses_output_on_failure(
         self, cli_runner: CliRunner, tmp_path: Path
     ) -> None:
@@ -167,7 +167,7 @@ stage: capture
         # Create invalid config
         praxis_yaml = tmp_path / "praxis.yaml"
         praxis_yaml.write_text("invalid: yaml")
-        
+
         result = cli_runner.invoke(app, ["validate", str(tmp_path), "--quiet"])
         assert result.exit_code == 1
         assert result.output.strip() == ""
@@ -181,14 +181,14 @@ class TestAuditContract:
     ) -> None:
         """Audit JSON output has required fields."""
         result = cli_runner.invoke(app, ["audit", str(valid_project), "--json"])
-        
+
         data = json.loads(result.output)
-        
+
         # Required fields
         assert "project_name" in data
         assert "domain" in data
         assert "checks" in data
-        
+
         # Check structure (if any checks exist)
         if data["checks"]:
             check = data["checks"][0]
@@ -197,7 +197,7 @@ class TestAuditContract:
             assert "status" in check
             assert "message" in check
             assert check["status"] in ["passed", "warning", "failed"]
-            
+
     def test_exit_code_no_failures(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
@@ -205,7 +205,7 @@ class TestAuditContract:
         result = cli_runner.invoke(app, ["audit", str(valid_project)])
         # May have warnings but should not fail
         assert result.exit_code == 0
-        
+
     def test_strict_mode_fails_on_warnings(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
@@ -213,7 +213,7 @@ class TestAuditContract:
         result = cli_runner.invoke(app, ["audit", str(valid_project), "--strict"])
         # Will have warnings for missing tooling, should fail in strict mode
         assert result.exit_code == 1
-        
+
     def test_quiet_suppresses_output(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
@@ -231,9 +231,9 @@ class TestContextContract:
         """Context JSON output has required fields."""
         result = cli_runner.invoke(app, ["context", str(valid_project), "--json"])
         assert result.exit_code == 0
-        
+
         data = json.loads(result.output)
-        
+
         # Required fields
         assert "schema_version" in data
         assert "project_name" in data
@@ -244,10 +244,10 @@ class TestContextContract:
         assert "opinions" in data
         assert "formalize_artifact" in data
         assert "errors" in data
-        
+
         # Schema version
         assert data["schema_version"] == "1.0"
-        
+
     def test_quiet_suppresses_output(
         self, cli_runner: CliRunner, valid_project: Path
     ) -> None:
@@ -266,15 +266,15 @@ class TestOpinionsContract:
             app, ["opinions", "--domain", "code", "--stage", "capture", "--json"]
         )
         assert result.exit_code == 0
-        
+
         data = json.loads(result.output)
-        
+
         # Required fields
         assert "domain" in data
         assert "stage" in data
         assert "subtype" in data
         assert "files" in data
-        
+
         # File structure (if any files exist)
         if data["files"]:
             file = data["files"][0]
@@ -293,9 +293,9 @@ class TestWorkspaceInfoContract:
         """Workspace info JSON output has required fields."""
         result = cli_runner.invoke(app, ["workspace", "info", "--json"])
         assert result.exit_code == 0
-        
+
         data = json.loads(result.output)
-        
+
         # Required fields
         assert "path" in data
         assert "extensions_path" in data
@@ -304,12 +304,12 @@ class TestWorkspaceInfoContract:
         assert "installed_extensions" in data
         assert "installed_examples" in data
         assert "defaults" in data
-        
+
         # Defaults structure
         defaults = data["defaults"]
         assert "privacy" in defaults
         assert "environment" in defaults
-        
+
     def test_quiet_suppresses_output(
         self, cli_runner: CliRunner, workspace: Path
     ) -> None:
@@ -317,7 +317,7 @@ class TestWorkspaceInfoContract:
         result = cli_runner.invoke(app, ["workspace", "info", "--quiet"])
         assert result.exit_code == 0
         assert result.output.strip() == ""
-        
+
     def test_exit_code_no_workspace(self, cli_runner: CliRunner) -> None:
         """Workspace info exits 3 when PRAXIS_HOME not set."""
         result = cli_runner.invoke(app, ["workspace", "info"])
@@ -333,23 +333,23 @@ class TestExitCodeConsistency:
         """Init --json without required args exits 1."""
         result = cli_runner.invoke(app, ["init", str(tmp_path), "--json"])
         assert result.exit_code == 1
-        
+
         # Should have error in JSON
         data = json.loads(result.output)
         assert "errors" in data
-        
+
     def test_init_requires_args_with_quiet(
         self, cli_runner: CliRunner, tmp_path: Path
     ) -> None:
         """Init --quiet without required args exits 1."""
         result = cli_runner.invoke(app, ["init", str(tmp_path), "--quiet"])
         assert result.exit_code == 1
-        
+
     def test_new_requires_args_with_json(self, cli_runner: CliRunner) -> None:
         """New --json without required args exits 1."""
         result = cli_runner.invoke(app, ["new", "test-proj", "--json"])
         assert result.exit_code == 1
-        
+
         # Should have error in JSON
         data = json.loads(result.output)
         assert not data["success"]
