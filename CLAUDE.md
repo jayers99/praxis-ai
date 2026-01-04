@@ -69,6 +69,11 @@ praxis audit                      # Domain-specific checks (stage/subtype aware)
 praxis audit --strict             # Fail on warnings
 praxis audit --json               # Machine-readable output
 
+# In-terminal documentation
+praxis guide lifecycle            # Lifecycle stages and Formalize hinge concept
+praxis guide privacy              # Privacy levels and behavioral constraints
+praxis guide domain code          # Domain-specific guidance (code, create, write, learn, observe)
+
 # Workspace management (requires PRAXIS_HOME env var)
 praxis workspace init             # Initialize a new workspace
 praxis workspace info             # Show workspace information
