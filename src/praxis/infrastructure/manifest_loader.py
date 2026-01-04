@@ -7,6 +7,8 @@ from pathlib import Path
 import yaml
 
 from praxis.domain.workspace import (
+    AuditCheckContribution,
+    AuditContribution,
     ExtensionContributions,
     ExtensionManifest,
     ManifestLoadResult,
@@ -103,6 +105,7 @@ def load_extension_manifest(
         contributions_data = data.get("contributions", {})
         opinions_data = contributions_data.get("opinions", [])
         templates_data = contributions_data.get("templates", [])
+        audits_data = contributions_data.get("audits", [])
 
         opinions = []
         for opinion_data in opinions_data:
@@ -139,7 +142,49 @@ def load_extension_manifest(
 
             templates.append(template_contrib)
 
-        contributions = ExtensionContributions(opinions=opinions, templates=templates)
+        # Parse audit contributions
+        audits = []
+        for audit_data in audits_data:
+            if not isinstance(audit_data, dict):
+                warning = f"Invalid audit contribution (not a dict): {audit_data}"
+                warnings.append(warning)
+                continue  # Skip malformed contribution
+
+            try:
+                # Parse checks within this audit contribution
+                checks_data = audit_data.get("checks", [])
+                checks = []
+                for check_data in checks_data:
+                    if not isinstance(check_data, dict):
+                        warning = f"Invalid audit check (not a dict): {check_data}"
+                        warnings.append(warning)
+                        continue
+                    
+                    try:
+                        check_contrib = AuditCheckContribution(**check_data)
+                        checks.append(check_contrib)
+                    except Exception as e:
+                        warning = (
+                            f"Malformed audit check '{check_data.get('name', 'unknown')}': {e}"
+                        )
+                        warnings.append(warning)
+                        continue
+
+                # Create audit contribution with validated checks
+                audit_contrib = AuditContribution(
+                    domain=audit_data.get("domain", ""),
+                    subtypes=audit_data.get("subtypes", []),
+                    checks=checks,
+                )
+                audits.append(audit_contrib)
+            except Exception as e:
+                warning = f"Malformed audit contribution: {e}"
+                warnings.append(warning)
+                continue
+
+        contributions = ExtensionContributions(
+            opinions=opinions, templates=templates, audits=audits
+        )
 
         manifest = ExtensionManifest(
             manifest_version=manifest_version,
