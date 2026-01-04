@@ -48,6 +48,24 @@ class PraxisConfig(BaseModel):
         default_factory=list,
         description="Stage transition history (most recent last).",
     )
+    # Project metadata fields
+    name: str | None = Field(
+        default=None,
+        description="Human-readable project name.",
+    )
+    slug: str | None = Field(
+        default=None,
+        pattern=r"^[a-z0-9]+(-[a-z0-9]+)*$",
+        description="Machine-friendly project identifier (kebab-case).",
+    )
+    description: str | None = Field(
+        default=None,
+        description="Brief project description.",
+    )
+    tags: list[str] = Field(
+        default_factory=list,
+        description="Freeform tags for categorization.",
+    )
 
 
 class ValidationIssue(BaseModel):

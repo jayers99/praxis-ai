@@ -74,6 +74,31 @@ def load_praxis_config(path: Path) -> ValidationResult:
         # Default to Home, but allow PRAXIS_ENV override
         data["environment"] = resolve_environment("Home")
 
+    # Auto-generate missing metadata fields from directory name
+    if path.is_dir():
+        project_dir_name = path.name
+    else:
+        project_dir_name = path.parent.name
+
+    # Only auto-generate if fields are completely missing (not if they're None/empty)
+    if "slug" not in data or data.get("slug") is None:
+        from praxis.infrastructure.slug_helpers import slugify
+
+        data["slug"] = slugify(project_dir_name)
+
+    if "name" not in data or data.get("name") is None:
+        from praxis.infrastructure.slug_helpers import title_case_name
+
+        # Use the slug to generate the name for consistency
+        slug = data.get("slug", project_dir_name)
+        data["name"] = title_case_name(slug)
+
+    # Ensure description and tags have defaults if not present or None
+    if "description" not in data or data.get("description") is None:
+        data["description"] = ""
+    if "tags" not in data or data.get("tags") is None:
+        data["tags"] = []
+
     # Validate with Pydantic
     try:
         config = PraxisConfig.model_validate(data)

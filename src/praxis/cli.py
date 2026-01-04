@@ -975,11 +975,18 @@ def status_cmd(
 
     # Current state
     typer.echo(f"Project: {status.project_name}")
+    if config.slug:
+        typer.echo(f"  Slug:    {config.slug}")
+    if config.description:
+        typer.echo(f"  Desc:    {config.description}")
     typer.echo(f"  Domain:  {config.domain.value}")
     stage_progress = f"{status.stage_index}/{status.stage_count}"
     typer.echo(f"  Stage:   {config.stage.value} ({stage_progress})")
     typer.echo(f"  Privacy: {config.privacy_level.value}")
     typer.echo(f"  Env:     {config.environment}")
+    if config.tags:
+        tags_str = ", ".join(config.tags)
+        typer.echo(f"  Tags:    {tags_str}")
 
     # Next stage
     typer.echo("")
