@@ -142,7 +142,7 @@ def templates_render_cmd(
 ) -> None:
     """Render lifecycle stage docs and domain artifacts into a project."""
     import os
-    
+
     from praxis.application.templates import render_stage_templates
     from praxis.domain.domains import Domain
     from praxis.domain.stages import Stage
@@ -209,13 +209,17 @@ def templates_render_cmd(
                     )
                     # Filter to successful manifests with template contributions
                     extension_manifests = []
-                    for result in manifest_results:
-                        if result.success and result.manifest:
-                            ext_path = extensions_path / result.extension_name
-                            extension_manifests.append((ext_path, result.manifest))
+                    for manifest_result in manifest_results:
+                        if manifest_result.success and manifest_result.manifest:
+                            ext_path = extensions_path / manifest_result.extension_name
+                            extension_manifests.append(
+                                (ext_path, manifest_result.manifest)
+                            )
                             # Log warnings if any
-                            if result.warning:
-                                typer.echo(f"Warning: {result.warning}", err=True)
+                            if manifest_result.warning:
+                                typer.echo(
+                                    f"Warning: {manifest_result.warning}", err=True
+                                )
             except Exception:
                 # Silently ignore workspace loading errors
                 pass

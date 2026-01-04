@@ -125,10 +125,16 @@ class TemplateContribution(BaseModel):
     """A single template file contribution from an extension."""
 
     source: str = Field(
-        description="Relative path in extension (e.g., 'templates/formalize/mobile-sod.md')"
+        description=(
+            "Relative path in extension "
+            "(e.g., 'templates/formalize/mobile-sod.md')"
+        )
     )
     target: str = Field(
-        description="Target path in template tree (e.g., 'code/formalize/mobile-sod.md')"
+        description=(
+            "Target path in template tree "
+            "(e.g., 'code/formalize/mobile-sod.md')"
+        )
     )
     subtypes: list[str] = Field(
         default_factory=list,

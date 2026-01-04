@@ -12,7 +12,7 @@ from praxis.domain.templates.models import (
     TemplateRoot,
     TemplatesRenderResult,
 )
-from praxis.domain.workspace import ExtensionManifest, TemplateContribution
+from praxis.domain.workspace import ExtensionManifest
 from praxis.infrastructure.stage_templates.template_renderer import (
     render_template_to_file,
 )
@@ -83,12 +83,12 @@ def _default_template_roots(
         for p in extra_roots:
             roots.append(TemplateRoot(kind="custom", path=p))
 
-    # 3. Extension roots (alphabetically sorted)
+    # 3. Core bundled templates (take precedence over extensions)
+    roots.append(TemplateRoot(kind="core", path=get_core_templates_root()))
+
+    # 4. Extension roots (alphabetically sorted, after core)
     if extension_roots:
         roots.extend(extension_roots)
-
-    # 4. Core bundled templates
-    roots.append(TemplateRoot(kind="core", path=get_core_templates_root()))
 
     return roots
 
@@ -130,7 +130,7 @@ def render_stage_templates(
         )
 
     roots = _default_template_roots(
-        project_root, 
+        project_root,
         extra_roots=extra_template_roots,
         extension_roots=extension_roots,
     )

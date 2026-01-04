@@ -123,10 +123,10 @@ def load_extension_manifest(
                     extension_name=extension_name,
                     error=f"Invalid template contribution: {template_data}",
                 )
-            
+
             # Parse the template contribution
             template_contrib = TemplateContribution(**template_data)
-            
+
             # Validate that the source file exists
             source_path = extension_path / template_contrib.source
             if not source_path.exists():
@@ -136,7 +136,7 @@ def load_extension_manifest(
                 )
                 warnings.append(warning)
                 continue  # Skip this invalid contribution
-            
+
             templates.append(template_contrib)
 
         contributions = ExtensionContributions(opinions=opinions, templates=templates)
@@ -153,11 +153,11 @@ def load_extension_manifest(
             extension_name=extension_name,
             manifest=manifest,
         )
-        
+
         # Add warning if any template sources were missing
         if warnings:
             result.warning = "; ".join(warnings)
-        
+
         return result
 
     except Exception as e:
