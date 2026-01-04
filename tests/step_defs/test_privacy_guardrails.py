@@ -82,35 +82,12 @@ def create_opinion_file(context: dict[str, Any], path: str) -> None:
     full_path.write_text(
         f"""---
 status: active
-version: 1.0
+version: "1.0"
 ---
 
 # {path}
 
 Test opinion content.
-"""
-    )
-
-
-@given(
-    parsers.parse(
-        'a praxis.yaml with domain "{domain}" stage "{stage}" and privacy "{privacy}"'
-    )
-)
-def create_praxis_yaml_with_privacy(
-    context: dict[str, Any],
-    domain: str,
-    stage: str,
-    privacy: str,
-) -> None:
-    """Create praxis.yaml with domain, stage, and privacy level."""
-    project_root = context["project_root"]
-    praxis_yaml = project_root / "praxis.yaml"
-    praxis_yaml.write_text(
-        f"""domain: {domain}
-stage: {stage}
-privacy_level: {privacy}
-environment: Home
 """
     )
 
@@ -128,7 +105,7 @@ def create_opinion_with_content(
     project_root = context["project_root"]
     opinions_dir = project_root / "opinions" / "_shared"
     opinions_dir.mkdir(parents=True, exist_ok=True)
-    
+
     opinion_file = opinions_dir / "first-principles.md"
     # Remove quotes from content if present
     content = content.strip('"')
@@ -220,7 +197,9 @@ def compare_saved_outputs(context: dict[str, Any], name1: str, name2: str) -> No
     saved = context.get("saved_outputs", {})
     assert name1 in saved, f"Output '{name1}' not found in saved outputs"
     assert name2 in saved, f"Output '{name2}' not found in saved outputs"
-    assert saved[name1] == saved[name2], f"Outputs differ:\n{name1}:\n{saved[name1]}\n\n{name2}:\n{saved[name2]}"
+    assert saved[name1] == saved[name2], (
+        f"Outputs differ:\n{name1}:\n{saved[name1]}\n\n{name2}:\n{saved[name2]}"
+    )
 
 
 @then(parsers.parse("the exit code is {code:d}"))

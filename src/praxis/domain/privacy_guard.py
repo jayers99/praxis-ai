@@ -76,15 +76,13 @@ class PrivacyGuard:
         RedactionPattern(
             name="API_KEY",
             regex=re.compile(
-                r"(?i)(api[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*\S+",
-                re.IGNORECASE,
+                r"(?i)(api[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*\S+"
             ),
         ),
         RedactionPattern(
             name="PASSWORD",
             regex=re.compile(
-                r"(?i)(password|passwd|pwd)\s*[=:]\s*\S+",
-                re.IGNORECASE,
+                r"(?i)(password|passwd|pwd)\s*[=:]\s*\S+"
             ),
         ),
         RedactionPattern(
@@ -94,8 +92,7 @@ class PrivacyGuard:
         RedactionPattern(
             name="AWS_SECRET",
             regex=re.compile(
-                r"(?i)(aws_secret_access_key|aws_secret)\s*[=:]\s*[A-Za-z0-9/+=]{40}",
-                re.IGNORECASE,
+                r"(?i)(aws_secret_access_key|aws_secret)\s*[=:]\s*[A-Za-z0-9/+=]{40}"
             ),
         ),
         RedactionPattern(
