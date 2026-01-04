@@ -12,3 +12,8 @@ extensions:
     repo: https://github.com/jayers99/template-python-cli.git
     domain: code
     description: Scaffold new Python CLI projects with best practices
+
+  praxis-workshop:
+    repo: https://github.com/jayers99/praxis-workshop.git
+    domain: code
+    description: Symlink-based workshop system for managing work items through stages
