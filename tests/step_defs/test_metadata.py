@@ -234,7 +234,11 @@ def project_with_description_and_tags(
 ) -> None:
     """Create a project with specific description and tags."""
     context["project_root"] = tmp_path
-    tags_list = [tag.strip() for tag in tags.split(",")]
+    # Handle empty tags string
+    if tags.strip():
+        tags_list = [tag.strip() for tag in tags.split(",")]
+    else:
+        tags_list = []
     tags_yaml = yaml.dump(tags_list, default_flow_style=True).strip()
 
     praxis_yaml = tmp_path / "praxis.yaml"

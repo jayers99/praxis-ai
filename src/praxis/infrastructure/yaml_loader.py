@@ -93,10 +93,10 @@ def load_praxis_config(path: Path) -> ValidationResult:
         slug = data.get("slug", project_dir_name)
         data["name"] = title_case_name(slug)
 
-    # Ensure description and tags have defaults if not present
-    if "description" not in data:
+    # Ensure description and tags have defaults if not present or None
+    if "description" not in data or data.get("description") is None:
         data["description"] = ""
-    if "tags" not in data:
+    if "tags" not in data or data.get("tags") is None:
         data["tags"] = []
 
     # Validate with Pydantic
