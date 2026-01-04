@@ -650,6 +650,12 @@ def stage_cmd(
         Path("."),
         help="Project directory.",
     ),
+    reason: str | None = typer.Option(
+        None,
+        "--reason",
+        "-r",
+        help="Rationale for non-standard regressions.",
+    ),
     json_output: bool = typer.Option(
         False,
         "--json",
@@ -663,7 +669,7 @@ def stage_cmd(
     ),
 ) -> None:
     """Transition project to a new lifecycle stage."""
-    result = transition_stage(path, new_stage)
+    result = transition_stage(path, new_stage, reason=reason)
 
     # Handle warnings that need confirmation (auto-fail in json/quiet mode)
     if result.needs_confirmation:
@@ -676,8 +682,11 @@ def stage_cmd(
         if not typer.confirm("Continue anyway?"):
             typer.echo("Aborted.")
             raise typer.Exit(0)
-        # Re-run with force
-        result = transition_stage(path, new_stage, force=True)
+        # Prompt for reason if not provided
+        if reason is None:
+            reason = typer.prompt("Reason for regression")
+        # Re-run with force and reason
+        result = transition_stage(path, new_stage, force=True, reason=reason)
 
     if json_output:
         typer.echo(result.model_dump_json(indent=2))
@@ -1002,8 +1011,18 @@ def status_cmd(
     if status.stage_history:
         typer.echo("Stage History:")
         for entry in status.stage_history[:5]:  # Show last 5
-            line = f"  {entry.commit_date} {entry.stage:10} {entry.commit_hash}"
-            typer.echo(f"{line} {entry.commit_message}")
+            # Format timestamp (just date part)
+            if "T" in entry.timestamp:
+                timestamp_date = entry.timestamp.split("T")[0]
+            else:
+                timestamp_date = entry.timestamp
+            transition = f"{entry.from_stage} → {entry.to_stage}"
+            line = f"  {timestamp_date} {transition:25}"
+            if entry.contract_id:
+                line += f" [{entry.contract_id}]"
+            if entry.reason:
+                line += f" ({entry.reason})"
+            typer.echo(line)
     else:
         typer.echo("Stage History: (no history found)")
 

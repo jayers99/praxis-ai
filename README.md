@@ -388,6 +388,15 @@ praxis stage explore
 praxis stage shape
 praxis stage formalize  # Creates docs/sod.md template
 
+# Stage history is automatically tracked in praxis.yaml
+praxis status  # Shows recent stage transitions
+# Stage History:
+#   2026-01-04 explore → formalize       [contract-20260104-214744]
+#   2026-01-03 sense → explore
+
+# Non-standard regressions require rationale
+praxis stage explore --reason "Scope change discovered during implementation"
+
 # Validate before execution
 praxis validate --strict
 praxis stage commit

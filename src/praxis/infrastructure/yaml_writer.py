@@ -32,12 +32,22 @@ def update_praxis_yaml(
         for key, value in updates.items():
             if hasattr(value, "value"):  # Enum
                 content[key] = value.value
+            elif isinstance(value, list):
+                # Handle list of items (potentially Pydantic models)
+                content[key] = [
+                    item.model_dump(mode="python", exclude_none=True)
+                    if hasattr(item, "model_dump")
+                    else item
+                    for item in value
+                ]
+            elif hasattr(value, "model_dump"):  # Pydantic model
+                content[key] = value.model_dump(mode="python", exclude_none=True)
             else:
                 content[key] = value
 
         # Write back
         yaml_path.write_text(
-            yaml.dump(content, default_flow_style=False, sort_keys=False)
+            yaml.safe_dump(content, default_flow_style=False, sort_keys=False)
         )
         return True, None
     except Exception as e:

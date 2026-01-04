@@ -203,27 +203,60 @@ praxis validate --json
 Transition project to a new lifecycle stage:
 
 ```bash
-praxis stage <NEW_STAGE> [PATH]
+praxis stage <NEW_STAGE> [PATH] [OPTIONS]
 ```
 
-| Argument    | Description                                                                               |
-| ----------- | ----------------------------------------------------------------------------------------- |
-| `NEW_STAGE` | Target stage (capture, sense, explore, shape, formalize, commit, execute, sustain, close) |
-| `PATH`      | Project directory (default: `.`)                                                          |
+| Argument/Option | Description                                                                               |
+| --------------- | ----------------------------------------------------------------------------------------- |
+| `NEW_STAGE`     | Target stage (capture, sense, explore, shape, formalize, commit, execute, sustain, close) |
+| `PATH`          | Project directory (default: `.`)                                                          |
+| `--reason`      | Rationale for non-standard regressions (required for non-standard regressions)            |
 
-**Example:**
+**Examples:**
 
 ```bash
+# Forward transition
 praxis stage sense
 # ✓ Stage updated to 'sense'
+
+# Formalize creates contract ID
+praxis stage formalize
+# ✓ Stage updated to 'formalize'
+# History entry will include: contract-20260104-214744
+
+# Non-standard regression with reason
+praxis stage explore --reason "Scope change discovered during implementation"
+# ⚠ Non-standard regression to 'explore'
+# ✓ Stage updated to 'explore'
 ```
 
 **Behavior:**
 
+- Records transition in `praxis.yaml` history with timestamp
+- Generates contract ID for Formalize transitions (`contract-YYYYMMDD-HHMMSS`)
 - Updates `praxis.yaml` with new stage
 - Updates `CLAUDE.md` stage line (if present)
 - Warns if missing required artifact (e.g., SOD at formalize+)
-- Prompts for confirmation on non-standard regressions
+- Prompts for confirmation and reason on non-standard regressions
+
+**Stage History Tracking:**
+
+All stage transitions are recorded in `praxis.yaml`:
+
+```yaml
+history:
+  - timestamp: "2026-01-04T10:00:00Z"
+    from_stage: "capture"
+    to_stage: "sense"
+  - timestamp: "2026-01-04T14:30:00Z"
+    from_stage: "sense"
+    to_stage: "formalize"
+    contract_id: "contract-20260104-143000"
+  - timestamp: "2026-01-05T09:00:00Z"
+    from_stage: "execute"
+    to_stage: "formalize"
+    reason: "Scope change discovered during implementation"
+```
 
 ### praxis status
 
@@ -271,8 +304,17 @@ Next Steps:
 Legend: + create  ~ edit  ▶ run  ? review  ! fix
 
 Stage History:
-  2025-12-27 formalize abc1234 move to formalize stage
+  2026-01-04 sense → formalize         [contract-20260104-143000]
+  2026-01-03 capture → sense
 ```
+
+**Stage History Display:**
+
+The status command shows recent stage transitions from `praxis.yaml`, displaying:
+- Timestamp (date)
+- Transition (from → to)
+- Contract ID for Formalize transitions (in brackets)
+- Rationale for non-standard regressions (in parentheses)
 
 **Lifecycle Checklists:**
 
