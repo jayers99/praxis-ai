@@ -181,10 +181,10 @@ def run_context_twice(context: dict[str, Any]) -> None:
     """Run praxis context command twice."""
     project_root: Path = context["project_root"]
     runner = CliRunner()
-    
+
     result1 = runner.invoke(app, ["context", str(project_root), "--json"])
     result2 = runner.invoke(app, ["context", str(project_root), "--json"])
-    
+
     context["result"] = result1
     context["output1"] = result1.stdout
     context["output2"] = result2.stdout
@@ -218,7 +218,7 @@ def json_contains_field(context: dict[str, Any], field: str) -> None:
     if "json_output" not in context:
         parsed = json.loads(context["output"])
         context["json_output"] = parsed
-    
+
     assert field in context["json_output"], f"Field '{field}' not found in JSON output"
 
 
@@ -228,13 +228,13 @@ def json_field_equals(context: dict[str, Any], field: str, value: str) -> None:
     if "json_output" not in context:
         parsed = json.loads(context["output"])
         context["json_output"] = parsed
-    
+
     # Handle nested fields (e.g., "formalize_artifact.path")
     parts = field.split(".")
     obj = context["json_output"]
     for part in parts:
         obj = obj[part]
-    
+
     assert str(obj) == value, f"Field '{field}' = '{obj}', expected '{value}'"
 
 
@@ -244,13 +244,13 @@ def json_field_not_null(context: dict[str, Any], field: str) -> None:
     if "json_output" not in context:
         parsed = json.loads(context["output"])
         context["json_output"] = parsed
-    
+
     # Handle nested fields
     parts = field.split(".")
     obj = context["json_output"]
     for part in parts:
         obj = obj[part]
-    
+
     assert obj is not None, f"Field '{field}' is null"
 
 
@@ -260,13 +260,13 @@ def json_field_is_null(context: dict[str, Any], field: str) -> None:
     if "json_output" not in context:
         parsed = json.loads(context["output"])
         context["json_output"] = parsed
-    
+
     # Handle nested fields
     parts = field.split(".")
     obj = context["json_output"]
     for part in parts:
         obj = obj[part]
-    
+
     assert obj is None, f"Field '{field}' is not null: {obj}"
 
 
@@ -276,13 +276,13 @@ def json_field_is_array(context: dict[str, Any], field: str) -> None:
     if "json_output" not in context:
         parsed = json.loads(context["output"])
         context["json_output"] = parsed
-    
+
     # Handle nested fields
     parts = field.split(".")
     obj = context["json_output"]
     for part in parts:
         obj = obj[part]
-    
+
     assert isinstance(obj, list), f"Field '{field}' is not an array"
 
 
@@ -292,7 +292,7 @@ def opinions_not_empty(context: dict[str, Any]) -> None:
     if "json_output" not in context:
         parsed = json.loads(context["output"])
         context["json_output"] = parsed
-    
+
     opinions = context["json_output"]["opinions"]
     assert len(opinions) > 0, "Opinions array is empty"
 
@@ -302,11 +302,11 @@ def outputs_identical(context: dict[str, Any]) -> None:
     """Check that both outputs are identical."""
     output1 = context["output1"]
     output2 = context["output2"]
-    
+
     # Parse JSON to compare structured data (ignoring whitespace differences)
     json1 = json.loads(output1)
     json2 = json.loads(output2)
-    
+
     assert json1 == json2, "Outputs are not identical"
 
 

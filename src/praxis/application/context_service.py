@@ -128,14 +128,21 @@ def _read_artifact_excerpt(
     """
     lines: list[str] = []
     bytes_read = 0
+    truncated = False
 
     with artifact_path.open("r", encoding="utf-8") as f:
         for i, line in enumerate(f):
             if i >= max_lines:
+                # Check if there are more lines
+                if next(f, None) is not None:
+                    truncated = True
                 break
 
             line_bytes = len(line.encode("utf-8"))
             if bytes_read + line_bytes > max_bytes:
+                # Check if there are more lines
+                if next(f, None) is not None:
+                    truncated = True
                 break
 
             lines.append(line)
@@ -144,12 +151,7 @@ def _read_artifact_excerpt(
     excerpt = "".join(lines)
 
     # Add truncation indicator if we stopped early
-    with artifact_path.open("r", encoding="utf-8") as f:
-        all_lines = f.readlines()
-        if len(all_lines) > len(lines):
-            excerpt += (
-                f"\n... (truncated at {len(lines)} lines "
-                f"of {len(all_lines)} total)\n"
-            )
+    if truncated:
+        excerpt += f"\n... (truncated at {len(lines)} lines)\n"
 
     return excerpt
