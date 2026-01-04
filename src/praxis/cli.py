@@ -840,10 +840,11 @@ def validate_cmd(
         raise typer.Exit(0)
 
     # Print validation issues (warnings and errors go to stderr)
-    for issue in result.issues:
-        icon = "\u2717" if issue.severity == "error" else "\u26a0"
-        severity = issue.severity.upper()
-        typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
+    if not quiet:
+        for issue in result.issues:
+            icon = "\u2717" if issue.severity == "error" else "\u26a0"
+            severity = issue.severity.upper()
+            typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
 
     # Print tool check results
     if (tool_results or coverage_result) and not quiet:
@@ -870,7 +871,8 @@ def validate_cmd(
                 typer.echo(f"    {coverage_result.error}", err=True)
 
     # Print summary
-    typer.echo("")
+    if not quiet:
+        typer.echo("")
     all_checks_pass = (
         result.valid
         and not has_warnings
@@ -883,18 +885,20 @@ def validate_cmd(
         raise typer.Exit(0)
 
     if has_tool_failures or has_coverage_failure:
-        failed_items = [t.tool for t in tool_failures]
-        if has_coverage_failure:
-            failed_items.append("coverage")
-        typer.echo(f"\u2717 Tool checks failed: {', '.join(failed_items)}", err=True)
+        if not quiet:
+            failed_items = [t.tool for t in tool_failures]
+            if has_coverage_failure:
+                failed_items.append("coverage")
+            typer.echo(f"\u2717 Tool checks failed: {', '.join(failed_items)}", err=True)
         raise typer.Exit(1)
 
     if result.valid and has_warnings:
         if strict:
-            typer.echo(
-                f"\u2717 Validation failed: {len(result.warnings)} warning(s)",
-                err=True,
-            )
+            if not quiet:
+                typer.echo(
+                    f"\u2717 Validation failed: {len(result.warnings)} warning(s)",
+                    err=True,
+                )
             raise typer.Exit(1)
         if not quiet:
             typer.echo(
@@ -903,7 +907,8 @@ def validate_cmd(
         raise typer.Exit(0)
 
     # Has errors
-    typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)", err=True)
+    if not quiet:
+        typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)", err=True)
     raise typer.Exit(1)
 
 
