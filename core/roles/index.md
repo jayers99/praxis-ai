@@ -1,5 +1,5 @@
 # Praxis Roles Index
-**Canonical Entry Point (v1.1)**
+**Canonical Entry Point (v1.2)**
 
 This is the **authoritative entry point** for the Praxis Roles subsystem.
 All other READMEs defer to this document.
@@ -14,7 +14,7 @@ All other READMEs defer to this document.
 ### Core Roles
 | Role | Purpose | Definition |
 |------|---------|------------|
-| Research Librarian | Epistemic backbone; curates truth and provenance | `definitions/00-research-librarian.md` |
+| Librarian | Query interface to research-library; retrieves and summarizes | `definitions/00-research-librarian.md` |
 | Product Owner | Value decisions; backlog ordering | `definitions/01-product-owner.md` |
 | Red Team | Constructive adversarial validation | `definitions/02-red-team.md` |
 | Synthesis | Resolves inputs into a single direction | `definitions/03-synthesis.md` |
@@ -30,6 +30,8 @@ All other READMEs defer to this document.
 | QA | Risk-based validation strategy | `definitions/09-qa.md` |
 | FinOps | Cost drivers and constraints | `definitions/10-finops.md` |
 | SRE | Operability, SLOs, monitoring | `definitions/11-sre.md` |
+| Researcher | Conducts inquiry-driven research; produces draft artifacts | `definitions/12-researcher.md` |
+| Cataloger | Indexes approved artifacts into research-library | `definitions/13-cataloger.md` |
 
 ## Governance Documents
 
@@ -68,7 +70,7 @@ praxis-ai/
 │       ├── domain-variants.md          # Domain-specific role adaptations
 │       ├── metrics-framework.md        # Role effectiveness metrics
 │       └── definitions/
-│           ├── 00-research-librarian.md  # v1.1
+│           ├── 00-research-librarian.md  # v2.0 (renamed: Librarian)
 │           ├── 01-product-owner.md       # v1.1
 │           ├── 02-red-team.md            # v1.1
 │           ├── 03-synthesis.md           # v1.1
@@ -79,7 +81,9 @@ praxis-ai/
 │           ├── 08-security.md            # v1.1
 │           ├── 09-qa.md                  # v1.1
 │           ├── 10-finops.md              # v1.1
-│           └── 11-sre.md                 # v1.1
+│           ├── 11-sre.md                 # v1.1
+│           ├── 12-researcher.md          # v1.0
+│           └── 13-cataloger.md           # v1.0
 ├── research-library/
 │   └── roles/
 │       ├── rationale.md
