@@ -1,7 +1,7 @@
 # Patterns Research Index
 
-_Artifacts: 5_
-_Last updated: 2026-01-01_
+_Artifacts: 6_
+_Last updated: 2026-01-03_
 
 ## Purpose
 
@@ -16,6 +16,33 @@ Reusable patterns and practices. Implementation approaches, best practices, and 
 | [AI Code Review Optimization](git-ai-review-optimization.md) | Medium | code-review, copilot, severity, uat | Copilot detection, severity classification, UAT gates |
 | [AI Code Verification Workflow](ai-code-verification-workflow.md) | Medium | verification, trust-calibration, solo-developer | Three-layer verification model, trust calibration, review bandwidth |
 | [TDD and BDD for AI Verification](tdd-bdd-ai-verification.md) | Medium | TDD, BDD, mutation-testing, test-quality | Tests-first for AI, prompting strategies, mutation testing gold standard |
+| [Refinement-Spawned PKDP](refinement-spawned-pkdp.md) | Low (POC) | refinement, pkdp, knowledge-gaps, spikes | Chain model for gap detection, size-based research routing |
+
+## Refinement-Spawned PKDP
+
+**Status:** POC — templates and runbook integration complete, awaiting first real-world validation.
+
+This pattern addresses how to spawn knowledge distillation research when refinement spikes discover conceptual gaps in Praxis specifications or opinions.
+
+### Key Concepts
+
+- **Chain model:** Clarifying Question → Spike → Knowledge Gap
+- **Size routing:** S (agent) / M (PKDP session) / L (extended session)
+- **User decision:** SPAWN / DEFER / PROCEED
+
+### Artifacts Created
+
+- `ticket-refinement-runbook.md` section: Knowledge Gap Detection (PKDP Spawn)
+- `ticket-refinement-runbook-pkdp-companion.md` — detailed guidance
+- `knowledge-gap-flags-template.md` — gap tracking format
+- `research-handoff-template.md` — handoff documentation
+
+### Validation Pending
+
+- [ ] Real gap identified during feature refinement
+- [ ] Gap flagged using template
+- [ ] Research spawned and completed
+- [ ] Findings integrated into feature ticket
 
 ## Git + AI Workflow Series
 

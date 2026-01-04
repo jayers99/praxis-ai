@@ -1,7 +1,7 @@
 # Research Library Catalog
 
 _Last updated: 2026-01-03_
-_Total artifacts: 33_
+_Total artifacts: 34_
 
 ---
 
@@ -28,6 +28,7 @@ _Total artifacts: 33_
 | [patterns-git-ai-review-optimization-2026-01-01](patterns/git-ai-review-optimization.md) | AI Code Review Optimization Patterns | patterns | Medium | 2026-01-01 |
 | [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | patterns | Medium | 2026-01-01 |
 | [patterns-tdd-bdd-ai-verification-2026-01-01](patterns/tdd-bdd-ai-verification.md) | TDD and BDD for AI Code Verification | patterns | Medium | 2026-01-01 |
+| [patterns-refinement-spawned-pkdp-2026-01-03](patterns/refinement-spawned-pkdp.md) | Refinement-Spawned Knowledge Distillation | patterns | Low (POC) | 2026-01-03 |
 | [roles-site-reliability-engineer-2026-01-02](roles/sre-role.md) | Site Reliability Engineering (SRE) Role | roles | High | 2026-01-02 |
 | [roles-synthesis-integration-lead-2026-01-02](roles/synthesis-role.md) | Synthesis / Integration Lead Role | roles | High | 2026-01-02 |
 | [roles-lead-software-developer-scrum-2026-01-02](roles/lead-software-developer-scrum-role.md) | Lead Software Developer Role in Scrum Teams | roles | Medium | 2026-01-02 |
@@ -104,6 +105,7 @@ _Total artifacts: 33_
 | [patterns-git-ai-review-optimization-2026-01-01](patterns/git-ai-review-optimization.md) | AI Code Review Optimization Patterns | Medium | code-review, copilot, ai-agents, severity-classification, uat |
 | [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | Medium | ai-assisted, code-review, verification, trust-calibration, workflow, solo-developer |
 | [patterns-tdd-bdd-ai-verification-2026-01-01](patterns/tdd-bdd-ai-verification.md) | TDD and BDD for AI Code Verification | Medium | TDD, BDD, test-first, mutation-testing, Gherkin, AI-verification, test-quality, prompting |
+| [patterns-refinement-spawned-pkdp-2026-01-03](patterns/refinement-spawned-pkdp.md) | Refinement-Spawned Knowledge Distillation | Low (POC) | refinement, pkdp, knowledge-gaps, spikes, chain-model, research-spawn |
 
 ### Subagents
 
@@ -165,6 +167,7 @@ _No artifacts yet_
 ### Low Consensus (use with caution)
 
 - [AI Guards Capture & Design Notes](ai-guards/capture-notes.md) — ai-guards — design-notes, capture
+- [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md) — patterns — refinement, pkdp, knowledge-gaps _(POC, awaiting validation)_
 
 ---
 
@@ -208,6 +211,9 @@ _No artifacts yet_
 
 ### CCR
 - [Praxis Roles Subsystem Analysis Report](roles/roles-subsystem-analysis-report.md)
+
+### chain-model
+- [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md)
 
 ### claude-code
 - [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md)
@@ -327,6 +333,9 @@ _No artifacts yet_
 ### knowledge-distillation
 - [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
 
+### knowledge-gaps
+- [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md)
+
 ### knowledge-management
 - [Research Library Design Principles](foundations/research-library-design.md)
 
@@ -388,8 +397,14 @@ _No artifacts yet_
 ### QA-engineer
 - [Why QA Engineer Is Not a Formal Role in Scrum](roles/qa-engineer-role-scrum-dora-analysis.md)
 
+### refinement
+- [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md)
+
 ### reliability
 - [Site Reliability Engineering (SRE) Role](roles/sre-role.md)
+
+### research-spawn
+- [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md)
 
 ### review-bandwidth
 - [Git + AI Workflow First Principles](patterns/git-ai-first-principles.md)
@@ -453,6 +468,9 @@ _No artifacts yet_
 
 ### solo-developer
 - [AI Code Verification Workflow](patterns/ai-code-verification-workflow.md)
+
+### spikes
+- [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md)
 
 ### SRE
 - [Site Reliability Engineering (SRE) Role](roles/sre-role.md)
@@ -533,6 +551,7 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2026-01-03 | [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md) | patterns |
 | 2026-01-02 | [Site Reliability Engineering (SRE) Role](roles/sre-role.md) | roles |
 | 2026-01-02 | [Synthesis / Integration Lead Role](roles/synthesis-role.md) | roles |
 | 2026-01-02 | [Lead Software Developer Role in Scrum Teams](roles/lead-software-developer-scrum-role.md) | roles |
