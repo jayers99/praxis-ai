@@ -74,7 +74,7 @@ praxis-ai/
 │           ├── cataloger.md              # v1.0
 │           ├── developer.md              # v1.1
 │           ├── finops.md                 # v1.1
-│           ├── librarian.md              # v2.0 (renamed from Research Librarian)
+│           ├── librarian.md              # v2.0 (renamed: Librarian)
 │           ├── product-owner.md          # v1.1
 │           ├── qa.md                     # v1.1
 │           ├── red-team.md               # v1.1
