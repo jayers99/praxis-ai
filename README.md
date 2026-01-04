@@ -188,6 +188,11 @@ praxis validate --check-all           # Include tests, lint, types
 praxis audit                          # Domain best practices check
 praxis audit --strict                 # Fail on warnings
 
+# In-terminal documentation
+praxis guide lifecycle                # Lifecycle stages and hinge concept
+praxis guide privacy                  # Privacy levels and constraints
+praxis guide domain code              # Domain-specific guidance
+
 # Workspace management
 praxis workspace init                 # Initialize workspace
 praxis extensions add render-run      # Install extensions
