@@ -60,12 +60,14 @@ extensions_app = typer.Typer(help="Extension management commands.")
 examples_app = typer.Typer(help="Example management commands.")
 templates_app = typer.Typer(help="Template rendering commands.")
 opinions_app = typer.Typer(help="Opinions resolution and export.")
+guide_app = typer.Typer(help="In-terminal documentation guides.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
 app.add_typer(examples_app, name="examples")
 app.add_typer(templates_app, name="templates")
 app.add_typer(opinions_app, name="opinions")
+app.add_typer(guide_app, name="guide")
 
 
 def version_callback(value: bool) -> None:
@@ -2006,6 +2008,53 @@ def opinions_cmd(
 
         typer.echo()
         typer.echo(f"Total: {len(resolved.existing_files)} files")
+
+
+@guide_app.command("lifecycle")
+def guide_lifecycle_cmd() -> None:
+    """Show lifecycle stages and Formalize hinge concept."""
+    from praxis.application.guide_service import get_lifecycle_guide
+
+    try:
+        guide_text = get_lifecycle_guide()
+        typer.echo(guide_text)
+    except FileNotFoundError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@guide_app.command("privacy")
+def guide_privacy_cmd() -> None:
+    """Show privacy levels and behavioral constraints."""
+    from praxis.application.guide_service import get_privacy_guide
+
+    try:
+        guide_text = get_privacy_guide()
+        typer.echo(guide_text)
+    except FileNotFoundError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+
+
+@guide_app.command("domain")
+def guide_domain_cmd(
+    domain: str = typer.Argument(..., help="Domain name (code, create, write, learn, observe)"),
+) -> None:
+    """Show domain-specific guidance and artifacts."""
+    from praxis.application.guide_service import get_domain_guide
+
+    try:
+        guide_text = get_domain_guide(domain)
+        typer.echo(guide_text)
+    except FileNotFoundError as e:
+        typer.echo(f"Error: {e}", err=True)
+        raise typer.Exit(1)
+    except ValueError as e:
+        typer.echo(f"Error: {e}", err=True)
+        # List valid domains
+        valid_domains = ["code", "create", "write", "learn", "observe"]
+        typer.echo(f"\nValid domains: {', '.join(valid_domains)}", err=True)
+        raise typer.Exit(1)
 
 
 if __name__ == "__main__":
