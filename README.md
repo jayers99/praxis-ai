@@ -276,12 +276,34 @@ Templates provide domain-appropriate scaffolding for each lifecycle stage.
 
 ---
 
+## Worked Examples
+
+Praxis includes first-party worked examples demonstrating full lifecycle progression for each non-Code domain:
+
+| Domain | Example | Demonstrates |
+|--------|---------|--------------|
+| **Write** | [Technical Article](examples/write/technical-article/) | Writing Brief, outline → drafts → final article, post-publication sustain |
+| **Create** | [Design Exploration](examples/create/design-exploration/) | Creative Brief, visual explorations → iterations → final deliverables |
+| **Learn** | [Python Testing](examples/learn/python-testing/) | Learning Plan, weekly notes + exercises + reflections, skill evidence |
+| **Observe** | [Research Capture](examples/observe/research-capture/) | Raw capture, no formalize artifact, domain transition (Observe → Write) |
+
+Each example includes:
+- Full stage-by-stage progression (Capture → Sustain or Close)
+- Domain-specific formalize artifact (Brief, Plan, or none for Observe)
+- Realistic artifacts showing what "done" looks like at each stage
+- README with "how to follow along" guidance
+
+**Use these as templates** when starting a new project in these domains.
+
+---
+
 ## Start Here
 
 **New to Praxis:**
 - [User Guide](docs/guides/user-guide.md) — Step-by-step walkthrough
 - [AI Setup](docs/guides/ai-setup.md) — Configure AI assistants
 - [Stage Templates](docs/guides/stage-templates.md) — Scaffold lifecycle docs
+- **[Worked Examples](examples/)** — Full lifecycle examples for Write, Create, Learn, Observe
 
 **Understanding the framework:**
 - [SOD Specification](core/spec/sod.md) — Main specification
