@@ -6,3 +6,43 @@ contributions:
   opinions:
     - source: opinions/code/subtypes/mobile/principles.md
       target: code/subtypes/mobile/principles.md
+
+  audits:
+    - domain: "code"
+      subtypes: ["mobile"]
+      checks:
+        - name: "mobile_manifest_exists"
+          category: "structure"
+          check_type: "file_exists"
+          path: "mobile.json"
+          pass_message: "Mobile manifest exists (mobile.json)"
+          fail_message: "Mobile manifest missing (create mobile.json)"
+          severity: "warning"
+
+        - name: "mobile_source_directory"
+          category: "structure"
+          check_type: "dir_exists"
+          path: "src/mobile"
+          pass_message: "Mobile source directory exists (src/mobile/)"
+          fail_message: "Mobile source directory missing (create src/mobile/)"
+          severity: "warning"
+
+        - name: "native_bridge_documented"
+          category: "documentation"
+          check_type: "file_exists"
+          path: "docs/native-bridge.md"
+          pass_message: "Native bridge documented (docs/native-bridge.md)"
+          fail_message: "Native bridge not documented (create docs/native-bridge.md)"
+          severity: "warning"
+          min_stage: "formalize"
+
+        - name: "platform_target_specified"
+          category: "configuration"
+          check_type: "file_contains"
+          path: "mobile.json"
+          pattern: '"platforms"\s*:\s*\['
+          pass_message: "Platform targets specified in mobile.json"
+          fail_message: "Platform targets not specified (add 'platforms' array to mobile.json)"
+          severity: "warning"
+          min_stage: "formalize"
+
