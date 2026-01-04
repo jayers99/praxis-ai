@@ -160,12 +160,51 @@ class ExtensionManifest(BaseModel):
     )
 
 
+class AuditCheckContribution(BaseModel):
+    """A single audit check contribution from an extension."""
+
+    name: str = Field(description="Check name (unique within extension)")
+    category: str = Field(description="Check category (e.g., 'structure', 'tooling')")
+    check_type: str = Field(
+        description="Type of check (file_exists, dir_exists, file_contains)"
+    )
+    path: str = Field(description="File or directory path to check (relative to project root)")
+    pattern: str | None = Field(
+        default=None,
+        description="Regex pattern for file_contains check type",
+    )
+    pass_message: str = Field(description="Message to display when check passes")
+    fail_message: str = Field(description="Message to display when check fails")
+    severity: str = Field(
+        default="warning",
+        description="Severity level (warning or failed)",
+    )
+    min_stage: str | None = Field(
+        default=None,
+        description="Minimum stage for check to apply (optional)",
+    )
+
+
+class AuditContribution(BaseModel):
+    """Audit checks contribution for a specific domain."""
+
+    domain: str = Field(description="Domain these checks apply to (code, create, etc.)")
+    subtypes: list[str] = Field(
+        default_factory=list,
+        description="Subtypes these checks apply to (empty = all subtypes)",
+    )
+    checks: list[AuditCheckContribution] = Field(
+        default_factory=list,
+        description="List of audit check definitions",
+    )
+
+
 class ExtensionContributions(BaseModel):
     """Contributions that an extension provides."""
 
     opinions: list[OpinionContribution] = Field(default_factory=list)
     templates: list[TemplateContribution] = Field(default_factory=list)
-    # audits will be added in Story 3
+    audits: list[AuditContribution] = Field(default_factory=list)
 
 
 class ManifestLoadResult(BaseModel):
