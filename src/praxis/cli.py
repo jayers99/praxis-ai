@@ -142,6 +142,12 @@ def templates_render_cmd(
         "--json",
         help="Output as JSON.",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
 ) -> None:
     """Render lifecycle stage docs and domain artifacts into a project."""
     import os
@@ -239,6 +245,9 @@ def templates_render_cmd(
 
     if json_output:
         typer.echo(result.model_dump_json(indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if quiet:
         raise typer.Exit(0 if result.success else 1)
 
     if result.success:
@@ -831,10 +840,11 @@ def validate_cmd(
         raise typer.Exit(0)
 
     # Print validation issues (warnings and errors go to stderr)
-    for issue in result.issues:
-        icon = "\u2717" if issue.severity == "error" else "\u26a0"
-        severity = issue.severity.upper()
-        typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
+    if not quiet:
+        for issue in result.issues:
+            icon = "\u2717" if issue.severity == "error" else "\u26a0"
+            severity = issue.severity.upper()
+            typer.echo(f"{icon} [{severity}] {issue.message}", err=True)
 
     # Print tool check results
     if (tool_results or coverage_result) and not quiet:
@@ -861,7 +871,8 @@ def validate_cmd(
                 typer.echo(f"    {coverage_result.error}", err=True)
 
     # Print summary
-    typer.echo("")
+    if not quiet:
+        typer.echo("")
     all_checks_pass = (
         result.valid
         and not has_warnings
@@ -874,18 +885,20 @@ def validate_cmd(
         raise typer.Exit(0)
 
     if has_tool_failures or has_coverage_failure:
-        failed_items = [t.tool for t in tool_failures]
-        if has_coverage_failure:
-            failed_items.append("coverage")
-        typer.echo(f"\u2717 Tool checks failed: {', '.join(failed_items)}", err=True)
+        if not quiet:
+            failed_items = [t.tool for t in tool_failures]
+            if has_coverage_failure:
+                failed_items.append("coverage")
+            typer.echo(f"\u2717 Tool checks failed: {', '.join(failed_items)}", err=True)
         raise typer.Exit(1)
 
     if result.valid and has_warnings:
         if strict:
-            typer.echo(
-                f"\u2717 Validation failed: {len(result.warnings)} warning(s)",
-                err=True,
-            )
+            if not quiet:
+                typer.echo(
+                    f"\u2717 Validation failed: {len(result.warnings)} warning(s)",
+                    err=True,
+                )
             raise typer.Exit(1)
         if not quiet:
             typer.echo(
@@ -894,7 +907,8 @@ def validate_cmd(
         raise typer.Exit(0)
 
     # Has errors
-    typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)", err=True)
+    if not quiet:
+        typer.echo(f"\u2717 Validation failed: {len(result.errors)} error(s)", err=True)
     raise typer.Exit(1)
 
 
@@ -1250,6 +1264,12 @@ def workspace_info_cmd(
         "--json",
         help="Output JSON format.",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
 ) -> None:
     """Show workspace information."""
     try:
@@ -1282,6 +1302,9 @@ def workspace_info_cmd(
         import json
 
         typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0)
+
+    if quiet:
         raise typer.Exit(0)
 
     typer.echo(f"Workspace: {info.path}")
@@ -1724,6 +1747,12 @@ def pipeline_status_cmd(
         "--json",
         help="Output as JSON.",
     ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
 ) -> None:
     """Show current pipeline status and progress."""
     from praxis.application.pipeline import get_pipeline_status
@@ -1732,28 +1761,32 @@ def pipeline_status_cmd(
 
     if json_output:
         typer.echo(status.model_dump_json(indent=2))
-    else:
-        if status.errors:
-            for error in status.errors:
-                typer.echo(f"Error: {error}", err=True)
-            raise typer.Exit(1)
+        raise typer.Exit(0 if not status.errors else 1)
 
-        typer.echo(f"Pipeline: {status.pipeline_id}")
-        typer.echo(f"Risk tier: {status.risk_tier.value}")
-        typer.echo(f"Current stage: {status.current_stage.value}")
-        typer.echo("")
-        typer.echo("Stage Progress:")
-        for progress in status.stage_progress:
-            marker = "✓" if progress.status == "completed" else "○"
-            req = "(required)" if progress.required else "(optional)"
-            typer.echo(f"  {marker} {progress.stage.value}: {progress.status} {req}")
+    if status.errors:
+        for error in status.errors:
+            typer.echo(f"Error: {error}", err=True)
+        raise typer.Exit(1)
 
-        if status.next_stage:
-            typer.echo(f"\nNext: {status.next_stage.value}")
-        elif status.is_complete:
-            typer.echo("\n✓ Pipeline complete")
-        elif status.awaiting_hva:
-            typer.echo("\n⏳ Awaiting HVA decision")
+    if quiet:
+        raise typer.Exit(0)
+
+    typer.echo(f"Pipeline: {status.pipeline_id}")
+    typer.echo(f"Risk tier: {status.risk_tier.value}")
+    typer.echo(f"Current stage: {status.current_stage.value}")
+    typer.echo("")
+    typer.echo("Stage Progress:")
+    for progress in status.stage_progress:
+        marker = "✓" if progress.status == "completed" else "○"
+        req = "(required)" if progress.required else "(optional)"
+        typer.echo(f"  {marker} {progress.stage.value}: {progress.status} {req}")
+
+    if status.next_stage:
+        typer.echo(f"\nNext: {status.next_stage.value}")
+    elif status.is_complete:
+        typer.echo("\n✓ Pipeline complete")
+    elif status.awaiting_hva:
+        typer.echo("\n⏳ Awaiting HVA decision")
 
 
 @pipeline_app.command("run")

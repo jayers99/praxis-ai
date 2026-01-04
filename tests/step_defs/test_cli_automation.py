@@ -150,3 +150,81 @@ def check_output_empty(context: dict[str, Any]) -> None:
     """Verify the output is empty (or only whitespace)."""
     result = context["result"]
     assert result.output.strip() == "", f"Expected empty output, got: {result.output}"
+
+
+@given("a workspace exists")
+def workspace_exists(tmp_path: Path, context: dict[str, Any], monkeypatch: Any) -> None:
+    """Create a temporary workspace and set PRAXIS_HOME."""
+    workspace_path = tmp_path / "workspace"
+    workspace_path.mkdir()
+    
+    # Create workspace structure
+    (workspace_path / "extensions").mkdir()
+    (workspace_path / "examples").mkdir()
+    (workspace_path / "projects").mkdir()
+    
+    # Create workspace config with correct filename
+    config_path = workspace_path / "workspace-config.yaml"
+    config_path.write_text(
+        """installed_extensions: []
+installed_examples: []
+defaults:
+  privacy: personal
+  environment: Home
+"""
+    )
+    
+    # Set PRAXIS_HOME environment variable
+    monkeypatch.setenv("PRAXIS_HOME", str(workspace_path))
+    context["workspace_path"] = workspace_path
+
+
+@when("I run praxis workspace info --quiet")
+def run_workspace_info_quiet(cli_runner: CliRunner, context: dict[str, Any]) -> None:
+    """Run praxis workspace info with --quiet flag."""
+    result = cli_runner.invoke(app, ["workspace", "info", "--quiet"])
+    context["result"] = result
+
+
+@given("a project with an active pipeline")
+def project_with_pipeline(tmp_path: Path, context: dict[str, Any]) -> None:
+    """Create a project with an active pipeline."""
+    context["project_root"] = tmp_path
+    praxis_yaml = tmp_path / "praxis.yaml"
+    praxis_yaml.write_text(
+        """domain: code
+stage: capture
+privacy_level: personal
+environment: Home
+"""
+    )
+    
+    # Create a minimal pipeline state file with required fields
+    pipeline_yaml = tmp_path / "pipeline.yaml"
+    pipeline_yaml.write_text(
+        """pipeline_id: test-pipeline-001
+risk_tier: 2
+current_stage: rtc
+started_at: '2025-01-01T10:00:00'
+source_corpus_path: /tmp/corpus
+stages:
+  rtc:
+    status: pending
+"""
+    )
+
+
+@when("I run praxis pipeline status --quiet")
+def run_pipeline_status_quiet(cli_runner: CliRunner, context: dict[str, Any]) -> None:
+    """Run praxis pipeline status with --quiet flag."""
+    project_root = context["project_root"]
+    result = cli_runner.invoke(app, ["pipeline", "status", str(project_root), "--quiet"])
+    context["result"] = result
+
+
+@when("I run praxis templates render --quiet")
+def run_templates_render_quiet(cli_runner: CliRunner, context: dict[str, Any]) -> None:
+    """Run praxis templates render with --quiet flag."""
+    project_root = context["project_root"]
+    result = cli_runner.invoke(app, ["templates", "render", str(project_root), "--quiet"])
+    context["result"] = result
