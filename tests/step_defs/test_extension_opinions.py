@@ -37,16 +37,16 @@ def setup_workspace(context: dict[str, Any], tmp_path: Path) -> None:
     # Create workspace structure
     workspace_root = tmp_path / "workspace"
     workspace_root.mkdir()
-    
+
     # Set PRAXIS_HOME
     os.environ["PRAXIS_HOME"] = str(workspace_root)
     context["workspace_root"] = workspace_root
-    
+
     # Create extensions directory
     extensions_dir = workspace_root / "extensions"
     extensions_dir.mkdir()
     context["extensions_dir"] = extensions_dir
-    
+
     # Create workspace config
     config = {
         "workspace": {"projects_path": "./projects"},
@@ -57,7 +57,7 @@ def setup_workspace(context: dict[str, Any], tmp_path: Path) -> None:
     config_path = workspace_root / "workspace-config.yaml"
     with open(config_path, "w") as f:
         yaml.dump(config, f)
-    
+
     # Create core opinions directory in project root
     project_root = context.get("project_root", tmp_path)
     opinions_dir = project_root / "opinions"
@@ -71,7 +71,7 @@ def create_extension_with_manifest(context: dict[str, Any], ext_name: str) -> No
     extensions_dir = context["extensions_dir"]
     ext_dir = extensions_dir / ext_name
     ext_dir.mkdir()
-    
+
     # Create default manifest
     manifest = {
         "manifest_version": "0.1",
@@ -82,7 +82,7 @@ def create_extension_with_manifest(context: dict[str, Any], ext_name: str) -> No
     manifest_path = ext_dir / "praxis-extension.yaml"
     with open(manifest_path, "w") as f:
         yaml.dump(manifest, f)
-    
+
     # Add to installed extensions
     workspace_root = context["workspace_root"]
     config_path = workspace_root / "workspace-config.yaml"
@@ -91,7 +91,7 @@ def create_extension_with_manifest(context: dict[str, Any], ext_name: str) -> No
     config["installed_extensions"].append(ext_name)
     with open(config_path, "w") as f:
         yaml.dump(config, f)
-    
+
     context[f"ext_{ext_name}"] = ext_dir
 
 
@@ -108,26 +108,26 @@ def add_opinion_contribution(context: dict[str, Any], target_path: str) -> None:
         if key.startswith("ext_"):
             ext_name = key[4:]  # Remove "ext_" prefix
             break
-    
+
     if not ext_name:
         raise ValueError("No extension created yet")
-    
+
     ext_dir = context[f"ext_{ext_name}"]
     manifest_path = ext_dir / "praxis-extension.yaml"
-    
+
     with open(manifest_path) as f:
         manifest = yaml.safe_load(f)
-    
+
     # Add opinion contribution
     contribution = {
         "source": f"opinions/{target_path}",
         "target": target_path,
     }
     manifest["contributions"]["opinions"].append(contribution)
-    
+
     with open(manifest_path, "w") as f:
         yaml.dump(manifest, f)
-    
+
     context["last_contribution"] = target_path
 
 
@@ -142,14 +142,14 @@ def create_extension_opinion_file(context: dict[str, Any], source_path: str) -> 
         if key.startswith("ext_"):
             ext_name = key[4:]
             break
-    
+
     if not ext_name:
         raise ValueError("No extension created yet")
-    
+
     ext_dir = context[f"ext_{ext_name}"]
     file_path = ext_dir / source_path
     file_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     # Create a simple opinion file with frontmatter
     content = """---
 domain: code
@@ -173,18 +173,18 @@ def set_unsupported_version(context: dict[str, Any], version: str) -> None:
         if key.startswith("ext_"):
             ext_name = key[4:]
             break
-    
+
     if not ext_name:
         raise ValueError("No extension created yet")
-    
+
     ext_dir = context[f"ext_{ext_name}"]
     manifest_path = ext_dir / "praxis-extension.yaml"
-    
+
     with open(manifest_path) as f:
         manifest = yaml.safe_load(f)
-    
+
     manifest["manifest_version"] = version
-    
+
     with open(manifest_path, "w") as f:
         yaml.dump(manifest, f)
 
@@ -198,13 +198,13 @@ def create_invalid_yaml_manifest(context: dict[str, Any]) -> None:
         if key.startswith("ext_"):
             ext_name = key[4:]
             break
-    
+
     if not ext_name:
         raise ValueError("No extension created yet")
-    
+
     ext_dir = context[f"ext_{ext_name}"]
     manifest_path = ext_dir / "praxis-extension.yaml"
-    
+
     # Write invalid YAML
     manifest_path.write_text("manifest_version: 0.1\n  invalid: indentation\n: bad")
 
@@ -217,7 +217,7 @@ def create_extension_with_contribution(
     extensions_dir = context["extensions_dir"]
     ext_dir = extensions_dir / ext_name
     ext_dir.mkdir()
-    
+
     # Create manifest with contribution
     manifest = {
         "manifest_version": "0.1",
@@ -232,7 +232,7 @@ def create_extension_with_contribution(
     manifest_path = ext_dir / "praxis-extension.yaml"
     with open(manifest_path, "w") as f:
         yaml.dump(manifest, f)
-    
+
     # Add to installed extensions
     workspace_root = context["workspace_root"]
     config_path = workspace_root / "workspace-config.yaml"
@@ -241,7 +241,7 @@ def create_extension_with_contribution(
     config["installed_extensions"].append(ext_name)
     with open(config_path, "w") as f:
         yaml.dump(config, f)
-    
+
     context[f"ext_{ext_name}"] = ext_dir
 
 
@@ -255,23 +255,23 @@ def create_opinion_files_for_both_extensions(context: dict[str, Any]) -> None:
             ext_names.append(key[4:])
             if len(ext_names) == 2:
                 break
-    
+
     if len(ext_names) < 2:
         raise ValueError("Need at least two extensions")
-    
+
     for ext_name in ext_names:
         ext_dir = context[f"ext_{ext_name}"]
-        
+
         # Get the target path from manifest
         manifest_path = ext_dir / "praxis-extension.yaml"
         with open(manifest_path) as f:
             manifest = yaml.safe_load(f)
-        
+
         if manifest["contributions"]["opinions"]:
             source_path = manifest["contributions"]["opinions"][0]["source"]
             file_path = ext_dir / source_path
             file_path.parent.mkdir(parents=True, exist_ok=True)
-            
+
             content = f"""---
 domain: code
 version: "1.0"
@@ -293,7 +293,7 @@ def create_core_opinion(context: dict[str, Any]) -> None:
     opinions_dir.mkdir(exist_ok=True)
     code_dir = opinions_dir / "code"
     code_dir.mkdir(exist_ok=True)
-    
+
     file_path = code_dir / "principles.md"
     content = """---
 domain: code
@@ -308,13 +308,17 @@ Core principles from praxis-ai.
     file_path.write_text(content)
 
 
-@given(parsers.parse('an installed extension "{ext_name}" without praxis-extension.yaml'))
+@given(
+    parsers.parse(
+        'an installed extension "{ext_name}" without praxis-extension.yaml'
+    )
+)
 def create_extension_without_manifest(context: dict[str, Any], ext_name: str) -> None:
     """Create an extension without a manifest."""
     extensions_dir = context["extensions_dir"]
     ext_dir = extensions_dir / ext_name
     ext_dir.mkdir()
-    
+
     # Add to installed extensions but don't create manifest
     workspace_root = context["workspace_root"]
     config_path = workspace_root / "workspace-config.yaml"
