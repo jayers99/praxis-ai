@@ -9,7 +9,11 @@ from typing import Callable, Literal
 from praxis.domain.domains import Domain
 from praxis.domain.stages import Stage
 from praxis.infrastructure.audit_helpers import dir_exists, file_exists_any
-from praxis.infrastructure.pyproject_loader import get_dependencies, get_poetry_scripts
+from praxis.infrastructure.pyproject_loader import (
+    get_dependencies,
+    get_poetry_scripts,
+    load_pyproject,
+)
 
 
 @dataclass
@@ -263,6 +267,199 @@ CLI_CHECKS: list[CheckDefinition] = [
 
 # Add CLI checks to CODE_CHECKS
 CODE_CHECKS.extend(CLI_CHECKS)
+
+
+# =============================================================================
+# Library Subtype Checks (code.library)
+# =============================================================================
+
+
+def _library_has_exports(project_root: Path) -> bool:
+    """Check for library exports definition (__all__ or pyproject.toml).
+
+    A library's public API is considered defined if:
+    - __init__.py contains __all__ definition, OR
+    - pyproject.toml has explicit packages/modules configuration
+    """
+    # Check for __all__ in __init__.py
+    src_dir = project_root / "src"
+    if src_dir.exists():
+        packages = [
+            d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
+        ]
+        if packages:
+            init_file = packages[0] / "__init__.py"
+            if init_file.exists():
+                try:
+                    content = init_file.read_text()
+                    if "__all__" in content:
+                        return True
+                except (OSError, UnicodeDecodeError):
+                    pass
+
+    # Check for explicit package configuration in pyproject.toml
+    data = load_pyproject(project_root)
+    if data:
+        poetry = data.get("tool", {}).get("poetry", {})
+        # Explicit packages or modules indicate intentional exports
+        if poetry.get("packages") or poetry.get("modules"):
+            return True
+
+    return False
+
+
+def _library_has_version(project_root: Path) -> bool:
+    """Check for version specification (__version__ and pyproject.toml).
+
+    A library version is considered properly specified if:
+    - pyproject.toml contains version field AND
+    - __init__.py contains __version__ variable
+    """
+    # Check pyproject.toml version
+    data = load_pyproject(project_root)
+    if not data:
+        return False
+
+    poetry = data.get("tool", {}).get("poetry", {})
+    if not poetry.get("version"):
+        return False
+
+    # Check for __version__ in package __init__.py
+    src_dir = project_root / "src"
+    if not src_dir.exists():
+        return False
+
+    packages = [
+        d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
+    ]
+    if not packages:
+        return False
+
+    init_file = packages[0] / "__init__.py"
+    if not init_file.exists():
+        return False
+
+    try:
+        content = init_file.read_text()
+        return "__version__" in content
+    except (OSError, UnicodeDecodeError):
+        return False
+
+
+def _library_has_docstrings(project_root: Path) -> bool:
+    """Check for docstrings on public functions in __init__.py.
+
+    For formalize stage, we check if public exports have docstrings.
+    This is a heuristic check looking for common docstring patterns.
+    """
+    src_dir = project_root / "src"
+    if not src_dir.exists():
+        return False
+
+    packages = [
+        d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
+    ]
+    if not packages:
+        return False
+
+    init_file = packages[0] / "__init__.py"
+    if not init_file.exists():
+        return False
+
+    try:
+        content = init_file.read_text()
+        # Look for docstring patterns (triple quotes)
+        # This is a heuristic - real check would parse AST
+        has_exports = "__all__" in content or "def " in content or "class " in content
+        has_docstrings = '"""' in content or "'''" in content
+        return has_exports and has_docstrings
+    except (OSError, UnicodeDecodeError):
+        return False
+
+
+def _library_has_docs_site(project_root: Path) -> bool:
+    """Check for documentation site (sphinx/mkdocs).
+
+    For commit+ stages, we expect a proper docs site setup.
+    """
+    # Check for common docs directories and config files
+    docs_indicators = [
+        project_root / "docs" / "conf.py",  # Sphinx
+        project_root / "mkdocs.yml",  # MkDocs
+        project_root / "docs" / "index.md",  # MkDocs
+        project_root / "docs" / "index.rst",  # Sphinx
+    ]
+    return any(indicator.exists() for indicator in docs_indicators)
+
+
+def _library_has_changelog(project_root: Path) -> bool:
+    """Check for changelog file.
+
+    Looks for common changelog file names.
+    """
+    return file_exists_any(
+        project_root,
+        "CHANGELOG.md",
+        "CHANGELOG.rst",
+        "CHANGELOG.txt",
+        "HISTORY.md",
+        "CHANGES.md",
+    )
+
+
+LIBRARY_CHECKS: list[CheckDefinition] = [
+    CheckDefinition(
+        name="library_exports_defined",
+        category="library",
+        check_fn=_library_has_exports,
+        pass_message="Library exports defined (__all__ or pyproject.toml packages)",
+        fail_message=(
+            "Library exports not defined. Add __all__ to __init__.py or configure "
+            "packages in pyproject.toml"
+        ),
+        subtypes=["library"],
+    ),
+    CheckDefinition(
+        name="library_version_specified",
+        category="library",
+        check_fn=_library_has_version,
+        pass_message="Version specified (__version__ and pyproject.toml)",
+        fail_message=(
+            "Version not properly specified. Add __version__ to __init__.py and "
+            "version to pyproject.toml"
+        ),
+        subtypes=["library"],
+    ),
+    CheckDefinition(
+        name="library_public_api_documented",
+        category="library",
+        check_fn=_library_has_docstrings,
+        pass_message="Public API documented (docstrings present)",
+        fail_message="Public API not documented. Add docstrings to public functions/classes",
+        subtypes=["library"],
+        min_stage=Stage.FORMALIZE,
+    ),
+    CheckDefinition(
+        name="library_docs_site",
+        category="library",
+        check_fn=_library_has_docs_site,
+        pass_message="Documentation site configured (sphinx/mkdocs)",
+        fail_message="Documentation site not found. Set up sphinx or mkdocs",
+        subtypes=["library"],
+        min_stage=Stage.COMMIT,
+    ),
+    CheckDefinition(
+        name="library_changelog_exists",
+        category="library",
+        check_fn=_library_has_changelog,
+        pass_message="Changelog exists (CHANGELOG.md or equivalent)",
+        fail_message="Changelog not found. Create CHANGELOG.md to track changes",
+        subtypes=["library"],
+    ),
+]
+
+# Add LIBRARY checks to CODE_CHECKS
+CODE_CHECKS.extend(LIBRARY_CHECKS)
 
 
 CHECKS_BY_DOMAIN: dict[Domain, list[CheckDefinition]] = {
