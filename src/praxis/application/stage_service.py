@@ -7,11 +7,64 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from praxis.domain.domains import ARTIFACT_PATHS
-from praxis.domain.models import StageHistoryEntry, StageResult, ValidationIssue
+from praxis.domain.models import (
+    PraxisConfig,
+    StageHistoryEntry,
+    StageResult,
+    ValidationIssue,
+)
 from praxis.domain.stages import ALLOWED_REGRESSIONS, REQUIRES_ARTIFACT, Stage
 from praxis.infrastructure.claude_md_updater import update_claude_md_stage
 from praxis.infrastructure.yaml_loader import load_praxis_config
 from praxis.infrastructure.yaml_writer import update_praxis_yaml
+
+
+def is_crossing_formalize(current: Stage, target: Stage) -> bool:
+    """Check if a regression crosses the Formalize boundary.
+
+    Crossing occurs when moving from post-Formalize (Commit+) to
+    pre-Formalize (Shape-).
+
+    Args:
+        current: Current stage.
+        target: Target stage.
+
+    Returns:
+        True if regression crosses Formalize boundary.
+    """
+    # Pre-Formalize stages
+    pre_formalize = {Stage.CAPTURE, Stage.SENSE, Stage.EXPLORE, Stage.SHAPE}
+    # Post-Formalize stages (same as REQUIRES_ARTIFACT)
+    post_formalize = REQUIRES_ARTIFACT
+
+    # Crossing happens when:
+    # 1. We're regressing (target < current)
+    # 2. Current is post-Formalize
+    # 3. Target is pre-Formalize
+    return (
+        target < current
+        and current in post_formalize
+        and target in pre_formalize
+    )
+
+
+def find_active_contract(config: PraxisConfig) -> str | None:
+    """Find the most recent active contract ID from history.
+
+    Searches history for the most recent Formalize transition that
+    has a contract_id.
+
+    Args:
+        config: Current project configuration.
+
+    Returns:
+        Contract ID string if found, None otherwise.
+    """
+    # Search history in reverse (most recent first)
+    for entry in reversed(config.history):
+        if entry.to_stage == Stage.FORMALIZE.value and entry.contract_id:
+            return entry.contract_id
+    return None
 
 
 def transition_stage(
@@ -75,7 +128,31 @@ def transition_stage(
     if new_stage < current_config.stage:
         allowed = ALLOWED_REGRESSIONS.get(current_config.stage, frozenset())
         if new_stage not in allowed:
-            # This is a non-standard regression - requires rationale
+            # This is a non-standard regression
+            # Check if crossing Formalize boundary
+            crossing = is_crossing_formalize(current_config.stage, new_stage)
+            contract_id = None
+            if crossing:
+                contract_id = find_active_contract(current_config)
+
+            # Build enhanced warning message
+            warning_parts = [
+                f"Regression from '{current_config.stage.value}' to "
+                f"'{new_stage.value}' is not standard."
+            ]
+
+            if crossing:
+                warning_parts.append("This crosses the Formalize boundary.")
+                if contract_id:
+                    warning_parts.append(f"This will void {contract_id}.")
+
+            warning_parts.append(
+                f"Allowed: {', '.join(s.value for s in allowed) or 'none'}."
+            )
+            warning_parts.append("Provide --reason to document rationale.")
+
+            warning_message = " ".join(warning_parts)
+
             # If reason is provided, proceed automatically
             if reason is not None:
                 force = True
@@ -83,12 +160,9 @@ def transition_stage(
                 return StageResult(
                     success=False,
                     needs_confirmation=True,
-                    warning_message=(
-                        f"Regression from '{current_config.stage.value}' to "
-                        f"'{new_stage.value}' is not standard. "
-                        f"Allowed: {', '.join(s.value for s in allowed) or 'none'}. "
-                        f"Provide --reason to document rationale."
-                    ),
+                    warning_message=warning_message,
+                    crossing_formalize=crossing,
+                    voided_contract_id=contract_id,
                 )
             # Force mode requires reason for auditability
             if reason is None:

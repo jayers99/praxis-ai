@@ -687,7 +687,21 @@ def stage_cmd(
             if json_output:
                 typer.echo(result.model_dump_json(indent=2))
             raise typer.Exit(1)
+
+        # Display enhanced warning with impact details
         typer.echo(f"⚠ {result.warning_message}", err=True)
+
+        if result.crossing_formalize:
+            typer.echo(
+                "  ⚠ This regression crosses the Formalize boundary",
+                err=True,
+            )
+            if result.voided_contract_id:
+                typer.echo(
+                    f"  ⚠ This will void: {result.voided_contract_id}",
+                    err=True,
+                )
+
         if not typer.confirm("Continue anyway?"):
             typer.echo("Aborted.")
             raise typer.Exit(0)
