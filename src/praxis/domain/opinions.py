@@ -46,6 +46,10 @@ class OpinionFile(BaseModel):
         default=None,
         description="Error message if file could not be parsed",
     )
+    source: str = Field(
+        default="core",
+        description="Provenance: 'core' or extension name that contributed this file",
+    )
 
 
 class ResolvedOpinions(BaseModel):
@@ -87,3 +91,11 @@ class OpinionsTree(BaseModel):
         description="Files in _shared/ directory",
     )
     total_files: int = Field(default=0, description="Total number of opinion files")
+    extension_contributions: dict[str, list[str]] = Field(
+        default_factory=dict,
+        description="Map of extension name to list of contributed file paths",
+    )
+    provenance: dict[str, str] = Field(
+        default_factory=dict,
+        description="Map of file path to source ('core' or extension name)",
+    )

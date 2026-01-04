@@ -108,3 +108,49 @@ class ExampleListResult(BaseModel):
 
     available: list[ExampleInfo]
     installed: list[str]
+
+
+class OpinionContribution(BaseModel):
+    """A single opinion file contribution from an extension."""
+
+    source: str = Field(
+        description="Relative path in extension (e.g., 'opinions/code/principles.md')"
+    )
+    target: str = Field(
+        description="Target path in opinions tree (e.g., 'code/principles.md')"
+    )
+
+
+class ExtensionManifest(BaseModel):
+    """Manifest for extension contributions (praxis-extension.yaml).
+
+    Schema version 0.1 - experimental, subject to breaking changes before v1.0.
+    """
+
+    manifest_version: str = Field(
+        description="Manifest schema version (e.g., '0.1', '1.0')"
+    )
+    name: str = Field(description="Extension name (must match directory name)")
+    description: str | None = Field(
+        default=None, description="Human-readable description"
+    )
+    contributions: ExtensionContributions = Field(
+        default_factory=lambda: ExtensionContributions()
+    )
+
+
+class ExtensionContributions(BaseModel):
+    """Contributions that an extension provides."""
+
+    opinions: list[OpinionContribution] = Field(default_factory=list)
+    # templates and audits will be added in Stories 2 and 3
+
+
+class ManifestLoadResult(BaseModel):
+    """Result of loading an extension manifest."""
+
+    success: bool
+    extension_name: str
+    manifest: ExtensionManifest | None = None
+    error: str | None = None
+    warning: str | None = None
