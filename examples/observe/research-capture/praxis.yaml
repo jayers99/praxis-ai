@@ -1,0 +1,5 @@
+domain: observe
+stage: close
+privacy_level: personal
+environment: Home
+subtype: notes
