@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -321,8 +322,6 @@ def check_output_not_contains(context: dict[str, Any], text: str) -> None:
 @then(parsers.parse('the JSON output should contain "{field}": {value}'))
 def check_json_output_field(context: dict[str, Any], field: str, value: str) -> None:
     """Verify the JSON output contains a specific field with a value."""
-    import json
-
     result = context["result"]
     try:
         data = json.loads(result.output)

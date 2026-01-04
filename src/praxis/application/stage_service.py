@@ -22,8 +22,8 @@ from praxis.infrastructure.yaml_writer import update_praxis_yaml
 def is_crossing_formalize(current: Stage, target: Stage) -> bool:
     """Check if a regression crosses the Formalize boundary.
 
-    Crossing occurs when moving from post-Formalize (Commit+) to
-    pre-Formalize (Shape-).
+    Crossing occurs when moving from post-Formalize (Formalize and later)
+    to pre-Formalize (before Formalize).
 
     Args:
         current: Current stage.
@@ -32,15 +32,15 @@ def is_crossing_formalize(current: Stage, target: Stage) -> bool:
     Returns:
         True if regression crosses Formalize boundary.
     """
-    # Pre-Formalize stages
+    # Pre-Formalize stages (before Formalize)
     pre_formalize = {Stage.CAPTURE, Stage.SENSE, Stage.EXPLORE, Stage.SHAPE}
-    # Post-Formalize stages (same as REQUIRES_ARTIFACT)
+    # Post-Formalize stages (Formalize and later, same as REQUIRES_ARTIFACT)
     post_formalize = REQUIRES_ARTIFACT
 
     # Crossing happens when:
     # 1. We're regressing (target < current)
-    # 2. Current is post-Formalize
-    # 3. Target is pre-Formalize
+    # 2. Current is post-Formalize (Formalize or later)
+    # 3. Target is pre-Formalize (before Formalize)
     return (
         target < current
         and current in post_formalize
