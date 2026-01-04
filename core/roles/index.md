@@ -14,24 +14,24 @@ All other READMEs defer to this document.
 ### Core Roles
 | Role | Purpose | Definition |
 |------|---------|------------|
-| Librarian | Query interface to research-library; retrieves and summarizes | `definitions/00-research-librarian.md` |
-| Product Owner | Value decisions; backlog ordering | `definitions/01-product-owner.md` |
-| Red Team | Constructive adversarial validation | `definitions/02-red-team.md` |
-| Synthesis | Resolves inputs into a single direction | `definitions/03-synthesis.md` |
-| Scrum Master | Cadence, flow, impediment removal | `definitions/04-scrum-master.md` |
-| Developer | Produces "Done" increments | `definitions/05-developer.md` |
+| Librarian | Query interface to research-library; retrieves and summarizes | `definitions/librarian.md` |
+| Product Owner | Value decisions; backlog ordering | `definitions/product-owner.md` |
+| Red Team | Constructive adversarial validation | `definitions/red-team.md` |
+| Synthesis | Resolves inputs into a single direction | `definitions/synthesis.md` |
+| Scrum Master | Cadence, flow, impediment removal | `definitions/scrum-master.md` |
+| Developer | Produces "Done" increments | `definitions/developer.md` |
 
 ### Supporting Roles (invoked as needed)
 | Role | Purpose | Definition |
 |------|---------|------------|
-| Stakeholder | User needs and acceptance language | `definitions/06-stakeholder.md` |
-| Architect | Coherence and boundaries | `definitions/07-architect.md` |
-| Security | Threats, controls, mitigations | `definitions/08-security.md` |
-| QA | Risk-based validation strategy | `definitions/09-qa.md` |
-| FinOps | Cost drivers and constraints | `definitions/10-finops.md` |
-| SRE | Operability, SLOs, monitoring | `definitions/11-sre.md` |
-| Researcher | Conducts inquiry-driven research; produces draft artifacts | `definitions/12-researcher.md` |
-| Cataloger | Indexes approved artifacts into research-library | `definitions/13-cataloger.md` |
+| Stakeholder | User needs and acceptance language | `definitions/stakeholder.md` |
+| Architect | Coherence and boundaries | `definitions/architect.md` |
+| Security | Threats, controls, mitigations | `definitions/security.md` |
+| QA | Risk-based validation strategy | `definitions/qa.md` |
+| FinOps | Cost drivers and constraints | `definitions/finops.md` |
+| SRE | Operability, SLOs, monitoring | `definitions/sre.md` |
+| Researcher | Conducts inquiry-driven research; produces draft artifacts | `definitions/researcher.md` |
+| Cataloger | Indexes approved artifacts into research-library | `definitions/cataloger.md` |
 
 ## Governance Documents
 
@@ -70,20 +70,20 @@ praxis-ai/
 │       ├── domain-variants.md          # Domain-specific role adaptations
 │       ├── metrics-framework.md        # Role effectiveness metrics
 │       └── definitions/
-│           ├── 00-research-librarian.md  # v2.0 (renamed: Librarian)
-│           ├── 01-product-owner.md       # v1.1
-│           ├── 02-red-team.md            # v1.1
-│           ├── 03-synthesis.md           # v1.1
-│           ├── 04-scrum-master.md        # v1.1
-│           ├── 05-developer.md           # v1.1
-│           ├── 06-stakeholder.md         # v1.1
-│           ├── 07-architect.md           # v1.1
-│           ├── 08-security.md            # v1.1
-│           ├── 09-qa.md                  # v1.1
-│           ├── 10-finops.md              # v1.1
-│           ├── 11-sre.md                 # v1.1
-│           ├── 12-researcher.md          # v1.0
-│           └── 13-cataloger.md           # v1.0
+│           ├── architect.md              # v1.1
+│           ├── cataloger.md              # v1.0
+│           ├── developer.md              # v1.1
+│           ├── finops.md                 # v1.1
+│           ├── librarian.md              # v2.0 (renamed from Research Librarian)
+│           ├── product-owner.md          # v1.1
+│           ├── qa.md                     # v1.1
+│           ├── red-team.md               # v1.1
+│           ├── researcher.md             # v1.0
+│           ├── scrum-master.md           # v1.1
+│           ├── security.md               # v1.1
+│           ├── sre.md                    # v1.1
+│           ├── stakeholder.md            # v1.1
+│           └── synthesis.md              # v1.1
 ├── research-library/
 │   └── roles/
 │       ├── rationale.md
