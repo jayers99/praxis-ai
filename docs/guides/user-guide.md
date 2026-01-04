@@ -228,7 +228,28 @@ praxis stage formalize
 praxis stage explore --reason "Scope change discovered during implementation"
 # ⚠ Non-standard regression to 'explore'
 # ✓ Stage updated to 'explore'
+
+# Regression crossing Formalize boundary shows impact
+praxis stage explore  # from execute stage
+# ⚠ Regression from 'execute' to 'explore' is not standard.
+#   This crosses the Formalize boundary.
+#   This will void contract-20260104-143000.
+#   Allowed: commit, formalize.
+#   Provide --reason to document rationale.
+# ⚠ This regression crosses the Formalize boundary
+# ⚠ This will void: contract-20260104-143000
+# Continue anyway? [y/N]:
 ```
+
+**Regression Impact Warnings:**
+
+When attempting a non-standard regression that crosses the Formalize boundary (moving from post-Formalize stages like Execute, Commit, or Sustain back to pre-Formalize stages like Shape, Explore, Sense, or Capture), Praxis displays enhanced warnings:
+
+- **Formalize boundary crossing**: Clearly indicates when a regression moves from execution back to discovery mode
+- **Contract void warning**: Shows which contract ID will be voided by the regression
+- **Impact summary**: Explains the implications of the regression before prompting for confirmation
+
+Allowed regressions (e.g., `sustain` → `execute`, `execute` → `formalize`) do not show crossing warnings.
 
 **Behavior:**
 

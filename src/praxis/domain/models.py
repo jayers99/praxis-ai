@@ -91,6 +91,14 @@ class StageResult(BaseModel):
     issues: list[ValidationIssue] = Field(default_factory=list)
     needs_confirmation: bool = False
     warning_message: str | None = None
+    crossing_formalize: bool = Field(
+        default=False,
+        description="True if regression crosses Formalize boundary (post→pre)",
+    )
+    voided_contract_id: str | None = Field(
+        default=None,
+        description="Contract ID that will be voided by this regression",
+    )
 
 
 class ToolCheckResult(BaseModel):

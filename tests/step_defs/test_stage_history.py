@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -44,6 +45,46 @@ environment: Home
 """
     )
     # Create SOD
+    docs_dir = tmp_path / "docs"
+    docs_dir.mkdir()
+    sod = docs_dir / "sod.md"
+    sod.write_text("# Solution Overview Document\n")
+
+
+@given(parsers.parse('a project at stage "{stage}" with contract "{contract_id}"'))
+def project_at_stage_with_contract(
+    tmp_path: Path, context: dict[str, Any], stage: str, contract_id: str
+) -> None:
+    """Create a project at the given stage with a contract in history."""
+    context["project_root"] = tmp_path
+    praxis_yaml = tmp_path / "praxis.yaml"
+
+    # Create history with a Formalize transition that has the contract ID
+    history_data = [
+        {
+            "timestamp": "2026-01-01T12:00:00Z",
+            "from_stage": "shape",
+            "to_stage": "formalize",
+            "contract_id": contract_id,
+        },
+        {
+            "timestamp": "2026-01-01T13:00:00Z",
+            "from_stage": "formalize",
+            "to_stage": stage,
+        },
+    ]
+
+    content = {
+        "domain": "code",
+        "stage": stage,
+        "privacy_level": "personal",
+        "environment": "Home",
+        "history": history_data,
+    }
+
+    praxis_yaml.write_text(yaml.safe_dump(content, default_flow_style=False, sort_keys=False))
+
+    # Create SOD for post-Formalize stages
     docs_dir = tmp_path / "docs"
     docs_dir.mkdir()
     sod = docs_dir / "sod.md"
@@ -266,4 +307,38 @@ def check_history_no_reason(context: dict[str, Any]) -> None:
     latest = history[-1]
     assert "reason" not in latest or latest.get("reason") is None, (
         f"Latest history entry should not have a reason. Got: {latest}"
+    )
+
+
+@then(parsers.parse('the output should not contain "{text}"'))
+def check_output_not_contains(context: dict[str, Any], text: str) -> None:
+    """Verify the output does NOT contain the specified text."""
+    result = context["result"]
+    assert text not in result.output, (
+        f"Did not expect '{text}' in output. Got: {result.output}"
+    )
+
+
+@then(parsers.parse('the JSON output should contain "{field}": {value}'))
+def check_json_output_field(context: dict[str, Any], field: str, value: str) -> None:
+    """Verify the JSON output contains a specific field with a value."""
+    result = context["result"]
+    try:
+        data = json.loads(result.output)
+    except json.JSONDecodeError as e:
+        raise AssertionError(f"Failed to parse JSON output: {e}. Output: {result.output}")
+
+    # Parse the expected value
+    if value == "true":
+        expected_value = True
+    elif value == "false":
+        expected_value = False
+    elif value.startswith('"') and value.endswith('"'):
+        expected_value = value[1:-1]  # Remove quotes
+    else:
+        expected_value = value
+
+    assert field in data, f"Field '{field}' not found in JSON output: {data}"
+    assert data[field] == expected_value, (
+        f"Expected '{field}': {expected_value}, got '{field}': {data[field]}"
     )

@@ -58,3 +58,36 @@ Feature: Stage history tracking
     When I run praxis stage "formalize"
     Then the exit code should be 0
     And praxis.yaml should contain a history entry without reason
+
+  Scenario: Non-standard regression shows Formalize crossing warning
+    Given a project at stage "execute" with contract "contract-20260101-120000"
+    When I run praxis stage "explore"
+    Then the exit code should be 1
+    And the output should contain "crosses the Formalize boundary"
+    And the output should contain "contract-20260101-120000"
+
+  Scenario: Non-standard regression with reason and Formalize crossing succeeds
+    Given a project at stage "execute" with contract "contract-20260101-120000"
+    When I run praxis stage "explore" with reason "Major scope change discovered"
+    Then the exit code should be 0
+    And praxis.yaml should contain a history entry with reason "Major scope change discovered"
+
+  Scenario: Commit to Shape crosses Formalize boundary
+    Given a project at stage "commit" with contract "contract-20260101-120000"
+    When I run praxis stage "shape"
+    Then the exit code should be 1
+    And the output should contain "crosses the Formalize boundary"
+    And the output should contain "contract-20260101-120000"
+
+  Scenario: Sustain to Execute does NOT cross Formalize
+    Given a project at stage "sustain" with docs/sod.md
+    When I run praxis stage "execute"
+    Then the exit code should be 0
+    And the output should not contain "crosses the Formalize boundary"
+
+  Scenario: Regression in automation mode includes crossing_formalize in JSON
+    Given a project at stage "execute" with contract "contract-20260101-120000"
+    When I run praxis stage "explore" with --json flag
+    Then the exit code should be 1
+    And the JSON output should contain "crossing_formalize": true
+    And the JSON output should contain "voided_contract_id": "contract-20260101-120000"
