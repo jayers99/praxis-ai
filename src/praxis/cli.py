@@ -127,8 +127,6 @@ def doctor_cmd(
     import os
     import sys
 
-    from praxis.application.workspace_service import get_praxis_home
-
     checks = []
     has_errors = False
     has_warnings = False
@@ -220,23 +218,13 @@ def doctor_cmd(
         })
         has_errors = True
 
-    # Check Praxis package
-    try:
-        from praxis import __version__
-        checks.append({
-            "status": "pass",
-            "check": "Praxis version",
-            "value": __version__,
-            "message": None,
-        })
-    except ImportError:
-        checks.append({
-            "status": "error",
-            "check": "Praxis version",
-            "value": "unknown",
-            "message": "Package not properly installed",
-        })
-        has_errors = True
+    # Check Praxis package version
+    checks.append({
+        "status": "pass",
+        "check": "Praxis version",
+        "value": __version__,
+        "message": None,
+    })
 
     # JSON output
     if json_output:

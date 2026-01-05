@@ -481,7 +481,7 @@ After installation:
 
 - **Documentation:** [docs/guides/](.)
 - **Issues:** [GitHub Issues](https://github.com/jayers99/praxis-ai/issues)
-- **Check health:** `praxis doctor` (planned feature)
+- **Check health:** `praxis doctor`
 - **Show commands:** `praxis --help`
 - **Command help:** `praxis <command> --help`
 
