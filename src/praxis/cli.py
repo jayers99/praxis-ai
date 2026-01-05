@@ -496,7 +496,10 @@ def init_cmd(
         None,
         "--privacy",
         "-p",
-        help="Privacy level (public, personal, confidential, restricted).",
+        help=(
+            "Privacy level (public, public-trusted, personal, "
+            "confidential, restricted)."
+        ),
     ),
     environment: str = typer.Option(
         "Home",
