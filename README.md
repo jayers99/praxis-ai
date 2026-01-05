@@ -8,7 +8,7 @@ Praxis provides deterministic behavior resolution for AI-assisted work:
 Domain + Stage + Privacy + Environment → Behavior
 ```
 
-This means: given your project's domain (Code/Create/Write/Learn/Observe), current lifecycle stage, privacy level, and environment context, Praxis validates governance rules and provides domain-specific guidance to keep AI collaboration aligned with your intent.
+This means: given your project's domain (Code/Create/Write/Learn/Observe), current lifecycle stage, privacy level, and environment context, Praxis validates governance rules. It also provides domain-specific guidance to keep AI collaboration aligned with your intent.
 
 Whether you're building software, creating art, writing documents, or learning skills—Praxis gives you lifecycle governance, domain-specific guidance, and the structure to maintain coherent intent as AI accelerates your output.
 
@@ -523,7 +523,7 @@ This section clarifies what is **implemented today** vs what is **planned or asp
 | **Privacy Guardrails** | ✅ Implemented | Privacy level declaration, downgrade warnings, validation | AI tool restrictions per privacy level, automated sanitization | [privacy.md](core/spec/privacy.md) |
 | **Roles System** | 📋 Specified | 12 roles defined with lifecycle matrices, decision rights, success criteria | CLI integration, role-aware guidance and prompts | [roles/index.md](core/roles/index.md) |
 | **Policy Engine** | ⚠️ Partial | Pydantic-based validation (domain + stage + privacy + environment → behavior), deterministic rules | Not a separate declarative engine (see ADR-001); may add CUE for complex composition | [ADR-001](adr/001-policy-engine.md) |
-| **Multi-Domain Projects** | 📋 Planned | — | Support multiple domains in one repo via subdirectories | [ADR-002](adr/002-validation-model.md) |
+| **Multi-Domain Projects** | 📋 Planned | None | Support multiple domains in one repo via subdirectories | [ADR-002](adr/002-validation-model.md) |
 | **AI Behavior Controls** | 📋 Specified | Permission matrices defined, guardrails documented | Enforcement integration with AI tools | [ai-guards.md](core/ai/ai-guards.md) |
 
 **Legend:**
