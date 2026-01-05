@@ -10,12 +10,10 @@ import questionary
 import yaml
 
 from praxis.domain.domain_spec import (
-    AIConstraint,
     DomainCreationResult,
     DomainMenuOption,
     DomainSpecification,
 )
-
 
 # Predefined domain templates for opinionated menu
 DOMAIN_MENU_OPTIONS: list[DomainMenuOption] = [
@@ -255,7 +253,13 @@ def _create_custom_domain_interactive() -> DomainSpecification | None:
             return None
 
     # Privacy default
-    privacy_choices = ["public", "public-trusted", "personal", "confidential", "restricted"]
+    privacy_choices = [
+        "public",
+        "public-trusted",
+        "personal",
+        "confidential",
+        "restricted",
+    ]
     default_privacy = questionary.select(
         "Default privacy level for new projects:",
         choices=privacy_choices,
@@ -319,7 +323,13 @@ def _create_from_template_interactive(
         return None
 
     # Allow customization of privacy
-    privacy_choices = ["public", "public-trusted", "personal", "confidential", "restricted"]
+    privacy_choices = [
+        "public",
+        "public-trusted",
+        "personal",
+        "confidential",
+        "restricted",
+    ]
     default_privacy = questionary.select(
         "Default privacy level:",
         choices=privacy_choices,
@@ -416,7 +426,9 @@ def _configure_subtypes_interactive() -> list[str] | None:
     return subtypes
 
 
-def list_custom_domains(workspace_path: Path | None = None) -> list[DomainSpecification]:
+def list_custom_domains(
+    workspace_path: Path | None = None,
+) -> list[DomainSpecification]:
     """List all custom domains defined in the workspace.
 
     Args:

@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Literal
-
 from pydantic import BaseModel, Field
 
 
@@ -36,7 +34,10 @@ class DomainSpecification(BaseModel):
     # Lifecycle configuration
     formalize_artifact_name: str | None = Field(
         default=None,
-        description="Name of the formalize artifact (e.g., 'Solution Overview Document')",
+        description=(
+            "Name of the formalize artifact "
+            "(e.g., 'Solution Overview Document')"
+        ),
     )
     formalize_artifact_path: str | None = Field(
         default=None,
