@@ -508,7 +508,10 @@ def init_cmd(
         "full",
         "--lifecycle-mode",
         "-m",
-        help="Lifecycle mode: 'full' (all 9 stages) or 'fast' (simplified 4-stage track).",
+        help=(
+            "Lifecycle mode: 'full' (all 9 stages) or 'fast' "
+            "(simplified 4-stage track)."
+        ),
     ),
     template: str | None = typer.Option(
         None,
@@ -625,7 +628,10 @@ def new_cmd(
         "full",
         "--lifecycle-mode",
         "-m",
-        help="Lifecycle mode: 'full' (all 9 stages) or 'fast' (simplified 4-stage track).",
+        help=(
+            "Lifecycle mode: 'full' (all 9 stages) or 'fast' "
+            "(simplified 4-stage track)."
+        ),
     ),
     path: Path | None = typer.Option(
         None,
