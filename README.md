@@ -8,6 +8,8 @@ Praxis provides deterministic behavior resolution for AI-assisted work:
 Domain + Stage + Privacy + Environment → Behavior
 ```
 
+This means: given your project's domain (Code/Create/Write/Learn/Observe), current lifecycle stage, privacy level, and environment context, Praxis validates governance rules. It also provides domain-specific guidance to keep AI collaboration aligned with your intent.
+
 Whether you're building software, creating art, writing documents, or learning skills—Praxis gives you lifecycle governance, domain-specific guidance, and the structure to maintain coherent intent as AI accelerates your output.
 
 ---
@@ -498,6 +500,58 @@ Run before committing:
 ```bash
 poetry run pytest && poetry run ruff check . && poetry run mypy .
 ```
+
+---
+
+## Current Capabilities & Roadmap
+
+This section clarifies what is **implemented today** vs what is **planned or aspirational**.
+
+### Implementation Status by Feature
+
+| Feature | Status | What Works | What's Planned | Docs/Specs |
+|---------|--------|------------|----------------|------------|
+| **Lifecycle Management** | ✅ Implemented | `stage`, `status`, stage transitions, regression warnings, stage history via git | Enhanced UX for cross-Formalize regressions | [lifecycle.md](core/spec/lifecycle.md) |
+| **Project Initialization** | ✅ Implemented | `init`, `new` with domain/privacy/environment selection | Multi-domain projects | [domains.md](core/spec/domains.md) |
+| **Validation** | ✅ Implemented | Schema validation, artifact existence checks, regression detection, privacy downgrade warnings | Deep artifact content validation | [ADR-002](adr/002-validation-model.md) |
+| **Opinions Framework** | ✅ Implemented | Hierarchical resolution, inheritance (_shared → domain → stage → subtype), `opinions` command, AI context generation | More domain-specific opinions for Create, Write, Learn | [opinions-contract.md](core/governance/opinions-contract.md) |
+| **Stage Templates** | ✅ Implemented | `templates render` for lifecycle docs, domain-specific scaffolding, extension template contributions | More templates per domain/subtype | [stage-templates.md](docs/guides/stage-templates.md) |
+| **Workspace Management** | ✅ Implemented | `workspace init`, extension/example installation and management | Extension marketplace, remote registries | — |
+| **Audit System** | ✅ Implemented | `audit` command with domain best practices checks, `--strict` mode | More comprehensive audit rules per domain | — |
+| **Context Generation** | ✅ Implemented | `context` command with deterministic AI context bundles, JSON output | — | — |
+| **Knowledge Pipeline (PKDP)** | ✅ Implemented | `pipeline` commands (init, run, accept, reject, refine), risk tiers 0-3, stage orchestration | Integration with research library, automated quality gates | [pkdp.md](docs/guides/pkdp.md) |
+| **Privacy Guardrails** | ✅ Implemented | Privacy level declaration, downgrade warnings, validation | AI tool restrictions per privacy level, automated sanitization | [privacy.md](core/spec/privacy.md) |
+| **Roles System** | 📋 Specified | 12 roles defined with lifecycle matrices, decision rights, success criteria | CLI integration, role-aware guidance and prompts | [roles/index.md](core/roles/index.md) |
+| **Policy Engine** | ⚠️ Partial | Pydantic-based validation (domain + stage + privacy + environment → behavior), deterministic rules | Not a separate declarative engine (see ADR-001); may add CUE for complex composition | [ADR-001](adr/001-policy-engine.md) |
+| **Multi-Domain Projects** | 📋 Planned | None | Support multiple domains in one repo via subdirectories | [ADR-002](adr/002-validation-model.md) |
+| **AI Behavior Controls** | 📋 Specified | Permission matrices defined, guardrails documented | Enforcement integration with AI tools | [ai-guards.md](core/ai/ai-guards.md) |
+
+**Legend:**
+- ✅ **Implemented** — Fully functional and tested
+- ⚠️ **Partial** — Core functionality works, but not all aspects are complete
+- 📋 **Specified** — Documented and designed, but not yet implemented
+- 📋 **Planned** — Identified for future development
+
+### What "Policy Engine" Actually Means
+
+The README and specs reference a "policy engine" for deterministic behavior resolution. **Clarification:**
+
+- ✅ **What's implemented:** Python validation logic using Pydantic models that enforce rules based on `Domain + Stage + Privacy + Environment`
+- ✅ **What works:** Schema validation, artifact checks, regression warnings, privacy guardrails
+- ❌ **What's NOT implemented:** A separate declarative policy language or runtime engine (e.g., CUE, OPA)
+
+Per [ADR-001](adr/001-policy-engine.md), Pydantic was chosen over CUE for pragmatism. The "engine" is just structured validation code, not a separate system. CUE may be added later if complex policy composition is needed.
+
+### Opinions vs Enforcement
+
+**Opinions are advisory guidance, not mechanically enforced rules.**
+
+- ✅ Opinions **are** resolved hierarchically and provided to AI assistants via `praxis opinions --prompt`
+- ✅ Opinions **do** influence quality gates and best practices
+- ❌ Opinions are **NOT** enforced by the CLI (by design per [opinions-contract.md](core/governance/opinions-contract.md))
+- ✅ Validation **does** enforce structural requirements (e.g., SOD required before Execute stage)
+
+Think of it as: **Validation enforces structure; Opinions guide quality.**
 
 ---
 
