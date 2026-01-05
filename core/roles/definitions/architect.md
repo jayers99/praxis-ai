@@ -55,6 +55,10 @@ The Architect reviews issue drafts to ensure system coherence, boundary clarity,
 6. [ ] **ADR needed** — significant decisions flagged for documentation
 7. [ ] **Migration path** — breaking changes have upgrade strategy
 8. [ ] **Technical debt** — new debt acknowledged or existing debt addressed
+9. [ ] **Guidance level and architectural context**
+   - Level: [0/1/2/3] (XS/S=0, M=1, L=2, XL=3)
+   - [ ] Architectural Context section present
+   - [ ] Content adequate for classified level
 
 ### Output Format
 
@@ -72,6 +76,11 @@ The Architect reviews issue drafts to ensure system coherence, boundary clarity,
 - Over-engineering for the problem size
 - Under-specification of integration points
 - Technical debt created without acknowledgment
+- Missing Architectural Context section for implementation ticket
+- Missing layer/module placement (Level 0+)
+- Missing pattern examples for multi-file feature (Level 1+)
+- Missing component specification for new ports/adapters (Level 2+)
+- Missing dependency direction for cross-layer work (Level 2+)
 
 ---
 
