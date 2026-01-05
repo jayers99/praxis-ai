@@ -1,7 +1,7 @@
 # Research Library Catalog
 
-_Last updated: 2026-01-03_
-_Total artifacts: 34_
+_Last updated: 2026-01-04_
+_Total artifacts: 35_
 
 ---
 
@@ -43,6 +43,7 @@ _Total artifacts: 34_
 | [roles-subsystem-analysis-2026-01-02](roles/roles-subsystem-analysis-report.md) | Praxis Roles Subsystem Analysis Report | roles | N/A | 2026-01-02 |
 | [roles-multi-agent-context-mitigation-2026-01-02](roles/multi-agent-role-specialization-context-mitigation.md) | Multi-Agent Role Specialization as Context Memory Mitigation | roles | Partial | 2026-01-02 |
 | [roles-agile-ai-context-memory-2026-01-02](roles/agile-shared-responsibility-ai-context-memory.md) | Agile Shared Responsibility: AI Context Memory Problem | roles | Medium | 2026-01-02 |
+| [patterns-agent-architectural-direction-2026-01-04](patterns/agent-architectural-direction.md) | Architectural Direction for AI Agent Tickets | patterns | Medium | 2026-01-04 |
 
 ---
 
@@ -106,6 +107,7 @@ _Total artifacts: 34_
 | [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | Medium | ai-assisted, code-review, verification, trust-calibration, workflow, solo-developer |
 | [patterns-tdd-bdd-ai-verification-2026-01-01](patterns/tdd-bdd-ai-verification.md) | TDD and BDD for AI Code Verification | Medium | TDD, BDD, test-first, mutation-testing, Gherkin, AI-verification, test-quality, prompting |
 | [patterns-refinement-spawned-pkdp-2026-01-03](patterns/refinement-spawned-pkdp.md) | Refinement-Spawned Knowledge Distillation | Low (POC) | refinement, pkdp, knowledge-gaps, spikes, chain-model, research-spawn |
+| [patterns-agent-architectural-direction-2026-01-04](patterns/agent-architectural-direction.md) | Architectural Direction for AI Agent Tickets | Medium | ai-agents, architectural-guidance, ddd, hexagonal, tickets, claude-code, instruction-engineering |
 
 ### Subagents
 
@@ -159,6 +161,7 @@ _No artifacts yet_
 - [Lead Software Developer Role in Scrum Teams](roles/lead-software-developer-scrum-role.md) — roles — lead-developer, tech-lead, scrum
 - [Software Architect Role in Scrum Teams](roles/software-architect-scrum-role.md) — roles — software-architect, agile, SAFe
 - [Agile Shared Responsibility: AI Context Memory Problem](roles/agile-shared-responsibility-ai-context-memory.md) — roles — agile, collective-ownership, AI-agents
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md) — patterns — ai-agents, architectural-guidance, ddd, hexagonal
 
 ### Partial Consensus (hypothesis under evaluation)
 
@@ -189,6 +192,10 @@ _No artifacts yet_
 - [AI Code Review Optimization Patterns](patterns/git-ai-review-optimization.md)
 - [Praxis Roles Subsystem Analysis Report](roles/roles-subsystem-analysis-report.md)
 - [Agile Shared Responsibility: AI Context Memory Problem](roles/agile-shared-responsibility-ai-context-memory.md)
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
+
+### architectural-guidance
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
 
 ### ai-assisted
 - [Git + AI Workflow First Principles](patterns/git-ai-first-principles.md)
@@ -217,6 +224,7 @@ _No artifacts yet_
 
 ### claude-code
 - [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md)
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
 
 ### claude-md
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md)
@@ -260,6 +268,9 @@ _No artifacts yet_
 
 ### decision-rights
 - [Rationale for Praxis Roles Architecture](roles/rationale.md)
+
+### ddd
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
 
 ### DevOps
 - [Site Reliability Engineering (SRE) Role](roles/sre-role.md)
@@ -315,6 +326,9 @@ _No artifacts yet_
 ### heredoc
 - [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md)
 
+### hexagonal
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
+
 ### human-ai-collaboration
 - [Human Intent vs AI Throughput Research](foundations/human-ai-intent-maintenance.md)
 
@@ -326,6 +340,9 @@ _No artifacts yet_
 
 ### integration
 - [Synthesis / Integration Lead Role](roles/synthesis-role.md)
+
+### instruction-engineering
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
 
 ### intent-maintenance
 - [Human Intent vs AI Throughput Research](foundations/human-ai-intent-maintenance.md)
@@ -510,6 +527,9 @@ _No artifacts yet_
 
 ### threat-modeling
 - [Security Engineer Role in Scrum Teams](roles/security-engineer-scrum-role.md)
+
+### tickets
+- [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
 
 ### toil
 - [Site Reliability Engineering (SRE) Role](roles/sre-role.md)
