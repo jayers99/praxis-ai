@@ -2,27 +2,23 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 
-
-@dataclass
 class TemplateFileData:
     """A file to be created from a template."""
 
-    path: str
-    content: str
+    def __init__(self, path: str, content: str) -> None:
+        """Initialize template file data."""
+        self.path = path
+        self.content = content
 
 
-@dataclass
 class PythonCliTemplate:
     """Python CLI project template."""
 
-    name: str = "python-cli"
-    domain: str = "code"
-    files: list[TemplateFileData] = None  # type: ignore
-
-    def __post_init__(self) -> None:
-        """Initialize template files."""
+    def __init__(self) -> None:
+        """Initialize template."""
+        self.name = "python-cli"
+        self.domain = "code"
         self.files = _get_template_files()
 
 
@@ -47,7 +43,7 @@ version = "0.1.0"
 description = ""
 authors = []
 readme = "README.md"
-packages = [{{include = "{package_name}", from = "src"}}]
+packages = [{include = "{package_name}", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10"
@@ -196,7 +192,7 @@ def say_hello(name: str) -> str:
     Returns:
         Greeting message.
     \"\"\"
-    greeting = Greeting(recipient=name, message=f"Hello, {{name}}!")
+    greeting = Greeting(recipient=name, message=f"Hello, """ + """{name}!")
     return greeting.message
 """,
         ),

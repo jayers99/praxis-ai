@@ -3,25 +3,10 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Protocol
+from typing import Any
 
 
-class TemplateFile(Protocol):
-    """A single file to be created from a template."""
-
-    path: str  # Relative path from project root
-    content: str  # File content
-
-
-class ProjectTemplate(Protocol):
-    """A project template definition."""
-
-    name: str
-    domain: str
-    files: list[TemplateFile]
-
-
-def get_template(template_name: str) -> ProjectTemplate | None:
+def get_template(template_name: str) -> Any | None:
     """Get a project template by name.
 
     Args:
@@ -41,7 +26,7 @@ def get_template(template_name: str) -> ProjectTemplate | None:
 
 def apply_template(
     project_root: Path,
-    template: ProjectTemplate,
+    template: Any,
     project_name: str,
     force: bool = False,
 ) -> tuple[list[str], list[str]]:
@@ -61,7 +46,7 @@ def apply_template(
 
     created_files: list[str] = []
     errors: list[str] = []
-    
+
     # Generate slug for package name
     package_name = slugify(project_name).replace("-", "_")
 
