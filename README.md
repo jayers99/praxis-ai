@@ -320,8 +320,9 @@ Each example includes:
 **Knowledge distillation:**
 - [PKDP Guide](docs/guides/pkdp.md) — Knowledge pipeline walkthrough
 
-**Security:**
+**Security and operations:**
 - [SECURITY.md](SECURITY.md) — Reporting vulnerabilities
+- [CI/CD and Release Process](docs/CI-CD.md) — Build, test, and release documentation
 
 ---
 
