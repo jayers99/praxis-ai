@@ -1,9 +1,11 @@
 # Solution Overview Document (SOD)
 
-**Project:** Praxis
-**Version:** v0.3
-**Status:** Integrated Draft
+**Project:** Praxis  
+**Version:** v0.3  
+**Status:** Integrated Draft  
 **Date:** 2025-12-21
+
+> **Versioning:** See [core/spec/VERSION.md](../core/spec/VERSION.md) for Praxis specification version history and roadmap.
 
 ---
 

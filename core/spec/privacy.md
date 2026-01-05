@@ -1,8 +1,10 @@
 # Praxis Privacy Model
 
-Version: 0.2
-Status: Draft  
-Scope: Cross-cutting control overlay for all Praxis domains and lifecycle stages
+**Version:** v0.3  
+**Status:** Draft  
+**Scope:** Cross-cutting control overlay for all Praxis domains and lifecycle stages
+
+> **Versioning:** See [VERSION.md](VERSION.md) for Praxis specification version history and roadmap.
 
 ---
 
