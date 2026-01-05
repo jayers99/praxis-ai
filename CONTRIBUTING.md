@@ -43,6 +43,19 @@ You understand that your contributions are voluntary and that the Project Owner 
 - Use GitHub Issues to report bugs or suggest features
 - Check existing issues before creating a new one
 - Provide as much detail as possible
+- Use issue templates when available
+
+**For security vulnerabilities:** See [SECURITY.md](SECURITY.md) for private reporting instructions.
+
+**Issue labels:**
+- `maturity: raw|shaped|formalized` — Issue readiness level
+- `size: small|medium|large` — Effort estimate
+- `type: feature|spike|chore` — Work type
+- `priority: high|medium|low` — Importance
+- `security` — Security-related issues (non-vulnerabilities)
+- `documentation` — Documentation improvements
+
+See [CONTRIBUTING.md workflow section](CONTRIBUTING.md) for more details on the issue maturity model.
 
 ### Submitting Changes
 
@@ -51,10 +64,63 @@ You understand that your contributions are voluntary and that the Project Owner 
 3. Make your changes
 4. Ensure your code follows existing patterns
 5. **Add tests for new functionality** (see Testing Requirements below)
-6. Run tests, linting, and type checking
+6. Run tests, linting, and type checking (see Local Development below)
 7. Commit with clear messages
 8. Push to your fork
 9. Open a Pull Request
+
+### Local Development Setup
+
+**Prerequisites:**
+- Python >=3.10
+- Poetry (install via `pip install poetry` or see https://python-poetry.org/)
+- Git
+
+**Initial setup:**
+```bash
+# Clone your fork
+git clone https://github.com/YOUR_USERNAME/praxis-ai.git
+cd praxis-ai
+
+# Install dependencies
+poetry install
+
+# Verify installation
+poetry run praxis --version
+```
+
+**Running quality checks locally:**
+```bash
+# Run all tests
+poetry run pytest
+
+# Run specific test file
+poetry run pytest tests/features/test_validate.py
+
+# Run tests with verbose output
+poetry run pytest -v
+
+# Run linting (code style checks)
+poetry run ruff check .
+
+# Auto-fix linting issues where possible
+poetry run ruff check . --fix
+
+# Run type checking
+poetry run mypy .
+
+# Run all checks (recommended before committing)
+poetry run pytest && poetry run ruff check . && poetry run mypy .
+```
+
+**Debugging:**
+```bash
+# Run tests with debugging output
+poetry run pytest -vv -s
+
+# Run specific test scenario by name
+poetry run pytest -k "test_scenario_name"
+```
 
 ### Testing Requirements
 
@@ -89,7 +155,62 @@ Scenario: Validate project at Execute stage requires SOD
 1. PRs should target the `main` branch
 2. Include a clear description of changes
 3. Reference any related issues
-4. Wait for review and address feedback
+4. **All CI checks must pass** (when CI is implemented)
+5. Wait for review and address feedback
+6. Squash commits if requested
+
+**Current CI status:** Manual review only. GitHub Actions CI is planned but not yet implemented. You must run tests, linting, and type checking locally before submitting.
+
+---
+
+## Security and Responsible Development
+
+### Secrets and Credentials
+
+**Never commit secrets, credentials, or sensitive data to the repository.**
+
+This includes:
+- API keys, tokens, passwords
+- Private keys, certificates
+- Personal identifiable information (PII)
+- Proprietary data or code from other sources
+- Environment-specific configuration with sensitive values
+
+**Best practices:**
+- Use environment variables for secrets (`.env` files, not committed)
+- Add sensitive file patterns to `.gitignore`
+- Review your commits before pushing (`git diff --cached`)
+- Use `git log -p` to audit recent commits
+- If you accidentally commit a secret, notify maintainers immediately
+
+**If a secret is committed:**
+1. DO NOT just delete it in a new commit (it remains in git history)
+2. Notify maintainers via the security contact (see SECURITY.md)
+3. Rotate/revoke the exposed credential immediately
+4. Maintainers may need to rewrite git history or rotate repo keys
+
+### Dependency Management
+
+**When adding or updating dependencies:**
+- Add dependencies via `poetry add <package>`
+- Update `poetry.lock` by running `poetry update` or `poetry lock`
+- Commit both `pyproject.toml` and `poetry.lock` changes
+- Document why the dependency is needed in PR description
+- Check for known vulnerabilities (planned: automated scanning)
+
+**Avoid:**
+- Directly editing `pyproject.toml` without running `poetry lock`
+- Adding dependencies with wildcard versions (`*`)
+- Including development-only dependencies in production dependencies
+
+### Code Review for Security
+
+When reviewing PRs, consider:
+- Does this change handle user input safely?
+- Are file paths validated to prevent directory traversal?
+- Are shell commands constructed safely (avoid shell injection)?
+- Does privacy level enforcement remain intact?
+- Are new dependencies from trusted sources?
 
 ---
 
