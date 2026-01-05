@@ -64,6 +64,7 @@ opinions_app = typer.Typer(help="Opinions resolution and export.")
 guide_app = typer.Typer(help="In-terminal documentation guides.")
 research_app = typer.Typer(help="Research session management commands.")
 library_app = typer.Typer(help="Research library query and maintenance commands.")
+domain_app = typer.Typer(help="Domain creation and management commands.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
@@ -73,6 +74,7 @@ app.add_typer(opinions_app, name="opinions")
 app.add_typer(guide_app, name="guide")
 app.add_typer(research_app, name="research")
 app.add_typer(library_app, name="library")
+app.add_typer(domain_app, name="domain")
 
 
 def version_callback(value: bool) -> None:
@@ -3143,6 +3145,207 @@ def library_reindex_cmd(
     else:
         typer.echo("ℹ Reindex is not yet implemented")
         typer.echo("  Use incremental cataloging via 'praxis research approve'")
+
+    raise typer.Exit(0)
+
+
+# =============================================================================
+# Domain Commands
+# =============================================================================
+
+
+@domain_app.command("create")
+def domain_create_cmd(
+    workspace: Path | None = typer.Option(
+        None,
+        "--workspace",
+        "-w",
+        help="Workspace path (defaults to PRAXIS_HOME).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Create a new custom domain through guided Q&A.
+
+    This command provides a guided journey to define a new domain:
+    1. Select from predefined templates or create custom
+    2. Configure domain characteristics and AI permissions
+    3. Define subtypes and formalize artifacts
+    4. Generate domain specification file
+
+    The new domain becomes available for use in future projects.
+    """
+    import json
+
+    from praxis.application.domain_creation_service import create_domain_guided
+
+    # Domain creation requires interactive mode
+    if json_output or quiet:
+        typer.echo(
+            json.dumps(
+                {
+                    "success": False,
+                    "errors": ["Domain creation requires interactive mode"],
+                },
+                indent=2,
+            )
+            if json_output
+            else "✗ Domain creation requires interactive mode",
+            err=True,
+        )
+        raise typer.Exit(1)
+
+    result = create_domain_guided(workspace_path=workspace, interactive=True)
+
+    if result.success:
+        typer.echo("✓ Domain created successfully")
+        typer.echo(f"  Name: {result.domain_name}")
+        typer.echo(f"  Specification: {result.spec_path}")
+        for f in result.files_created:
+            typer.echo(f"  Created: {f}")
+        if result.warnings:
+            for warning in result.warnings:
+                typer.echo(f"  ⚠ {warning}")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+@domain_app.command("list")
+def domain_list_cmd(
+    workspace: Path | None = typer.Option(
+        None,
+        "--workspace",
+        "-w",
+        help="Workspace path (defaults to PRAXIS_HOME).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    include_builtin: bool = typer.Option(
+        True,
+        "--include-builtin/--no-builtin",
+        help="Include built-in domains in listing.",
+    ),
+) -> None:
+    """List available domains (built-in and custom)."""
+    import json
+
+    from praxis.application.domain_creation_service import list_custom_domains
+    from praxis.domain.domains import Domain
+
+    custom_domains = list_custom_domains(workspace_path=workspace)
+
+    if json_output:
+        output = {
+            "builtin": [d.value for d in Domain] if include_builtin else [],
+            "custom": [
+                {
+                    "name": d.name,
+                    "display_name": d.display_name,
+                    "description": d.description,
+                    "subtypes": d.subtypes,
+                }
+                for d in custom_domains
+            ],
+        }
+        typer.echo(json.dumps(output, indent=2))
+        raise typer.Exit(0)
+
+    if include_builtin:
+        typer.echo("Built-in Domains:")
+        for domain in Domain:
+            typer.echo(f"  • {domain.value}")
+        typer.echo("")
+
+    if custom_domains:
+        typer.echo("Custom Domains:")
+        for domain in custom_domains:
+            typer.echo(f"  • {domain.name} - {domain.description}")
+    else:
+        typer.echo("Custom Domains: (none)")
+
+    raise typer.Exit(0)
+
+
+@domain_app.command("show")
+def domain_show_cmd(
+    name: str = typer.Argument(..., help="Domain name to show details for."),
+    workspace: Path | None = typer.Option(
+        None,
+        "--workspace",
+        "-w",
+        help="Workspace path (defaults to PRAXIS_HOME).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Show details of a custom domain."""
+    import json
+
+    from praxis.application.domain_creation_service import load_domain_specification
+
+    spec = load_domain_specification(name, workspace_path=workspace)
+
+    if spec is None:
+        error_msg = f"Domain '{name}' not found"
+        if json_output:
+            typer.echo(json.dumps({"success": False, "error": error_msg}, indent=2))
+        else:
+            typer.echo(f"✗ {error_msg}", err=True)
+        raise typer.Exit(1)
+
+    if json_output:
+        typer.echo(spec.model_dump_json(indent=2, exclude_none=True))
+        raise typer.Exit(0)
+
+    typer.echo(f"Domain: {spec.display_name} ({spec.name})")
+    typer.echo(f"  Description: {spec.description}")
+    typer.echo(f"  Version: {spec.version}")
+    if spec.author:
+        typer.echo(f"  Author: {spec.author}")
+    if spec.created_at:
+        typer.echo(f"  Created: {spec.created_at}")
+
+    typer.echo("")
+    if spec.formalize_artifact_name:
+        typer.echo(f"Formalize Artifact: {spec.formalize_artifact_name}")
+        typer.echo(f"  Path: {spec.formalize_artifact_path}")
+    else:
+        typer.echo("Formalize Artifact: (none)")
+
+    typer.echo("")
+    typer.echo(f"Default Privacy: {spec.default_privacy}")
+
+    typer.echo("")
+    typer.echo("AI Permissions:")
+    if spec.ai_permissions:
+        for op, perm in spec.ai_permissions.items():
+            typer.echo(f"  {op:12} → {perm}")
+    else:
+        typer.echo("  (using defaults)")
+
+    typer.echo("")
+    if spec.subtypes:
+        typer.echo(f"Subtypes: {', '.join(spec.subtypes)}")
+    else:
+        typer.echo("Subtypes: (none)")
 
     raise typer.Exit(0)
 
