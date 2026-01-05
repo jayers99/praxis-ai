@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
-import tomllib
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib  # type: ignore[import-not-found]
 
 
 def load_pyproject(project_root: Path) -> dict[str, Any] | None:
@@ -22,7 +26,7 @@ def load_pyproject(project_root: Path) -> dict[str, Any] | None:
         return None
 
     with open(path, "rb") as f:
-        return tomllib.load(f)
+        return cast(dict[str, Any], tomllib.load(f))
 
 
 def get_dependencies(project_root: Path) -> set[str]:
@@ -74,4 +78,4 @@ def get_poetry_scripts(project_root: Path) -> dict[str, str]:
         return {}
 
     poetry = data.get("tool", {}).get("poetry", {})
-    return poetry.get("scripts", {})
+    return cast(dict[str, str], poetry.get("scripts", {}))

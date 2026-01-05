@@ -101,7 +101,8 @@ def main(
 @app.command(name="help")
 def help_cmd(ctx: typer.Context) -> None:
     """Show this help message."""
-    typer.echo(ctx.parent.get_help())
+    if ctx.parent:
+        typer.echo(ctx.parent.get_help())
 
 
 @app.command(name="doctor")
@@ -1935,7 +1936,7 @@ def pipeline_init_cmd(
     else:
         if result.success:
             typer.echo(f"Pipeline initialized: {result.pipeline_id}")
-            typer.echo(f"Risk tier: {result.risk_tier.value}")
+            typer.echo(f"Risk tier: {result.risk_tier.value if result.risk_tier else 'unknown'}")
             stages = ", ".join(s.value for s in result.required_stages)
             typer.echo(f"Required stages: {stages}")
         else:
@@ -1980,8 +1981,8 @@ def pipeline_status_cmd(
         raise typer.Exit(0)
 
     typer.echo(f"Pipeline: {status.pipeline_id}")
-    typer.echo(f"Risk tier: {status.risk_tier.value}")
-    typer.echo(f"Current stage: {status.current_stage.value}")
+    typer.echo(f"Risk tier: {status.risk_tier.value if status.risk_tier else 'unknown'}")
+    typer.echo(f"Current stage: {status.current_stage.value if status.current_stage else 'none'}")
     typer.echo("")
     typer.echo("Stage Progress:")
     for progress in status.stage_progress:
@@ -2022,6 +2023,8 @@ def pipeline_run_cmd(
     ),
 ) -> None:
     """Execute pipeline stage(s)."""
+    from collections.abc import Callable
+
     from praxis.application.pipeline import (
         execute_asr,
         execute_ccr,
@@ -2030,8 +2033,9 @@ def pipeline_run_cmd(
         execute_sad,
         get_pipeline_status,
     )
+    from praxis.domain.pipeline import PipelineStageResult
 
-    executors = {
+    executors: dict[str, Callable[[Path], PipelineStageResult]] = {
         "rtc": execute_rtc,
         "idas": execute_idas,
         "sad": execute_sad,
@@ -3246,8 +3250,8 @@ def domain_list_cmd(
 
     if custom_domains:
         typer.echo("Custom Domains:")
-        for domain in custom_domains:
-            typer.echo(f"  • {domain.name} - {domain.description}")
+        for custom in custom_domains:
+            typer.echo(f"  • {custom.name} - {custom.description}")
     else:
         typer.echo("Custom Domains: (none)")
 

@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import string
+from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 from praxis.infrastructure.file_writer import write_file
+
+RenderStatus = Literal["created", "skipped", "overwritten", "error"]
 
 
 class _SafeFormatter(string.Formatter):
@@ -20,7 +23,7 @@ class _SafeFormatter(string.Formatter):
     make template rendering brittle.
     """
 
-    def get_value(self, key: Any, args: tuple[Any, ...], kwargs: dict[str, Any]) -> Any:
+    def get_value(self, key: int | str, args: Sequence[Any], kwargs: Mapping[str, Any]) -> Any:
         if isinstance(key, str) and key not in kwargs:
             return "{" + key + "}"
         return super().get_value(key, args, kwargs)
@@ -41,10 +44,10 @@ def render_template_to_file(
     destination: Path,
     context: dict[str, Any],
     force: bool,
-) -> tuple[bool, str | None, str]:
+) -> tuple[bool, str | None, RenderStatus]:
     """Render a template to destination.
 
-    Returns: (success, error, status) where status is created/skipped/overwritten.
+    Returns: (success, error, status) where status is created/skipped/overwritten/error.
     """
 
     existed = destination.exists()
