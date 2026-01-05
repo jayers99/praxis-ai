@@ -40,7 +40,9 @@ def test_stage_transition_does_not_overwrite_existing_stage_doc(tmp_path: Path) 
     assert sense_doc.read_text() == "EXISTING"
 
 
-def test_create_transition_before_formalize_does_not_create_brief(tmp_path: Path) -> None:
+def test_create_transition_before_formalize_does_not_create_brief(
+    tmp_path: Path,
+) -> None:
     _write_praxis_yaml(tmp_path, domain="create", stage="capture")
 
     result = transition_stage(tmp_path, "sense")
@@ -61,7 +63,9 @@ def test_create_transition_to_formalize_creates_brief(tmp_path: Path) -> None:
     assert "# Creative Brief" in brief_doc.read_text()
 
 
-def test_create_transition_to_formalize_does_not_overwrite_existing_brief(tmp_path: Path) -> None:
+def test_create_transition_to_formalize_does_not_overwrite_existing_brief(
+    tmp_path: Path,
+) -> None:
     _write_praxis_yaml(tmp_path, domain="create", stage="shape")
 
     docs_dir = tmp_path / "docs"

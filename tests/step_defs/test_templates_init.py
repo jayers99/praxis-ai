@@ -36,12 +36,7 @@ def run_init_with_flags(
     context["result"] = result
 
 
-@when(
-    parsers.parse(
-        'I run praxis init with domain "{domain}", privacy "{privacy}", '
-        'and template "{template}"'
-    )
-)
+@when(parsers.parse('I run praxis init with domain "{domain}", privacy "{privacy}", ' 'and template "{template}"'))
 def run_init_with_template(
     cli_runner: CliRunner,
     context: dict[str, Any],
@@ -74,9 +69,7 @@ def check_praxis_yaml_domain(context: dict[str, Any], domain: str) -> None:
     praxis_yaml = project_root / "praxis.yaml"
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
-    assert content["domain"] == domain, (
-        f"Expected domain '{domain}', got '{content.get('domain')}'"
-    )
+    assert content["domain"] == domain, f"Expected domain '{domain}', got '{content.get('domain')}'"
 
 
 @then("pyproject.toml should exist")
@@ -107,9 +100,7 @@ def check_hexagonal_architecture(context: dict[str, Any]) -> None:
     package_dir = src_dirs[0]
     assert (package_dir / "domain").is_dir(), "domain/ directory should exist"
     assert (package_dir / "application").is_dir(), "application/ directory should exist"
-    assert (
-        package_dir / "infrastructure"
-    ).is_dir(), "infrastructure/ directory should exist"
+    assert (package_dir / "infrastructure").is_dir(), "infrastructure/ directory should exist"
     assert (package_dir / "cli.py").is_file(), "cli.py should exist"
 
 

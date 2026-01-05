@@ -41,11 +41,7 @@ def is_crossing_formalize(current: Stage, target: Stage) -> bool:
     # 1. We're regressing (target < current)
     # 2. Current is post-Formalize (Formalize or later)
     # 3. Target is pre-Formalize (before Formalize)
-    return (
-        target < current
-        and current in post_formalize
-        and target in pre_formalize
-    )
+    return target < current and current in post_formalize and target in pre_formalize
 
 
 def find_active_contract(config: PraxisConfig) -> str | None:
@@ -137,8 +133,7 @@ def transition_stage(
 
             # Build enhanced warning message
             warning_parts = [
-                f"Regression from '{current_config.stage.value}' to "
-                f"'{new_stage.value}' is not standard."
+                f"Regression from '{current_config.stage.value}' to " f"'{new_stage.value}' is not standard."
             ]
 
             if crossing:
@@ -146,9 +141,7 @@ def transition_stage(
                 if contract_id:
                     warning_parts.append(f"This will void {contract_id}.")
 
-            warning_parts.append(
-                f"Allowed: {', '.join(s.value for s in allowed) or 'none'}."
-            )
+            warning_parts.append(f"Allowed: {', '.join(s.value for s in allowed) or 'none'}.")
             warning_parts.append("Provide --reason to document rationale.")
 
             warning_message = " ".join(warning_parts)
@@ -172,10 +165,7 @@ def transition_stage(
                         ValidationIssue(
                             rule="regression_reason_required",
                             severity="error",
-                            message=(
-                                "Non-standard regression requires --reason flag "
-                                "to document rationale"
-                            ),
+                            message=("Non-standard regression requires --reason flag " "to document rationale"),
                         )
                     ],
                 )
@@ -198,10 +188,7 @@ def transition_stage(
                     ValidationIssue(
                         rule="artifact_missing",
                         severity="warning",
-                        message=(
-                            f"Stage '{new_stage.value}' typically requires "
-                            f"'{artifact_path}'"
-                        ),
+                        message=(f"Stage '{new_stage.value}' typically requires " f"'{artifact_path}'"),
                     )
                 )
 
@@ -228,9 +215,7 @@ def transition_stage(
     updated_history = current_config.history + [new_entry]
 
     # 7. Update praxis.yaml with new stage and history
-    success, error = update_praxis_yaml(
-        project_root, stage=new_stage, history=updated_history
-    )
+    success, error = update_praxis_yaml(project_root, stage=new_stage, history=updated_history)
     if not success:
         return StageResult(
             success=False,
@@ -276,9 +261,7 @@ def transition_stage(
             )
         )
     except Exception as e:
-        logging.getLogger(__name__).exception(
-            "Unexpected error during template rendering"
-        )
+        logging.getLogger(__name__).exception("Unexpected error during template rendering")
         issues.append(
             ValidationIssue(
                 rule="template_render_error",

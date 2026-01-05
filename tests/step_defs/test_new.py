@@ -24,9 +24,7 @@ def empty_directory(tmp_path: Path, context: dict[str, Any]) -> None:
 
 
 @given("PRAXIS_HOME is set with a workspace config")
-def praxis_home_set_with_workspace_config(
-    tmp_path: Path, context: dict[str, Any]
-) -> None:
+def praxis_home_set_with_workspace_config(tmp_path: Path, context: dict[str, Any]) -> None:
     """Create a minimal workspace-config.yaml and set PRAXIS_HOME."""
     context["original_praxis_home"] = os.environ.get("PRAXIS_HOME")
     os.environ["PRAXIS_HOME"] = str(tmp_path)
@@ -45,9 +43,7 @@ def check_praxis_yaml_domain(context: dict[str, Any], domain: str) -> None:
     praxis_yaml = project_root / "praxis.yaml"
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
-    assert content["domain"] == domain, (
-        f"Expected domain '{domain}', got '{content.get('domain')}'"
-    )
+    assert content["domain"] == domain, f"Expected domain '{domain}', got '{content.get('domain')}'"
 
 
 @then(parsers.parse('praxis.yaml should exist with subtype "{subtype}"'))
@@ -57,9 +53,7 @@ def check_praxis_yaml_subtype(context: dict[str, Any], subtype: str) -> None:
     praxis_yaml = project_root / "praxis.yaml"
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
-    assert content.get("subtype") == subtype, (
-        f"Expected subtype '{subtype}', got '{content.get('subtype')}'"
-    )
+    assert content.get("subtype") == subtype, f"Expected subtype '{subtype}', got '{content.get('subtype')}'"
 
 
 @then("CLAUDE.md should exist")
@@ -86,11 +80,7 @@ def praxis_home_not_set(context: dict[str, Any]) -> None:
         del os.environ["PRAXIS_HOME"]
 
 
-@when(
-    parsers.parse(
-        'I run praxis new "{name}" with domain "{domain}" and privacy "{privacy}"'
-    )
-)
+@when(parsers.parse('I run praxis new "{name}" with domain "{domain}" and privacy "{privacy}"'))
 def run_new_with_flags(
     cli_runner: CliRunner,
     context: dict[str, Any],
@@ -121,7 +111,7 @@ def run_new_with_flags(
     context["project_root"] = parent_dir / name
 
 
-@when("I run praxis new \"my-project\" again without --force")
+@when('I run praxis new "my-project" again without --force')
 def run_new_again_without_force(
     cli_runner: CliRunner,
     context: dict[str, Any],
@@ -148,7 +138,7 @@ def run_new_again_without_force(
     context["result"] = result
 
 
-@when("I run praxis new \"my-project\" again with --force")
+@when('I run praxis new "my-project" again with --force')
 def run_new_again_with_force(
     cli_runner: CliRunner,
     context: dict[str, Any],
@@ -232,11 +222,7 @@ def run_new_invalid_subtype_for_domain(
     context["result"] = result
 
 
-@when(
-    parsers.parse(
-        'I run praxis new "{name}" with domain "{domain}" and privacy "{privacy}" --json'
-    )
-)
+@when(parsers.parse('I run praxis new "{name}" with domain "{domain}" and privacy "{privacy}" --json'))
 def run_new_json_no_path(
     cli_runner: CliRunner,
     context: dict[str, Any],
@@ -263,9 +249,7 @@ def run_new_json_no_path(
     # created under the default parent and we can assert file existence.
     workspace_path = context.get("workspace_path")
     if workspace_path is not None and result.exit_code == 0:
-        context["project_root"] = (
-            Path(workspace_path) / "projects" / domain / name
-        ).resolve()
+        context["project_root"] = (Path(workspace_path) / "projects" / domain / name).resolve()
 
 
 @pytest.fixture(autouse=True)

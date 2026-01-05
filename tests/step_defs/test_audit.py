@@ -86,9 +86,7 @@ environment: Home
 
 
 @given(parsers.parse('a project with domain "{domain}" at stage "{stage}"'))
-def project_with_domain_and_stage(
-    tmp_path: Path, context: dict[str, Any], domain: str, stage: str
-) -> None:
+def project_with_domain_and_stage(tmp_path: Path, context: dict[str, Any], domain: str, stage: str) -> None:
     """Create a project with specified domain and stage."""
     context["project_root"] = tmp_path
 
@@ -119,9 +117,7 @@ stage: capture
 
 
 @given(parsers.parse('a create project at stage "{stage}"'))
-def create_project_at_stage(
-    tmp_path: Path, context: dict[str, Any], stage: str
-) -> None:
+def create_project_at_stage(tmp_path: Path, context: dict[str, Any], stage: str) -> None:
     """Create a Create domain project at specified stage."""
     context["project_root"] = tmp_path
 
@@ -136,9 +132,7 @@ environment: Home
 
 
 @given(parsers.parse('a learn project with subtype "{subtype}"'))
-def learn_project_with_subtype(
-    tmp_path: Path, context: dict[str, Any], subtype: str
-) -> None:
+def learn_project_with_subtype(tmp_path: Path, context: dict[str, Any], subtype: str) -> None:
     """Create a Learn domain project with specified subtype."""
     context["project_root"] = tmp_path
 
@@ -154,9 +148,7 @@ environment: Home
 
 
 @given(parsers.parse('a write project at stage "{stage}"'))
-def write_project_at_stage(
-    tmp_path: Path, context: dict[str, Any], stage: str
-) -> None:
+def write_project_at_stage(tmp_path: Path, context: dict[str, Any], stage: str) -> None:
     """Create a Write domain project at specified stage."""
     context["project_root"] = tmp_path
 
@@ -213,18 +205,14 @@ def run_audit_json(cli_runner: CliRunner, context: dict[str, Any]) -> None:
 def check_output_not_contains(context: dict[str, Any], text: str) -> None:
     """Verify the output does not contain expected text."""
     result = context["result"]
-    assert text not in result.output, (
-        f"Did not expect '{text}' in output. Got: {result.output}"
-    )
+    assert text not in result.output, f"Did not expect '{text}' in output. Got: {result.output}"
 
 
 # CLI subtype-specific audit scenarios
 
 
 @given(parsers.parse('a code project with subtype "{subtype}"'))
-def code_project_with_subtype(
-    tmp_path: Path, context: dict[str, Any], subtype: str
-) -> None:
+def code_project_with_subtype(tmp_path: Path, context: dict[str, Any], subtype: str) -> None:
     """Create a Code domain project with specified subtype."""
     context["project_root"] = tmp_path
 
@@ -258,9 +246,7 @@ environment: Home
 
 
 @given(parsers.parse('a code project with subtype "{subtype}" at stage "{stage}"'))
-def code_project_with_subtype_and_stage(
-    tmp_path: Path, context: dict[str, Any], subtype: str, stage: str
-) -> None:
+def code_project_with_subtype_and_stage(tmp_path: Path, context: dict[str, Any], subtype: str, stage: str) -> None:
     """Create a Code domain project with specified subtype and stage."""
     context["project_root"] = tmp_path
 
@@ -281,7 +267,9 @@ def init_with_all(tmp_path: Path, context: dict[str, Any]) -> None:
     src_dir = tmp_path / "src" / "test_lib"
     src_dir.mkdir(parents=True)
     init_file = src_dir / "__init__.py"
-    init_file.write_text('__all__ = ["example_function"]\n\ndef example_function():\n    """Example function."""\n    pass\n')
+    init_file.write_text(
+        '__all__ = ["example_function"]\n\ndef example_function():\n    """Example function."""\n    pass\n'
+    )
 
 
 @given("__all__ is not defined in __init__.py")
@@ -290,7 +278,7 @@ def init_without_all(tmp_path: Path, context: dict[str, Any]) -> None:
     src_dir = tmp_path / "src" / "test_lib"
     src_dir.mkdir(parents=True)
     init_file = src_dir / "__init__.py"
-    init_file.write_text('def example_function():\n    pass\n')
+    init_file.write_text("def example_function():\n    pass\n")
 
 
 @given("CHANGELOG.md does not exist")
@@ -330,4 +318,3 @@ def docs_site_configured(tmp_path: Path, context: dict[str, Any]) -> None:
     # Create sphinx conf.py
     (docs_dir / "conf.py").write_text("# Sphinx configuration\n")
     (docs_dir / "index.rst").write_text("Welcome\n=======\n")
-

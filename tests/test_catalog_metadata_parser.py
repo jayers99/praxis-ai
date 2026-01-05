@@ -23,7 +23,7 @@ def test_parse_artifact_metadata_valid(tmp_artifact: Path) -> None:
     """Test parsing valid artifact metadata."""
     content = dedent("""\
         # Test Artifact
-        
+
         <!--
         metadata:
           id: patterns-test-artifact-2026-01-04
@@ -35,15 +35,15 @@ def test_parse_artifact_metadata_valid(tmp_artifact: Path) -> None:
           consensus: high
           sources_count: 5
         -->
-        
+
         ## Body content
-        
+
         Some content here.
     """)
     tmp_artifact.write_text(content, encoding="utf-8")
-    
+
     metadata = parse_artifact_metadata(tmp_artifact)
-    
+
     assert metadata["id"] == "patterns-test-artifact-2026-01-04"
     assert metadata["title"] == "Test Artifact Title"
     # YAML parses dates as datetime.date objects, so convert to string
@@ -59,13 +59,13 @@ def test_parse_artifact_metadata_no_metadata(tmp_artifact: Path) -> None:
     """Test parsing artifact with no metadata block."""
     content = dedent("""\
         # Test Artifact
-        
+
         No metadata here.
     """)
     tmp_artifact.write_text(content, encoding="utf-8")
-    
+
     metadata = parse_artifact_metadata(tmp_artifact)
-    
+
     assert metadata == {}
 
 
@@ -79,14 +79,14 @@ def test_parse_artifact_metadata_malformed_yaml(tmp_artifact: Path) -> None:
     """Test parsing artifact with malformed YAML."""
     content = dedent("""\
         # Test Artifact
-        
+
         <!--
         metadata:
           id: invalid yaml: [unclosed bracket
         -->
     """)
     tmp_artifact.write_text(content, encoding="utf-8")
-    
+
     with pytest.raises(yaml.YAMLError):
         parse_artifact_metadata(tmp_artifact)
 
@@ -103,9 +103,9 @@ def test_validate_artifact_metadata_valid() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is True
     assert result.entry is not None
     assert result.entry.id == "patterns-test-artifact-2026-01-04"
@@ -125,9 +125,9 @@ def test_validate_artifact_metadata_status_validated() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is True
     assert result.entry is not None
 
@@ -144,9 +144,9 @@ def test_validate_artifact_metadata_missing_required_field() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert len(result.errors) == 1
     assert result.errors[0].field == "id"
@@ -165,9 +165,9 @@ def test_validate_artifact_metadata_invalid_id_format() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert any(e.field == "id" for e in result.errors)
     assert any("invalid format" in e.message for e in result.errors)
@@ -185,9 +185,9 @@ def test_validate_artifact_metadata_invalid_date_format() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert any(e.field == "date" for e in result.errors)
 
@@ -204,9 +204,9 @@ def test_validate_artifact_metadata_invalid_status() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert any(e.field == "status" for e in result.errors)
 
@@ -223,9 +223,9 @@ def test_validate_artifact_metadata_too_few_keywords() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert any(e.field == "keywords" for e in result.errors)
     assert any("at least 3" in e.message for e in result.errors)
@@ -243,9 +243,9 @@ def test_validate_artifact_metadata_too_many_keywords() -> None:
         "consensus": "high",
         "sources_count": 5,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert any(e.field == "keywords" for e in result.errors)
     assert any("at most 7" in e.message for e in result.errors)
@@ -263,9 +263,9 @@ def test_validate_artifact_metadata_negative_sources_count() -> None:
         "consensus": "high",
         "sources_count": -1,
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is False
     assert any(e.field == "sources_count" for e in result.errors)
 
@@ -285,9 +285,9 @@ def test_validate_artifact_metadata_with_optional_fields() -> None:
         "supersedes": "patterns-old-artifact-2025-12-01",
         "related": ["patterns-related-2026-01-01"],
     }
-    
+
     result = validate_artifact_metadata(metadata)
-    
+
     assert result.success is True
     assert result.entry is not None
     assert result.entry.also_relevant == ["foundations", "roles"]

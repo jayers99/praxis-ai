@@ -17,9 +17,7 @@ scenarios("../features/extension_opinions.feature")
 
 
 @given("I am in a temporary directory")
-def setup_temp_dir(
-    tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest
-) -> None:
+def setup_temp_dir(tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest) -> None:
     """Set up temporary directory with cleanup."""
     context["project_root"] = tmp_path
     original_dir = os.getcwd()
@@ -95,11 +93,7 @@ def create_extension_with_manifest(context: dict[str, Any], ext_name: str) -> No
     context[f"ext_{ext_name}"] = ext_dir
 
 
-@given(
-    parsers.parse(
-        'the manifest declares an opinion contribution "{target_path}"'
-    )
-)
+@given(parsers.parse('the manifest declares an opinion contribution "{target_path}"'))
 def add_opinion_contribution(context: dict[str, Any], target_path: str) -> None:
     """Add an opinion contribution to the most recently created extension."""
     # Find the most recently created extension
@@ -131,9 +125,7 @@ def add_opinion_contribution(context: dict[str, Any], target_path: str) -> None:
     context["last_contribution"] = target_path
 
 
-@given(
-    parsers.parse('the extension has the opinion file at "{source_path}"')
-)
+@given(parsers.parse('the extension has the opinion file at "{source_path}"'))
 def create_extension_opinion_file(context: dict[str, Any], source_path: str) -> None:
     """Create an opinion file in the extension directory."""
     # Find the most recently created extension
@@ -210,9 +202,7 @@ def create_invalid_yaml_manifest(context: dict[str, Any]) -> None:
 
 
 @given(parsers.parse('an installed extension "{ext_name}" contributing "{target}"'))
-def create_extension_with_contribution(
-    context: dict[str, Any], ext_name: str, target: str
-) -> None:
+def create_extension_with_contribution(context: dict[str, Any], ext_name: str, target: str) -> None:
     """Create an extension with a specific contribution."""
     extensions_dir = context["extensions_dir"]
     ext_dir = extensions_dir / ext_name
@@ -223,11 +213,7 @@ def create_extension_with_contribution(
         "manifest_version": "0.1",
         "name": ext_name,
         "description": f"Test extension {ext_name}",
-        "contributions": {
-            "opinions": [
-                {"source": f"opinions/{target}", "target": target}
-            ]
-        },
+        "contributions": {"opinions": [{"source": f"opinions/{target}", "target": target}]},
     }
     manifest_path = ext_dir / "praxis-extension.yaml"
     with open(manifest_path, "w") as f:
@@ -308,11 +294,7 @@ Core principles from praxis-ai.
     file_path.write_text(content)
 
 
-@given(
-    parsers.parse(
-        'an installed extension "{ext_name}" without praxis-extension.yaml'
-    )
-)
+@given(parsers.parse('an installed extension "{ext_name}" without praxis-extension.yaml'))
 def create_extension_without_manifest(context: dict[str, Any], ext_name: str) -> None:
     """Create an extension without a manifest."""
     extensions_dir = context["extensions_dir"]

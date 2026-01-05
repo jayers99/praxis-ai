@@ -241,21 +241,9 @@ def _deserialize_pipeline_state(
         execution = StageExecution(
             stage=stage,
             status=stage_data["status"],
-            started_at=(
-                datetime.fromisoformat(stage_data["started_at"])
-                if "started_at" in stage_data
-                else None
-            ),
-            completed_at=(
-                datetime.fromisoformat(stage_data["completed_at"])
-                if "completed_at" in stage_data
-                else None
-            ),
-            output_path=(
-                Path(stage_data["output_path"])
-                if "output_path" in stage_data
-                else None
-            ),
+            started_at=(datetime.fromisoformat(stage_data["started_at"]) if "started_at" in stage_data else None),
+            completed_at=(datetime.fromisoformat(stage_data["completed_at"]) if "completed_at" in stage_data else None),
+            output_path=(Path(stage_data["output_path"]) if "output_path" in stage_data else None),
             agent_outputs=agent_outputs,
         )
         stages[stage] = execution

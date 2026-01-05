@@ -28,16 +28,11 @@ def context() -> dict[str, Any]:
 def check_exit_code(context: dict[str, Any], code: int) -> None:
     """Verify the exit code."""
     result = context["result"]
-    assert result.exit_code == code, (
-        f"Expected exit code {code}, got {result.exit_code}. "
-        f"Output: {result.output}"
-    )
+    assert result.exit_code == code, f"Expected exit code {code}, got {result.exit_code}. " f"Output: {result.output}"
 
 
 @then(parsers.parse('the output should contain "{text}"'))
 def check_output_contains(context: dict[str, Any], text: str) -> None:
     """Verify the output contains expected text."""
     result = context["result"]
-    assert text in result.output, (
-        f"Expected '{text}' in output. Got: {result.output}"
-    )
+    assert text in result.output, f"Expected '{text}' in output. Got: {result.output}"

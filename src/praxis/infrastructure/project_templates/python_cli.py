@@ -115,7 +115,8 @@ app = typer.Typer(
 def version_callback(value: bool) -> None:
     \"\"\"Print version and exit.\"\"\"
     if value:
-        typer.echo(f"{package_name} """ + """{__version__}")
+        typer.echo(f"{package_name} """
+            + """{__version__}")
         raise typer.Exit()
 
 
@@ -192,7 +193,8 @@ def say_hello(name: str) -> str:
     Returns:
         Greeting message.
     \"\"\"
-    greeting = Greeting(recipient=name, message=f"Hello, """ + """{name}!")
+    greeting = Greeting(recipient=name, message=f"Hello, """
+            + """{name}!")
     return greeting.message
 """,
         ),

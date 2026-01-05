@@ -28,9 +28,7 @@ def library_exists(context: dict[str, Any]) -> None:
 
 
 @when(parsers.parse('I run praxis library query "{question}"'))
-def run_library_query(
-    cli_runner: CliRunner, context: dict[str, Any], question: str
-) -> None:
+def run_library_query(cli_runner: CliRunner, context: dict[str, Any], question: str) -> None:
     """Run library query command."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -41,9 +39,7 @@ def run_library_query(
 
 
 @when("I run praxis library query with empty string")
-def run_library_query_empty(
-    cli_runner: CliRunner, context: dict[str, Any]
-) -> None:
+def run_library_query_empty(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     """Run library query command with empty string."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -54,9 +50,7 @@ def run_library_query_empty(
 
 
 @when(parsers.parse('I run praxis library query "{question}" with json flag'))
-def run_library_query_json(
-    cli_runner: CliRunner, context: dict[str, Any], question: str
-) -> None:
+def run_library_query_json(cli_runner: CliRunner, context: dict[str, Any], question: str) -> None:
     """Run library query command with JSON output."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -74,9 +68,7 @@ def run_library_query_json(
 
 
 @when(parsers.parse('I run praxis library search with keyword "{keyword}"'))
-def run_library_search(
-    cli_runner: CliRunner, context: dict[str, Any], keyword: str
-) -> None:
+def run_library_search(cli_runner: CliRunner, context: dict[str, Any], keyword: str) -> None:
     """Run library search command."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -94,9 +86,7 @@ def run_library_search(
 
 
 @when(parsers.parse('I run praxis library cite "{artifact_id}"'))
-def run_library_cite(
-    cli_runner: CliRunner, context: dict[str, Any], artifact_id: str
-) -> None:
+def run_library_cite(cli_runner: CliRunner, context: dict[str, Any], artifact_id: str) -> None:
     """Run library cite command."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -107,9 +97,7 @@ def run_library_cite(
 
 
 @when("I run praxis library check-orphans")
-def run_library_check_orphans(
-    cli_runner: CliRunner, context: dict[str, Any]
-) -> None:
+def run_library_check_orphans(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     """Run library check-orphans command."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -120,9 +108,7 @@ def run_library_check_orphans(
 
 
 @when(parsers.parse("I run praxis library check-stale with days {days:d}"))
-def run_library_check_stale(
-    cli_runner: CliRunner, context: dict[str, Any], days: int
-) -> None:
+def run_library_check_stale(cli_runner: CliRunner, context: dict[str, Any], days: int) -> None:
     """Run library check-stale command."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -140,9 +126,7 @@ def run_library_check_stale(
 
 
 @when("I run praxis library reindex")
-def run_library_reindex(
-    cli_runner: CliRunner, context: dict[str, Any]
-) -> None:
+def run_library_reindex(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     """Run library reindex command."""
     library_path = context["library_path"]
     result = cli_runner.invoke(
@@ -158,9 +142,6 @@ def check_json_contains_key(context: dict[str, Any], key: str) -> None:
     result = context["result"]
     try:
         output_data = json.loads(result.output)
-        assert key in output_data, (
-            f"Expected key '{key}' in JSON output. "
-            f"Got keys: {list(output_data.keys())}"
-        )
+        assert key in output_data, f"Expected key '{key}' in JSON output. " f"Got keys: {list(output_data.keys())}"
     except json.JSONDecodeError as e:
         raise AssertionError(f"Invalid JSON output: {e}. Output: {result.output}")

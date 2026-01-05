@@ -47,13 +47,15 @@ class Stage(str, Enum):
 
 
 # Stages that require formalization artifacts (stage >= formalize)
-REQUIRES_ARTIFACT: frozenset[Stage] = frozenset({
-    Stage.FORMALIZE,
-    Stage.COMMIT,
-    Stage.EXECUTE,
-    Stage.SUSTAIN,
-    Stage.CLOSE,
-})
+REQUIRES_ARTIFACT: frozenset[Stage] = frozenset(
+    {
+        Stage.FORMALIZE,
+        Stage.COMMIT,
+        Stage.EXECUTE,
+        Stage.SUSTAIN,
+        Stage.CLOSE,
+    }
+)
 
 # Allowed regression paths (from lifecycle.md lines 104-118)
 ALLOWED_REGRESSIONS: dict[Stage, frozenset[Stage]] = {
@@ -101,9 +103,7 @@ def is_stage_allowed(stage: Stage, mode: Literal["full", "fast"]) -> bool:
     return stage in get_allowed_stages(mode)
 
 
-def get_next_stage(
-    current: Stage, mode: Literal["full", "fast"]
-) -> Stage | None:
+def get_next_stage(current: Stage, mode: Literal["full", "fast"]) -> Stage | None:
     """Get the next stage in the lifecycle for the given mode.
 
     Args:

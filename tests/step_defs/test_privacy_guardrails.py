@@ -22,9 +22,7 @@ def privacy_cli_runner() -> CliRunner:
 
 
 @given("I am in a temporary directory")
-def setup_temp_dir(
-    tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest
-) -> None:
+def setup_temp_dir(tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest) -> None:
     """Set up temporary directory with cleanup."""
     context["project_root"] = tmp_path
     original_dir = os.getcwd()
@@ -47,11 +45,7 @@ def create_opinions_dir(context: dict[str, Any]) -> None:
     (opinions_dir / "code").mkdir(exist_ok=True)
 
 
-@given(
-    parsers.parse(
-        'a praxis.yaml with domain "{domain}" stage "{stage}" and privacy "{privacy}"'
-    )
-)
+@given(parsers.parse('a praxis.yaml with domain "{domain}" stage "{stage}" and privacy "{privacy}"'))
 def create_praxis_yaml_with_privacy(
     context: dict[str, Any],
     domain: str,
@@ -92,11 +86,7 @@ Test opinion content.
     )
 
 
-@given(
-    parsers.parse(
-        "opinions/_shared/first-principles.md exists with content containing {content}"
-    )
-)
+@given(parsers.parse("opinions/_shared/first-principles.md exists with content containing {content}"))
 def create_opinion_with_content(
     context: dict[str, Any],
     content: str,
@@ -154,9 +144,7 @@ def check_stderr_not_contains(context: dict[str, Any], text: str) -> None:
     """Check that stderr does not contain the specified text."""
     result = context.get("last_result") or context.get("result")
     assert result is not None, "No command result found in context"
-    assert (
-        text not in result.stderr
-    ), f"Expected '{text}' not in stderr, got: {result.stderr}"
+    assert text not in result.stderr, f"Expected '{text}' not in stderr, got: {result.stderr}"
 
 
 @then(parsers.parse('the output does not contain "{text}"'))
@@ -165,10 +153,8 @@ def check_output_not_contains(context: dict[str, Any], text: str) -> None:
     result = context.get("last_result") or context.get("result")
     assert result is not None, "No command result found in context"
     # Check stdout for --prompt output
-    stdout = result.stdout if hasattr(result, 'stdout') else result.output
-    assert (
-        text not in stdout
-    ), f"Expected '{text}' not in output, got: {stdout}"
+    stdout = result.stdout if hasattr(result, "stdout") else result.output
+    assert text not in stdout, f"Expected '{text}' not in output, got: {stdout}"
 
 
 @then(parsers.parse('the output contains "{text}"'))
@@ -177,7 +163,7 @@ def check_output_contains_privacy(context: dict[str, Any], text: str) -> None:
     result = context.get("last_result") or context.get("result")
     assert result is not None, "No command result found in context"
     # Check stdout for --prompt output
-    stdout = result.stdout if hasattr(result, 'stdout') else result.output
+    stdout = result.stdout if hasattr(result, "stdout") else result.output
     assert text in stdout, f"Expected '{text}' in output, got: {stdout}"
 
 
@@ -187,7 +173,7 @@ def save_output_privacy(context: dict[str, Any], name: str) -> None:
     if "saved_outputs" not in context:
         context["saved_outputs"] = {}
     result = context.get("last_result") or context.get("result")
-    stdout = result.stdout if hasattr(result, 'stdout') else result.output
+    stdout = result.stdout if hasattr(result, "stdout") else result.output
     context["saved_outputs"][name] = stdout
 
 
@@ -197,9 +183,7 @@ def compare_saved_outputs(context: dict[str, Any], name1: str, name2: str) -> No
     saved = context.get("saved_outputs", {})
     assert name1 in saved, f"Output '{name1}' not found in saved outputs"
     assert name2 in saved, f"Output '{name2}' not found in saved outputs"
-    assert saved[name1] == saved[name2], (
-        f"Outputs differ:\n{name1}:\n{saved[name1]}\n\n{name2}:\n{saved[name2]}"
-    )
+    assert saved[name1] == saved[name2], f"Outputs differ:\n{name1}:\n{saved[name1]}\n\n{name2}:\n{saved[name2]}"
 
 
 @then(parsers.parse("the exit code is {code:d}"))
@@ -211,4 +195,3 @@ def check_exit_code_privacy(context: dict[str, Any], code: int) -> None:
         f"Stdout: {result.stdout if hasattr(result, 'stdout') else result.output}\n"
         f"Stderr: {result.stderr if hasattr(result, 'stderr') else ''}"
     )
-

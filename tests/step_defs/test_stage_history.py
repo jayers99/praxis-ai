@@ -31,9 +31,7 @@ environment: Home
 
 
 @given(parsers.parse('a project at stage "{stage}" with docs/sod.md'))
-def project_at_stage_with_sod(
-    tmp_path: Path, context: dict[str, Any], stage: str
-) -> None:
+def project_at_stage_with_sod(tmp_path: Path, context: dict[str, Any], stage: str) -> None:
     """Create a project at the given stage with SOD artifact."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -52,9 +50,7 @@ environment: Home
 
 
 @given(parsers.parse('a project at stage "{stage}" with contract "{contract_id}"'))
-def project_at_stage_with_contract(
-    tmp_path: Path, context: dict[str, Any], stage: str, contract_id: str
-) -> None:
+def project_at_stage_with_contract(tmp_path: Path, context: dict[str, Any], stage: str, contract_id: str) -> None:
     """Create a project at the given stage with a contract in history."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -92,9 +88,7 @@ def project_at_stage_with_contract(
 
 
 @given(parsers.parse('a project at stage "{stage}" without history field'))
-def project_at_stage_no_history(
-    tmp_path: Path, context: dict[str, Any], stage: str
-) -> None:
+def project_at_stage_no_history(tmp_path: Path, context: dict[str, Any], stage: str) -> None:
     """Create a project at the given stage without history field."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -107,12 +101,8 @@ environment: Home
     )
 
 
-@given(
-    parsers.parse('the project has transitioned through "{s1}" to "{s2}" to "{s3}"')
-)
-def project_with_history(
-    context: dict[str, Any], s1: str, s2: str, s3: str
-) -> None:
+@given(parsers.parse('the project has transitioned through "{s1}" to "{s2}" to "{s3}"'))
+def project_with_history(context: dict[str, Any], s1: str, s2: str, s3: str) -> None:
     """Create a project with existing history."""
     project_root = context["project_root"]
     praxis_yaml = project_root / "praxis.yaml"
@@ -158,9 +148,7 @@ def run_stage_with_reason(
 ) -> None:
     """Run praxis stage command with --reason flag."""
     project_root = context["project_root"]
-    result = cli_runner.invoke(
-        app, ["stage", new_stage, str(project_root), "--reason", reason]
-    )
+    result = cli_runner.invoke(app, ["stage", new_stage, str(project_root), "--reason", reason])
     context["result"] = result
 
 
@@ -184,9 +172,7 @@ def run_status(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     context["result"] = result
 
 
-@then(
-    parsers.parse('praxis.yaml should contain a history entry with from_stage "{stage}"')
-)
+@then(parsers.parse('praxis.yaml should contain a history entry with from_stage "{stage}"'))
 def check_history_from_stage(context: dict[str, Any], stage: str) -> None:
     """Verify praxis.yaml has a history entry with the expected from_stage."""
     project_root = context["project_root"]
@@ -201,9 +187,7 @@ def check_history_from_stage(context: dict[str, Any], stage: str) -> None:
     assert found, f"No history entry found with from_stage '{stage}'. History: {history}"
 
 
-@then(
-    parsers.parse('praxis.yaml should contain a history entry with to_stage "{stage}"')
-)
+@then(parsers.parse('praxis.yaml should contain a history entry with to_stage "{stage}"'))
 def check_history_to_stage(context: dict[str, Any], stage: str) -> None:
     """Verify praxis.yaml has a history entry with the expected to_stage."""
     project_root = context["project_root"]
@@ -248,9 +232,7 @@ def check_contract_id(context: dict[str, Any], pattern: str) -> None:
 
     # Check pattern match
     contract_id = contract_ids[-1]  # Get most recent
-    assert re.match(pattern, contract_id), (
-        f"contract_id '{contract_id}' does not match pattern '{pattern}'"
-    )
+    assert re.match(pattern, contract_id), f"contract_id '{contract_id}' does not match pattern '{pattern}'"
 
 
 @then(parsers.parse('praxis.yaml should contain a history entry with reason "{reason}"'))
@@ -287,9 +269,7 @@ def check_history_count(context: dict[str, Any], count: int) -> None:
 
     assert "history" in content, "praxis.yaml should have a 'history' field"
     history = content["history"]
-    assert len(history) == count, (
-        f"Expected {count} history entries, got {len(history)}. History: {history}"
-    )
+    assert len(history) == count, f"Expected {count} history entries, got {len(history)}. History: {history}"
 
 
 @then("praxis.yaml should contain a history entry without reason")
@@ -305,18 +285,16 @@ def check_history_no_reason(context: dict[str, Any]) -> None:
 
     # Check that the latest entry doesn't have a reason (or it's None)
     latest = history[-1]
-    assert "reason" not in latest or latest.get("reason") is None, (
-        f"Latest history entry should not have a reason. Got: {latest}"
-    )
+    assert (
+        "reason" not in latest or latest.get("reason") is None
+    ), f"Latest history entry should not have a reason. Got: {latest}"
 
 
 @then(parsers.parse('the output should not contain "{text}"'))
 def check_output_not_contains(context: dict[str, Any], text: str) -> None:
     """Verify the output does NOT contain the specified text."""
     result = context["result"]
-    assert text not in result.output, (
-        f"Did not expect '{text}' in output. Got: {result.output}"
-    )
+    assert text not in result.output, f"Did not expect '{text}' in output. Got: {result.output}"
 
 
 @then(parsers.parse('the JSON output should contain "{field}": {value}'))
@@ -339,6 +317,4 @@ def check_json_output_field(context: dict[str, Any], field: str, value: str) -> 
         expected_value = value
 
     assert field in data, f"Field '{field}' not found in JSON output: {data}"
-    assert data[field] == expected_value, (
-        f"Expected '{field}': {expected_value}, got '{field}': {data[field]}"
-    )
+    assert data[field] == expected_value, f"Expected '{field}': {expected_value}, got '{field}': {data[field]}"

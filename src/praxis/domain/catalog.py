@@ -14,10 +14,10 @@ from pathlib import Path
 @dataclass
 class CatalogEntry:
     """A research artifact entry for the catalog.
-    
+
     Represents a validated research artifact with all required metadata
     for inclusion in the research library catalog.
-    
+
     Attributes:
         id: Unique identifier, format: {topic}-{slug}-{YYYY-MM-DD}
         title: Human-readable title of the artifact
@@ -50,7 +50,7 @@ class CatalogEntry:
 @dataclass
 class ValidationError:
     """A validation error for artifact metadata.
-    
+
     Attributes:
         field: Name of the field that failed validation
         message: Human-readable error message
@@ -63,7 +63,7 @@ class ValidationError:
 @dataclass
 class CatalogResult:
     """Result of a cataloging operation.
-    
+
     Attributes:
         success: Whether the operation succeeded
         entry: The catalog entry if successful

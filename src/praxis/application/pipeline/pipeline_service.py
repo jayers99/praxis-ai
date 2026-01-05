@@ -80,10 +80,7 @@ def init_pipeline(
     # Check for existing active pipeline
     existing_state = load_pipeline_state(project_root)
     if existing_state is not None and not force:
-        errors.append(
-            f"Active pipeline exists: {existing_state.config.pipeline_id}. "
-            "Use --force to replace."
-        )
+        errors.append(f"Active pipeline exists: {existing_state.config.pipeline_id}. " "Use --force to replace.")
         return PipelineInitResult(success=False, errors=errors)
 
     # Run library precheck if enabled
@@ -193,9 +190,7 @@ def get_pipeline_status(project_root: Path) -> PipelineStatus:
         required = is_stage_required(tier, stage)
         if stage in state.stages:
             status = state.stages[stage].status
-            output_path = get_stage_output_path(
-                project_root, config.pipeline_id, stage
-            )
+            output_path = get_stage_output_path(project_root, config.pipeline_id, stage)
             output_exists = output_path.exists()
         else:
             status = "skipped" if not required else "pending"

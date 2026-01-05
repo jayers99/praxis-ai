@@ -24,11 +24,7 @@ def empty_directory(tmp_path: Path, context: dict[str, Any]) -> None:
     context["project_root"] = tmp_path
 
 
-@when(
-    parsers.parse(
-        'I run praxis new "{name}" with domain "{domain}" and privacy "{privacy}"'
-    )
-)
+@when(parsers.parse('I run praxis new "{name}" with domain "{domain}" and privacy "{privacy}"'))
 def run_new_with_flags(
     cli_runner: CliRunner,
     context: dict[str, Any],
@@ -80,9 +76,7 @@ def check_praxis_yaml_name(context: dict[str, Any], expected_name: str) -> None:
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
     actual_name = content.get("name", "")
-    assert actual_name == expected_name, (
-        f"Expected name '{expected_name}', got '{actual_name}'"
-    )
+    assert actual_name == expected_name, f"Expected name '{expected_name}', got '{actual_name}'"
 
 
 @then(parsers.parse('praxis.yaml should contain slug "{expected_slug}"'))
@@ -93,9 +87,7 @@ def check_praxis_yaml_slug(context: dict[str, Any], expected_slug: str) -> None:
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
     actual_slug = content.get("slug", "")
-    assert actual_slug == expected_slug, (
-        f"Expected slug '{expected_slug}', got '{actual_slug}'"
-    )
+    assert actual_slug == expected_slug, f"Expected slug '{expected_slug}', got '{actual_slug}'"
 
 
 @then(parsers.parse('praxis.yaml should contain description "{expected_desc}"'))
@@ -106,9 +98,7 @@ def check_praxis_yaml_description(context: dict[str, Any], expected_desc: str) -
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
     actual_desc = content.get("description", "")
-    assert actual_desc == expected_desc, (
-        f"Expected description '{expected_desc}', got '{actual_desc}'"
-    )
+    assert actual_desc == expected_desc, f"Expected description '{expected_desc}', got '{actual_desc}'"
 
 
 @then("praxis.yaml should have empty description")
@@ -133,12 +123,8 @@ def check_praxis_yaml_empty_tags(context: dict[str, Any]) -> None:
     assert tags == [], f"Expected empty tags list, got {tags}"
 
 
-@given(
-    parsers.parse('a project with name "{name}" and slug "{slug}"')
-)
-def project_with_name_and_slug(
-    tmp_path: Path, context: dict[str, Any], name: str, slug: str
-) -> None:
+@given(parsers.parse('a project with name "{name}" and slug "{slug}"'))
+def project_with_name_and_slug(tmp_path: Path, context: dict[str, Any], name: str, slug: str) -> None:
     """Create a project with specific name and slug."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -155,12 +141,8 @@ tags: []
     )
 
 
-@given(
-    parsers.parse('a project directory "{dirname}" with no metadata fields')
-)
-def project_directory_no_metadata(
-    tmp_path: Path, context: dict[str, Any], dirname: str
-) -> None:
+@given(parsers.parse('a project directory "{dirname}" with no metadata fields'))
+def project_directory_no_metadata(tmp_path: Path, context: dict[str, Any], dirname: str) -> None:
     """Create a project directory with legacy praxis.yaml (no metadata fields)."""
     # Create the subdirectory with the specified name
     project_dir = tmp_path / dirname
@@ -189,9 +171,7 @@ def check_auto_generated_slug(context: dict[str, Any], expected_slug: str) -> No
     assert result.valid, "Config should be valid"
     assert result.config is not None, "Config should be loaded"
     actual_slug = result.config.slug
-    assert actual_slug == expected_slug, (
-        f"Expected auto-generated slug '{expected_slug}', got '{actual_slug}'"
-    )
+    assert actual_slug == expected_slug, f"Expected auto-generated slug '{expected_slug}', got '{actual_slug}'"
 
 
 @then(parsers.parse('name should be auto-generated as "{expected_name}"'))
@@ -204,15 +184,11 @@ def check_auto_generated_name(context: dict[str, Any], expected_name: str) -> No
     assert result.valid, "Config should be valid"
     assert result.config is not None, "Config should be loaded"
     actual_name = result.config.name
-    assert actual_name == expected_name, (
-        f"Expected auto-generated name '{expected_name}', got '{actual_name}'"
-    )
+    assert actual_name == expected_name, f"Expected auto-generated name '{expected_name}', got '{actual_name}'"
 
 
 @given(parsers.parse('a praxis.yaml with slug "{slug}"'))
-def praxis_yaml_with_slug(
-    tmp_path: Path, context: dict[str, Any], slug: str
-) -> None:
+def praxis_yaml_with_slug(tmp_path: Path, context: dict[str, Any], slug: str) -> None:
     """Create a praxis.yaml with a specific slug."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -226,12 +202,8 @@ slug: {slug}
     )
 
 
-@given(
-    parsers.parse('a project with description "{description}" and tags "{tags}"')
-)
-def project_with_description_and_tags(
-    tmp_path: Path, context: dict[str, Any], description: str, tags: str
-) -> None:
+@given(parsers.parse('a project with description "{description}" and tags "{tags}"'))
+def project_with_description_and_tags(tmp_path: Path, context: dict[str, Any], description: str, tags: str) -> None:
     """Create a project with specific description and tags."""
     context["project_root"] = tmp_path
     # Handle empty tags string
@@ -264,9 +236,7 @@ def directory_named(tmp_path: Path, context: dict[str, Any], dirname: str) -> No
 
 
 @when('I run praxis init with domain "code" and privacy "personal"')
-def run_init_with_domain_privacy(
-    cli_runner: CliRunner, context: dict[str, Any]
-) -> None:
+def run_init_with_domain_privacy(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     """Run praxis init command."""
     project_root: Path = context["project_root"]
     result = cli_runner.invoke(

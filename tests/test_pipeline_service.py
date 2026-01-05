@@ -53,88 +53,56 @@ class TestInitPipeline:
         assert not result.success
         assert any("praxis.yaml" in err for err in result.errors)
 
-    def test_validates_risk_tier(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_validates_risk_tier(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Fails with invalid risk tier."""
-        result = init_pipeline(
-            praxis_project, risk_tier=5, source_corpus_path=corpus_dir
-        )
+        result = init_pipeline(praxis_project, risk_tier=5, source_corpus_path=corpus_dir)
         assert not result.success
         assert any("Invalid risk tier" in err for err in result.errors)
 
     def test_validates_corpus_exists(self, praxis_project: Path) -> None:
         """Fails when corpus doesn't exist."""
         missing_corpus = Path("/nonexistent/corpus")
-        result = init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=missing_corpus
-        )
+        result = init_pipeline(praxis_project, risk_tier=2, source_corpus_path=missing_corpus)
         assert not result.success
         assert any("not found" in err for err in result.errors)
 
-    def test_creates_pipeline_yaml(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_creates_pipeline_yaml(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Creates pipeline.yaml on success."""
-        result = init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=corpus_dir
-        )
+        result = init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         assert result.success
         assert (praxis_project / "pipeline.yaml").exists()
 
-    def test_creates_pipeline_run_directory(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_creates_pipeline_run_directory(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Creates pipeline-runs/{id}/ directory."""
-        result = init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=corpus_dir
-        )
+        result = init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         assert result.success
         run_dir = praxis_project / "pipeline-runs" / result.pipeline_id
         assert run_dir.exists()
 
-    def test_returns_required_stages_for_tier(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_returns_required_stages_for_tier(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Returns correct required stages for tier."""
         # Tier 0: RTC, IDAS only
-        result = init_pipeline(
-            praxis_project, risk_tier=0, source_corpus_path=corpus_dir
-        )
+        result = init_pipeline(praxis_project, risk_tier=0, source_corpus_path=corpus_dir)
         assert result.success
         assert result.required_stages == [PipelineStage.RTC, PipelineStage.IDAS]
 
-    def test_prevents_duplicate_pipeline(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_prevents_duplicate_pipeline(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Prevents duplicate active pipelines."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
-        result = init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=corpus_dir
-        )
+        result = init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         assert not result.success
         assert any("Active pipeline exists" in err for err in result.errors)
 
-    def test_force_replaces_existing(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_force_replaces_existing(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Force flag replaces existing pipeline."""
-        first = init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=corpus_dir
-        )
-        second = init_pipeline(
-            praxis_project, risk_tier=1, source_corpus_path=corpus_dir, force=True
-        )
+        first = init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
+        second = init_pipeline(praxis_project, risk_tier=1, source_corpus_path=corpus_dir, force=True)
         assert second.success
         assert second.pipeline_id != first.pipeline_id
 
-    def test_tier_3_requires_all_stages(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_tier_3_requires_all_stages(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Tier 3 requires all 6 stages."""
-        result = init_pipeline(
-            praxis_project, risk_tier=3, source_corpus_path=corpus_dir
-        )
+        result = init_pipeline(praxis_project, risk_tier=3, source_corpus_path=corpus_dir)
         assert result.success
         assert len(result.required_stages) == 6
         assert PipelineStage.HVA in result.required_stages
@@ -149,27 +117,19 @@ class TestGetPipelineStatus:
         assert not status.pipeline_id
         assert any("No active pipeline" in err for err in status.errors)
 
-    def test_returns_pipeline_id(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_returns_pipeline_id(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Returns pipeline ID."""
-        init_result = init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=corpus_dir
-        )
+        init_result = init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         status = get_pipeline_status(praxis_project)
         assert status.pipeline_id == init_result.pipeline_id
 
-    def test_returns_stage_progress(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_returns_stage_progress(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Returns progress for all stages."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         status = get_pipeline_status(praxis_project)
         assert len(status.stage_progress) == 6  # All stages tracked
 
-    def test_shows_required_stages(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_shows_required_stages(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Correctly marks required stages."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         status = get_pipeline_status(praxis_project)
@@ -181,17 +141,13 @@ class TestGetPipelineStatus:
         assert rtc.required is True  # Tier 2 requires RTC
         assert hva.required is False  # Tier 2 doesn't require HVA
 
-    def test_shows_next_stage(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_shows_next_stage(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Shows next stage to execute."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         status = get_pipeline_status(praxis_project)
         assert status.next_stage == PipelineStage.RTC
 
-    def test_not_complete_initially(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_not_complete_initially(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Pipeline is not complete initially."""
         init_pipeline(praxis_project, risk_tier=0, source_corpus_path=corpus_dir)
         status = get_pipeline_status(praxis_project)
@@ -201,9 +157,7 @@ class TestGetPipelineStatus:
 class TestMarkStageStarted:
     """Tests for mark_stage_started function."""
 
-    def test_marks_stage_in_progress(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_marks_stage_in_progress(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Marks stage as in_progress."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         success, error = mark_stage_started(praxis_project, PipelineStage.RTC)
@@ -225,9 +179,7 @@ class TestMarkStageStarted:
 class TestMarkStageCompleted:
     """Tests for mark_stage_completed function."""
 
-    def test_marks_stage_completed(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_marks_stage_completed(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Marks stage as completed."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         success, error = mark_stage_completed(praxis_project, PipelineStage.RTC)
@@ -239,9 +191,7 @@ class TestMarkStageCompleted:
         assert state.stages[PipelineStage.RTC].status == "completed"
         assert state.stages[PipelineStage.RTC].completed_at is not None
 
-    def test_advances_current_stage(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_advances_current_stage(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Advances current stage after completion."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         mark_stage_completed(praxis_project, PipelineStage.RTC)
@@ -250,9 +200,7 @@ class TestMarkStageCompleted:
         assert state is not None
         assert state.config.current_stage == PipelineStage.IDAS
 
-    def test_stores_output_path(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_stores_output_path(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Stores output path when provided."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         output_path = praxis_project / "output.md"
@@ -266,9 +214,7 @@ class TestMarkStageCompleted:
 class TestAdvancePipelineStage:
     """Tests for advance_pipeline_stage function."""
 
-    def test_advances_stage(
-        self, praxis_project: Path, corpus_dir: Path
-    ) -> None:
+    def test_advances_stage(self, praxis_project: Path, corpus_dir: Path) -> None:
         """Advances to specified stage."""
         init_pipeline(praxis_project, risk_tier=2, source_corpus_path=corpus_dir)
         success, error = advance_pipeline_stage(praxis_project, PipelineStage.SAD)

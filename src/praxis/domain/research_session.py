@@ -99,9 +99,7 @@ class ResearchSession:
 
         # Record initial phase if history is empty
         if not self.phase_history:
-            self.phase_history = [
-                {"phase": self.phase.value, "timestamp": self.created_at}
-            ]
+            self.phase_history = [{"phase": self.phase.value, "timestamp": self.created_at}]
 
     def can_advance(self) -> bool:
         """Check if the session can advance to the next phase."""
@@ -123,10 +121,12 @@ class ResearchSession:
 
         self.phase = next_phase
         self.updated_at = datetime.now().isoformat()
-        self.phase_history.append({
-            "phase": next_phase.value,
-            "timestamp": self.updated_at,
-        })
+        self.phase_history.append(
+            {
+                "phase": next_phase.value,
+                "timestamp": self.updated_at,
+            }
+        )
         return next_phase
 
     def can_approve(self) -> bool:
@@ -134,10 +134,7 @@ class ResearchSession:
 
         Sessions can only be approved at the synthesis phase.
         """
-        return (
-            self.status == SessionStatus.ACTIVE
-            and self.phase == ResearchPhase.SYNTHESIS
-        )
+        return self.status == SessionStatus.ACTIVE and self.phase == ResearchPhase.SYNTHESIS
 
     def approve(self, rationale: str) -> bool:
         """Approve the research session.

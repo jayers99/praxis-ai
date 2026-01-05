@@ -70,32 +70,24 @@ def _create_check_function(
 
     elif check_type == "file_contains":
         if not check_contrib.pattern:
-            warnings.append(
-                f"Check '{check_contrib.name}': file_contains requires 'pattern' field"
-            )
+            warnings.append(f"Check '{check_contrib.name}': file_contains requires 'pattern' field")
             return lambda p: False, warnings
 
         # Validate regex pattern
         try:
             re.compile(check_contrib.pattern)
         except re.error as e:
-            warnings.append(
-                f"Check '{check_contrib.name}': invalid regex pattern: {e}"
-            )
+            warnings.append(f"Check '{check_contrib.name}': invalid regex pattern: {e}")
             # Return a function that will fail gracefully
             return lambda p: False, warnings
 
         return (
-            lambda p: run_file_contains_check(
-                p, check_contrib.path, check_contrib.pattern or ""
-            ),
+            lambda p: run_file_contains_check(p, check_contrib.path, check_contrib.pattern or ""),
             warnings,
         )
 
     else:
-        warnings.append(
-            f"Check '{check_contrib.name}': unsupported check_type '{check_type}'"
-        )
+        warnings.append(f"Check '{check_contrib.name}': unsupported check_type '{check_type}'")
         return lambda p: False, warnings
 
 
@@ -132,26 +124,20 @@ def register_extension_checks() -> list[str]:
         return warnings  # No valid workspace config
 
     # Discover and load extension manifests
-    manifest_results = discover_extension_manifests(
-        extensions_path, installed_extensions
-    )
+    manifest_results = discover_extension_manifests(extensions_path, installed_extensions)
 
     # Process each manifest and register audit checks
     for manifest_result in manifest_results:
         if not manifest_result.success or not manifest_result.manifest:
             if manifest_result.error:
                 error_msg = manifest_result.error
-                warnings.append(
-                    f"Extension '{manifest_result.extension_name}': {error_msg}"
-                )
+                warnings.append(f"Extension '{manifest_result.extension_name}': {error_msg}")
             continue
 
         # Add manifest loading warnings
         if manifest_result.warning:
             warn_msg = manifest_result.warning
-            warnings.append(
-                f"Extension '{manifest_result.extension_name}': {warn_msg}"
-            )
+            warnings.append(f"Extension '{manifest_result.extension_name}': {warn_msg}")
 
         manifest = manifest_result.manifest
         extension_name = manifest.name
@@ -163,9 +149,7 @@ def register_extension_checks() -> list[str]:
                 domain = Domain(audit_contrib.domain)
             except ValueError:
                 domain_name = audit_contrib.domain
-                warnings.append(
-                    f"Extension '{extension_name}': invalid domain '{domain_name}'"
-                )
+                warnings.append(f"Extension '{extension_name}': invalid domain '{domain_name}'")
                 continue
 
             # Process each check in this audit contribution
@@ -192,9 +176,7 @@ def register_extension_checks() -> list[str]:
                         continue
 
                 # Parse subtypes (inherit from audit contribution)
-                subtypes = (
-                    audit_contrib.subtypes if audit_contrib.subtypes else None
-                )
+                subtypes = audit_contrib.subtypes if audit_contrib.subtypes else None
 
                 # Create CheckDefinition with prefixed name for provenance
                 check_def = CheckDefinition(
@@ -203,9 +185,7 @@ def register_extension_checks() -> list[str]:
                     check_fn=check_fn,
                     pass_message=check_contrib.pass_message,
                     fail_message=check_contrib.fail_message,
-                    severity="warning"
-                    if check_contrib.severity == "warning"
-                    else "failed",
+                    severity="warning" if check_contrib.severity == "warning" else "failed",
                     min_stage=min_stage,
                     subtypes=subtypes,
                 )

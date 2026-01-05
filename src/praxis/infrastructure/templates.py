@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-CLAUDE_MD_TEMPLATE = '''# {project_name} — AI Instructions
+CLAUDE_MD_TEMPLATE = """# {project_name} — AI Instructions
 
 ## Praxis Governance
 
@@ -46,9 +46,9 @@ praxis validate .
 ## Privacy: {privacy}
 
 Respect the declared privacy level in all AI interactions and data handling.
-'''
+"""
 
-CAPTURE_MD_TEMPLATE = '''# Capture
+CAPTURE_MD_TEMPLATE = """# Capture
 
 **Stage:** Capture
 **Date:** {date}
@@ -74,7 +74,7 @@ CAPTURE_MD_TEMPLATE = '''# Capture
 ## Next Steps
 
 Move to **Sense** to organize these inputs into a coherent understanding.
-'''
+"""
 
 
 def render_claude_md(project_name: str, domain: str, privacy: str) -> str:

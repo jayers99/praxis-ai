@@ -113,29 +113,15 @@ class ExampleListResult(BaseModel):
 class OpinionContribution(BaseModel):
     """A single opinion file contribution from an extension."""
 
-    source: str = Field(
-        description="Relative path in extension (e.g., 'opinions/code/principles.md')"
-    )
-    target: str = Field(
-        description="Target path in opinions tree (e.g., 'code/principles.md')"
-    )
+    source: str = Field(description="Relative path in extension (e.g., 'opinions/code/principles.md')")
+    target: str = Field(description="Target path in opinions tree (e.g., 'code/principles.md')")
 
 
 class TemplateContribution(BaseModel):
     """A single template file contribution from an extension."""
 
-    source: str = Field(
-        description=(
-            "Relative path in extension "
-            "(e.g., 'templates/formalize/mobile-sod.md')"
-        )
-    )
-    target: str = Field(
-        description=(
-            "Target path in template tree "
-            "(e.g., 'code/formalize/mobile-sod.md')"
-        )
-    )
+    source: str = Field(description=("Relative path in extension " "(e.g., 'templates/formalize/mobile-sod.md')"))
+    target: str = Field(description=("Target path in template tree " "(e.g., 'code/formalize/mobile-sod.md')"))
     subtypes: list[str] = Field(
         default_factory=list,
         description="Subtypes this template applies to (empty = all subtypes)",
@@ -148,16 +134,10 @@ class ExtensionManifest(BaseModel):
     Schema version 0.1 - experimental, subject to breaking changes before v1.0.
     """
 
-    manifest_version: str = Field(
-        description="Manifest schema version (e.g., '0.1', '1.0')"
-    )
+    manifest_version: str = Field(description="Manifest schema version (e.g., '0.1', '1.0')")
     name: str = Field(description="Extension name (must match directory name)")
-    description: str | None = Field(
-        default=None, description="Human-readable description"
-    )
-    contributions: ExtensionContributions = Field(
-        default_factory=lambda: ExtensionContributions()
-    )
+    description: str | None = Field(default=None, description="Human-readable description")
+    contributions: ExtensionContributions = Field(default_factory=lambda: ExtensionContributions())
 
 
 class AuditCheckContribution(BaseModel):
@@ -165,12 +145,8 @@ class AuditCheckContribution(BaseModel):
 
     name: str = Field(description="Check name (unique within extension)")
     category: str = Field(description="Check category (e.g., 'structure', 'tooling')")
-    check_type: str = Field(
-        description="Type of check (file_exists, dir_exists, file_contains)"
-    )
-    path: str = Field(
-        description="File or directory path to check (relative to project root)"
-    )
+    check_type: str = Field(description="Type of check (file_exists, dir_exists, file_contains)")
+    path: str = Field(description="File or directory path to check (relative to project root)")
     pattern: str | None = Field(
         default=None,
         description="Regex pattern for file_contains check type",

@@ -17,9 +17,7 @@ scenarios("../features/opinions.feature")
 
 
 @given("I am in a temporary directory")
-def setup_temp_dir(
-    tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest
-) -> None:
+def setup_temp_dir(tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest) -> None:
     """Set up temporary directory with cleanup."""
     context["project_root"] = tmp_path
     original_dir = os.getcwd()
@@ -61,12 +59,7 @@ environment: Home
     )
 
 
-@given(
-    parsers.parse(
-        'a praxis.yaml with domain "{domain}" and stage "{stage}" '
-        'and subtype "{subtype}"'
-    )
-)
+@given(parsers.parse('a praxis.yaml with domain "{domain}" and stage "{stage}" ' 'and subtype "{subtype}"'))
 def create_praxis_yaml_with_subtype(
     context: dict[str, Any],
     domain: str,
@@ -181,10 +174,7 @@ def check_stderr_contains(context: dict[str, Any], text: str) -> None:
 def check_exit_code(context: dict[str, Any], code: int) -> None:
     """Verify exit code."""
     result = context["result"]
-    assert result.exit_code == code, (
-        f"Expected exit code {code}, got {result.exit_code}. "
-        f"Output: {result.output}"
-    )
+    assert result.exit_code == code, f"Expected exit code {code}, got {result.exit_code}. " f"Output: {result.output}"
 
 
 @then("the output is valid JSON")
@@ -213,6 +203,4 @@ def check_outputs_equal(context: dict[str, Any], first: str, second: str) -> Non
     saved = context.get("saved_outputs", {})
     assert first in saved, f"Output '{first}' not saved"
     assert second in saved, f"Output '{second}' not saved"
-    assert saved[first] == saved[second], (
-        f"Outputs differ:\n{first}:\n{saved[first]}\n{second}:\n{saved[second]}"
-    )
+    assert saved[first] == saved[second], f"Outputs differ:\n{first}:\n{saved[first]}\n{second}:\n{saved[second]}"

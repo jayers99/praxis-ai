@@ -256,9 +256,7 @@ def check_json_contains_key(context: dict[str, Any], key: str) -> None:
     result = context["result"]
     try:
         output_data = json.loads(result.output)
-        assert key in output_data, (
-            f"Expected key '{key}' in JSON output. Got keys: {list(output_data.keys())}"
-        )
+        assert key in output_data, f"Expected key '{key}' in JSON output. Got keys: {list(output_data.keys())}"
     except json.JSONDecodeError as e:
         raise AssertionError(f"Invalid JSON output: {e}. Output: {result.output}")
 
@@ -272,12 +270,8 @@ def check_json_version(context: dict[str, Any], version: str) -> None:
     try:
         output_data = json.loads(result.output)
         assert "version" in output_data, (
-            f"Expected 'version' key in JSON output. "
-            f"Got keys: {list(output_data.keys())}"
+            f"Expected 'version' key in JSON output. " f"Got keys: {list(output_data.keys())}"
         )
-        assert output_data["version"] == version, (
-            f"Expected version '{version}', got '{output_data['version']}'"
-        )
+        assert output_data["version"] == version, f"Expected version '{version}', got '{output_data['version']}'"
     except json.JSONDecodeError as e:
         raise AssertionError(f"Invalid JSON output: {e}. Output: {result.output}")
-

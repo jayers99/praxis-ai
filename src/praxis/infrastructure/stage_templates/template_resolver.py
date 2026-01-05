@@ -36,9 +36,7 @@ class TemplateResolver:
     def roots(self) -> list[TemplateRoot]:
         return list(self._roots)
 
-    def resolve_stage(
-        self, domain: Domain, stage: Stage, subtype: str | None
-    ) -> TemplateSelection:
+    def resolve_stage(self, domain: Domain, stage: Stage, subtype: str | None) -> TemplateSelection:
         candidates = stage_template_candidates(domain=domain, stage=stage, subtype=subtype)
         return self._resolve_candidates(candidates)
 

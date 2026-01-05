@@ -157,12 +157,12 @@ def workspace_exists(tmp_path: Path, context: dict[str, Any], monkeypatch: Any) 
     """Create a temporary workspace and set PRAXIS_HOME."""
     workspace_path = tmp_path / "workspace"
     workspace_path.mkdir()
-    
+
     # Create workspace structure
     (workspace_path / "extensions").mkdir()
     (workspace_path / "examples").mkdir()
     (workspace_path / "projects").mkdir()
-    
+
     # Create workspace config with correct filename
     config_path = workspace_path / "workspace-config.yaml"
     config_path.write_text(
@@ -173,7 +173,7 @@ defaults:
   environment: Home
 """
     )
-    
+
     # Set PRAXIS_HOME environment variable
     monkeypatch.setenv("PRAXIS_HOME", str(workspace_path))
     context["workspace_path"] = workspace_path
@@ -198,7 +198,7 @@ privacy_level: personal
 environment: Home
 """
     )
-    
+
     # Create a minimal pipeline state file with required fields
     pipeline_yaml = tmp_path / "pipeline.yaml"
     pipeline_yaml.write_text(

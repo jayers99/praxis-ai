@@ -60,9 +60,7 @@ class TestExecuteRTC:
         assert not result.success
         assert "No active pipeline" in result.errors
 
-    def test_copies_corpus_to_run_directory(
-        self, initialized_pipeline: Path, corpus_dir: Path
-    ) -> None:
+    def test_copies_corpus_to_run_directory(self, initialized_pipeline: Path, corpus_dir: Path) -> None:
         """Copies corpus to pipeline-runs/{id}/rtc-corpus/."""
         state = load_pipeline_state(initialized_pipeline)
         assert state is not None
@@ -70,12 +68,7 @@ class TestExecuteRTC:
         result = execute_rtc(initialized_pipeline)
         assert result.success
 
-        rtc_corpus = (
-            initialized_pipeline
-            / "pipeline-runs"
-            / state.config.pipeline_id
-            / "rtc-corpus"
-        )
+        rtc_corpus = initialized_pipeline / "pipeline-runs" / state.config.pipeline_id / "rtc-corpus"
         assert rtc_corpus.exists()
         assert (rtc_corpus / "notes.md").exists()
         assert (rtc_corpus / "ideas.txt").exists()
@@ -210,9 +203,7 @@ class TestExecuteSAD:
         assert result.output_path.exists()
         assert result.output_path.name == "sad-dispatch.md"
 
-    def test_creates_specialist_response_placeholders(
-        self, initialized_pipeline: Path
-    ) -> None:
+    def test_creates_specialist_response_placeholders(self, initialized_pipeline: Path) -> None:
         """Creates placeholder files for specialist responses."""
         execute_rtc(initialized_pipeline)
         execute_idas(initialized_pipeline)
@@ -221,12 +212,7 @@ class TestExecuteSAD:
         state = load_pipeline_state(initialized_pipeline)
         assert state is not None
 
-        sad_responses = (
-            initialized_pipeline
-            / "pipeline-runs"
-            / state.config.pipeline_id
-            / "sad-responses"
-        )
+        sad_responses = initialized_pipeline / "pipeline-runs" / state.config.pipeline_id / "sad-responses"
         assert sad_responses.exists()
         # Code domain should have architect, security, testing, operations
         assert (sad_responses / "architect-response.md").exists()
@@ -258,12 +244,7 @@ class TestExecuteSAD:
         state = load_pipeline_state(initialized_pipeline)
         assert state is not None
 
-        sad_responses = (
-            initialized_pipeline
-            / "pipeline-runs"
-            / state.config.pipeline_id
-            / "sad-responses"
-        )
+        sad_responses = initialized_pipeline / "pipeline-runs" / state.config.pipeline_id / "sad-responses"
         assert (sad_responses / "researcher-response.md").exists()
 
 
@@ -277,24 +258,15 @@ class TestSingleFileCorpus:
         corpus_file.write_text("# My Research\n\nContent here.")
         return corpus_file
 
-    def test_handles_single_file_corpus(
-        self, praxis_project: Path, single_file_corpus: Path
-    ) -> None:
+    def test_handles_single_file_corpus(self, praxis_project: Path, single_file_corpus: Path) -> None:
         """Handles single file as corpus."""
-        init_pipeline(
-            praxis_project, risk_tier=2, source_corpus_path=single_file_corpus
-        )
+        init_pipeline(praxis_project, risk_tier=2, source_corpus_path=single_file_corpus)
         result = execute_rtc(praxis_project)
         assert result.success
 
         state = load_pipeline_state(praxis_project)
         assert state is not None
 
-        rtc_corpus = (
-            praxis_project
-            / "pipeline-runs"
-            / state.config.pipeline_id
-            / "rtc-corpus"
-        )
+        rtc_corpus = praxis_project / "pipeline-runs" / state.config.pipeline_id / "rtc-corpus"
         assert rtc_corpus.exists()
         assert (rtc_corpus / "research.md").exists()

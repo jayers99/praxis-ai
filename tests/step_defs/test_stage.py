@@ -29,9 +29,7 @@ environment: Home
 
 
 @given(parsers.parse('a project at stage "{stage}" with docs/sod.md'))
-def project_at_stage_with_sod(
-    tmp_path: Path, context: dict[str, Any], stage: str
-) -> None:
+def project_at_stage_with_sod(tmp_path: Path, context: dict[str, Any], stage: str) -> None:
     """Create a project at the given stage with SOD artifact."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -50,9 +48,7 @@ environment: Home
 
 
 @given(parsers.parse('a project at stage "{stage}" with CLAUDE.md'))
-def project_at_stage_with_claude_md(
-    tmp_path: Path, context: dict[str, Any], stage: str
-) -> None:
+def project_at_stage_with_claude_md(tmp_path: Path, context: dict[str, Any], stage: str) -> None:
     """Create a project at the given stage with CLAUDE.md."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -95,9 +91,7 @@ def check_praxis_yaml_stage(context: dict[str, Any], stage: str) -> None:
     project_root = context["project_root"]
     praxis_yaml = project_root / "praxis.yaml"
     content = yaml.safe_load(praxis_yaml.read_text())
-    assert content["stage"] == stage, (
-        f"Expected stage '{stage}', got '{content.get('stage')}'"
-    )
+    assert content["stage"] == stage, f"Expected stage '{stage}', got '{content.get('stage')}'"
 
 
 @then(parsers.parse('CLAUDE.md should show stage "{stage}"'))
@@ -106,6 +100,4 @@ def check_claude_md_stage(context: dict[str, Any], stage: str) -> None:
     project_root = context["project_root"]
     claude_md = project_root / "CLAUDE.md"
     content = claude_md.read_text()
-    assert f"**Stage:** {stage}" in content, (
-        f"Expected '**Stage:** {stage}' in CLAUDE.md. Got: {content}"
-    )
+    assert f"**Stage:** {stage}" in content, f"Expected '**Stage:** {stage}' in CLAUDE.md. Got: {content}"

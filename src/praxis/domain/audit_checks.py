@@ -37,9 +37,7 @@ def _has_hexagonal_dirs(project_root: Path) -> bool:
         return False
 
     # Find package directory (first subdir of src/)
-    packages = [
-        d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
-    ]
+    packages = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")]
     if not packages:
         return False
 
@@ -54,9 +52,7 @@ def _has_main_module(project_root: Path) -> bool:
     if not src_dir.exists():
         return False
 
-    packages = [
-        d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
-    ]
+    packages = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")]
     if not packages:
         return False
 
@@ -242,9 +238,7 @@ CLI_CHECKS: list[CheckDefinition] = [
         category="cli",
         check_fn=_cli_has_entry_point,
         pass_message="CLI entry point exists (console script or __main__.py)",
-        fail_message=(
-            "CLI entry point not found. Add [tool.poetry.scripts] or __main__.py"
-        ),
+        fail_message=("CLI entry point not found. Add [tool.poetry.scripts] or __main__.py"),
         subtypes=["cli"],
     ),
     CheckDefinition(
@@ -284,9 +278,7 @@ def _library_has_exports(project_root: Path) -> bool:
     # Check for __all__ in __init__.py
     src_dir = project_root / "src"
     if src_dir.exists():
-        packages = [
-            d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
-        ]
+        packages = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")]
         if packages:
             init_file = packages[0] / "__init__.py"
             if init_file.exists():
@@ -329,9 +321,7 @@ def _library_has_version(project_root: Path) -> bool:
     if not src_dir.exists():
         return False
 
-    packages = [
-        d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
-    ]
+    packages = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")]
     if not packages:
         return False
 
@@ -356,9 +346,7 @@ def _library_has_docstrings(project_root: Path) -> bool:
     if not src_dir.exists():
         return False
 
-    packages = [
-        d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")
-    ]
+    packages = [d for d in src_dir.iterdir() if d.is_dir() and not d.name.startswith("_")]
     if not packages:
         return False
 
@@ -414,8 +402,7 @@ LIBRARY_CHECKS: list[CheckDefinition] = [
         check_fn=_library_has_exports,
         pass_message="Library exports defined (__all__ or pyproject.toml packages)",
         fail_message=(
-            "Library exports not defined. Add __all__ to __init__.py or configure "
-            "packages in pyproject.toml"
+            "Library exports not defined. Add __all__ to __init__.py or configure " "packages in pyproject.toml"
         ),
         subtypes=["library"],
     ),
@@ -425,8 +412,7 @@ LIBRARY_CHECKS: list[CheckDefinition] = [
         check_fn=_library_has_version,
         pass_message="Version specified (__version__ and pyproject.toml)",
         fail_message=(
-            "Version not properly specified. Add __version__ to __init__.py and "
-            "version to pyproject.toml"
+            "Version not properly specified. Add __version__ to __init__.py and " "version to pyproject.toml"
         ),
         subtypes=["library"],
     ),
@@ -482,10 +468,7 @@ CREATE_CHECKS: list[CheckDefinition] = [
         category="artifact",
         check_fn=lambda p: file_exists_any(p, "docs/brief.md"),
         pass_message="Brief exists (docs/brief.md)",
-        fail_message=(
-            "Brief not found. Create docs/brief.md to formalize your creative "
-            "vision."
-        ),
+        fail_message=("Brief not found. Create docs/brief.md to formalize your creative " "vision."),
         min_stage=Stage.FORMALIZE,
     ),
     CheckDefinition(
@@ -493,17 +476,12 @@ CREATE_CHECKS: list[CheckDefinition] = [
         category="organization",
         check_fn=lambda p: dir_exists(p, "assets"),
         pass_message="Assets organized (assets/ directory exists)",
-        fail_message=(
-            "Assets not organized. Create an assets/ directory for your "
-            "creative outputs."
-        ),
+        fail_message=("Assets not organized. Create an assets/ directory for your " "creative outputs."),
     ),
     CheckDefinition(
         name="prompts_documented",
         category="workflow",
-        check_fn=lambda p: (
-            dir_exists(p, "prompts") or file_exists_any(p, "docs/prompts.md")
-        ),
+        check_fn=lambda p: (dir_exists(p, "prompts") or file_exists_any(p, "docs/prompts.md")),
         pass_message="Prompts documented (prompts/ or docs/prompts.md exists)",
         fail_message=(
             "Prompts not documented. Create prompts/ directory or docs/prompts.md "
@@ -535,10 +513,7 @@ WRITE_CHECKS: list[CheckDefinition] = [
         category="artifact",
         check_fn=lambda p: file_exists_any(p, "docs/brief.md"),
         pass_message="Brief exists (docs/brief.md)",
-        fail_message=(
-            "Brief not found. Create docs/brief.md to formalize your writing "
-            "project."
-        ),
+        fail_message=("Brief not found. Create docs/brief.md to formalize your writing " "project."),
         min_stage=Stage.FORMALIZE,
     ),
     CheckDefinition(
@@ -546,10 +521,7 @@ WRITE_CHECKS: list[CheckDefinition] = [
         category="workflow",
         check_fn=lambda p: file_exists_any(p, "docs/outline.md", "outline.md"),
         pass_message="Outline present (docs/outline.md or outline.md exists)",
-        fail_message=(
-            "Outline not found. Create docs/outline.md or outline.md "
-            "to structure your writing."
-        ),
+        fail_message=("Outline not found. Create docs/outline.md or outline.md " "to structure your writing."),
         min_stage=Stage.SHAPE,
     ),
     CheckDefinition(
@@ -557,10 +529,7 @@ WRITE_CHECKS: list[CheckDefinition] = [
         category="organization",
         check_fn=lambda p: dir_exists(p, "drafts"),
         pass_message="Drafts organized (drafts/ directory exists)",
-        fail_message=(
-            "Drafts not organized. Create a drafts/ directory for your "
-            "work-in-progress."
-        ),
+        fail_message=("Drafts not organized. Create a drafts/ directory for your " "work-in-progress."),
     ),
     CheckDefinition(
         name="citations_present",
@@ -573,10 +542,7 @@ WRITE_CHECKS: list[CheckDefinition] = [
             "bibliography.md",
         ),
         pass_message="Citations present (citations or bibliography file exists)",
-        fail_message=(
-            "Citations not found. Create docs/citations.md or bibliography.md "
-            "to track your sources."
-        ),
+        fail_message=("Citations not found. Create docs/citations.md or bibliography.md " "to track your sources."),
         subtypes=["academic", "journalistic"],
     ),
 ]
@@ -592,30 +558,22 @@ LEARN_CHECKS: list[CheckDefinition] = [
         category="artifact",
         check_fn=lambda p: file_exists_any(p, "docs/plan.md"),
         pass_message="Plan exists (docs/plan.md)",
-        fail_message=(
-            "Plan not found. Create docs/plan.md to formalize your learning "
-            "objectives."
-        ),
+        fail_message=("Plan not found. Create docs/plan.md to formalize your learning " "objectives."),
         min_stage=Stage.FORMALIZE,
     ),
     CheckDefinition(
         name="resources_documented",
         category="workflow",
         check_fn=lambda p: file_exists_any(p, "docs/resources.md", "reading-list.md"),
-        pass_message=(
-            "Resources documented (docs/resources.md or reading-list.md exists)"
-        ),
+        pass_message=("Resources documented (docs/resources.md or reading-list.md exists)"),
         fail_message=(
-            "Resources not documented. Create docs/resources.md or reading-list.md "
-            "to track your learning materials."
+            "Resources not documented. Create docs/resources.md or reading-list.md " "to track your learning materials."
         ),
     ),
     CheckDefinition(
         name="practice_log_present",
         category="workflow",
-        check_fn=lambda p: (
-            file_exists_any(p, "docs/practice-log.md") or dir_exists(p, "practice")
-        ),
+        check_fn=lambda p: (file_exists_any(p, "docs/practice-log.md") or dir_exists(p, "practice")),
         pass_message="Practice log present (docs/practice-log.md or practice/ exists)",
         fail_message=(
             "Practice log not found. Create docs/practice-log.md or practice/ "
@@ -628,10 +586,7 @@ LEARN_CHECKS: list[CheckDefinition] = [
         category="workflow",
         check_fn=lambda p: file_exists_any(p, "docs/progress.md", "log.md"),
         pass_message="Progress tracked (docs/progress.md or log.md exists)",
-        fail_message=(
-            "Progress not tracked. Create docs/progress.md or log.md "
-            "to record your learning journey."
-        ),
+        fail_message=("Progress not tracked. Create docs/progress.md or log.md " "to record your learning journey."),
         subtypes=["course", "exploration"],
     ),
 ]
@@ -647,28 +602,24 @@ OBSERVE_CHECKS: list[CheckDefinition] = [
         category="organization",
         check_fn=lambda p: dir_exists(p, "captures", "inbox"),
         pass_message="Captures organized (captures/ or inbox/ exists)",
-        fail_message=(
-            "Captures not organized. Create captures/ or inbox/ directory "
-            "to collect your observations."
-        ),
+        fail_message=("Captures not organized. Create captures/ or inbox/ directory " "to collect your observations."),
     ),
     CheckDefinition(
         name="index_present",
         category="organization",
         check_fn=lambda p: file_exists_any(p, "index.md", "catalog.md"),
         pass_message="Index present (index.md or catalog.md exists)",
-        fail_message=(
-            "Index not found. Create index.md or catalog.md "
-            "to navigate your captured materials."
-        ),
+        fail_message=("Index not found. Create index.md or catalog.md " "to navigate your captured materials."),
     ),
 ]
 
 
 # Update CHECKS_BY_DOMAIN with new domain checks
-CHECKS_BY_DOMAIN.update({
-    Domain.CREATE: CREATE_CHECKS,
-    Domain.WRITE: WRITE_CHECKS,
-    Domain.OBSERVE: OBSERVE_CHECKS,
-    Domain.LEARN: LEARN_CHECKS,
-})
+CHECKS_BY_DOMAIN.update(
+    {
+        Domain.CREATE: CREATE_CHECKS,
+        Domain.WRITE: WRITE_CHECKS,
+        Domain.OBSERVE: OBSERVE_CHECKS,
+        Domain.LEARN: LEARN_CHECKS,
+    }
+)

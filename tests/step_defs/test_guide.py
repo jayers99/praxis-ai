@@ -27,7 +27,7 @@ def run_command(command: str, context: dict[str, Any]) -> None:
     parts = command.split()
     if parts[0] == "praxis":
         parts = parts[1:]  # Remove "praxis" prefix
-    
+
     result = runner.invoke(app, parts)
     context["result"] = result
     context["exit_code"] = result.exit_code
@@ -38,8 +38,7 @@ def run_command(command: str, context: dict[str, Any]) -> None:
 def check_exit_code(expected_code: int, context: dict[str, Any]) -> None:
     """Check the exit code matches expected value."""
     assert context["exit_code"] == expected_code, (
-        f"Expected exit code {expected_code}, got {context['exit_code']}\n"
-        f"Output: {context['output']}"
+        f"Expected exit code {expected_code}, got {context['exit_code']}\n" f"Output: {context['output']}"
     )
 
 
@@ -67,12 +66,10 @@ def check_formalize_hinge(context: dict[str, Any]) -> None:
     """Check that Formalize hinge concept is explained."""
     output = context["output"]
     # Look for key hinge concept phrases
-    assert "hinge" in output.lower() or "HINGE" in output, (
-        "Formalize hinge concept not found in output"
-    )
-    assert "exploration" in output.lower() and "execution" in output.lower(), (
-        "Exploration/execution boundary not explained"
-    )
+    assert "hinge" in output.lower() or "HINGE" in output, "Formalize hinge concept not found in output"
+    assert (
+        "exploration" in output.lower() and "execution" in output.lower()
+    ), "Exploration/execution boundary not explained"
 
 
 @then(parsers.parse('the output contains a reference to "{file_path}"'))
@@ -112,22 +109,16 @@ def check_behavioral_constraints(context: dict[str, Any]) -> None:
     # Look for constraint-related keywords
     constraint_keywords = ["storage", "AI", "collaboration", "artifact"]
     found = sum(1 for kw in constraint_keywords if kw.lower() in output.lower())
-    assert found >= 2, (
-        f"Expected behavioral constraint keywords, found only {found}"
-    )
+    assert found >= 2, f"Expected behavioral constraint keywords, found only {found}"
 
 
 @then("the output describes the code domain purpose")
 def check_code_domain_purpose(context: dict[str, Any]) -> None:
     """Check that code domain purpose is described."""
     output = context["output"]
-    assert "code" in output.lower() or "CODE" in output, (
-        "Code domain not identified in output"
-    )
+    assert "code" in output.lower() or "CODE" in output, "Code domain not identified in output"
     # Check for purpose-related content
-    assert "functional" in output.lower() or "system" in output.lower(), (
-        "Code domain purpose not described"
-    )
+    assert "functional" in output.lower() or "system" in output.lower(), "Code domain purpose not described"
 
 
 @then(parsers.parse('the output mentions the required formalize artifact "{artifact}"'))

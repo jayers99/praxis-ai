@@ -288,9 +288,7 @@ def run_coverage(project_root: Path, threshold: int) -> CoverageResult:
             coverage_percent=coverage_pct,
             threshold=threshold,
             output=result.output,
-            error="" if meets_threshold else (
-                f"Coverage {coverage_pct:.0f}% is below threshold {threshold}%"
-            ),
+            error="" if meets_threshold else (f"Coverage {coverage_pct:.0f}% is below threshold {threshold}%"),
         )
 
     return CoverageResult(

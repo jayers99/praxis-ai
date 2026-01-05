@@ -17,9 +17,7 @@ scenarios("../features/extension_templates.feature")
 
 
 @given("I am in a temporary directory")
-def setup_temp_dir(
-    tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest
-) -> None:
+def setup_temp_dir(tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest) -> None:
     """Set up temporary directory with cleanup."""
     context["project_root"] = tmp_path
     original_dir = os.getcwd()
@@ -120,6 +118,7 @@ def add_template_contribution_table(context: dict[str, Any], datatable: Any) -> 
 
         # Parse subtypes (e.g., '["mobile"]' -> ["mobile"])
         import ast
+
         try:
             subtypes = ast.literal_eval(subtypes_str) if subtypes_str else []
         except (ValueError, SyntaxError):
@@ -157,15 +156,11 @@ def create_template_file(context: dict[str, Any], template_path: str) -> None:
     ext_dir = context[f"ext_{ext_name}_dir"]
     template_file = ext_dir / template_path
     template_file.parent.mkdir(parents=True, exist_ok=True)
-    template_file.write_text(
-        f"# Mobile SOD Template\n\nThis is a mobile-specific template from {ext_name}."
-    )
+    template_file.write_text(f"# Mobile SOD Template\n\nThis is a mobile-specific template from {ext_name}.")
 
 
 @given(parsers.parse('I have a project with domain "{domain}" and subtype "{subtype}"'))
-def create_project_with_subtype(
-    context: dict[str, Any], domain: str, subtype: str
-) -> None:
+def create_project_with_subtype(context: dict[str, Any], domain: str, subtype: str) -> None:
     """Create a project with specified domain and subtype."""
     project_root = context["project_root"]
     praxis_yaml = project_root / "praxis.yaml"
@@ -182,7 +177,7 @@ subtype: {subtype}
     docs_dir.mkdir(exist_ok=True)
 
 
-@given("the manifest declares a template contribution for subtype \"mobile\"")
+@given('the manifest declares a template contribution for subtype "mobile"')
 def add_mobile_template_contribution(context: dict[str, Any]) -> None:
     """Add a mobile-specific template contribution."""
     # Get the last created extension
@@ -227,9 +222,7 @@ def create_mobile_template(context: dict[str, Any]) -> None:
     ext_dir = context[f"ext_{ext_name}_dir"]
     template_file = ext_dir / "templates/domain/code/subtype/mobile/stage/formalize.md"
     template_file.parent.mkdir(parents=True, exist_ok=True)
-    template_file.write_text(
-        "# Mobile Formalize\n\nMobile-specific formalize template."
-    )
+    template_file.write_text("# Mobile Formalize\n\nMobile-specific formalize template.")
 
 
 @given("the manifest declares a template contribution that overlaps with core")
@@ -391,10 +384,7 @@ def check_command_success(context: dict[str, Any]) -> None:
     assert result.exit_code == 0, f"Command failed: {result.output}"
 
 
-@then(
-    'the output contains "extension:mobile-pack" '
-    "or shows the contributed template was used"
-)
+@then('the output contains "extension:mobile-pack" ' "or shows the contributed template was used")
 def check_extension_provenance(context: dict[str, Any]) -> None:
     """Check that extension provenance is visible or template was used."""
     result = context["result"]

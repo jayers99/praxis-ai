@@ -34,10 +34,7 @@ class DomainSpecification(BaseModel):
     # Lifecycle configuration
     formalize_artifact_name: str | None = Field(
         default=None,
-        description=(
-            "Name of the formalize artifact "
-            "(e.g., 'Solution Overview Document')"
-        ),
+        description=("Name of the formalize artifact " "(e.g., 'Solution Overview Document')"),
     )
     formalize_artifact_path: str | None = Field(
         default=None,
@@ -68,9 +65,7 @@ class DomainSpecification(BaseModel):
     # AI permissions
     ai_permissions: dict[str, str] = Field(
         default_factory=dict,
-        description=(
-            "AI operation permissions: suggest, complete, generate, transform, execute"
-        ),
+        description=("AI operation permissions: suggest, complete, generate, transform, execute"),
     )
     ai_constraints: list[AIConstraint] = Field(
         default_factory=list,

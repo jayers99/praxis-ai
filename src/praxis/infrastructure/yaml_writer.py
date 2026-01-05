@@ -8,9 +8,7 @@ from typing import Any
 import yaml
 
 
-def update_praxis_yaml(
-    project_root: Path, **updates: Any
-) -> tuple[bool, str | None]:
+def update_praxis_yaml(project_root: Path, **updates: Any) -> tuple[bool, str | None]:
     """Update specific fields in praxis.yaml while preserving structure.
 
     Args:
@@ -35,9 +33,7 @@ def update_praxis_yaml(
             elif isinstance(value, list):
                 # Handle list of items (potentially Pydantic models)
                 content[key] = [
-                    item.model_dump(mode="python", exclude_none=True)
-                    if hasattr(item, "model_dump")
-                    else item
+                    item.model_dump(mode="python", exclude_none=True) if hasattr(item, "model_dump") else item
                     for item in value
                 ]
             elif hasattr(value, "model_dump"):  # Pydantic model
@@ -46,9 +42,7 @@ def update_praxis_yaml(
                 content[key] = value
 
         # Write back
-        yaml_path.write_text(
-            yaml.safe_dump(content, default_flow_style=False, sort_keys=False)
-        )
+        yaml_path.write_text(yaml.safe_dump(content, default_flow_style=False, sort_keys=False))
         return True, None
     except Exception as e:
         return False, f"Failed to update praxis.yaml: {e}"

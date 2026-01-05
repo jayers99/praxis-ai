@@ -61,8 +61,13 @@ def run_init_with_force(
     result = cli_runner.invoke(
         app,
         [
-            "init", str(project_root),
-            "--domain", "code", "--privacy", "personal", "--force",
+            "init",
+            str(project_root),
+            "--domain",
+            "code",
+            "--privacy",
+            "personal",
+            "--force",
         ],
     )
     context["result"] = result
@@ -75,9 +80,7 @@ def check_praxis_yaml_domain(context: dict[str, Any], domain: str) -> None:
     praxis_yaml = project_root / "praxis.yaml"
     assert praxis_yaml.exists(), "praxis.yaml should exist"
     content = yaml.safe_load(praxis_yaml.read_text())
-    assert content["domain"] == domain, (
-        f"Expected domain '{domain}', got '{content.get('domain')}'"
-    )
+    assert content["domain"] == domain, f"Expected domain '{domain}', got '{content.get('domain')}'"
 
 
 @then("CLAUDE.md should exist")
@@ -104,6 +107,4 @@ def check_praxis_yaml_updated(context: dict[str, Any]) -> None:
     current_content = praxis_yaml.read_text()
     # The domain should now be "code" instead of "write"
     content = yaml.safe_load(current_content)
-    assert content["domain"] == "code", (
-        f"Expected domain 'code' after --force, got '{content.get('domain')}'"
-    )
+    assert content["domain"] == "code", f"Expected domain 'code' after --force, got '{content.get('domain')}'"

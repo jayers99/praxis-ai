@@ -46,15 +46,14 @@ def verify_checklist_count(context: dict[str, Any]) -> None:
 def verify_checklist_structure(context: dict[str, Any]) -> None:
     """Verify each checklist has required sections."""
     required_sections = ["Entry Criteria", "Exit Criteria", "Guidance", "References"]
-    
+
     for checklist_file in context["checklist_files"]:
         if "-" in checklist_file.stem:
             # Skip addenda for this check
             continue
         content = checklist_file.read_text()
         for section in required_sections:
-            assert f"## {section}" in content, \
-                f"{checklist_file.name} missing section: {section}"
+            assert f"## {section}" in content, f"{checklist_file.name} missing section: {section}"
 
 
 @given('a project at stage "formalize"')
@@ -168,8 +167,7 @@ def output_no_missing_addendum(context: dict[str, Any]) -> None:
     """Verify output doesn't reference non-existent addendum."""
     result = context["result"]
     # Should not show capture-code.md since it doesn't exist
-    assert "capture-code.md" not in result.output, \
-        f"Should not reference missing addendum, got:\n{result.output}"
+    assert "capture-code.md" not in result.output, f"Should not reference missing addendum, got:\n{result.output}"
 
 
 @given('the checklist file "core/checklists/formalize.md"')

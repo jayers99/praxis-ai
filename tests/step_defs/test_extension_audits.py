@@ -18,7 +18,7 @@ def setup_workspace(tmp_path: Path, context: dict[str, Any]) -> Path:
     """Create a workspace structure with PRAXIS_HOME."""
     workspace_path = tmp_path / "workspace"
     workspace_path.mkdir()
-    
+
     # Create workspace-config.yaml
     config_path = workspace_path / "workspace-config.yaml"
     config_path.write_text(
@@ -33,35 +33,33 @@ defaults:
   environment: Home
 """
     )
-    
+
     # Create extensions directory
     extensions_path = workspace_path / "extensions"
     extensions_path.mkdir()
-    
+
     context["workspace_path"] = workspace_path
     context["extensions_path"] = extensions_path
     return workspace_path
 
 
-def add_extension_to_workspace(
-    context: dict[str, Any], extension_name: str, manifest_content: str
-) -> None:
+def add_extension_to_workspace(context: dict[str, Any], extension_name: str, manifest_content: str) -> None:
     """Add an extension to the workspace."""
     extensions_path = context["extensions_path"]
     ext_path = extensions_path / extension_name
     ext_path.mkdir(exist_ok=True)
-    
+
     # Write manifest
     manifest_path = ext_path / "praxis-extension.yaml"
     manifest_path.write_text(manifest_content)
-    
+
     # Update workspace config to include this extension
     workspace_path = context["workspace_path"]
     config_path = workspace_path / "workspace-config.yaml"
-    
+
     # Read current config
     config_text = config_path.read_text()
-    
+
     # Add extension to installed list if not already there
     if "installed_extensions:" in config_text:
         config_lines = config_text.split("\n")
@@ -79,6 +77,7 @@ def add_extension_to_workspace(
 
 # Background steps
 
+
 @given("I am in a temporary directory")
 def temp_directory(tmp_path: Path, context: dict[str, Any]) -> None:
     """Set up temporary directory."""
@@ -94,6 +93,7 @@ def workspace_with_praxis_home(tmp_path: Path, context: dict[str, Any], monkeypa
 
 
 # Happy Path Scenarios
+
 
 @given(parsers.parse('an installed extension "{ext_name}" with praxis-extension.yaml'))
 def extension_with_manifest(context: dict[str, Any], ext_name: str) -> None:
@@ -114,7 +114,7 @@ def manifest_declares_audit_check(context: dict[str, Any], check_name: str, doma
     """Add an audit check to the extension manifest."""
     ext_name = context.get("current_extension", "test-pack")
     ext_path = context["extensions_path"] / ext_name
-    
+
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
 description: Test extension
@@ -132,24 +132,22 @@ contributions:
           fail_message: "mobile.json not found"
           severity: "warning"
 """
-    
+
     manifest_path = ext_path / "praxis-extension.yaml"
     manifest_path.write_text(manifest)
-    
+
     # Store check name for verification
     context["check_name"] = f"{ext_name}:{check_name}"
     context["check_message"] = "mobile.json not found"
 
 
 @given(parsers.parse('I have a project with domain "{domain}" and subtype "{subtype}"'))
-def project_with_domain_and_subtype(
-    tmp_path: Path, context: dict[str, Any], domain: str, subtype: str
-) -> None:
+def project_with_domain_and_subtype(tmp_path: Path, context: dict[str, Any], domain: str, subtype: str) -> None:
     """Create a project with specified domain and subtype."""
     project_root = tmp_path / "test_project"
     project_root.mkdir(exist_ok=True)
     context["project_root"] = project_root
-    
+
     praxis_yaml = project_root / "praxis.yaml"
     praxis_yaml.write_text(
         f"""domain: {domain}
@@ -162,9 +160,7 @@ environment: Home
 
 
 @given(parsers.parse('an installed extension "{ext_name}" with a "{check_type}" audit check for "{path}"'))
-def extension_with_check_type(
-    context: dict[str, Any], ext_name: str, check_type: str, path: str
-) -> None:
+def extension_with_check_type(context: dict[str, Any], ext_name: str, check_type: str, path: str) -> None:
     """Create an extension with a specific check type."""
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
@@ -188,13 +184,13 @@ contributions:
     context["check_fail_message"] = "Check failed"
 
 
-@given("I have a code project at stage \"capture\"")
+@given('I have a code project at stage "capture"')
 def code_project_at_capture(tmp_path: Path, context: dict[str, Any]) -> None:
     """Create a code project at capture stage."""
     project_root = tmp_path / "test_project"
     project_root.mkdir(exist_ok=True)
     context["project_root"] = project_root
-    
+
     praxis_yaml = project_root / "praxis.yaml"
     praxis_yaml.write_text(
         """domain: code
@@ -232,9 +228,7 @@ def project_contains_directory(context: dict[str, Any], dirname: str) -> None:
 
 
 @given(parsers.parse('an installed extension "{ext_name}" with a "{check_type}" audit check'))
-def extension_with_file_contains_check(
-    context: dict[str, Any], ext_name: str, check_type: str
-) -> None:
+def extension_with_file_contains_check(context: dict[str, Any], ext_name: str, check_type: str) -> None:
     """Create an extension with file_contains check (pattern to be set later)."""
     context["current_extension"] = ext_name
     context["check_type"] = check_type
@@ -244,10 +238,10 @@ def extension_with_file_contains_check(
 def check_looks_for_pattern(context: dict[str, Any], pattern: str, path: str) -> None:
     """Set up file_contains check with pattern."""
     ext_name = context["current_extension"]
-    
+
     # Escape pattern for YAML (replace backslashes)
     yaml_pattern = pattern.replace("\\", "\\\\")
-    
+
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
 description: Test extension
@@ -284,10 +278,9 @@ name = "test-project"
 
 # Filtering Scenarios
 
+
 @given(parsers.parse('an installed extension "{ext_name}" contributing audit checks for subtype "{subtype}"'))
-def extension_contributing_for_subtype(
-    context: dict[str, Any], ext_name: str, subtype: str
-) -> None:
+def extension_contributing_for_subtype(context: dict[str, Any], ext_name: str, subtype: str) -> None:
     """Create an extension with subtype-specific checks."""
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
@@ -316,7 +309,7 @@ def code_domain_project(tmp_path: Path, context: dict[str, Any]) -> None:
     project_root = tmp_path / "test_project"
     project_root.mkdir(exist_ok=True)
     context["project_root"] = project_root
-    
+
     praxis_yaml = project_root / "praxis.yaml"
     praxis_yaml.write_text(
         """domain: code
@@ -328,9 +321,7 @@ environment: Home
 
 
 @given(parsers.parse('an installed extension "{ext_name}" contributing audit checks for domain "{domain}"'))
-def extension_contributing_for_domain(
-    context: dict[str, Any], ext_name: str, domain: str
-) -> None:
+def extension_contributing_for_domain(context: dict[str, Any], ext_name: str, domain: str) -> None:
     """Create an extension with domain-specific checks."""
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
@@ -353,9 +344,7 @@ contributions:
 
 
 @given(parsers.parse('an installed extension "{ext_name}" with an audit check with min_stage "{min_stage}"'))
-def extension_with_min_stage_check(
-    context: dict[str, Any], ext_name: str, min_stage: str
-) -> None:
+def extension_with_min_stage_check(context: dict[str, Any], ext_name: str, min_stage: str) -> None:
     """Create an extension with min_stage filtering."""
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
@@ -378,13 +367,13 @@ contributions:
     context["stage_check_name"] = f"{ext_name}:stage_filtered_check"
 
 
-@given("I have a code project at stage \"explore\"")
+@given('I have a code project at stage "explore"')
 def code_project_at_explore(tmp_path: Path, context: dict[str, Any]) -> None:
     """Create a code project at explore stage."""
     project_root = tmp_path / "test_project"
     project_root.mkdir(exist_ok=True)
     context["project_root"] = project_root
-    
+
     praxis_yaml = project_root / "praxis.yaml"
     praxis_yaml.write_text(
         """domain: code
@@ -396,6 +385,7 @@ environment: Home
 
 
 # Error Handling Scenarios
+
 
 @given(parsers.parse('an installed extension "{ext_name}" with a malformed audit check definition'))
 def extension_with_malformed_check(context: dict[str, Any], ext_name: str) -> None:
@@ -421,9 +411,7 @@ contributions:
 
 
 @given(parsers.parse('an installed extension "{ext_name}" with an audit check using check_type "{check_type}"'))
-def extension_with_unknown_check_type(
-    context: dict[str, Any], ext_name: str, check_type: str
-) -> None:
+def extension_with_unknown_check_type(context: dict[str, Any], ext_name: str, check_type: str) -> None:
     """Create an extension with an unsupported check type."""
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
@@ -461,7 +449,7 @@ def extension_with_file_contains_basic(context: dict[str, Any], ext_name: str) -
 def pattern_with_invalid_regex(context: dict[str, Any], pattern: str) -> None:
     """Set up file_contains check with invalid regex."""
     ext_name = context["current_extension"]
-    
+
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
 description: Test extension
@@ -491,10 +479,9 @@ contributions:
 
 # Multi-Extension Scenarios
 
+
 @given(parsers.parse('an installed extension "{ext_name}" contributing check "{check_name}"'))
-def extension_contributing_named_check(
-    context: dict[str, Any], ext_name: str, check_name: str
-) -> None:
+def extension_contributing_named_check(context: dict[str, Any], ext_name: str, check_name: str) -> None:
     """Create an extension with a named check."""
     manifest = f"""manifest_version: "0.1"
 name: {ext_name}
@@ -513,7 +500,7 @@ contributions:
           severity: "warning"
 """
     add_extension_to_workspace(context, ext_name, manifest)
-    
+
     # Track checks for ordering validation
     if "extension_checks" not in context:
         context["extension_checks"] = []
@@ -521,6 +508,7 @@ contributions:
 
 
 # When steps
+
 
 @when('I run "praxis audit"')
 def run_praxis_audit(cli_runner: CliRunner, context: dict[str, Any]) -> None:
@@ -531,16 +519,14 @@ def run_praxis_audit(cli_runner: CliRunner, context: dict[str, Any]) -> None:
 
 
 @when('I run "praxis audit" in a code project')
-def run_praxis_audit_in_code_project(
-    cli_runner: CliRunner, context: dict[str, Any], tmp_path: Path
-) -> None:
+def run_praxis_audit_in_code_project(cli_runner: CliRunner, context: dict[str, Any], tmp_path: Path) -> None:
     """Run praxis audit in a code project."""
     if "project_root" not in context:
         # Create a basic code project
         project_root = tmp_path / "test_project"
         project_root.mkdir(exist_ok=True)
         context["project_root"] = project_root
-        
+
         praxis_yaml = project_root / "praxis.yaml"
         praxis_yaml.write_text(
             """domain: code
@@ -549,13 +535,14 @@ privacy_level: personal
 environment: Home
 """
         )
-    
+
     project_root = context["project_root"]
     result = cli_runner.invoke(app, ["audit", str(project_root)])
     context["result"] = result
 
 
 # Then steps
+
 
 @then("the command succeeds")
 def command_succeeds(context: dict[str, Any]) -> None:
@@ -591,9 +578,7 @@ def check_fails_with_message(context: dict[str, Any]) -> None:
 def check_passes(context: dict[str, Any]) -> None:
     """Verify the check passed."""
     result = context["result"]
-    assert "passed" in result.output.lower() or "✓" in result.output, (
-        f"Expected check to pass. Got: {result.output}"
-    )
+    assert "passed" in result.output.lower() or "✓" in result.output, f"Expected check to pass. Got: {result.output}"
 
 
 @then("the mobile-only audit checks are not executed")
@@ -601,9 +586,7 @@ def mobile_checks_not_executed(context: dict[str, Any]) -> None:
     """Verify mobile-specific checks were not executed."""
     result = context["result"]
     check_name = context.get("subtype_check_name", "mobile-pack:subtype_specific_check")
-    assert check_name not in result.output, (
-        f"Did not expect '{check_name}' in output. Got: {result.output}"
-    )
+    assert check_name not in result.output, f"Did not expect '{check_name}' in output. Got: {result.output}"
 
 
 @then("the create-only audit checks are not executed")
@@ -611,9 +594,7 @@ def create_checks_not_executed(context: dict[str, Any]) -> None:
     """Verify create-specific checks were not executed."""
     result = context["result"]
     check_name = context.get("domain_check_name", "create-pack:domain_specific_check")
-    assert check_name not in result.output, (
-        f"Did not expect '{check_name}' in output. Got: {result.output}"
-    )
+    assert check_name not in result.output, f"Did not expect '{check_name}' in output. Got: {result.output}"
 
 
 @then("the check is not executed")
@@ -621,9 +602,7 @@ def check_not_executed(context: dict[str, Any]) -> None:
     """Verify the check was not executed."""
     result = context["result"]
     check_name = context.get("stage_check_name", "formalize-pack:stage_filtered_check")
-    assert check_name not in result.output, (
-        f"Did not expect '{check_name}' in output. Got: {result.output}"
-    )
+    assert check_name not in result.output, f"Did not expect '{check_name}' in output. Got: {result.output}"
 
 
 @then("the malformed check is skipped with a warning")
@@ -631,9 +610,9 @@ def malformed_check_skipped(context: dict[str, Any]) -> None:
     """Verify malformed check was skipped with a warning."""
     result = context["result"]
     # Check for warning about malformed check
-    assert "warning" in result.output.lower() or "invalid" in result.output.lower() or result.exit_code == 0, (
-        f"Expected warning about malformed check. Got: {result.output}"
-    )
+    assert (
+        "warning" in result.output.lower() or "invalid" in result.output.lower() or result.exit_code == 0
+    ), f"Expected warning about malformed check. Got: {result.output}"
 
 
 @then("other valid checks are executed normally")
@@ -641,9 +620,9 @@ def other_checks_executed(context: dict[str, Any]) -> None:
     """Verify other checks still executed."""
     result = context["result"]
     # Should have at least some checks executed (core checks)
-    assert "passed" in result.output.lower() or "warning" in result.output.lower() or "failed" in result.output.lower(), (
-        f"Expected some checks to execute. Got: {result.output}"
-    )
+    assert (
+        "passed" in result.output.lower() or "warning" in result.output.lower() or "failed" in result.output.lower()
+    ), f"Expected some checks to execute. Got: {result.output}"
 
 
 @then("the check is skipped with a warning about unsupported check_type")
@@ -659,9 +638,9 @@ def other_checks_continue(context: dict[str, Any]) -> None:
     """Verify other checks continued to execute."""
     result = context["result"]
     # Should have valid_check in output
-    assert "valid_check" in result.output or "Valid check" in result.output or result.exit_code == 0, (
-        f"Expected other checks to execute. Got: {result.output}"
-    )
+    assert (
+        "valid_check" in result.output or "Valid check" in result.output or result.exit_code == 0
+    ), f"Expected other checks to execute. Got: {result.output}"
 
 
 @then("the check is skipped with a warning about invalid regex")
@@ -686,10 +665,10 @@ def check_order(context: dict[str, Any], check_a: str, check_b: str) -> None:
     """Verify check order in output."""
     result = context["result"]
     output = result.output
-    
+
     pos_a = output.find(check_a)
     pos_b = output.find(check_b)
-    
+
     assert pos_a >= 0, f"Expected '{check_a}' in output. Got: {output}"
     assert pos_b >= 0, f"Expected '{check_b}' in output. Got: {output}"
     assert pos_a < pos_b, f"Expected '{check_a}' before '{check_b}'. Got: {output}"

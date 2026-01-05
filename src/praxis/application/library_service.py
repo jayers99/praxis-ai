@@ -148,14 +148,16 @@ def query_library_service(
     # Convert sources to serializable format
     sources = []
     for source in response.sources:
-        sources.append({
-            "artifact_id": source.artifact_id,
-            "title": source.title,
-            "path": str(source.path),
-            "consensus": source.consensus,
-            "date": source.date,
-            "key_finding": source.key_finding,
-        })
+        sources.append(
+            {
+                "artifact_id": source.artifact_id,
+                "title": source.title,
+                "path": str(source.path),
+                "consensus": source.consensus,
+                "date": source.date,
+                "key_finding": source.key_finding,
+            }
+        )
 
     return LibraryQueryResult(
         success=True,
@@ -212,15 +214,17 @@ def search_library_service(
     # Convert to serializable format
     match_list = []
     for match in matches:
-        match_list.append({
-            "id": match.id,
-            "title": match.title,
-            "path": str(match.path),
-            "topic": match.topic,
-            "consensus": match.consensus,
-            "date": match.date,
-            "relevance_score": match.relevance_score,
-        })
+        match_list.append(
+            {
+                "id": match.id,
+                "title": match.title,
+                "path": str(match.path),
+                "topic": match.topic,
+                "consensus": match.consensus,
+                "date": match.date,
+                "relevance_score": match.relevance_score,
+            }
+        )
 
     return LibrarySearchResult(
         success=True,
@@ -276,9 +280,7 @@ def cite_artifact(
     # Format citation
     # Format: [Title](path) - Consensus: {consensus}, Date: {date}
     formatted = (
-        f"[{citation.title}]({citation.path})\n"
-        f"  Consensus: {citation.consensus}\n"
-        f"  Date: {citation.date}"
+        f"[{citation.title}]({citation.path})\n" f"  Consensus: {citation.consensus}\n" f"  Date: {citation.date}"
     )
 
     if citation.key_finding:
@@ -370,12 +372,14 @@ def check_stale(
         artifact_date = artifact.get("date", "")
         # Simple string comparison works for YYYY-MM-DD format
         if artifact_date and artifact_date < threshold_str:
-            stale_artifacts.append({
-                "id": artifact["id"],
-                "title": artifact["title"],
-                "date": artifact_date,
-                "path": artifact["path"],
-            })
+            stale_artifacts.append(
+                {
+                    "id": artifact["id"],
+                    "title": artifact["title"],
+                    "date": artifact_date,
+                    "path": artifact["path"],
+                }
+            )
 
     return LibraryStaleResult(
         success=True,

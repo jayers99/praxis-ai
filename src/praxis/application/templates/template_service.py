@@ -126,9 +126,7 @@ def render_stage_templates(
     # Build extension template roots with subtype filtering
     extension_roots: list[TemplateRoot] | None = None
     if extension_manifests:
-        extension_roots = _build_extension_template_roots(
-            extension_manifests, subtype
-        )
+        extension_roots = _build_extension_template_roots(extension_manifests, subtype)
 
     roots = _default_template_roots(
         project_root,
@@ -149,9 +147,7 @@ def render_stage_templates(
 
     for stage in stages_to_render:
         try:
-            selection = resolver.resolve_stage(
-                domain=domain, stage=stage, subtype=subtype
-            )
+            selection = resolver.resolve_stage(domain=domain, stage=stage, subtype=subtype)
             dest = project_root / "docs" / f"{stage.value}.md"
             ok, err, status = render_template_to_file(
                 template_path=selection.template_path,
@@ -184,9 +180,7 @@ def render_stage_templates(
         except Exception as e:  # keep going, report
             result.success = False
             result.errors.append(str(e))
-            result.rendered.append(
-                RenderedFile(destination=project_root, status="error", error=str(e))
-            )
+            result.rendered.append(RenderedFile(destination=project_root, status="error", error=str(e)))
 
     _render_minimal_domain_artifact_if_needed(
         project_root=project_root,
@@ -232,8 +226,7 @@ def _render_minimal_domain_artifact_if_needed(
     elif domain == Domain.OBSERVE:
         # Observe domain has no formalize artifact
         msg = (
-            "Observe domain has no formalize artifact. "
-            "Observe is for raw capture and does not cross into execution."
+            "Observe domain has no formalize artifact. " "Observe is for raw capture and does not cross into execution."
         )
         result.info.append(msg)
         return

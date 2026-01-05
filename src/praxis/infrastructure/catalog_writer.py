@@ -13,9 +13,7 @@ from pathlib import Path
 from praxis.domain.catalog import CatalogEntry
 
 
-def _find_section_boundaries(
-    content: str, section_header: str
-) -> tuple[int, int] | None:
+def _find_section_boundaries(content: str, section_header: str) -> tuple[int, int] | None:
     """Find the start and end positions of a markdown section.
 
     Args:
@@ -66,10 +64,7 @@ def _update_quick_reference(content: str, entry: CatalogEntry) -> str:
     section = content[start_pos:end_pos]
 
     # Parse existing table
-    table_pattern = (
-        r"\| \[([^\]]+)\]\(([^\)]+)\) \| ([^\|]+) \| "
-        r"([^\|]+) \| ([^\|]+) \| ([^\|]+) \|"
-    )
+    table_pattern = r"\| \[([^\]]+)\]\(([^\)]+)\) \| ([^\|]+) \| " r"([^\|]+) \| ([^\|]+) \| ([^\|]+) \|"
 
     rows = []
     for match in re.finditer(table_pattern, section):
@@ -102,9 +97,7 @@ def _update_quick_reference(content: str, entry: CatalogEntry) -> str:
     ]
     for row in rows:
         date, row_id, row_path, title, topic, consensus = row
-        table_lines.append(
-            f"| [{row_id}]({row_path}) | {title} | {topic} | {consensus} | {date} |"
-        )
+        table_lines.append(f"| [{row_id}]({row_path}) | {title} | {topic} | {consensus} | {date} |")
 
     new_section = "\n".join(table_lines) + "\n"
 
@@ -137,10 +130,7 @@ def _update_by_topic(content: str, entry: CatalogEntry) -> str:
     topic_match = re.search(topic_pattern, section)
 
     keywords_str = ", ".join(entry.keywords)
-    new_entry_line = (
-        f"| [{entry.id}]({entry.path}) | {entry.title} | "
-        f"{entry.consensus} | {keywords_str} |\n"
-    )
+    new_entry_line = f"| [{entry.id}]({entry.path}) | {entry.title} | " f"{entry.consensus} | {keywords_str} |\n"
 
     if topic_match:
         # Topic exists, add to it
@@ -165,14 +155,10 @@ def _update_by_topic(content: str, entry: CatalogEntry) -> str:
         else:
             # No table yet, create it
             new_topic_section = (
-                "\n| ID | Title | Consensus | Keywords |\n"
-                "|----|-------|-----------|----------|\n"
-                + new_entry_line
+                "\n| ID | Title | Consensus | Keywords |\n" "|----|-------|-----------|----------|\n" + new_entry_line
             )
 
-        new_section = (
-            section[:topic_start] + new_topic_section + section[topic_end:]
-        )
+        new_section = section[:topic_start] + new_topic_section + section[topic_end:]
     else:
         # Topic doesn't exist, create new subsection
         # Insert alphabetically among existing topics
@@ -193,9 +179,7 @@ def _update_by_topic(content: str, entry: CatalogEntry) -> str:
         new_topic_block = (
             f"\n### {entry.topic.title()}\n\n"
             "| ID | Title | Consensus | Keywords |\n"
-            "|----|-------|-----------|----------|\n"
-            + new_entry_line
-            + "\n"
+            "|----|-------|-----------|----------|\n" + new_entry_line + "\n"
         )
 
         new_section = section[:insert_pos] + new_topic_block + section[insert_pos:]
@@ -254,10 +238,7 @@ def _update_by_consensus(content: str, entry: CatalogEntry) -> str:
 
     # Create new entry line
     keywords_str = ", ".join(entry.keywords[:3])  # Show first 3 keywords
-    new_entry_line = (
-        f"- [{entry.title}]({entry.path}) — "
-        f"{entry.topic} — {keywords_str}\n"
-    )
+    new_entry_line = f"- [{entry.title}]({entry.path}) — " f"{entry.topic} — {keywords_str}\n"
 
     # Insert at beginning of subsection (after blank line if exists)
     subsection_content = section[subsection_start:subsection_end]
@@ -271,11 +252,7 @@ def _update_by_consensus(content: str, entry: CatalogEntry) -> str:
     lines.insert(insert_idx, new_entry_line.rstrip())
     new_subsection_content = "\n".join(lines)
 
-    new_section = (
-        section[:subsection_start]
-        + new_subsection_content
-        + section[subsection_end:]
-    )
+    new_section = section[:subsection_start] + new_subsection_content + section[subsection_end:]
 
     return content[:start_pos] + new_section + content[end_pos:]
 
@@ -328,11 +305,7 @@ def _update_keyword_index(content: str, entry: CatalogEntry) -> str:
             lines.insert(insert_idx, new_entry_line.rstrip())
             new_keyword_content = "\n".join(lines)
 
-            section = (
-                section[:keyword_start]
-                + new_keyword_content
-                + section[keyword_end:]
-            )
+            section = section[:keyword_start] + new_keyword_content + section[keyword_end:]
         else:
             # Keyword section doesn't exist, create it
             # Find alphabetical insertion point
@@ -349,9 +322,7 @@ def _update_keyword_index(content: str, entry: CatalogEntry) -> str:
                 # Add at end
                 insert_pos = len(section) - 1
 
-            new_keyword_block = (
-                f"\n### {keyword}\n" + new_entry_line + "\n"
-            )
+            new_keyword_block = f"\n### {keyword}\n" + new_entry_line + "\n"
 
             section = section[:insert_pos] + new_keyword_block + section[insert_pos:]
 
@@ -431,9 +402,7 @@ def update_catalog(catalog_path: Path, entry: CatalogEntry) -> None:
     if match:
         current_count = int(match.group(1))
         new_count = current_count + 1
-        content = re.sub(
-            total_pattern, f"_Total artifacts: {new_count}_", content
-        )
+        content = re.sub(total_pattern, f"_Total artifacts: {new_count}_", content)
 
     # Update last updated timestamp
     today = datetime.now().strftime("%Y-%m-%d")

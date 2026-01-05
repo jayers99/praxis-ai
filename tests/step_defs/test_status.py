@@ -88,9 +88,7 @@ stage: capture
 
 
 @given(parsers.parse('a Praxis project with domain "{domain}" and stage "{stage}"'))
-def project_with_domain_and_stage(
-    tmp_path: Path, context: dict[str, Any], domain: str, stage: str
-) -> None:
+def project_with_domain_and_stage(tmp_path: Path, context: dict[str, Any], domain: str, stage: str) -> None:
     """Create a project with specific domain and stage."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -162,9 +160,7 @@ def run_status_json(cli_runner: CliRunner, context: dict[str, Any]) -> None:
 
 
 @then(parsers.parse('the output includes a "{action}" action for "{target}"'))
-def output_includes_action_for_target(
-    context: dict[str, Any], action: str, target: str
-) -> None:
+def output_includes_action_for_target(context: dict[str, Any], action: str, target: str) -> None:
     """Check that output includes a specific action for a target."""
     result = context["result"]
     output = result.output
@@ -186,18 +182,13 @@ def output_includes_action_for_target(
     ]
 
     found = any(pattern in output for pattern in expected_patterns)
-    assert found, (
-        f"Expected '{action}' action for '{target}' not found in output.\n"
-        f"Output: {output}"
-    )
+    assert found, f"Expected '{action}' action for '{target}' not found in output.\n" f"Output: {output}"
 
 
 # Alias to handle "an" vs "a" article grammar in Gherkin steps
 # (e.g., "an edit action" vs "a create action")
 @then(parsers.parse('the output includes an "{action}" action for "{target}"'))
-def output_includes_an_action_for_target(
-    context: dict[str, Any], action: str, target: str
-) -> None:
+def output_includes_an_action_for_target(context: dict[str, Any], action: str, target: str) -> None:
     """Check that output includes a specific action for a target.
 
     This is an alias for 'the output includes a "{action}" action for "{target}"'
@@ -215,14 +206,11 @@ def one_to_three_next_steps(context: dict[str, Any]) -> None:
     # Count lines with action icons
     action_icons = ["+", "~", "▶", "?", "!"]
     step_lines = [
-        line for line in output.split("\n")
-        if any(line.strip().startswith(icon + " ") for icon in action_icons)
+        line for line in output.split("\n") if any(line.strip().startswith(icon + " ") for icon in action_icons)
     ]
 
     assert 1 <= len(step_lines) <= 3, (
-        f"Expected 1-3 next steps, found {len(step_lines)}.\n"
-        f"Step lines: {step_lines}\n"
-        f"Output: {output}"
+        f"Expected 1-3 next steps, found {len(step_lines)}.\n" f"Step lines: {step_lines}\n" f"Output: {output}"
     )
 
 
@@ -243,9 +231,7 @@ def first_step_is_fix(context: dict[str, Any]) -> None:
             return  # Found fix action as first step
         if in_next_steps and line.strip() and not line.strip().startswith("Legend:"):
             # First non-empty line after "Next Steps:" that isn't legend
-            assert line.strip().startswith("!"), (
-                f"Expected first step to be '!' (fix), got: {line}"
-            )
+            assert line.strip().startswith("!"), f"Expected first step to be '!' (fix), got: {line}"
             return
 
     assert False, f"No fix action found as first step.\nOutput: {output}"
@@ -255,10 +241,7 @@ def first_step_is_fix(context: dict[str, Any]) -> None:
 def step_includes_target(context: dict[str, Any], target: str) -> None:
     """Check that a step includes the target."""
     result = context["result"]
-    assert target in result.output, (
-        f"Expected target '{target}' not found in output.\n"
-        f"Output: {result.output}"
-    )
+    assert target in result.output, f"Expected target '{target}' not found in output.\n" f"Output: {result.output}"
 
 
 @then('the JSON output contains "next_steps" array')
@@ -270,13 +253,9 @@ def json_contains_next_steps(context: dict[str, Any]) -> None:
     except json.JSONDecodeError:
         assert False, f"Output is not valid JSON.\nOutput: {result.output}"
 
-    assert "next_steps" in data, (
-        f"Expected 'next_steps' in JSON output.\n"
-        f"Keys: {list(data.keys())}"
-    )
+    assert "next_steps" in data, f"Expected 'next_steps' in JSON output.\n" f"Keys: {list(data.keys())}"
     assert isinstance(data["next_steps"], list), (
-        f"Expected 'next_steps' to be a list.\n"
-        f"Type: {type(data['next_steps'])}"
+        f"Expected 'next_steps' to be a list.\n" f"Type: {type(data['next_steps'])}"
     )
 
 
@@ -287,10 +266,7 @@ def next_steps_has_1_to_3_items(context: dict[str, Any]) -> None:
     data = json.loads(result.output)
     next_steps = data.get("next_steps", [])
 
-    assert 1 <= len(next_steps) <= 3, (
-        f"Expected 1-3 next_steps, got {len(next_steps)}.\n"
-        f"Steps: {next_steps}"
-    )
+    assert 1 <= len(next_steps) <= 3, f"Expected 1-3 next_steps, got {len(next_steps)}.\n" f"Steps: {next_steps}"
 
 
 @then(parsers.parse('the output includes a "{action}" action'))
@@ -310,8 +286,7 @@ def output_includes_action(context: dict[str, Any], action: str) -> None:
     icon = action_icons.get(action, action)
 
     assert f"{icon} " in output or f"{icon} {action.capitalize()}" in output, (
-        f"Expected '{action}' action not found in output.\n"
-        f"Output: {output}"
+        f"Expected '{action}' action not found in output.\n" f"Output: {output}"
     )
 
 
@@ -322,14 +297,7 @@ def run_step_includes_text(context: dict[str, Any], text: str) -> None:
     output = result.output
 
     # Find run steps (lines starting with ▶)
-    run_lines = [
-        line for line in output.split("\n")
-        if line.strip().startswith("▶")
-    ]
+    run_lines = [line for line in output.split("\n") if line.strip().startswith("▶")]
 
     found = any(text in line for line in run_lines)
-    assert found, (
-        f"Expected text '{text}' in run step not found.\n"
-        f"Run lines: {run_lines}\n"
-        f"Output: {output}"
-    )
+    assert found, f"Expected text '{text}' in run step not found.\n" f"Run lines: {run_lines}\n" f"Output: {output}"

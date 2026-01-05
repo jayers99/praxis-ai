@@ -60,9 +60,7 @@ Test opinion content.
 
 
 @given(parsers.parse('a Praxis project at stage "{stage}" with domain "{domain}"'))
-def project_at_stage_with_domain(
-    tmp_path: Path, context: dict[str, Any], stage: str, domain: str
-) -> None:
+def project_at_stage_with_domain(tmp_path: Path, context: dict[str, Any], stage: str, domain: str) -> None:
     """Create a Praxis project at a specific stage and domain."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -76,9 +74,7 @@ environment: Home
 
 
 @given(parsers.parse('a Praxis project with domain "{domain}" and stage "{stage}"'))
-def project_with_domain_and_stage(
-    tmp_path: Path, context: dict[str, Any], domain: str, stage: str
-) -> None:
+def project_with_domain_and_stage(tmp_path: Path, context: dict[str, Any], domain: str, stage: str) -> None:
     """Create a Praxis project with specific domain and stage."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -92,9 +88,7 @@ environment: Home
 
 
 @given(parsers.parse('a Praxis project with domain "{domain}" and subtype "{subtype}"'))
-def project_with_domain_and_subtype(
-    tmp_path: Path, context: dict[str, Any], domain: str, subtype: str
-) -> None:
+def project_with_domain_and_subtype(tmp_path: Path, context: dict[str, Any], domain: str, subtype: str) -> None:
     """Create a Praxis project with specific domain and subtype."""
     context["project_root"] = tmp_path
     praxis_yaml = tmp_path / "praxis.yaml"
@@ -190,7 +184,7 @@ def run_context_twice(context: dict[str, Any]) -> None:
     context["output2"] = result2.stdout
 
 
-@then(parsers.parse('the exit code should be {code:d}'))
+@then(parsers.parse("the exit code should be {code:d}"))
 def check_exit_code(context: dict[str, Any], code: int) -> None:
     """Check the exit code matches expected."""
     assert context["result"].exit_code == code

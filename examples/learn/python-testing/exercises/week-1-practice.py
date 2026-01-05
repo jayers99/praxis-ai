@@ -6,6 +6,7 @@ Week 1 exercises: Test discovery, assertions, pytest CLI
 
 import pytest
 
+
 # Example 1: Basic assertions
 def test_string_operations():
     text = "pytest"
@@ -13,17 +14,20 @@ def test_string_operations():
     assert len(text) == 6
     assert "test" in text
 
+
 # Example 2: Testing exceptions
 def test_list_index_error():
     my_list = [1, 2, 3]
     with pytest.raises(IndexError):
         _ = my_list[10]
 
+
 # Example 3: Custom failure messages
 def test_dictionary_key():
     data = {"name": "pytest", "version": 7}
     assert "name" in data, "Expected 'name' key in data dictionary"
     assert data["version"] > 6, f"Expected version > 6, got {data['version']}"
+
 
 # Example 4: Multiple assertions (shows which one fails)
 def test_user_validation():
@@ -32,6 +36,7 @@ def test_user_validation():
     assert user["age"] >= 18
     assert user["active"] is True
 
+
 # Example 5: Testing with different data types
 def test_type_checking():
     value = 42
@@ -39,12 +44,14 @@ def test_type_checking():
     assert not isinstance(value, str)
     assert isinstance(value * 1.5, float)
 
+
 # Example 6: String assertions with operators
 def test_substring_matching():
     sentence = "pytest makes testing easier"
     assert sentence.startswith("pytest")
     assert sentence.endswith("easier")
     assert "testing" in sentence
+
 
 # Example 7: List operations
 def test_list_operations():
@@ -54,16 +61,19 @@ def test_list_operations():
     assert numbers[-1] == 5
     assert sum(numbers) == 15
 
+
 # Example 8: Exception with match pattern
 def test_value_error_message():
     with pytest.raises(ValueError, match="invalid literal"):
         int("not_a_number")
+
 
 # Example 9: Testing None
 def test_none_checks():
     result = None
     assert result is None
     assert not result  # None is falsy
+
 
 # Example 10: Boolean assertions
 def test_boolean_logic():
@@ -72,6 +82,7 @@ def test_boolean_logic():
     assert is_valid
     assert not is_active
     assert is_valid and not is_active
+
 
 # Checkpoint: All 10 basic test examples pass
 # Run with: pytest week-1-practice.py -v

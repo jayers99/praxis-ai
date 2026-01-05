@@ -26,9 +26,7 @@ def create_corpus(tmp_path: Path, context: dict[str, Any]) -> None:
 
 
 @given(parsers.parse('an active research session exists at phase "{phase}"'))
-def create_active_session(
-    tmp_path: Path, context: dict[str, Any], phase: str
-) -> None:
+def create_active_session(tmp_path: Path, context: dict[str, Any], phase: str) -> None:
     """Create a session at the specified phase."""
     context["working_dir"] = tmp_path
 
@@ -78,14 +76,8 @@ def no_session_exists(tmp_path: Path, context: dict[str, Any]) -> None:
         session_path.unlink()
 
 
-@when(
-    parsers.parse(
-        'I run praxis research init with topic "{topic}" and corpus path'
-    )
-)
-def run_research_init(
-    cli_runner: CliRunner, context: dict[str, Any], topic: str
-) -> None:
+@when(parsers.parse('I run praxis research init with topic "{topic}" and corpus path'))
+def run_research_init(cli_runner: CliRunner, context: dict[str, Any], topic: str) -> None:
     """Run research init command."""
     working_dir = context["working_dir"]
     corpus_path = context["corpus_path"]
@@ -105,9 +97,7 @@ def run_research_init(
 
 
 @when("I run praxis research init without topic")
-def run_research_init_no_topic(
-    cli_runner: CliRunner, context: dict[str, Any]
-) -> None:
+def run_research_init_no_topic(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     """Run research init command without topic."""
     working_dir = context["working_dir"]
     corpus_path = context["corpus_path"]
@@ -133,14 +123,10 @@ def run_research_status(cli_runner: CliRunner, context: dict[str, Any]) -> None:
 
 
 @when("I run praxis research status with json flag")
-def run_research_status_json(
-    cli_runner: CliRunner, context: dict[str, Any]
-) -> None:
+def run_research_status_json(cli_runner: CliRunner, context: dict[str, Any]) -> None:
     """Run research status command with JSON output."""
     working_dir = context["working_dir"]
-    result = cli_runner.invoke(
-        app, ["research", "status", str(working_dir), "--json"]
-    )
+    result = cli_runner.invoke(app, ["research", "status", str(working_dir), "--json"])
     context["result"] = result
 
 
@@ -153,9 +139,7 @@ def run_research_run(cli_runner: CliRunner, context: dict[str, Any]) -> None:
 
 
 @when(parsers.parse('I run praxis research approve with rationale "{rationale}"'))
-def run_research_approve(
-    cli_runner: CliRunner, context: dict[str, Any], rationale: str
-) -> None:
+def run_research_approve(cli_runner: CliRunner, context: dict[str, Any], rationale: str) -> None:
     """Run research approve command."""
     working_dir = context["working_dir"]
     result = cli_runner.invoke(
@@ -166,9 +150,7 @@ def run_research_approve(
 
 
 @when(parsers.parse('I run praxis research reject with rationale "{rationale}"'))
-def run_research_reject(
-    cli_runner: CliRunner, context: dict[str, Any], rationale: str
-) -> None:
+def run_research_reject(cli_runner: CliRunner, context: dict[str, Any], rationale: str) -> None:
     """Run research reject command."""
     working_dir = context["working_dir"]
     result = cli_runner.invoke(
@@ -203,9 +185,6 @@ def check_json_contains_key(context: dict[str, Any], key: str) -> None:
     result = context["result"]
     try:
         output_data = json.loads(result.output)
-        assert key in output_data, (
-            f"Expected key '{key}' in JSON output. "
-            f"Got keys: {list(output_data.keys())}"
-        )
+        assert key in output_data, f"Expected key '{key}' in JSON output. " f"Got keys: {list(output_data.keys())}"
     except json.JSONDecodeError as e:
         raise AssertionError(f"Invalid JSON output: {e}. Output: {result.output}")

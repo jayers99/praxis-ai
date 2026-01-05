@@ -17,14 +17,8 @@ from praxis.application.cataloging_service import (
 scenarios("../features/cataloging.feature")
 
 
-@given(
-    parsers.parse(
-        'a research artifact with valid metadata at "{artifact_path}"'
-    )
-)
-def valid_artifact_at_path(
-    tmp_path: Path, context: dict[str, Any], artifact_path: str
-) -> None:
+@given(parsers.parse('a research artifact with valid metadata at "{artifact_path}"'))
+def valid_artifact_at_path(tmp_path: Path, context: dict[str, Any], artifact_path: str) -> None:
     """Create a valid research artifact at the specified path."""
     context["tmp_path"] = tmp_path
     artifact_file = tmp_path / artifact_path
@@ -54,9 +48,7 @@ def valid_artifact_at_path(
 
 
 @given(parsers.parse('the research-library exists at "{library_path}"'))
-def research_library_exists(
-    tmp_path: Path, context: dict[str, Any], library_path: str
-) -> None:
+def research_library_exists(tmp_path: Path, context: dict[str, Any], library_path: str) -> None:
     """Create a research library structure."""
     library = tmp_path / library_path
     library.mkdir(parents=True, exist_ok=True)
@@ -124,9 +116,7 @@ def catalog_to_topic(context: dict[str, Any], topic: str) -> None:
     context["catalog_result"] = result
 
 
-@then(
-    parsers.parse('the artifact is moved to "{expected_path}"')
-)
+@then(parsers.parse('the artifact is moved to "{expected_path}"'))
 def artifact_moved_to_path(context: dict[str, Any], expected_path: str) -> None:
     """Verify the artifact was moved to the expected path."""
     full_path = context["tmp_path"] / expected_path
@@ -141,14 +131,8 @@ def catalog_quick_reference_contains_artifact(context: dict[str, Any]) -> None:
     assert "My Topic Research" in catalog_content
 
 
-@then(
-    parsers.parse(
-        'the CATALOG.md By Topic section under "{topic}" contains the artifact'
-    )
-)
-def catalog_by_topic_contains_artifact(
-    context: dict[str, Any], topic: str
-) -> None:
+@then(parsers.parse('the CATALOG.md By Topic section under "{topic}" contains the artifact'))
+def catalog_by_topic_contains_artifact(context: dict[str, Any], topic: str) -> None:
     """Verify the By Topic section was updated."""
     catalog_content = context["catalog_path"].read_text(encoding="utf-8")
     # Find the topic section
@@ -176,9 +160,7 @@ def catalog_keyword_index_contains_keywords(context: dict[str, Any]) -> None:
     assert "### example" in catalog_content
 
 
-@then(
-    "the CATALOG.md Recently Added section contains the artifact at the top"
-)
+@then("the CATALOG.md Recently Added section contains the artifact at the top")
 def catalog_recently_added_contains_artifact(context: dict[str, Any]) -> None:
     """Verify the Recently Added section was updated."""
     catalog_content = context["catalog_path"].read_text(encoding="utf-8")
@@ -198,9 +180,7 @@ def catalog_recently_added_contains_artifact(context: dict[str, Any]) -> None:
 
 
 @given(parsers.parse('a research artifact missing the "{field}" field'))
-def artifact_missing_field(
-    tmp_path: Path, context: dict[str, Any], field: str
-) -> None:
+def artifact_missing_field(tmp_path: Path, context: dict[str, Any], field: str) -> None:
     """Create an artifact with a missing required field."""
     context["tmp_path"] = tmp_path
     artifact = tmp_path / "missing-field.md"
@@ -233,9 +213,7 @@ def validate_artifact(context: dict[str, Any]) -> None:
 
 
 @then(parsers.parse('validation returns an error for "{error_message}"'))
-def validation_returns_error(
-    context: dict[str, Any], error_message: str
-) -> None:
+def validation_returns_error(context: dict[str, Any], error_message: str) -> None:
     """Verify validation returned the expected error."""
     result = context["validation_result"]
     assert result.success is False
@@ -245,14 +223,8 @@ def validation_returns_error(
 # Scenario: Reject artifact with duplicate ID
 
 
-@given(
-    parsers.parse(
-        'an artifact with id "{artifact_id}" exists in CATALOG.md'
-    )
-)
-def artifact_exists_in_catalog(
-    tmp_path: Path, context: dict[str, Any], artifact_id: str
-) -> None:
+@given(parsers.parse('an artifact with id "{artifact_id}" exists in CATALOG.md'))
+def artifact_exists_in_catalog(tmp_path: Path, context: dict[str, Any], artifact_id: str) -> None:
     """Create a CATALOG.md with an existing artifact ID."""
     library = tmp_path / "research-library"
     library.mkdir(parents=True, exist_ok=True)
@@ -321,9 +293,7 @@ def artifact_exists_in_catalog(
 
 
 @given(parsers.parse('a new artifact has the same id "{artifact_id}"'))
-def new_artifact_with_duplicate_id(
-    tmp_path: Path, context: dict[str, Any], artifact_id: str
-) -> None:
+def new_artifact_with_duplicate_id(tmp_path: Path, context: dict[str, Any], artifact_id: str) -> None:
     """Create a new artifact with a duplicate ID."""
     artifact = tmp_path / "duplicate.md"
     content = dedent(f"""\
@@ -360,9 +330,7 @@ def catalog_new_artifact(context: dict[str, Any]) -> None:
 
 
 @then(parsers.parse('cataloging fails with error "{error_message}"'))
-def cataloging_fails_with_error(
-    context: dict[str, Any], error_message: str
-) -> None:
+def cataloging_fails_with_error(context: dict[str, Any], error_message: str) -> None:
     """Verify cataloging failed with the expected error."""
     result = context["catalog_result"]
     assert result.success is False
@@ -478,9 +446,7 @@ def artifact_cataloged_successfully(context: dict[str, Any]) -> None:
 
 
 @given(parsers.parse('an artifact exists at "{artifact_path}"'))
-def orphan_artifact_exists(
-    tmp_path: Path, context: dict[str, Any], artifact_path: str
-) -> None:
+def orphan_artifact_exists(tmp_path: Path, context: dict[str, Any], artifact_path: str) -> None:
     """Create an orphan artifact."""
     full_path = tmp_path / artifact_path
     full_path.parent.mkdir(parents=True, exist_ok=True)
@@ -535,9 +501,7 @@ def orphan_in_list(context: dict[str, Any], orphan_path: str) -> None:
 
 
 @given(parsers.parse("a research library with {count:d} artifacts"))
-def library_with_artifacts(
-    tmp_path: Path, context: dict[str, Any], count: int
-) -> None:
+def library_with_artifacts(tmp_path: Path, context: dict[str, Any], count: int) -> None:
     """Create a research library with the specified number of artifacts."""
     # For MVP, reindex is not implemented, so this scenario will be skipped
     context["skip_reason"] = "Reindex not implemented in MVP"

@@ -42,31 +42,20 @@ class PrivacyGuard:
         PrivacyConstraint(
             level=PrivacyLevel.PERSONAL,
             constraint_text="No credentials, secrets, or regulated identifiers",
-            warning_text=(
-                "⚠️  Privacy Level: PERSONAL - "
-                "Review exported content before sharing with AI"
-            ),
+            warning_text=("⚠️  Privacy Level: PERSONAL - " "Review exported content before sharing with AI"),
         ),
         PrivacyConstraint(
             level=PrivacyLevel.CONFIDENTIAL,
-            constraint_text=(
-                "Redacted or abstracted inputs only; "
-                "no raw logs, configs, or identifiers"
-            ),
+            constraint_text=("Redacted or abstracted inputs only; " "no raw logs, configs, or identifiers"),
             warning_text=(
-                "⚠️  Privacy Level: CONFIDENTIAL - "
-                "Sensitive content detected. Use --redact or review carefully"
+                "⚠️  Privacy Level: CONFIDENTIAL - " "Sensitive content detected. Use --redact or review carefully"
             ),
         ),
         PrivacyConstraint(
             level=PrivacyLevel.RESTRICTED,
-            constraint_text=(
-                "No external AI with raw content; "
-                "abstract summaries only, never source material"
-            ),
+            constraint_text=("No external AI with raw content; " "abstract summaries only, never source material"),
             warning_text=(
-                "⚠️  Privacy Level: RESTRICTED - "
-                "Maximum secrecy. Verify no sensitive content before AI use"
+                "⚠️  Privacy Level: RESTRICTED - " "Maximum secrecy. Verify no sensitive content before AI use"
             ),
         ),
     ]
@@ -75,15 +64,11 @@ class PrivacyGuard:
     REDACTION_PATTERNS = [
         RedactionPattern(
             name="API_KEY",
-            regex=re.compile(
-                r"(?i)(api[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*\S+"
-            ),
+            regex=re.compile(r"(?i)(api[_-]?key|secret[_-]?key|auth[_-]?token)\s*[=:]\s*\S+"),
         ),
         RedactionPattern(
             name="PASSWORD",
-            regex=re.compile(
-                r"(?i)(password|passwd|pwd)\s*[=:]\s*\S+"
-            ),
+            regex=re.compile(r"(?i)(password|passwd|pwd)\s*[=:]\s*\S+"),
         ),
         RedactionPattern(
             name="AWS_ACCESS_KEY",
@@ -91,9 +76,7 @@ class PrivacyGuard:
         ),
         RedactionPattern(
             name="AWS_SECRET",
-            regex=re.compile(
-                r"(?i)(aws_secret_access_key|aws_secret)\s*[=:]\s*[A-Za-z0-9/+=]{40}"
-            ),
+            regex=re.compile(r"(?i)(aws_secret_access_key|aws_secret)\s*[=:]\s*[A-Za-z0-9/+=]{40}"),
         ),
         RedactionPattern(
             name="JWT",

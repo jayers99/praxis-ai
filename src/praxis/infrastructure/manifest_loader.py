@@ -20,9 +20,7 @@ from praxis.domain.workspace import (
 SUPPORTED_MANIFEST_VERSIONS = ["0.1"]
 
 
-def load_extension_manifest(
-    extension_path: Path, extension_name: str
-) -> ManifestLoadResult:
+def load_extension_manifest(extension_path: Path, extension_name: str) -> ManifestLoadResult:
     """Load and validate an extension manifest.
 
     Args:
@@ -96,8 +94,7 @@ def load_extension_manifest(
         return ManifestLoadResult(
             success=False,
             extension_name=extension_name,
-            error=f"Manifest name '{manifest_name}' does not match "
-            f"extension directory name '{extension_name}'",
+            error=f"Manifest name '{manifest_name}' does not match " f"extension directory name '{extension_name}'",
         )
 
     # Parse contributions
@@ -164,9 +161,7 @@ def load_extension_manifest(
                         check_contrib = AuditCheckContribution(**check_data)
                         checks.append(check_contrib)
                     except Exception as e:
-                        warning = (
-                            f"Malformed audit check '{check_data.get('name', 'unknown')}': {e}"
-                        )
+                        warning = f"Malformed audit check '{check_data.get('name', 'unknown')}': {e}"
                         warnings.append(warning)
                         continue
 
@@ -182,9 +177,7 @@ def load_extension_manifest(
                 warnings.append(warning)
                 continue
 
-        contributions = ExtensionContributions(
-            opinions=opinions, templates=templates, audits=audits
-        )
+        contributions = ExtensionContributions(opinions=opinions, templates=templates, audits=audits)
 
         manifest = ExtensionManifest(
             manifest_version=manifest_version,
@@ -213,9 +206,7 @@ def load_extension_manifest(
         )
 
 
-def discover_extension_manifests(
-    extensions_path: Path, installed_extensions: list[str]
-) -> list[ManifestLoadResult]:
+def discover_extension_manifests(extensions_path: Path, installed_extensions: list[str]) -> list[ManifestLoadResult]:
     """Discover and load manifests for all installed extensions.
 
     Args:

@@ -136,37 +136,45 @@ def doctor_cmd(
     # Check Python version
     py_version = sys.version_info
     if py_version >= (3, 10):
-        checks.append({
-            "status": "pass",
-            "check": "Python version",
-            "value": f"{py_version.major}.{py_version.minor}.{py_version.micro}",
-            "message": None,
-        })
+        checks.append(
+            {
+                "status": "pass",
+                "check": "Python version",
+                "value": f"{py_version.major}.{py_version.minor}.{py_version.micro}",
+                "message": None,
+            }
+        )
     else:
-        checks.append({
-            "status": "error",
-            "check": "Python version",
-            "value": f"{py_version.major}.{py_version.minor}.{py_version.micro}",
-            "message": "Python 3.10+ required",
-        })
+        checks.append(
+            {
+                "status": "error",
+                "check": "Python version",
+                "value": f"{py_version.major}.{py_version.minor}.{py_version.micro}",
+                "message": "Python 3.10+ required",
+            }
+        )
         has_errors = True
 
     # Check PRAXIS_HOME
     praxis_home_env = os.environ.get("PRAXIS_HOME")
     if praxis_home_env:
-        checks.append({
-            "status": "pass",
-            "check": "PRAXIS_HOME",
-            "value": praxis_home_env,
-            "message": None,
-        })
+        checks.append(
+            {
+                "status": "pass",
+                "check": "PRAXIS_HOME",
+                "value": praxis_home_env,
+                "message": None,
+            }
+        )
     else:
-        checks.append({
-            "status": "warning",
-            "check": "PRAXIS_HOME",
-            "value": "not set",
-            "message": "Workspace features disabled",
-        })
+        checks.append(
+            {
+                "status": "warning",
+                "check": "PRAXIS_HOME",
+                "value": "not set",
+                "message": "Workspace features disabled",
+            }
+        )
         has_warnings = True
 
     # Check workspace structure
@@ -174,59 +182,68 @@ def doctor_cmd(
     if workspace_path and workspace_path.exists():
         workspace_config = workspace_path / "workspace-config.yaml"
         if workspace_config.exists():
-            checks.append({
-                "status": "pass",
-                "check": "Workspace",
-                "value": str(workspace_path),
-                "message": "Configured",
-            })
+            checks.append(
+                {
+                    "status": "pass",
+                    "check": "Workspace",
+                    "value": str(workspace_path),
+                    "message": "Configured",
+                }
+            )
 
             # Check subdirectories
             expected_dirs = ["extensions", "examples", "projects"]
             for dirname in expected_dirs:
                 dir_path = workspace_path / dirname
                 if dir_path.exists():
-                    checks.append({
-                        "status": "pass",
-                        "check": f"  {dirname}/",
-                        "value": "exists",
-                        "message": None,
-                    })
+                    checks.append(
+                        {
+                            "status": "pass",
+                            "check": f"  {dirname}/",
+                            "value": "exists",
+                            "message": None,
+                        }
+                    )
                 else:
-                    checks.append({
-                        "status": "warning",
-                        "check": f"  {dirname}/",
-                        "value": "missing",
-                        "message": "Expected directory not found",
-                    })
+                    checks.append(
+                        {
+                            "status": "warning",
+                            "check": f"  {dirname}/",
+                            "value": "missing",
+                            "message": "Expected directory not found",
+                        }
+                    )
                     has_warnings = True
         else:
-            checks.append({
-                "status": "warning",
-                "check": "Workspace",
-                "value": str(workspace_path),
-                "message": (
-                    "Directory exists but not initialized "
-                    "(run 'praxis workspace init')"
-                ),
-            })
+            checks.append(
+                {
+                    "status": "warning",
+                    "check": "Workspace",
+                    "value": str(workspace_path),
+                    "message": ("Directory exists but not initialized " "(run 'praxis workspace init')"),
+                }
+            )
             has_warnings = True
     elif praxis_home_env:
-        checks.append({
-            "status": "error",
-            "check": "Workspace",
-            "value": praxis_home_env,
-            "message": "Directory not found",
-        })
+        checks.append(
+            {
+                "status": "error",
+                "check": "Workspace",
+                "value": praxis_home_env,
+                "message": "Directory not found",
+            }
+        )
         has_errors = True
 
     # Check Praxis package version
-    checks.append({
-        "status": "pass",
-        "check": "Praxis version",
-        "value": __version__,
-        "message": None,
-    })
+    checks.append(
+        {
+            "status": "pass",
+            "check": "Praxis version",
+            "value": __version__,
+            "message": None,
+        }
+    )
 
     # JSON output
     if json_output:
@@ -308,10 +325,7 @@ def templates_render_cmd(
         None,
         "--domain",
         "-d",
-        help=(
-            "Project domain (code, create, write, observe, learn). "
-            "Defaults to praxis.yaml."
-        ),
+        help=("Project domain (code, create, write, observe, learn). " "Defaults to praxis.yaml."),
     ),
     subtype: str | None = typer.Option(
         None,
@@ -321,10 +335,7 @@ def templates_render_cmd(
     stages: list[str] = typer.Option(
         [],
         "--stage",
-        help=(
-            "Only render these stages (can be provided multiple times). "
-            "Defaults to all stages."
-        ),
+        help=("Only render these stages (can be provided multiple times). " "Defaults to all stages."),
     ),
     force: bool = typer.Option(
         False,
@@ -413,22 +424,16 @@ def templates_render_cmd(
                 config = load_workspace_config(workspace_path)
                 extensions_path = workspace_path / "extensions"
                 if extensions_path.exists() and config.installed_extensions:
-                    manifest_results = discover_extension_manifests(
-                        extensions_path, config.installed_extensions
-                    )
+                    manifest_results = discover_extension_manifests(extensions_path, config.installed_extensions)
                     # Filter to successful manifests with template contributions
                     extension_manifests = []
                     for manifest_result in manifest_results:
                         if manifest_result.success and manifest_result.manifest:
                             ext_path = extensions_path / manifest_result.extension_name
-                            extension_manifests.append(
-                                (ext_path, manifest_result.manifest)
-                            )
+                            extension_manifests.append((ext_path, manifest_result.manifest))
                             # Log warnings if any
                             if manifest_result.warning:
-                                typer.echo(
-                                    f"Warning: {manifest_result.warning}", err=True
-                                )
+                                typer.echo(f"Warning: {manifest_result.warning}", err=True)
             except Exception:
                 # Silently ignore workspace loading errors
                 pass
@@ -496,10 +501,7 @@ def init_cmd(
         None,
         "--privacy",
         "-p",
-        help=(
-            "Privacy level (public, public-trusted, personal, "
-            "confidential, restricted)."
-        ),
+        help=("Privacy level (public, public-trusted, personal, " "confidential, restricted)."),
     ),
     environment: str = typer.Option(
         "Home",
@@ -511,10 +513,7 @@ def init_cmd(
         "full",
         "--lifecycle-mode",
         "-m",
-        help=(
-            "Lifecycle mode: 'full' (all 9 stages) or 'fast' "
-            "(simplified 4-stage track)."
-        ),
+        help=("Lifecycle mode: 'full' (all 9 stages) or 'fast' " "(simplified 4-stage track)."),
     ),
     template: str | None = typer.Option(
         None,
@@ -616,10 +615,7 @@ def new_cmd(
         None,
         "--privacy",
         "-p",
-        help=(
-            "Privacy level (public, public-trusted, personal, "
-            "confidential, restricted)."
-        ),
+        help=("Privacy level (public, public-trusted, personal, " "confidential, restricted)."),
     ),
     environment: str | None = typer.Option(
         None,
@@ -631,10 +627,7 @@ def new_cmd(
         "full",
         "--lifecycle-mode",
         "-m",
-        help=(
-            "Lifecycle mode: 'full' (all 9 stages) or 'fast' "
-            "(simplified 4-stage track)."
-        ),
+        help=("Lifecycle mode: 'full' (all 9 stages) or 'fast' " "(simplified 4-stage track)."),
     ),
     path: Path | None = typer.Option(
         None,
@@ -649,10 +642,7 @@ def new_cmd(
         False,
         "--force",
         "-f",
-        help=(
-            "Overwrite existing managed files (praxis.yaml, CLAUDE.md, "
-            "docs/capture.md)."
-        ),
+        help=("Overwrite existing managed files (praxis.yaml, CLAUDE.md, " "docs/capture.md)."),
     ),
     json_output: bool = typer.Option(
         False,
@@ -717,11 +707,7 @@ def new_cmd(
             subtype = subtype_answer.strip() or None
 
         if privacy is None:
-            privacy_default = (
-                workspace_info.config.defaults.privacy.value
-                if workspace_info is not None
-                else "personal"
-            )
+            privacy_default = workspace_info.config.defaults.privacy.value if workspace_info is not None else "personal"
             privacy_choices = [p.value for p in PrivacyLevel]
             privacy = typer.prompt(
                 "Privacy level",
@@ -731,11 +717,7 @@ def new_cmd(
             )
 
         if environment is None:
-            env_default = (
-                workspace_info.config.defaults.environment
-                if workspace_info is not None
-                else "Home"
-            )
+            env_default = workspace_info.config.defaults.environment if workspace_info is not None else "Home"
             environment = typer.prompt(
                 "Environment",
                 default=env_default,
@@ -788,11 +770,7 @@ def new_cmd(
 
     # Apply workspace defaults in automation mode (if not provided)
     if environment is None:
-        environment = (
-            workspace_info.config.defaults.environment
-            if workspace_info is not None
-            else "Home"
-        )
+        environment = workspace_info.config.defaults.environment if workspace_info is not None else "Home"
 
     # Resolve parent directory
     if path is not None:
@@ -1023,21 +1001,15 @@ def validate_cmd(
 
     if run_tests:
         tr = run_pytest(project_root)
-        tool_results.append(ToolCheckResult(
-            tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
-        ))
+        tool_results.append(ToolCheckResult(tool=tr.tool, success=tr.success, output=tr.output, error=tr.error))
 
     if run_lint:
         tr = run_ruff(project_root)
-        tool_results.append(ToolCheckResult(
-            tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
-        ))
+        tool_results.append(ToolCheckResult(tool=tr.tool, success=tr.success, output=tr.output, error=tr.error))
 
     if run_types:
         tr = run_mypy(project_root)
-        tool_results.append(ToolCheckResult(
-            tool=tr.tool, success=tr.success, output=tr.output, error=tr.error
-        ))
+        tool_results.append(ToolCheckResult(tool=tr.tool, success=tr.success, output=tr.output, error=tr.error))
 
     # Run coverage check if requested and threshold is configured
     coverage_result: CoverageCheckResult | None = None
@@ -1117,12 +1089,7 @@ def validate_cmd(
     # Print summary
     if not quiet:
         typer.echo("")
-    all_checks_pass = (
-        result.valid
-        and not has_warnings
-        and not has_tool_failures
-        and not has_coverage_failure
-    )
+    all_checks_pass = result.valid and not has_warnings and not has_tool_failures and not has_coverage_failure
     if all_checks_pass:
         if not quiet:
             typer.echo("\u2713 Validation passed")
@@ -1146,9 +1113,7 @@ def validate_cmd(
                 )
             raise typer.Exit(1)
         if not quiet:
-            typer.echo(
-                f"\u2713 Validation passed ({len(result.warnings)} warning(s))"
-            )
+            typer.echo(f"\u2713 Validation passed ({len(result.warnings)} warning(s))")
         raise typer.Exit(0)
 
     # Has errors
@@ -1247,6 +1212,7 @@ def status_cmd(
             # We're in a user project, so we need to check if the addendum exists
             # in the praxis framework installation
             import importlib.util
+
             praxis_spec = importlib.util.find_spec("praxis")
             if praxis_spec and praxis_spec.origin:
                 framework_root = Path(praxis_spec.origin).parent.parent.parent
@@ -1471,9 +1437,7 @@ def workspace_init_cmd(
         if praxis_home:
             workspace_path = Path(praxis_home).expanduser()
         elif json_output or quiet:
-            typer.echo(
-                "Error: PRAXIS_HOME not set and --path not provided", err=True
-            )
+            typer.echo("Error: PRAXIS_HOME not set and --path not provided", err=True)
             raise typer.Exit(3)
         else:
             # Interactive prompt
@@ -1707,10 +1671,7 @@ def extensions_add_cmd(
     if json_output:
         import json
 
-        data = [
-            {"name": r.name, "success": r.success, "error": r.error}
-            for r in results
-        ]
+        data = [{"name": r.name, "success": r.success, "error": r.error} for r in results]
         typer.echo(json.dumps(data, indent=2))
 
     # Exit with error if any failed
@@ -1779,10 +1740,7 @@ def extensions_update_cmd(
     if json_output:
         import json
 
-        data = [
-            {"name": r.name, "success": r.success, "error": r.error}
-            for r in results
-        ]
+        data = [{"name": r.name, "success": r.success, "error": r.error} for r in results]
         typer.echo(json.dumps(data, indent=2))
     else:
         for r in results:
@@ -1915,10 +1873,7 @@ def examples_add_cmd(
     if json_output:
         import json
 
-        data = [
-            {"name": r.name, "success": r.success, "error": r.error}
-            for r in results
-        ]
+        data = [{"name": r.name, "success": r.success, "error": r.error} for r in results]
         typer.echo(json.dumps(data, indent=2))
 
     # Exit with error if any failed
@@ -2392,9 +2347,7 @@ def opinions_cmd(
     if json_output:
         typer.echo(json_module.dumps(format_json_output(resolved), indent=2))
     elif prompt:
-        output, redaction_warnings = format_prompt_output(
-            resolved, privacy_level=privacy_level, redact=redact
-        )
+        output, redaction_warnings = format_prompt_output(resolved, privacy_level=privacy_level, redact=redact)
         if redaction_warnings:
             patterns_str = ", ".join(set(redaction_warnings))
             typer.echo(
@@ -2453,9 +2406,7 @@ def guide_privacy_cmd() -> None:
 
 @guide_app.command("domain")
 def guide_domain_cmd(
-    domain: str = typer.Argument(
-        ..., help="Domain name (code, create, write, learn, observe)"
-    ),
+    domain: str = typer.Argument(..., help="Domain name (code, create, write, learn, observe)"),
 ) -> None:
     """Show domain-specific guidance and artifacts."""
     from praxis.application.guide_service import get_domain_guide
@@ -2666,9 +2617,7 @@ def research_run_cmd(
 
     if result.success:
         if not quiet:
-            typer.echo(
-                f"✓ Advanced from {result.previous_phase} to {result.current_phase}"
-            )
+            typer.echo(f"✓ Advanced from {result.previous_phase} to {result.current_phase}")
             for warning in result.warnings:
                 typer.echo(f"  ℹ {warning}")
         raise typer.Exit(0)

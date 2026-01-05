@@ -37,9 +37,7 @@ def load_lifecycle_guide(spec_root: Path) -> str:
     output_lines.append("  3. Explore    → Generate possibilities without obligation")
     output_lines.append("  4. Shape      → Converge toward a viable direction")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "  5. Formalize  → Convert thinking into durable artifacts (HINGE)"
-    )
+    output_lines.append("  5. Formalize  → Convert thinking into durable artifacts (HINGE)")
     output_lines.append("  6. Commit     → Explicitly decide to proceed")
     output_lines.append("  7. Execute    → Produce the artifact")
     output_lines.append("  8. Sustain    → Maintain and govern delivered work")
@@ -51,9 +49,7 @@ def load_lifecycle_guide(spec_root: Path) -> str:
     output_lines.append("")
     output_lines.append("Formalize is the boundary between exploration and execution.")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "It's where thinking becomes durable, policy-bearing artifacts."
-    )
+    output_lines.append("It's where thinking becomes durable, policy-bearing artifacts.")
     output_lines.append("")
     output_lines.append("Before Formalize: Discovery iteration (what is this?)")
     output_lines.append("After Formalize:  Refinement iteration (how good can it be?)")
@@ -105,38 +101,27 @@ def load_privacy_guide(spec_root: Path) -> str:
     # Privacy levels with brief descriptions
     output_lines.append("  1. Public")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "     Safe for unrestricted publication and broad collaboration"
-    )
+    output_lines.append("     Safe for unrestricted publication and broad collaboration")
     output_lines.append("")
 
     output_lines.append("  2. Public – Trusted Collaborators")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "     Broadly shareable but collaboration intentionally limited"
-    )
+    output_lines.append("     Broadly shareable but collaboration intentionally limited")
     output_lines.append("")
 
     output_lines.append("  3. Personal")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "     Private to author or trusted collaborators; "
-        "low-to-moderate sensitivity"
-    )
+    output_lines.append("     Private to author or trusted collaborators; " "low-to-moderate sensitivity")
     output_lines.append("")
 
     output_lines.append("  4. Confidential")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "     Sensitive material requiring deliberate containment and abstraction"
-    )
+    output_lines.append("     Sensitive material requiring deliberate containment and abstraction")
     output_lines.append("")
 
     output_lines.append("  5. Restricted")
     # noqa: E501 - Keep user-visible strings readable
-    output_lines.append(
-        "     Single-custodian, maximum secrecy; exposure minimized by design"
-    )
+    output_lines.append("     Single-custodian, maximum secrecy; exposure minimized by design")
     output_lines.append("")
 
     output_lines.append("━━━ Behavioral Constraints ━━━")
@@ -243,10 +228,10 @@ def load_domain_guide(spec_root: Path, domain: str) -> str:
     output_lines.append(f"  Location: {info['artifact']}")
     output_lines.append("")
 
-    if info['subtypes']:
+    if info["subtypes"]:
         output_lines.append("━━━ Subtypes ━━━")
         output_lines.append("")
-        for subtype in info['subtypes']:
+        for subtype in info["subtypes"]:
             output_lines.append(f"  • {domain}.{subtype}")
         output_lines.append("")
 

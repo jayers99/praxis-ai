@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
-from pytest_bdd import given, parsers, scenarios, then, when
+from pytest_bdd import given, scenarios, then, when
 
 from praxis.application.pipeline.pipeline_service import init_pipeline
 from praxis.infrastructure.librarian import search_library
@@ -16,9 +16,7 @@ scenarios("../features/pipeline_precheck.feature")
 
 
 @given("I am in a temporary directory")
-def setup_temp_dir(
-    tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest
-) -> None:
+def setup_temp_dir(tmp_path: Path, context: dict[str, Any], request: pytest.FixtureRequest) -> None:
     """Set up temporary directory with cleanup."""
     context["project_root"] = tmp_path
     original_dir = os.getcwd()
@@ -322,7 +320,7 @@ def verify_structured_metadata(context: dict[str, Any]) -> None:
 @then("the rerun metadata includes a reference to the prior run")
 def verify_prior_run_reference(context: dict[str, Any]) -> None:
     """Verify rerun references the prior run."""
-    result = context["rerun_result"]
+    context["rerun_result"]
     # Check that we can load the pipeline state and find prior_run_id
     from praxis.infrastructure.pipeline.pipeline_state_repo import load_pipeline_state
 
@@ -354,9 +352,7 @@ def verify_librarian_ranked_results(context: dict[str, Any]) -> None:
     # Check that matches are sorted by relevance (if multiple)
     if len(matches) > 1:
         scores = [m.relevance_score for m in matches]
-        assert scores == sorted(
-            scores, reverse=True
-        ), "Matches should be sorted by relevance"
+        assert scores == sorted(scores, reverse=True), "Matches should be sorted by relevance"
 
 
 @then("it returns an empty list without error")
