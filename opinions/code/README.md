@@ -11,6 +11,8 @@ status: draft
 ## Quick Navigation
 
 - [Principles](principles.md) — Cross-stage principles for all Code projects
+- [Design Patterns](design-patterns.md) — Software design patterns and architectural guidance
+- [Testing](testing.md) — Testing methodology and AI-assisted test generation
 - Stages:
   - [Capture](capture.md) | [Sense](sense.md) | [Explore](explore.md)
   - [Shape](shape.md) | [Formalize](formalize.md) | [Commit](commit.md)
