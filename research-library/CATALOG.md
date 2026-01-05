@@ -1,7 +1,7 @@
 # Research Library Catalog
 
-_Last updated: 2026-01-04_
-_Total artifacts: 36_
+_Last updated: 2026-01-05_
+_Total artifacts: 37_
 
 ---
 
@@ -45,6 +45,7 @@ _Total artifacts: 36_
 | [roles-agile-ai-context-memory-2026-01-02](roles/agile-shared-responsibility-ai-context-memory.md) | Agile Shared Responsibility: AI Context Memory Problem | roles | Medium | 2026-01-02 |
 | [patterns-agent-architectural-direction-2026-01-04](patterns/agent-architectural-direction.md) | Architectural Direction for AI Agent Tickets | patterns | Medium | 2026-01-04 |
 | [roles-architect-ccr-agent-guidance-2026-01-04](roles/architect-ccr-agent-guidance.md) | Architect CCR Enhancement for AI Agent Tickets | roles | Medium | 2026-01-04 |
+| [spec-formalize-domains-research-2026-01-05](spec/formalize-domains-research.md) | Formalize Stage Domain Refinement Research | spec | Medium | 2026-01-05 |
 
 ---
 
@@ -98,6 +99,7 @@ _Total artifacts: 36_
 | [spec-lifecycle-research-2025-12-28](spec/lifecycle-research.md) | Lifecycle Stage Research Report | High | lifecycle, stages, formalize, stage-gate |
 | [spec-domains-research-2025-12-28](spec/domains-research.md) | Domain Definitions Research Report | High | domains, code, create, write, observe, learn |
 | [spec-sustain-worked-example-2025-12-28](spec/sustain-worked-example.md) | Worked Example - Iteration vs Sustain Decision | Medium | sustain, iteration, governance |
+| [spec-formalize-domains-research-2026-01-05](spec/formalize-domains-research.md) | Formalize Stage Domain Refinement Research | Medium | formalize, domains, creative-brief, writing-brief, learning-plan, observe, code, create, write, learn, SOD |
 
 ### Patterns
 
