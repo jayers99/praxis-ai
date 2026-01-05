@@ -62,6 +62,8 @@ examples_app = typer.Typer(help="Example management commands.")
 templates_app = typer.Typer(help="Template rendering commands.")
 opinions_app = typer.Typer(help="Opinions resolution and export.")
 guide_app = typer.Typer(help="In-terminal documentation guides.")
+research_app = typer.Typer(help="Research session management commands.")
+library_app = typer.Typer(help="Research library query and maintenance commands.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
@@ -69,6 +71,8 @@ app.add_typer(examples_app, name="examples")
 app.add_typer(templates_app, name="templates")
 app.add_typer(opinions_app, name="opinions")
 app.add_typer(guide_app, name="guide")
+app.add_typer(research_app, name="research")
+app.add_typer(library_app, name="library")
 
 
 def version_callback(value: bool) -> None:
@@ -903,7 +907,8 @@ def validate_cmd(
             failed_items = [t.tool for t in tool_failures]
             if has_coverage_failure:
                 failed_items.append("coverage")
-            typer.echo(f"\u2717 Tool checks failed: {', '.join(failed_items)}", err=True)
+            msg = f"\u2717 Tool checks failed: {', '.join(failed_items)}"
+            typer.echo(msg, err=True)
         raise typer.Exit(1)
 
     if result.valid and has_warnings:
@@ -2221,7 +2226,9 @@ def guide_privacy_cmd() -> None:
 
 @guide_app.command("domain")
 def guide_domain_cmd(
-    domain: str = typer.Argument(..., help="Domain name (code, create, write, learn, observe)"),
+    domain: str = typer.Argument(
+        ..., help="Domain name (code, create, write, learn, observe)"
+    ),
 ) -> None:
     """Show domain-specific guidance and artifacts."""
     from praxis.application.guide_service import get_domain_guide
@@ -2238,6 +2245,705 @@ def guide_domain_cmd(
         valid_domains = ["code", "create", "write", "learn", "observe"]
         typer.echo(f"\nValid domains: {', '.join(valid_domains)}", err=True)
         raise typer.Exit(1)
+
+
+# =============================================================================
+# Research Commands
+# =============================================================================
+
+
+@research_app.command("init")
+def research_init_cmd(
+    topic: str = typer.Option(
+        ...,
+        "--topic",
+        "-t",
+        help="Research topic to investigate.",
+    ),
+    corpus: Path = typer.Option(
+        ...,
+        "--corpus",
+        "-c",
+        help="Path to source corpus for RTC phase.",
+    ),
+    tier: int = typer.Option(
+        2,
+        "--tier",
+        help="Risk tier (0-3). Higher tiers have stricter requirements.",
+    ),
+    path: Path = typer.Argument(
+        Path("."),
+        help="Working directory for the research session.",
+    ),
+    force: bool = typer.Option(
+        False,
+        "--force",
+        "-f",
+        help="Replace existing active session.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Initialize a new research session."""
+    import json
+
+    from praxis.application.research_service import init_research
+
+    result = init_research(
+        working_dir=path.resolve(),
+        topic=topic,
+        corpus_path=corpus.resolve(),
+        tier=tier,
+        force=force,
+    )
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "session_id": result.session_id,
+            "phase": result.phase,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        if not quiet:
+            typer.echo("✓ Research session initialized")
+            typer.echo(f"  Session ID: {result.session_id}")
+            typer.echo(f"  Phase: {result.phase}")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+@research_app.command("status")
+def research_status_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Working directory containing session.yaml.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Show current research session status and progress."""
+    import json
+
+    from praxis.application.research_service import get_research_status
+
+    result = get_research_status(path.resolve())
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "session_id": result.session_id,
+            "topic": result.topic,
+            "phase": result.phase,
+            "phase_index": result.phase_index,
+            "phase_count": result.phase_count,
+            "tier": result.tier,
+            "status": result.status,
+            "corpus_path": result.corpus_path,
+            "created_at": result.created_at,
+            "updated_at": result.updated_at,
+            "phase_history": result.phase_history,
+            "artifact_path": result.artifact_path,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    typer.echo(f"Session: {result.session_id}")
+    typer.echo(f"  Topic:  {result.topic}")
+    typer.echo(f"  Phase:  {result.phase} ({result.phase_index}/{result.phase_count})")
+    typer.echo(f"  Tier:   {result.tier}")
+    typer.echo(f"  Status: {result.status}")
+    typer.echo(f"  Corpus: {result.corpus_path}")
+
+    if result.artifact_path:
+        typer.echo(f"  Artifact: {result.artifact_path}")
+
+    typer.echo("")
+    typer.echo("Phase History:")
+    for entry in result.phase_history:
+        timestamp = entry.get("timestamp", "")[:10]  # Just date part
+        phase = entry.get("phase", "")
+        typer.echo(f"  {timestamp} → {phase}")
+
+    raise typer.Exit(0)
+
+
+@research_app.command("run")
+def research_run_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Working directory containing session.yaml.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Advance to the next research phase."""
+    import json
+
+    from praxis.application.research_service import run_research_phase
+
+    result = run_research_phase(path.resolve())
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "previous_phase": result.previous_phase,
+            "current_phase": result.current_phase,
+            "errors": result.errors,
+            "warnings": result.warnings,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        if not quiet:
+            typer.echo(
+                f"✓ Advanced from {result.previous_phase} to {result.current_phase}"
+            )
+            for warning in result.warnings:
+                typer.echo(f"  ℹ {warning}")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+@research_app.command("approve")
+def research_approve_cmd(
+    rationale: str = typer.Option(
+        ...,
+        "--rationale",
+        "-r",
+        help="Rationale for approving the research.",
+    ),
+    path: Path = typer.Argument(
+        Path("."),
+        help="Working directory containing session.yaml.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Approve completed research for cataloging."""
+    import json
+
+    from praxis.application.research_service import approve_research
+
+    result = approve_research(path.resolve(), rationale)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "session_id": result.session_id,
+            "artifact_path": result.artifact_path,
+            "cataloged": result.cataloged,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        if not quiet:
+            typer.echo("✓ Research approved")
+            typer.echo(f"  Session: {result.session_id}")
+            if result.artifact_path:
+                typer.echo(f"  Artifact: {result.artifact_path}")
+            if result.cataloged:
+                typer.echo("  Status: Cataloged to research library")
+            else:
+                typer.echo("  Status: Ready for cataloging")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+@research_app.command("reject")
+def research_reject_cmd(
+    rationale: str = typer.Option(
+        ...,
+        "--rationale",
+        "-r",
+        help="Rationale for rejecting the research.",
+    ),
+    path: Path = typer.Argument(
+        Path("."),
+        help="Working directory containing session.yaml.",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Reject research session and archive as draft."""
+    import json
+
+    from praxis.application.research_service import reject_research
+
+    result = reject_research(path.resolve(), rationale)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "session_id": result.session_id,
+            "archived": result.archived,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if result.success:
+        if not quiet:
+            typer.echo("✗ Research rejected")
+            typer.echo(f"  Session: {result.session_id}")
+            if result.archived:
+                typer.echo("  Status: Archived as draft")
+        raise typer.Exit(0)
+    else:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+
+# =============================================================================
+# Library Commands
+# =============================================================================
+
+
+@library_app.command("query")
+def library_query_cmd(
+    question: str = typer.Argument(
+        ...,
+        help="Natural language question to answer from the library.",
+    ),
+    library_path: Path | None = typer.Option(
+        None,
+        "--library-path",
+        "-l",
+        help="Path to research library (defaults to auto-detected).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Query the research library with a natural language question."""
+    import json
+
+    from praxis.application.library_service import query_library_service
+
+    result = query_library_service(question, library_path)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "query": result.query,
+            "coverage_level": result.coverage_level,
+            "coverage_reasoning": result.coverage_reasoning,
+            "match_count": result.match_count,
+            "summary": result.summary,
+            "sources": result.sources,
+            "gaps": result.gaps,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    typer.echo(f"Query: {result.query}")
+    typer.echo("")
+    typer.echo(f"Coverage: {result.coverage_level} ({result.match_count} matches)")
+    typer.echo(f"  {result.coverage_reasoning}")
+    typer.echo("")
+
+    if result.sources:
+        typer.echo("Sources:")
+        for source in result.sources:
+            typer.echo(f"  • [{source['title']}]({source['path']})")
+            typer.echo(f"    Consensus: {source['consensus']}, Date: {source['date']}")
+
+    if result.gaps:
+        typer.echo("")
+        typer.echo("Gaps (topics with limited coverage):")
+        for gap in result.gaps:
+            typer.echo(f"  • {gap}")
+
+    raise typer.Exit(0)
+
+
+@library_app.command("search")
+def library_search_cmd(
+    keyword: str = typer.Option(
+        ...,
+        "--keyword",
+        "-k",
+        help="Keyword to search for.",
+    ),
+    topic: str | None = typer.Option(
+        None,
+        "--topic",
+        "-t",
+        help="Optional topic to filter results.",
+    ),
+    library_path: Path | None = typer.Option(
+        None,
+        "--library-path",
+        "-l",
+        help="Path to research library (defaults to auto-detected).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Search the research library by keyword."""
+    import json
+
+    from praxis.application.library_service import search_library_service
+
+    result = search_library_service(keyword, topic, library_path)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "keyword": result.keyword,
+            "topic": result.topic,
+            "matches": result.matches,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    typer.echo(f"Search: {result.keyword}")
+    if result.topic:
+        typer.echo(f"  Topic filter: {result.topic}")
+    typer.echo("")
+
+    if not result.matches:
+        typer.echo("No matching artifacts found.")
+        raise typer.Exit(0)
+
+    typer.echo(f"Found {len(result.matches)} match(es):")
+    for match in result.matches:
+        score = match.get("relevance_score", 0)
+        typer.echo(f"  • {match['id']} (relevance: {score:.2f})")
+        typer.echo(f"    {match['title']}")
+        typer.echo(f"    Topic: {match['topic']}, Consensus: {match['consensus']}")
+
+    raise typer.Exit(0)
+
+
+@library_app.command("cite")
+def library_cite_cmd(
+    artifact_id: str = typer.Argument(
+        ...,
+        help="Artifact ID to cite.",
+    ),
+    library_path: Path | None = typer.Option(
+        None,
+        "--library-path",
+        "-l",
+        help="Path to research library (defaults to auto-detected).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Get a formatted citation for an artifact."""
+    import json
+
+    from praxis.application.library_service import cite_artifact
+
+    result = cite_artifact(artifact_id, library_path)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "artifact_id": result.artifact_id,
+            "citation": result.citation,
+            "formatted": result.formatted,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    typer.echo(result.formatted)
+    raise typer.Exit(0)
+
+
+@library_app.command("check-orphans")
+def library_check_orphans_cmd(
+    library_path: Path | None = typer.Option(
+        None,
+        "--library-path",
+        "-l",
+        help="Path to research library (defaults to auto-detected).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Check for orphaned artifacts not listed in CATALOG.md."""
+    import json
+
+    from praxis.application.library_service import check_orphans
+
+    result = check_orphans(library_path)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "orphans": result.orphans,
+            "count": result.count,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    if result.count == 0:
+        typer.echo("✓ No orphaned artifacts found")
+    else:
+        typer.echo(f"Found {result.count} orphaned artifact(s):")
+        for orphan in result.orphans:
+            typer.echo(f"  • {orphan}")
+
+    raise typer.Exit(0)
+
+
+@library_app.command("check-stale")
+def library_check_stale_cmd(
+    days: int = typer.Option(
+        180,
+        "--days",
+        "-d",
+        help="Number of days before an artifact is considered stale.",
+    ),
+    library_path: Path | None = typer.Option(
+        None,
+        "--library-path",
+        "-l",
+        help="Path to research library (defaults to auto-detected).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Check for stale artifacts older than threshold."""
+    import json
+
+    from praxis.application.library_service import check_stale
+
+    result = check_stale(days, library_path)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "stale_artifacts": result.stale_artifacts,
+            "count": result.count,
+            "threshold_days": result.threshold_days,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    if result.count == 0:
+        typer.echo(f"✓ No stale artifacts found (threshold: {days} days)")
+    else:
+        typer.echo(f"Found {result.count} stale artifact(s) (older than {days} days):")
+        for artifact in result.stale_artifacts:
+            typer.echo(f"  • {artifact['id']} ({artifact['date']})")
+            typer.echo(f"    {artifact['title']}")
+
+    raise typer.Exit(0)
+
+
+@library_app.command("reindex")
+def library_reindex_cmd(
+    library_path: Path | None = typer.Option(
+        None,
+        "--library-path",
+        "-l",
+        help="Path to research library (defaults to auto-detected).",
+    ),
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+    quiet: bool = typer.Option(
+        False,
+        "--quiet",
+        "-q",
+        help="Suppress non-error output.",
+    ),
+) -> None:
+    """Rebuild CATALOG.md from all artifacts in the library."""
+    import json
+
+    from praxis.application.library_service import reindex_library_service
+
+    result = reindex_library_service(library_path)
+
+    if json_output:
+        data = {
+            "success": result.success,
+            "implemented": result.implemented,
+            "errors": result.errors,
+        }
+        typer.echo(json.dumps(data, indent=2))
+        raise typer.Exit(0 if result.success else 1)
+
+    if not result.success:
+        for err in result.errors:
+            typer.echo(f"✗ {err}", err=True)
+        raise typer.Exit(1)
+
+    if quiet:
+        raise typer.Exit(0)
+
+    if result.implemented:
+        typer.echo("✓ Library reindexed successfully")
+    else:
+        typer.echo("ℹ Reindex is not yet implemented")
+        typer.echo("  Use incremental cataloging via 'praxis research approve'")
+
+    raise typer.Exit(0)
 
 
 if __name__ == "__main__":
