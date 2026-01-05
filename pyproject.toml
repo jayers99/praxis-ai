@@ -24,6 +24,7 @@ pytest-bdd = "^8.0"
 ruff = "^0.8"
 mypy = "^1.0"
 types-pyyaml = "^6.0"
+pre-commit = "^4.5.1"
 
 [tool.poetry.scripts]
 praxis = "praxis.cli:app"
