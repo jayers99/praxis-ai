@@ -543,6 +543,136 @@ See [PKDP Guide](pkdp.md) for stages, tiers, and artifacts.
 
 ---
 
+## Research Commands
+
+The `praxis research` command group manages research sessions that follow the research runbook workflow.
+
+### praxis research init
+
+Initialize a new research session:
+
+```bash
+praxis research init --topic "Research Topic" --corpus /path/to/corpus [PATH] [OPTIONS]
+```
+
+| Option           | Description                                     |
+| ---------------- | ----------------------------------------------- |
+| `--topic`, `-t`  | Research topic to investigate (required)        |
+| `--corpus`, `-c` | Path to source corpus for RTC phase (required)  |
+| `--tier`         | Risk tier 0-3, higher = stricter (default: 2)   |
+| `--force`, `-f`  | Replace existing active session                 |
+| `--json`         | Output in JSON format                           |
+| `--quiet`, `-q`  | Suppress non-error output                       |
+
+### praxis research status
+
+Show current research session status and progress:
+
+```bash
+praxis research status [PATH] [OPTIONS]
+```
+
+### praxis research run
+
+Advance to the next research phase:
+
+```bash
+praxis research run [PATH] [OPTIONS]
+```
+
+Research phases progress: **intake → rtc → idas → sad → ccr → asr → synthesis**
+
+### praxis research approve
+
+Approve completed research for cataloging (requires synthesis phase):
+
+```bash
+praxis research approve --rationale "Approval reason" [PATH] [OPTIONS]
+```
+
+### praxis research reject
+
+Reject research session and archive as draft (works at any phase):
+
+```bash
+praxis research reject --rationale "Rejection reason" [PATH] [OPTIONS]
+```
+
+---
+
+## Library Commands
+
+The `praxis library` command group provides query and maintenance operations for the research library.
+
+### praxis library query
+
+Query the research library with a natural language question:
+
+```bash
+praxis library query "What are the praxis roles?" [OPTIONS]
+```
+
+| Option              | Description                                      |
+| ------------------- | ------------------------------------------------ |
+| `--library-path`    | Path to research library (auto-detected)         |
+| `--json`            | Output in JSON format                            |
+| `--quiet`, `-q`     | Suppress non-error output                        |
+
+### praxis library search
+
+Search the research library by keyword:
+
+```bash
+praxis library search --keyword roles [OPTIONS]
+```
+
+| Option              | Description                                      |
+| ------------------- | ------------------------------------------------ |
+| `--keyword`, `-k`   | Keyword to search for (required)                 |
+| `--topic`, `-t`     | Optional topic to filter results                 |
+| `--library-path`    | Path to research library (auto-detected)         |
+| `--json`            | Output in JSON format                            |
+
+### praxis library cite
+
+Get a formatted citation for an artifact:
+
+```bash
+praxis library cite roles-rationale-2025-12-28 [OPTIONS]
+```
+
+### praxis library check-orphans
+
+Check for orphaned artifacts not listed in CATALOG.md:
+
+```bash
+praxis library check-orphans [OPTIONS]
+```
+
+### praxis library check-stale
+
+Check for stale artifacts older than threshold:
+
+```bash
+praxis library check-stale --days 180 [OPTIONS]
+```
+
+| Option              | Description                                      |
+| ------------------- | ------------------------------------------------ |
+| `--days`, `-d`      | Days before artifact is considered stale (180)   |
+| `--library-path`    | Path to research library (auto-detected)         |
+| `--json`            | Output in JSON format                            |
+
+### praxis library reindex
+
+Rebuild CATALOG.md from all artifacts (placeholder, not yet fully implemented):
+
+```bash
+praxis library reindex [OPTIONS]
+```
+
+---
+
 ## Walkthrough: Building a Hello World CLI
 
 This example demonstrates building a minimal Python CLI using the full Praxis lifecycle.
