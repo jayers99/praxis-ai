@@ -1,6 +1,10 @@
 # Praxis: Domain Definitions
 
+**Version:** v0.3
+
 > **Research basis:** See [Domains Research](../../research-library/spec/domains-research.md) for full prior art, sources, and rationale.
+> 
+> **Versioning:** See [VERSION.md](VERSION.md) for Praxis specification version history and roadmap.
 
 ---
 
