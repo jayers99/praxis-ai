@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 import questionary
@@ -163,7 +163,7 @@ def create_domain_guided(
 
     # Step 3: Add metadata
     spec.author = os.environ.get("USER", "unknown")
-    spec.created_at = datetime.utcnow().isoformat() + "Z"
+    spec.created_at = datetime.now(timezone.utc).isoformat() + "Z"
 
     # Step 4: Save domain specification
     domains_dir = workspace_path / "domains"
