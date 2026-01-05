@@ -504,6 +504,12 @@ def init_cmd(
         "-e",
         help="Environment (Home, Work).",
     ),
+    lifecycle_mode: str = typer.Option(
+        "full",
+        "--lifecycle-mode",
+        "-m",
+        help="Lifecycle mode: 'full' (all 9 stages) or 'fast' (simplified 4-stage track).",
+    ),
     template: str | None = typer.Option(
         None,
         "--template",
@@ -563,6 +569,7 @@ def init_cmd(
         environment,
         subtype=None,
         template=template,
+        lifecycle_mode=lifecycle_mode,
         force=force,
     )
 
@@ -613,6 +620,12 @@ def new_cmd(
         "--env",
         "-e",
         help="Environment (Home, Work). Defaults to workspace config when available.",
+    ),
+    lifecycle_mode: str = typer.Option(
+        "full",
+        "--lifecycle-mode",
+        "-m",
+        help="Lifecycle mode: 'full' (all 9 stages) or 'fast' (simplified 4-stage track).",
     ),
     path: Path | None = typer.Option(
         None,
@@ -822,6 +835,7 @@ def new_cmd(
         privacy,
         environment,
         subtype=subtype,
+        lifecycle_mode=lifecycle_mode,
         force=force,
     )
 
@@ -1192,6 +1206,7 @@ def status_cmd(
     typer.echo(f"  Stage:   {config.stage.value} ({stage_progress})")
     typer.echo(f"  Privacy: {config.privacy_level.value}")
     typer.echo(f"  Env:     {config.environment}")
+    typer.echo(f"  Mode:    {config.lifecycle_mode}")
     if config.tags:
         tags_str = ", ".join(config.tags)
         typer.echo(f"  Tags:    {tags_str}")

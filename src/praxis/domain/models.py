@@ -38,6 +38,13 @@ class PraxisConfig(BaseModel):
     stage: Stage
     privacy_level: PrivacyLevel
     environment: str = Field(default="Home", pattern=r"^(Home|Work)$")
+    lifecycle_mode: Literal["full", "fast"] = Field(
+        default="full",
+        description=(
+            "Lifecycle mode: 'full' (all 9 stages) or 'fast' "
+            "(simplified 4-stage track)."
+        ),
+    )
     coverage_threshold: int | None = Field(
         default=None,
         ge=0,
