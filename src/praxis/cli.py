@@ -308,6 +308,12 @@ def init_cmd(
         "-e",
         help="Environment (Home, Work).",
     ),
+    template: str | None = typer.Option(
+        None,
+        "--template",
+        "-t",
+        help="Project template (e.g., python-cli).",
+    ),
     force: bool = typer.Option(
         False,
         "--force",
@@ -360,6 +366,7 @@ def init_cmd(
         privacy,
         environment,
         subtype=None,
+        template=template,
         force=force,
     )
 

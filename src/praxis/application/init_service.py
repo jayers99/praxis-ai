@@ -22,6 +22,7 @@ def init_project(
     environment: str,
     *,
     subtype: str | None = None,
+    template: str | None = None,
     force: bool = False,
 ) -> InitResult:
     """Initialize a Praxis project.
@@ -32,6 +33,7 @@ def init_project(
         subtype: Optional subtype (e.g., cli, api, library).
         privacy: Privacy level (public, personal, confidential, restricted).
         environment: Environment (Home, Work).
+        template: Optional project template name (e.g., 'python-cli').
         force: If True, overwrite existing files.
 
     Returns:
@@ -142,6 +144,30 @@ def init_project(
         created_files.append("docs/capture.md")
     else:
         errors.append(err or "Unknown error writing docs/capture.md")
+
+    # Apply project template if specified
+    if template is not None:
+        from praxis.infrastructure.project_templates.template_loader import (
+            apply_template,
+            get_template,
+        )
+
+        project_template = get_template(template)
+        if project_template is None:
+            errors.append(f"Unknown template: '{template}'")
+        else:
+            # Validate template domain matches project domain
+            if project_template.domain != domain_enum.value:
+                errors.append(
+                    f"Template '{template}' is for domain '{project_template.domain}', "
+                    f"but project domain is '{domain_enum.value}'"
+                )
+            else:
+                template_files, template_errors = apply_template(
+                    project_root, project_template, project_name, force
+                )
+                created_files.extend(template_files)
+                errors.extend(template_errors)
 
     return InitResult(
         success=len(errors) == 0,
