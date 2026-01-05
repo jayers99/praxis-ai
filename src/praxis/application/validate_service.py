@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from praxis.domain.models import ValidationResult
+from praxis.domain.models import ValidationIssue, ValidationResult
+from praxis.domain.stages import is_stage_allowed
 from praxis.infrastructure.artifact_checker import check_artifact_exists
 from praxis.infrastructure.git_history import (
     check_privacy_downgrade,
@@ -19,9 +20,10 @@ def validate(path: Path) -> ValidationResult:
 
     Performs all validation checks:
     1. Schema validation (via Pydantic)
-    2. Artifact existence check
-    3. Regression detection (vs previous commit)
-    4. Privacy downgrade detection (vs previous commit)
+    2. Lifecycle mode validation
+    3. Artifact existence check
+    4. Regression detection (vs previous commit)
+    5. Privacy downgrade detection (vs previous commit)
 
     Args:
         path: Path to praxis.yaml file or project directory.
@@ -43,20 +45,32 @@ def validate(path: Path) -> ValidationResult:
     config = result.config
     issues = list(result.issues)
 
-    # Step 2: Check artifact existence
+    # Step 2: Check if stage is allowed in lifecycle mode
+    if not is_stage_allowed(config.stage, config.lifecycle_mode):
+        issues.append(
+            ValidationIssue(
+                rule="invalid_stage_for_mode",
+                severity="error",
+                message=f"Stage '{config.stage.value}' is not allowed in "
+                f"'{config.lifecycle_mode}' mode. "
+                f"Use 'capture', 'formalize', 'execute', or 'close' for fast track.",
+            )
+        )
+
+    # Step 3: Check artifact existence
     artifact_issue = check_artifact_exists(config, project_root)
     if artifact_issue is not None:
         issues.append(artifact_issue)
 
-    # Step 3: Get previous config for regression checks
+    # Step 4: Get previous config for regression checks
     previous_config = get_previous_config(project_root)
 
-    # Step 4: Check for invalid regression
+    # Step 5: Check for invalid regression
     regression_issue = check_regression(config, previous_config)
     if regression_issue is not None:
         issues.append(regression_issue)
 
-    # Step 5: Check for privacy downgrade
+    # Step 6: Check for privacy downgrade
     privacy_issue = check_privacy_downgrade(config, previous_config)
     if privacy_issue is not None:
         issues.append(privacy_issue)

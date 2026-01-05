@@ -10,7 +10,12 @@ from praxis.application.validate_service import validate
 from praxis.domain.domains import ARTIFACT_PATHS
 from praxis.domain.models import PraxisConfig, ValidationResult
 from praxis.domain.next_steps import NextStep
-from praxis.domain.stages import REQUIRES_ARTIFACT, Stage
+from praxis.domain.stages import (
+    REQUIRES_ARTIFACT,
+    Stage,
+    get_allowed_stages,
+    get_next_stage,
+)
 from praxis.infrastructure.yaml_loader import load_praxis_config
 
 
@@ -85,24 +90,6 @@ def get_stage_history_from_config(
         )
         for entry in history_entries
     ]
-
-
-def get_next_stage(current: Stage) -> Stage | None:
-    """Get the next stage in the lifecycle.
-
-    Args:
-        current: Current stage.
-
-    Returns:
-        Next stage, or None if at Close.
-    """
-    stages = list(Stage)
-    current_index = stages.index(current)
-
-    if current_index >= len(stages) - 1:
-        return None  # Already at Close
-
-    return stages[current_index + 1]
 
 
 def get_next_stage_requirements(
@@ -219,11 +206,12 @@ def get_status(path: Path) -> ProjectStatus:
         )
 
     config = load_result.config
-    stages = list(Stage)
-    stage_index = stages.index(config.stage) + 1  # 1-based
+    allowed_stages = list(get_allowed_stages(config.lifecycle_mode))
+    stage_index = allowed_stages.index(config.stage) + 1  # 1-based
+    stage_count = len(allowed_stages)
 
-    # Next stage
-    next_stage = get_next_stage(config.stage)
+    # Next stage (mode-aware)
+    next_stage_value = get_next_stage(config.stage, config.lifecycle_mode)
 
     # Artifact info
     artifact_path_obj = ARTIFACT_PATHS.get(config.domain)
@@ -239,7 +227,7 @@ def get_status(path: Path) -> ProjectStatus:
 
     # Requirements
     requirements = get_next_stage_requirements(
-        config.stage, next_stage, config, project_root
+        config.stage, next_stage_value, config, project_root
     )
 
     # Validation
@@ -255,8 +243,8 @@ def get_status(path: Path) -> ProjectStatus:
         project_name=project_name,
         config=config,
         stage_index=stage_index,
-        stage_count=len(Stage),
-        next_stage=next_stage,
+        stage_count=stage_count,
+        next_stage=next_stage_value,
         next_stage_requirements=requirements,
         artifact_path=artifact_path,
         artifact_exists=artifact_exists,

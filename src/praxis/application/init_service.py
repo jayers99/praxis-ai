@@ -23,6 +23,7 @@ def init_project(
     *,
     subtype: str | None = None,
     template: str | None = None,
+    lifecycle_mode: str = "full",
     force: bool = False,
 ) -> InitResult:
     """Initialize a Praxis project.
@@ -34,6 +35,8 @@ def init_project(
         privacy: Privacy level (public, personal, confidential, restricted).
         environment: Environment (Home, Work).
         template: Optional project template name (e.g., 'python-cli').
+        lifecycle_mode: Lifecycle mode ('full' for all stages,
+            'fast' for simplified track).
         force: If True, overwrite existing files.
 
     Returns:
@@ -64,6 +67,13 @@ def init_project(
     if environment not in ("Home", "Work"):
         errors.append(
             f"Invalid environment: '{environment}'. Valid options: Home, Work"
+        )
+        return InitResult(success=False, errors=errors)
+
+    # Validate lifecycle_mode
+    if lifecycle_mode not in ("full", "fast"):
+        errors.append(
+            f"Invalid lifecycle_mode: '{lifecycle_mode}'. Valid options: full, fast"
         )
         return InitResult(success=False, errors=errors)
 
@@ -105,6 +115,7 @@ def init_project(
         "stage": "capture",
         "privacy_level": privacy_enum.value,
         "environment": environment,
+        "lifecycle_mode": lifecycle_mode,
         "name": generated_name,
         "slug": generated_slug,
         "description": "",
