@@ -51,7 +51,7 @@ labels: ["type:feature"]
 ## Architectural Context
 
 <!--
-Level Selection Quick Reference:
+Level Selection Quick Reference (for initial estimation; Architect has final authority):
 | Size | Files | New Components | Layers | Level |
 |------|-------|----------------|--------|-------|
 | XS/S | 1-2   | 0              | 1      | 0     |
@@ -63,7 +63,7 @@ Rule: When in doubt, go one level higher.
 Default: Level 1 for all non-trivial work.
 -->
 
-**Level:** [0/1/2/3] (determined by Architect during CCR)
+**Level:** [0/1/2/3] (use table above for initial estimate; Architect confirms during CCR)
 
 ### Placement
 - **Layer:** [domain | application | infrastructure]
@@ -88,6 +88,7 @@ Default: Level 1 for all non-trivial work.
 
 ### Dependency Direction (Level 2+)
 <!-- Remove this section if Level 0 or 1 -->
+<!-- ← = "depends on", ↑ = "implements" -->
 ```
 Domain ← Application ← Infrastructure
         ↑               ↑
