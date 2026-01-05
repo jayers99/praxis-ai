@@ -1,7 +1,7 @@
 # Patterns Research Index
 
-_Artifacts: 6_
-_Last updated: 2026-01-03_
+_Artifacts: 7_
+_Last updated: 2026-01-05_
 
 ## Purpose
 
@@ -11,6 +11,7 @@ Reusable patterns and practices. Implementation approaches, best practices, and 
 
 | Title | Consensus | Keywords | Summary |
 |-------|-----------|----------|---------|
+| [Software Design Patterns for Code Domain](design-patterns-code-domain.md) | High | design-patterns, GoF, architecture, refactoring | Classical patterns aligned with Praxis principles, anti-patterns, stage guidance |
 | [Git + AI First Principles](git-ai-first-principles.md) | Medium | git, ai-assisted, gates, drift, human-oversight | Session gates, review bottleneck inversion, METR counter-evidence |
 | [Git + AI Tool Ecosystem](git-ai-tool-ecosystem.md) | Medium | git, mcp, claude-code, heredoc, security | MCP setup, heredoc workarounds, worktrees, security warnings |
 | [AI Code Review Optimization](git-ai-review-optimization.md) | Medium | code-review, copilot, severity, uat | Copilot detection, severity classification, UAT gates |
@@ -82,6 +83,43 @@ These two artifacts focus on verification strategies for AI-assisted development
 ### Key Finding
 
 **AI-generated tests achieve ~79% of human test effectiveness** (0.546 vs 0.690 mutation score). Prompting strategies (role prompting, Explain-Plan-Execute, constraints) significantly improve quality.
+
+## Software Design Patterns for Code Domain
+
+**Status:** Complete — Research synthesized and integrated into Code domain opinions.
+
+This artifact documents classical software design patterns and their application within the Praxis methodology.
+
+### Key Contributions
+
+- **Pattern-Principle Alignment** — Maps GoF/Fowler patterns to Praxis core principles
+- **Architectural Foundation** — Documents hexagonal architecture used in Praxis itself
+- **Anti-Pattern Catalog** — Identifies pattern overuse and misapplication
+- **Stage-Specific Guidance** — When to consider patterns across lifecycle stages
+
+### Patterns Aligned with Praxis
+
+| Pattern | Praxis Principle | Benefit |
+|---------|------------------|---------|
+| Strategy | Optimize for Change | Isolates variation points |
+| Template Method | Lifecycle Stages | Fixed process with variable steps |
+| Builder | Small Increments | Incremental construction |
+| Repository | Design for Feedback | Testable domain isolation |
+| Hexagonal Architecture | Separation of Concerns | Domain/Application/Infrastructure layers |
+
+### Anti-Patterns Documented
+
+1. **Pattern Overuse (Golden Hammer)** — Applying patterns without clear problem
+2. **Singleton Abuse** — Global state masquerading as pattern
+3. **Anemic Domain Model** — All behavior in services, objects just data
+4. **Deep Inheritance Hierarchies** — Fragile base class problems
+5. **Premature Abstraction** — Patterns before second use case
+
+### Artifacts Created
+
+- `opinions/code/design-patterns.md` — Full opinion file with examples
+- `research-library/patterns/design-patterns-code-domain.md` — Research documentation
+- Updated `opinions/code/README.md` — Added navigation links
 
 ## Related Topics
 

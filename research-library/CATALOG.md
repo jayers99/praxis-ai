@@ -1,7 +1,7 @@
 # Research Library Catalog
 
-_Last updated: 2026-01-04_
-_Total artifacts: 36_
+_Last updated: 2026-01-05_
+_Total artifacts: 37_
 
 ---
 
@@ -29,6 +29,7 @@ _Total artifacts: 36_
 | [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | patterns | Medium | 2026-01-01 |
 | [patterns-tdd-bdd-ai-verification-2026-01-01](patterns/tdd-bdd-ai-verification.md) | TDD and BDD for AI Code Verification | patterns | Medium | 2026-01-01 |
 | [patterns-refinement-spawned-pkdp-2026-01-03](patterns/refinement-spawned-pkdp.md) | Refinement-Spawned Knowledge Distillation | patterns | Low (POC) | 2026-01-03 |
+| [patterns-design-patterns-code-domain-2026-01-05](patterns/design-patterns-code-domain.md) | Software Design Patterns for Praxis Code Domain | patterns | High | 2026-01-05 |
 | [roles-site-reliability-engineer-2026-01-02](roles/sre-role.md) | Site Reliability Engineering (SRE) Role | roles | High | 2026-01-02 |
 | [roles-synthesis-integration-lead-2026-01-02](roles/synthesis-role.md) | Synthesis / Integration Lead Role | roles | High | 2026-01-02 |
 | [roles-lead-software-developer-scrum-2026-01-02](roles/lead-software-developer-scrum-role.md) | Lead Software Developer Role in Scrum Teams | roles | Medium | 2026-01-02 |
@@ -109,6 +110,7 @@ _Total artifacts: 36_
 | [patterns-ai-code-verification-workflow-2026-01-01](patterns/ai-code-verification-workflow.md) | AI Code Verification Workflow | Medium | ai-assisted, code-review, verification, trust-calibration, workflow, solo-developer |
 | [patterns-tdd-bdd-ai-verification-2026-01-01](patterns/tdd-bdd-ai-verification.md) | TDD and BDD for AI Code Verification | Medium | TDD, BDD, test-first, mutation-testing, Gherkin, AI-verification, test-quality, prompting |
 | [patterns-refinement-spawned-pkdp-2026-01-03](patterns/refinement-spawned-pkdp.md) | Refinement-Spawned Knowledge Distillation | Low (POC) | refinement, pkdp, knowledge-gaps, spikes, chain-model, research-spawn |
+| [patterns-design-patterns-code-domain-2026-01-05](patterns/design-patterns-code-domain.md) | Software Design Patterns for Praxis Code Domain | High | design-patterns, GoF, architecture, code-domain, refactoring, hexagonal-architecture |
 | [patterns-agent-architectural-direction-2026-01-04](patterns/agent-architectural-direction.md) | Architectural Direction for AI Agent Tickets | Medium | ai-agents, architectural-guidance, ddd, hexagonal, tickets, claude-code, instruction-engineering |
 
 ### Subagents
@@ -135,6 +137,7 @@ _No artifacts yet_
 - [Decision Record: Roles vs Hats](roles/decision-hats.md) — roles — terminology
 - [Lifecycle Stage Research Report](spec/lifecycle-research.md) — spec — lifecycle, stages, formalize
 - [Domain Definitions Research Report](spec/domains-research.md) — spec — domains, code, create, write
+- [Software Design Patterns for Praxis Code Domain](patterns/design-patterns-code-domain.md) — patterns — design-patterns, GoF, architecture
 - [Site Reliability Engineering (SRE) Role](roles/sre-role.md) — roles — SRE, reliability, DevOps, SLO
 - [Synthesis / Integration Lead Role](roles/synthesis-role.md) — roles — synthesis, integration, decision-making
 - [Security Engineer Role in Scrum Teams](roles/security-engineer-scrum-role.md) — roles — security-engineer, DevSecOps, shift-left
