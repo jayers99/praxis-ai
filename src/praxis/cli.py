@@ -3413,17 +3413,23 @@ def guards_render_cmd(
         render_guard_for_vendor,
     )
     from praxis.domain.ai_guards import AIVendor
-    from praxis.infrastructure.yaml_repo import load_praxis_yaml
+    from praxis.infrastructure.yaml_loader import load_praxis_config
+
+    # Resolve path
+    resolved_path = path.resolve()
 
     # Load project config to get domain
-    try:
-        config = load_praxis_yaml(path)
-    except Exception as e:
-        typer.echo(f"✗ Failed to load praxis.yaml: {e}", err=True)
+    validation_result = load_praxis_config(resolved_path)
+    if not validation_result.valid or validation_result.config is None:
+        typer.echo("✗ Failed to load praxis.yaml", err=True)
+        for issue in validation_result.issues:
+            typer.echo(f"  {issue.message}", err=True)
         raise typer.Exit(1)
 
+    config = validation_result.config
+
     # Compose guards
-    composition = compose_guards(config.domain.value, path)
+    composition = compose_guards(config.domain.value, resolved_path)
 
     # Determine vendors to render
     vendors_to_render = []
@@ -3442,7 +3448,7 @@ def guards_render_cmd(
 
     # Determine output directory
     if output_dir is None:
-        output_dir = path
+        output_dir = resolved_path
 
     # Render for each vendor
     for v in vendors_to_render:
@@ -3489,17 +3495,23 @@ def guards_validate_cmd(
         compose_guards,
         validate_guard_composition,
     )
-    from praxis.infrastructure.yaml_repo import load_praxis_yaml
+    from praxis.infrastructure.yaml_loader import load_praxis_config
+
+    # Resolve path
+    resolved_path = path.resolve()
 
     # Load project config to get domain
-    try:
-        config = load_praxis_yaml(path)
-    except Exception as e:
-        typer.echo(f"✗ Failed to load praxis.yaml: {e}", err=True)
+    validation_result = load_praxis_config(resolved_path)
+    if not validation_result.valid or validation_result.config is None:
+        typer.echo("✗ Failed to load praxis.yaml", err=True)
+        for issue in validation_result.issues:
+            typer.echo(f"  {issue.message}", err=True)
         raise typer.Exit(1)
 
+    config = validation_result.config
+
     # Compose and validate
-    composition = compose_guards(config.domain.value, path)
+    composition = compose_guards(config.domain.value, resolved_path)
     result = validate_guard_composition(composition)
 
     # Show results
@@ -3541,17 +3553,23 @@ def guards_list_cmd(
     Shows which guard files are being used in composition.
     """
     from praxis.application.ai_guards_service import list_active_guards
-    from praxis.infrastructure.yaml_repo import load_praxis_yaml
+    from praxis.infrastructure.yaml_loader import load_praxis_config
+
+    # Resolve path
+    resolved_path = path.resolve()
 
     # Load project config to get domain
-    try:
-        config = load_praxis_yaml(path)
-    except Exception as e:
-        typer.echo(f"✗ Failed to load praxis.yaml: {e}", err=True)
+    validation_result = load_praxis_config(resolved_path)
+    if not validation_result.valid or validation_result.config is None:
+        typer.echo("✗ Failed to load praxis.yaml", err=True)
+        for issue in validation_result.issues:
+            typer.echo(f"  {issue.message}", err=True)
         raise typer.Exit(1)
 
+    config = validation_result.config
+
     # List guards
-    descriptions = list_active_guards(config.domain.value, path)
+    descriptions = list_active_guards(config.domain.value, resolved_path)
 
     typer.echo("Active AI Guards:")
     for desc in descriptions:
