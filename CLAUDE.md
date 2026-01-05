@@ -29,6 +29,24 @@ gh issue list --label "maturity: formalized" --label "type: feature"
 
 **Session summaries:** Save to workspace-level bench: `$PRAXIS_HOME/bench/sessions/YYYY-MM-DD.md`
 
+### Issue Maturity vs Project Lifecycle
+
+**Important distinction:** Issue maturity labels (`raw|shaped|formalized`) are a **simplified workflow for GitHub issues**, not the full Praxis lifecycle.
+
+**Mapping to Canonical Lifecycle:**
+
+| Issue Maturity | Approximate Lifecycle Stages | Purpose |
+|----------------|------------------------------|---------|
+| `raw` | Capture, Sense | Raw idea, needs investigation |
+| `shaped` | Explore, Shape | Direction forming, tradeoffs explored |
+| `formalized` | Formalize (+ CCR approval) | Ready for commitment with clear acceptance criteria |
+
+**Key differences:**
+- **Issues** use a 3-stage maturity model for tracking work items
+- **Projects** use the full 9-stage lifecycle (Capture → Sense → Explore → Shape → Formalize → Commit → Execute → Sustain → Close)
+- Issue maturity focuses on **readiness to implement**, project lifecycle governs **full work evolution**
+- A `formalized` issue still requires `praxis.yaml` at Formalize stage with required artifacts (e.g., `docs/sod.md` for Code domain)
+
 ## Tech Stack
 
 - **Language:** Python 3.12+
@@ -153,6 +171,26 @@ Run `praxis opinions --prompt` to get formatted context for AI assistants.
 | generate  |   Ask   | Allowed |   Ask   | Allowed | Blocked |
 | transform |   Ask   | Allowed |   Ask   | Allowed | Blocked |
 | execute   |   Ask   |    —    |    —    |    —    |    —    |
+
+## AI Governance
+
+**Current Source of Truth:** This file (CLAUDE.md) is the active governance document for AI behavior in Praxis.
+
+**Future Direction:** The `core/ai/ai-guards.md` document defines a future design for AI guards:
+- **Status:** DRAFT — Design Under Review (as of 2025-12-25)
+- **Purpose:** Separate user-level environment constraints from project-level domain workflows
+- **Not yet active:** AI guards are not currently implemented or enforced
+
+**Implementation Reality:**
+- **Policy Engine:** Pydantic v2 (see [ADR-001](adr/001-policy-engine.md))
+- **Validation Model:** Schema + filesystem checks (see [ADR-002](adr/002-validation-model.md))
+- **Execution Guardrails:** Defined in `core/governance/guardrails.md` (currently skeleton)
+
+**What this means for you:**
+- Follow the guidance in this file (CLAUDE.md) for current AI behavior
+- Reference `core/spec/` for normative lifecycle and domain specifications
+- Use `core/governance/` for governance decisions and arbitration rules
+- Treat `core/ai/ai-guards.md` as future architectural direction, not current requirements
 
 ## Project Structure
 

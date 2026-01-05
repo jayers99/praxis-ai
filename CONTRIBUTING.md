@@ -50,9 +50,39 @@ You understand that your contributions are voluntary and that the Project Owner 
 2. Create a feature branch (`git checkout -b feature/your-feature`)
 3. Make your changes
 4. Ensure your code follows existing patterns
-5. Commit with clear messages
-6. Push to your fork
-7. Open a Pull Request
+5. **Add tests for new functionality** (see Testing Requirements below)
+6. Run tests, linting, and type checking
+7. Commit with clear messages
+8. Push to your fork
+9. Open a Pull Request
+
+### Testing Requirements
+
+This project uses **Behavior-Driven Development (BDD)** with Gherkin feature files:
+
+- **All new features require Gherkin acceptance criteria**
+- Feature files go in `tests/features/`
+- Step definitions go in `tests/step_defs/`
+- Use Given-When-Then format for test scenarios
+- Follow existing feature files as examples
+
+**Running tests:**
+```bash
+poetry run pytest                    # Run all tests
+poetry run pytest tests/features/    # Run BDD tests only
+poetry run ruff check .              # Linting
+poetry run mypy .                    # Type checking
+```
+
+**Example Gherkin scenario:**
+```gherkin
+Scenario: Validate project at Execute stage requires SOD
+  Given a praxis project at stage "execute" with domain "code"
+  When I run "praxis validate"
+  And no file exists at "docs/sod.md"
+  Then the command should fail
+  And the output should contain "Missing formalize artifact"
+```
 
 ### Pull Request Process
 
