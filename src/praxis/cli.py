@@ -205,7 +205,10 @@ def doctor_cmd(
                 "status": "warning",
                 "check": "Workspace",
                 "value": str(workspace_path),
-                "message": "Directory exists but not initialized (run 'praxis workspace init')",
+                "message": (
+                    "Directory exists but not initialized "
+                    "(run 'praxis workspace init')"
+                ),
             })
             has_warnings = True
     elif praxis_home_env:
@@ -255,13 +258,10 @@ def doctor_cmd(
     for check in checks:
         if check["status"] == "pass":
             icon = "✓"
-            color_fn = lambda x: x  # No color
         elif check["status"] == "warning":
             icon = "⚠"
-            color_fn = lambda x: x
         else:  # error
             icon = "✗"
-            color_fn = lambda x: x
 
         check_name = check["check"]
         value = check["value"]
@@ -282,7 +282,7 @@ def doctor_cmd(
             typer.echo("  - Install Python 3.10 or higher", err=True)
 
         if praxis_home_env and workspace_path and not workspace_path.exists():
-            typer.echo(f"  - Create workspace: praxis workspace init", err=True)
+            typer.echo("  - Create workspace: praxis workspace init", err=True)
 
         raise typer.Exit(1)
 
