@@ -31,7 +31,7 @@ def run_command(command: str, context: dict[str, Any]) -> None:
     result = runner.invoke(app, parts)
     context["result"] = result
     context["exit_code"] = result.exit_code
-    context["output"] = result.stdout
+    context["output"] = result.output
 
 
 @then(parsers.parse("the exit code should be {expected_code:d}"))

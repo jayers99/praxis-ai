@@ -15,6 +15,10 @@ from praxis.infrastructure.librarian import (
     query_library,
 )
 
+# Project root for accessing research-library
+PROJECT_ROOT = Path(__file__).parent.parent
+RESEARCH_LIBRARY = PROJECT_ROOT / "research-library"
+
 
 class TestExtractKeywords:
     """Tests for extract_keywords function."""
@@ -65,7 +69,7 @@ class TestGetArtifactSummary:
 
     def test_existing_artifact_with_summary(self) -> None:
         """Returns summary for existing artifact with Executive Summary section."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         summary = get_artifact_summary("roles-rationale-2025-12-28", library_path)
 
         assert summary != ""
@@ -73,14 +77,14 @@ class TestGetArtifactSummary:
 
     def test_nonexistent_artifact(self) -> None:
         """Returns empty string for non-existent artifact."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         summary = get_artifact_summary("non-existent-id", library_path)
         assert summary == ""
 
     def test_artifact_without_summary(self) -> None:
         """Returns empty string when artifact has no Executive Summary section."""
         # This is a hypothetical test case - all current artifacts have summaries
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         # For now, we test with a non-existent artifact
         summary = get_artifact_summary("test-artifact-no-summary", library_path)
         assert summary == ""
@@ -91,7 +95,7 @@ class TestAssessCoverage:
 
     def test_good_coverage(self) -> None:
         """Returns 'good' or 'partial' coverage for well-covered topics."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         assessment = assess_coverage("roles", library_path)
 
         # Roles is a well-covered topic with many artifacts
@@ -102,7 +106,7 @@ class TestAssessCoverage:
 
     def test_limited_coverage(self) -> None:
         """Returns 'limited' or 'none' coverage for obscure topics."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         assessment = assess_coverage("quantum computing", library_path)
 
         assert assessment.level in ["limited", "none"]
@@ -111,7 +115,7 @@ class TestAssessCoverage:
 
     def test_no_coverage(self) -> None:
         """Returns 'limited' or 'none' coverage for obscure topics."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         # Use a very specific non-existent topic that won't match anything
         assessment = assess_coverage("zzzqwertynonsense123", library_path)
 
@@ -121,7 +125,7 @@ class TestAssessCoverage:
 
     def test_empty_query(self) -> None:
         """Handles empty query gracefully."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         assessment = assess_coverage("", library_path)
 
         assert assessment.level == "none"
@@ -133,7 +137,7 @@ class TestGetCitations:
 
     def test_existing_artifact(self) -> None:
         """Returns citation for existing artifact."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         citations = get_citations("roles-rationale-2025-12-28", library_path)
 
         assert len(citations) == 1
@@ -146,7 +150,7 @@ class TestGetCitations:
 
     def test_nonexistent_artifact(self) -> None:
         """Returns empty list for non-existent artifact."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         citations = get_citations("non-existent-id", library_path)
         assert citations == []
 
@@ -156,7 +160,7 @@ class TestQueryLibrary:
 
     def test_query_with_matching_artifacts(self) -> None:
         """Returns response with sources for matching query."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         response = query_library("What are praxis roles?", library_path)
 
         assert response.query == "What are praxis roles?"
@@ -166,7 +170,7 @@ class TestQueryLibrary:
 
     def test_query_with_no_matches(self) -> None:
         """Returns response with no sources for non-matching query."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         response = query_library("quantum computing breakthroughs", library_path)
 
         assert response.query == "quantum computing breakthroughs"
@@ -176,7 +180,7 @@ class TestQueryLibrary:
 
     def test_empty_query(self) -> None:
         """Handles empty query gracefully."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         response = query_library("", library_path)
 
         assert response.query == ""
@@ -186,7 +190,7 @@ class TestQueryLibrary:
 
     def test_query_response_structure(self) -> None:
         """Response has all required fields."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         response = query_library("roles", library_path)
 
         assert isinstance(response, LibraryResponse)
@@ -198,7 +202,7 @@ class TestQueryLibrary:
 
     def test_sources_are_citations(self) -> None:
         """Sources are Citation objects."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         response = query_library("praxis roles", library_path)
 
         for source in response.sources:
@@ -214,14 +218,14 @@ class TestCoverageThresholds:
 
     def test_coverage_level_type(self) -> None:
         """Coverage level is one of the allowed values."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         assessment = assess_coverage("roles", library_path)
 
         assert assessment.level in ["good", "partial", "limited", "none"]
 
     def test_good_coverage_criteria(self) -> None:
         """Good coverage requires 3+ matches with avg relevance >= 0.6."""
-        library_path = Path("/home/runner/work/praxis-ai/praxis-ai/research-library")
+        library_path = RESEARCH_LIBRARY
         # "roles" should have good coverage
         assessment = assess_coverage("roles scrum praxis", library_path)
 

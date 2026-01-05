@@ -147,7 +147,7 @@ def run_context(context: dict[str, Any]) -> None:
     runner = CliRunner()
     result = runner.invoke(app, ["context", str(project_root)])
     context["result"] = result
-    context["output"] = result.stdout
+    context["output"] = result.output
 
 
 @when("I run praxis context with --json")
@@ -157,7 +157,7 @@ def run_context_json(context: dict[str, Any]) -> None:
     runner = CliRunner()
     result = runner.invoke(app, ["context", str(project_root), "--json"])
     context["result"] = result
-    context["output"] = result.stdout
+    context["output"] = result.output
 
 
 @when("I run praxis context with --quiet")
@@ -167,7 +167,7 @@ def run_context_quiet(context: dict[str, Any]) -> None:
     runner = CliRunner()
     result = runner.invoke(app, ["context", str(project_root), "--quiet"])
     context["result"] = result
-    context["output"] = result.stdout
+    context["output"] = result.output
 
 
 @when("I run praxis context twice")

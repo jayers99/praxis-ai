@@ -17,8 +17,8 @@ scenarios("../features/privacy_guardrails.feature")
 
 @pytest.fixture
 def privacy_cli_runner() -> CliRunner:
-    """Provide a CLI runner with separated stderr."""
-    return CliRunner(mix_stderr=False)
+    """Provide a CLI runner."""
+    return CliRunner()
 
 
 @given("I am in a temporary directory")
