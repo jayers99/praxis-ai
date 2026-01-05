@@ -1,7 +1,7 @@
 # Research Library Catalog
 
 _Last updated: 2026-01-04_
-_Total artifacts: 35_
+_Total artifacts: 36_
 
 ---
 
@@ -44,6 +44,7 @@ _Total artifacts: 35_
 | [roles-multi-agent-context-mitigation-2026-01-02](roles/multi-agent-role-specialization-context-mitigation.md) | Multi-Agent Role Specialization as Context Memory Mitigation | roles | Partial | 2026-01-02 |
 | [roles-agile-ai-context-memory-2026-01-02](roles/agile-shared-responsibility-ai-context-memory.md) | Agile Shared Responsibility: AI Context Memory Problem | roles | Medium | 2026-01-02 |
 | [patterns-agent-architectural-direction-2026-01-04](patterns/agent-architectural-direction.md) | Architectural Direction for AI Agent Tickets | patterns | Medium | 2026-01-04 |
+| [roles-architect-ccr-agent-guidance-2026-01-04](roles/architect-ccr-agent-guidance.md) | Architect CCR Enhancement for AI Agent Tickets | roles | Medium | 2026-01-04 |
 
 ---
 
@@ -88,6 +89,7 @@ _Total artifacts: 35_
 | [roles-subsystem-analysis-2026-01-02](roles/roles-subsystem-analysis-report.md) | Praxis Roles Subsystem Analysis Report | N/A | praxis-roles, subsystem, governance, lifecycle, AI-agents, CCR |
 | [roles-multi-agent-context-mitigation-2026-01-02](roles/multi-agent-role-specialization-context-mitigation.md) | Multi-Agent Role Specialization as Context Memory Mitigation | Partial | multi-agent, context-memory, role-specialization, token-overhead, orchestration |
 | [roles-agile-ai-context-memory-2026-01-02](roles/agile-shared-responsibility-ai-context-memory.md) | Agile Shared Responsibility: AI Context Memory Problem | Medium | agile, collective-ownership, AI-agents, context-memory, stateless |
+| [roles-architect-ccr-agent-guidance-2026-01-04](roles/architect-ccr-agent-guidance.md) | Architect CCR Enhancement for AI Agent Tickets | Medium | architect, CCR, agent-readiness, architectural-guidance, tickets, kickback-triggers, issue-refinement |
 
 ### Spec
 
@@ -162,6 +164,7 @@ _No artifacts yet_
 - [Software Architect Role in Scrum Teams](roles/software-architect-scrum-role.md) — roles — software-architect, agile, SAFe
 - [Agile Shared Responsibility: AI Context Memory Problem](roles/agile-shared-responsibility-ai-context-memory.md) — roles — agile, collective-ownership, AI-agents
 - [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md) — patterns — ai-agents, architectural-guidance, ddd, hexagonal
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md) — roles — architect, CCR, agent-readiness, issue-refinement
 
 ### Partial Consensus (hypothesis under evaluation)
 
@@ -179,6 +182,9 @@ _No artifacts yet_
 ### accountability
 - [Rationale for Praxis Roles Architecture](roles/rationale.md)
 
+### agent-readiness
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md)
+
 ### ADR
 - [Synthesis / Integration Lead Role](roles/synthesis-role.md)
 
@@ -194,8 +200,12 @@ _No artifacts yet_
 - [Agile Shared Responsibility: AI Context Memory Problem](roles/agile-shared-responsibility-ai-context-memory.md)
 - [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
 
+### architect
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md)
+
 ### architectural-guidance
 - [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md)
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md)
 
 ### ai-assisted
 - [Git + AI Workflow First Principles](patterns/git-ai-first-principles.md)
@@ -218,6 +228,7 @@ _No artifacts yet_
 
 ### CCR
 - [Praxis Roles Subsystem Analysis Report](roles/roles-subsystem-analysis-report.md)
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md)
 
 ### chain-model
 - [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md)
@@ -346,6 +357,12 @@ _No artifacts yet_
 
 ### intent-maintenance
 - [Human Intent vs AI Throughput Research](foundations/human-ai-intent-maintenance.md)
+
+### issue-refinement
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md)
+
+### kickback-triggers
+- [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md)
 
 ### knowledge-distillation
 - [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md)
@@ -571,6 +588,8 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2026-01-04 | [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md) | roles |
+| 2026-01-04 | [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md) | patterns |
 | 2026-01-03 | [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md) | patterns |
 | 2026-01-02 | [Site Reliability Engineering (SRE) Role](roles/sre-role.md) | roles |
 | 2026-01-02 | [Synthesis / Integration Lead Role](roles/synthesis-role.md) | roles |
