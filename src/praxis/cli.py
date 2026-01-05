@@ -102,6 +102,200 @@ def help_cmd(ctx: typer.Context) -> None:
     typer.echo(ctx.parent.get_help())
 
 
+@app.command(name="doctor")
+def doctor_cmd(
+    json_output: bool = typer.Option(
+        False,
+        "--json",
+        help="Output as JSON.",
+    ),
+) -> None:
+    """Check Praxis installation and configuration.
+
+    Verifies:
+    - Python version (requires 3.10+)
+    - PRAXIS_HOME environment variable
+    - Workspace structure and configuration
+    - CLI accessibility
+
+    Exit codes:
+    - 0: All checks passed
+    - 1: Critical errors found (missing required components)
+    - 2: Warnings found (optional components missing)
+    """
+    import json as json_module
+    import os
+    import sys
+
+    checks = []
+    has_errors = False
+    has_warnings = False
+
+    # Check Python version
+    py_version = sys.version_info
+    if py_version >= (3, 10):
+        checks.append({
+            "status": "pass",
+            "check": "Python version",
+            "value": f"{py_version.major}.{py_version.minor}.{py_version.micro}",
+            "message": None,
+        })
+    else:
+        checks.append({
+            "status": "error",
+            "check": "Python version",
+            "value": f"{py_version.major}.{py_version.minor}.{py_version.micro}",
+            "message": "Python 3.10+ required",
+        })
+        has_errors = True
+
+    # Check PRAXIS_HOME
+    praxis_home_env = os.environ.get("PRAXIS_HOME")
+    if praxis_home_env:
+        checks.append({
+            "status": "pass",
+            "check": "PRAXIS_HOME",
+            "value": praxis_home_env,
+            "message": None,
+        })
+    else:
+        checks.append({
+            "status": "warning",
+            "check": "PRAXIS_HOME",
+            "value": "not set",
+            "message": "Workspace features disabled",
+        })
+        has_warnings = True
+
+    # Check workspace structure
+    workspace_path = get_praxis_home()
+    if workspace_path and workspace_path.exists():
+        workspace_config = workspace_path / "workspace-config.yaml"
+        if workspace_config.exists():
+            checks.append({
+                "status": "pass",
+                "check": "Workspace",
+                "value": str(workspace_path),
+                "message": "Configured",
+            })
+
+            # Check subdirectories
+            expected_dirs = ["extensions", "examples", "projects"]
+            for dirname in expected_dirs:
+                dir_path = workspace_path / dirname
+                if dir_path.exists():
+                    checks.append({
+                        "status": "pass",
+                        "check": f"  {dirname}/",
+                        "value": "exists",
+                        "message": None,
+                    })
+                else:
+                    checks.append({
+                        "status": "warning",
+                        "check": f"  {dirname}/",
+                        "value": "missing",
+                        "message": "Expected directory not found",
+                    })
+                    has_warnings = True
+        else:
+            checks.append({
+                "status": "warning",
+                "check": "Workspace",
+                "value": str(workspace_path),
+                "message": (
+                    "Directory exists but not initialized "
+                    "(run 'praxis workspace init')"
+                ),
+            })
+            has_warnings = True
+    elif praxis_home_env:
+        checks.append({
+            "status": "error",
+            "check": "Workspace",
+            "value": praxis_home_env,
+            "message": "Directory not found",
+        })
+        has_errors = True
+
+    # Check Praxis package version
+    checks.append({
+        "status": "pass",
+        "check": "Praxis version",
+        "value": __version__,
+        "message": None,
+    })
+
+    # JSON output
+    if json_output:
+        output = {
+            "success": not has_errors,
+            "has_warnings": has_warnings,
+            "checks": checks,
+        }
+        typer.echo(json_module.dumps(output, indent=2))
+        if has_errors:
+            raise typer.Exit(1)
+        if has_warnings:
+            raise typer.Exit(2)
+        raise typer.Exit(0)
+
+    # Human-readable output
+    typer.echo("Praxis Health Check\n")
+
+    for check in checks:
+        if check["status"] == "pass":
+            icon = "✓"
+        elif check["status"] == "warning":
+            icon = "⚠"
+        else:  # error
+            icon = "✗"
+
+        check_name = check["check"]
+        value = check["value"]
+        message = check["message"]
+
+        if message:
+            typer.echo(f"  {icon} {check_name:25} {value} ({message})")
+        else:
+            typer.echo(f"  {icon} {check_name:25} {value}")
+
+    # Summary and recommendations
+    typer.echo("")
+    if has_errors:
+        typer.echo("✗ Critical errors found\n", err=True)
+        typer.echo("Recommended fixes:", err=True)
+
+        if py_version < (3, 10):
+            typer.echo("  - Install Python 3.10 or higher", err=True)
+
+        if praxis_home_env and workspace_path and not workspace_path.exists():
+            typer.echo("  - Create workspace: praxis workspace init", err=True)
+
+        raise typer.Exit(1)
+
+    if has_warnings:
+        typer.echo("⚠ Some optional components missing\n")
+        typer.echo("Recommendations:")
+
+        if not praxis_home_env:
+            typer.echo("  - Set PRAXIS_HOME environment variable:")
+            typer.echo('    export PRAXIS_HOME="$HOME/praxis-workspace"')
+            typer.echo("  - Initialize workspace:")
+            typer.echo("    praxis workspace init")
+
+        if workspace_path and workspace_path.exists():
+            workspace_config = workspace_path / "workspace-config.yaml"
+            if not workspace_config.exists():
+                typer.echo("  - Initialize workspace:")
+                typer.echo("    praxis workspace init")
+
+        raise typer.Exit(2)
+
+    typer.echo("✓ All checks passed")
+    raise typer.Exit(0)
+
+
 @templates_app.command("render")
 def templates_render_cmd(
     path: Path = typer.Argument(
