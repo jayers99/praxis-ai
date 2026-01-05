@@ -65,6 +65,7 @@ guide_app = typer.Typer(help="In-terminal documentation guides.")
 research_app = typer.Typer(help="Research session management commands.")
 library_app = typer.Typer(help="Research library query and maintenance commands.")
 domain_app = typer.Typer(help="Domain creation and management commands.")
+guards_app = typer.Typer(help="AI Guards composition and rendering commands.")
 
 app.add_typer(workspace_app, name="workspace")
 app.add_typer(extensions_app, name="extensions")
@@ -75,6 +76,7 @@ app.add_typer(guide_app, name="guide")
 app.add_typer(research_app, name="research")
 app.add_typer(library_app, name="library")
 app.add_typer(domain_app, name="domain")
+app.add_typer(guards_app, name="guards")
 
 
 def version_callback(value: bool) -> None:
@@ -3372,6 +3374,188 @@ def domain_show_cmd(
         typer.echo("Subtypes: (none)")
 
     raise typer.Exit(0)
+
+
+# === AI Guards Commands ===
+
+
+@guards_app.command("render")
+def guards_render_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+    vendor: str = typer.Option(
+        "claude",
+        "--vendor",
+        "-v",
+        help="AI vendor to render for (claude, copilot, gemini, or 'all').",
+    ),
+    output_dir: Path | None = typer.Option(
+        None,
+        "--output",
+        "-o",
+        help="Output directory (defaults to project root).",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Show what would be rendered without writing files.",
+    ),
+) -> None:
+    """Render AI guard files for specified vendor(s).
+
+    Composes guards from user and project sources and generates
+    vendor-specific instruction files (CLAUDE.md, copilot-instructions.md, etc.).
+    """
+    from praxis.application.ai_guards_service import (
+        compose_guards,
+        render_guard_for_vendor,
+    )
+    from praxis.domain.ai_guards import AIVendor
+    from praxis.infrastructure.yaml_repo import load_praxis_yaml
+
+    # Load project config to get domain
+    try:
+        config = load_praxis_yaml(path)
+    except Exception as e:
+        typer.echo(f"✗ Failed to load praxis.yaml: {e}", err=True)
+        raise typer.Exit(1)
+
+    # Compose guards
+    composition = compose_guards(config.domain.value, path)
+
+    # Determine vendors to render
+    vendors_to_render = []
+    if vendor.lower() == "all":
+        vendors_to_render = list(AIVendor)
+    else:
+        try:
+            vendors_to_render = [AIVendor(vendor.lower())]
+        except ValueError:
+            typer.echo(
+                f"✗ Unknown vendor: {vendor}. "
+                f"Use: claude, copilot, gemini, or all",
+                err=True,
+            )
+            raise typer.Exit(1)
+
+    # Determine output directory
+    if output_dir is None:
+        output_dir = path
+
+    # Render for each vendor
+    for v in vendors_to_render:
+        rendered = render_guard_for_vendor(composition, v)
+
+        # Show warnings
+        for warning in rendered.warnings:
+            typer.echo(f"⚠ {warning}")
+
+        # Determine output path
+        if v == AIVendor.COPILOT:
+            # copilot needs .github subdirectory
+            output_path = output_dir / ".github" / "copilot-instructions.md"
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            output_path = output_dir / rendered.filename
+
+        if dry_run:
+            typer.echo(f"Would write {output_path}")
+            typer.echo(f"Content preview ({len(rendered.content)} chars):")
+            lines = rendered.content.split("\n")[:10]
+            for line in lines:
+                typer.echo(f"  {line}")
+            if len(rendered.content.split("\n")) > 10:
+                typer.echo("  ...")
+        else:
+            # Write file
+            output_path.write_text(rendered.content, encoding="utf-8")
+            typer.echo(f"✓ Rendered {v.value} guards → {output_path}")
+
+
+@guards_app.command("validate")
+def guards_validate_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+) -> None:
+    """Validate AI guard composition.
+
+    Checks for missing guards, environment leakage, and other issues.
+    """
+    from praxis.application.ai_guards_service import (
+        compose_guards,
+        validate_guard_composition,
+    )
+    from praxis.infrastructure.yaml_repo import load_praxis_yaml
+
+    # Load project config to get domain
+    try:
+        config = load_praxis_yaml(path)
+    except Exception as e:
+        typer.echo(f"✗ Failed to load praxis.yaml: {e}", err=True)
+        raise typer.Exit(1)
+
+    # Compose and validate
+    composition = compose_guards(config.domain.value, path)
+    result = validate_guard_composition(composition)
+
+    # Show results
+    if result.errors:
+        for issue in result.errors:
+            typer.echo(f"✗ ERROR: {issue.message}")
+            if issue.guard_file:
+                typer.echo(f"  File: {issue.guard_file}")
+
+    if result.warnings:
+        for issue in result.warnings:
+            typer.echo(f"⚠ WARNING: {issue.message}")
+            if issue.guard_file:
+                typer.echo(f"  File: {issue.guard_file}")
+
+    # Info messages
+    info_issues = [i for i in result.issues if i.severity == "info"]
+    if info_issues:
+        for issue in info_issues:
+            typer.echo(f"ℹ INFO: {issue.message}")
+
+    # Summary
+    if result.valid:
+        typer.echo("\n✓ Guard composition is valid")
+    else:
+        typer.echo("\n✗ Guard composition has errors")
+        raise typer.Exit(1)
+
+
+@guards_app.command("list")
+def guards_list_cmd(
+    path: Path = typer.Argument(
+        Path("."),
+        help="Project directory.",
+    ),
+) -> None:
+    """List active guard files for the project.
+
+    Shows which guard files are being used in composition.
+    """
+    from praxis.application.ai_guards_service import list_active_guards
+    from praxis.infrastructure.yaml_repo import load_praxis_yaml
+
+    # Load project config to get domain
+    try:
+        config = load_praxis_yaml(path)
+    except Exception as e:
+        typer.echo(f"✗ Failed to load praxis.yaml: {e}", err=True)
+        raise typer.Exit(1)
+
+    # List guards
+    descriptions = list_active_guards(config.domain.value, path)
+
+    typer.echo("Active AI Guards:")
+    for desc in descriptions:
+        typer.echo(f"  {desc}")
 
 
 if __name__ == "__main__":
