@@ -340,14 +340,16 @@ This mirrors successful patterns (npm global vs local, git system vs user vs rep
 **Already implemented:**
 - ✅ Core templates in `src/praxis/templates/`
 - ✅ Template resolver with precedence (project > extension > core)
+- ✅ Project-local template override support (`.praxis/templates/`)
 - ✅ Stage and artifact templates
 - ✅ Extension template contributions (ADR-003)
 - ✅ System prompts in `core/roles/`
 - ✅ Pipeline workflows as domain models
 
 **Not yet implemented:**
-- ❌ `.praxis/` directory scaffolding in `praxis init`
-- ❌ Project-local template overrides (resolver supports it, but undocumented)
+- ❌ `.praxis/` directory auto-creation in `praxis init`
+- ❌ Tests for project-local template overrides
+- ❌ `praxis templates list` command (show resolution precedence)
 - ❌ `praxis prompts` CLI commands
 - ❌ Declarative workflow definitions
 
