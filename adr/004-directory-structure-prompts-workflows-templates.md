@@ -157,13 +157,15 @@ When rendering templates (e.g., `praxis templates render`), the resolver searche
 
 1. **Project-local** (`.praxis/templates/` in project root) — **Highest priority**
 2. **Custom roots** (via `--template-root` CLI flag)
-3. **Extension templates** (alphabetically by extension name, Z > A)
+3. **Extension templates** (alphabetically by extension name, A > Z)
 4. **Core templates** (`src/praxis/templates/` in framework) — **Fallback**
 
 **First match wins.** This allows:
 - Projects to override any template
 - Extensions to provide domain/subtype-specific variants
 - Core to provide sensible defaults
+
+**Note:** Extension precedence for templates (A > Z) differs from opinions (Z > A, per ADR-003). This is because templates use "first match wins" with extensions sorted A-Z, while opinions merge in reverse alphabetical order. Both are deterministic but may be unified in future versions.
 
 **Example resolution path for `formalize.md` in a `code` domain, `cli` subtype project:**
 
@@ -277,6 +279,20 @@ This mirrors successful patterns (npm global vs local, git system vs user vs rep
 - Namespaced to avoid conflicts with project files
 - Optional (most projects don't need it)
 - Future-proof for additional project-local configs
+
+### Why Different Extension Precedence for Templates vs Opinions?
+
+**Current state:**
+- **Templates:** A-named extensions win over Z-named (A > Z)
+- **Opinions:** Z-named extensions win over A-named (Z > A, per ADR-003)
+
+**Rationale:**
+- Both implementations are deterministic and documented
+- Templates use "first match wins" with A-Z sorted extension list
+- Opinions merge in reverse alphabetical order with explicit conflict tracking
+- Different precedence models reflect different use cases (files vs merged trees)
+
+**Future consideration:** May unify precedence in v1.0 if user confusion emerges. Current approach prioritizes determinism and clarity of implementation.
 
 ---
 
