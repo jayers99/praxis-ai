@@ -228,15 +228,57 @@ This design intentionally avoids:
 
 ---
 
+## Implementation Status
+
+**Version:** 0.2.0  
+**Status:** **PARTIALLY IMPLEMENTED**  
+**Last Updated:** 2026-01-05
+
+### Completed Features
+
+- ✅ Project-level guard files (`praxis/ai-guards/{domain}.md`)
+- ✅ Environment overlay resolution (`~/.ai-guards/env.md` + `env/{home|work}.md`)
+- ✅ Multi-vendor rendering (Claude, Copilot, Gemini)
+- ✅ Guard composition logic with precedence rules
+- ✅ Validation tooling with environment leakage detection
+- ✅ CLI commands: `praxis guards render`, `praxis guards validate`, `praxis guards list`
+
+### Pending Features
+
+- ⏳ User-level guard files (`~/.ai-guards/core.md`, `~/.ai-guards/tools.md`)
+- ⏳ Tool mapping strategy implementation
+- ⏳ Example guard files and documentation
+- ⏳ Integration with `praxis init` and `praxis new` commands
+
+### Usage
+
+```bash
+# Render AI guards for Claude
+praxis guards render --vendor claude
+
+# Render for all vendors
+praxis guards render --vendor all
+
+# Validate guard composition
+praxis guards validate
+
+# List active guards
+praxis guards list
+```
+
+See `/home/runner/work/praxis-ai/praxis-ai/docs/guides/ai-guards.md` for detailed setup instructions.
+
+---
+
 ## Status
 
-This document is **draft by design**.
+This document has moved from **DRAFT** to **PARTIALLY IMPLEMENTED**.
 
-Next steps (after review):
+Next steps:
 
-- Finalize file naming conventions
-- Implement rendering strategy per AI tool
-- Create minimal skeletons for user and domain guard files
-- Add validation tooling
+- Complete user-level guard file implementation
+- Add comprehensive examples for each domain
+- Create migration guide for existing CLAUDE.md files
+- Document best practices for guard file organization
 
-Until finalized, this document serves as the **authoritative design reference** for AI guard structure in Praxis.
+Until fully implemented, this document serves as the **authoritative design reference** for AI guard structure in Praxis.
