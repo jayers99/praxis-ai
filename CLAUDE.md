@@ -184,13 +184,32 @@ Run `praxis opinions --prompt` to get formatted context for AI assistants.
 **Implementation Reality:**
 - **Policy Engine:** Pydantic v2 (see [ADR-001](adr/001-policy-engine.md))
 - **Validation Model:** Schema + filesystem checks (see [ADR-002](adr/002-validation-model.md))
-- **Execution Guardrails:** Defined in `core/governance/guardrails.md` (currently skeleton)
+- **Execution Guardrails:** Defined in `core/governance/guardrails.md` (active with consistency propagation guardrail)
 
 **What this means for you:**
 - Follow the guidance in this file (CLAUDE.md) for current AI behavior
 - Reference `core/spec/` for normative lifecycle and domain specifications
 - Use `core/governance/` for governance decisions and arbitration rules
+- **MUST follow guardrails** in `core/governance/guardrails.md` — especially Bidirectional Consistency Propagation (G1)
 - Treat `core/ai/ai-guards.md` as future architectural direction, not current requirements
+
+### Bidirectional Consistency Propagation (Guardrail G1)
+
+When modifying **canonical definition files** or making **critical decisions**, you MUST:
+
+1. **Identify canonical documents affected** — domains.md, lifecycle.md, privacy.md, layer-model.md, CLAUDE.md, etc.
+2. **Check parent constraints** — Does this change conflict with higher-level governance?
+3. **Find dependent children** — Which files reference concepts defined here?
+4. **Verify consistency** — Are there stale references or contradictions?
+5. **Resolve conflicts** — Update all affected documents OR flag explicitly for review
+
+**Critical decisions include:**
+- Adding/removing/renaming domains, stages, privacy levels, or other canonical concepts
+- Changing constraints (what's allowed/forbidden)
+- Modifying relationships between documents
+- Altering validation rules or entry/exit criteria
+
+See `core/governance/guardrails.md` for the complete dependency graph and detailed ritual.
 
 ## Project Structure
 
