@@ -1,7 +1,7 @@
 # Research Library Catalog
 
-_Last updated: 2026-01-05_
-_Total artifacts: 37_
+_Last updated: 2026-01-25_
+_Total artifacts: 38_
 
 ---
 
@@ -13,6 +13,7 @@ _Total artifacts: 37_
 | [ai-guards-user-directives-2024-12-24](ai-guards/user-directives-research.md) | CLAUDE.md Directives Research | ai-guards | Medium | 2024-12-24 |
 | [ai-guards-rules-analysis-2024-12-24](ai-guards/analysis-user-models.md) | Model File Rules Analysis | ai-guards | Medium | 2024-12-24 |
 | [ai-guards-design-notes-2024-12-24](ai-guards/capture-notes.md) | AI Guards Capture & Design Notes | ai-guards | Low | 2024-12-24 |
+| [foundations-atomic-prompt-fundamentals-2026-01-25](foundations/atomic-prompt-fundamentals.md) | The Atomic Prompt: Foundations of Effective AI Prompting | foundations | High | 2026-01-25 |
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | foundations | High | 2025-12-30 |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | foundations | High | 2025-12-28 |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | foundations | Medium | 2025-12-26 |
@@ -65,6 +66,7 @@ _Total artifacts: 37_
 
 | ID | Title | Consensus | Keywords |
 |----|-------|-----------|----------|
+| [foundations-atomic-prompt-fundamentals-2026-01-25](foundations/atomic-prompt-fundamentals.md) | The Atomic Prompt: Foundations of Effective AI Prompting | High | prompt-engineering, atomic-prompts, llm, ai-prompting, best-practices |
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | High | research-library, knowledge-management, findability, zettelkasten |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | High | philosophy, aristotle, plato, socrates, praxis, phronesis |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | Medium | human-ai-collaboration, intent-maintenance, cognitive-load |
@@ -131,6 +133,7 @@ _No artifacts yet_
 
 ### High Consensus
 
+- [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md) — foundations — prompt-engineering, atomic-prompts, llm
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md) — ai-guards — ai-memory, context-window, instruction-files
 - [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md) — foundations — knowledge-distillation, epistemology, pkdp _(medium-high)_
 - [Research Library Design Principles for AI Agents](foundations/research-library-design.md) — foundations — research-library, knowledge-management
@@ -198,6 +201,9 @@ _No artifacts yet_
 
 ### agile-manifesto
 - [Why Software Architect Is Not a Formal Role in Scrum](roles/software-architect-role-scrum-dora-analysis.md)
+
+### ai-prompting
+- [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md)
 
 ### ai-agents
 - [AI Code Review Optimization Patterns](patterns/git-ai-review-optimization.md)
@@ -430,6 +436,9 @@ _No artifacts yet_
 ### product-owner
 - [Critical Scrum Team Roles for Success](roles/scrum-team-roles-comprehensive.md)
 
+### prompt-engineering
+- [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md)
+
 ### prompting
 - [TDD and BDD for AI Code Verification](patterns/tdd-bdd-ai-verification.md)
 
@@ -593,6 +602,7 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2026-01-25 | [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md) | foundations |
 | 2026-01-04 | [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md) | roles |
 | 2026-01-04 | [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md) | patterns |
 | 2026-01-03 | [Refinement-Spawned Knowledge Distillation](patterns/refinement-spawned-pkdp.md) | patterns |
