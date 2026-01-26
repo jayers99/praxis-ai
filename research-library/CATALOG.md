@@ -1,7 +1,7 @@
 # Research Library Catalog
 
 _Last updated: 2026-01-25_
-_Total artifacts: 39_
+_Total artifacts: 40_
 
 ---
 
@@ -15,6 +15,7 @@ _Total artifacts: 39_
 | [ai-guards-design-notes-2024-12-24](ai-guards/capture-notes.md) | AI Guards Capture & Design Notes | ai-guards | Low | 2024-12-24 |
 | [foundations-atomic-prompt-fundamentals-2026-01-25](foundations/atomic-prompt-fundamentals.md) | The Atomic Prompt: Foundations of Effective AI Prompting | foundations | High | 2026-01-25 |
 | [foundations-context-management-fundamentals-2026-01-25](foundations/context-management-fundamentals.md) | Context Management in AI/LLM Interactions | foundations | Medium-High | 2026-01-25 |
+| [foundations-model-education-2026-01-25](foundations/model-education.md) | AI Model Education: Understanding and Selection | foundations | Medium-High | 2026-01-25 |
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | foundations | High | 2025-12-30 |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | foundations | High | 2025-12-28 |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | foundations | Medium | 2025-12-26 |
@@ -69,6 +70,7 @@ _Total artifacts: 39_
 |----|-------|-----------|----------|
 | [foundations-atomic-prompt-fundamentals-2026-01-25](foundations/atomic-prompt-fundamentals.md) | The Atomic Prompt: Foundations of Effective AI Prompting | High | prompt-engineering, atomic-prompts, llm, ai-prompting, best-practices |
 | [foundations-context-management-fundamentals-2026-01-25](foundations/context-management-fundamentals.md) | Context Management in AI/LLM Interactions | Medium-High | context-management, LLM, attention, RAG, summarization, token-budgets, context-window, transformer |
+| [foundations-model-education-2026-01-25](foundations/model-education.md) | AI Model Education: Understanding and Selection | Medium-High | ai-models, llm, model-selection, transformers, hallucination, prompt-injection, extended-thinking, model-versioning |
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | High | research-library, knowledge-management, findability, zettelkasten |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | High | philosophy, aristotle, plato, socrates, praxis, phronesis |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | Medium | human-ai-collaboration, intent-maintenance, cognitive-load |
@@ -139,6 +141,7 @@ _No artifacts yet_
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md) — ai-guards — ai-memory, context-window, instruction-files
 - [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md) — foundations — knowledge-distillation, epistemology, pkdp _(medium-high)_
 - [Context Management in AI/LLM Interactions](foundations/context-management-fundamentals.md) — foundations — context-management, attention, RAG, summarization _(medium-high)_
+- [AI Model Education: Understanding and Selection](foundations/model-education.md) — foundations — ai-models, model-selection, hallucination, extended-thinking _(medium-high)_
 - [Research Library Design Principles for AI Agents](foundations/research-library-design.md) — foundations — research-library, knowledge-management
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md) — foundations — philosophy, aristotle, plato
 - [Rationale for Praxis Roles Architecture](roles/rationale.md) — roles — praxis-roles, accountability
@@ -229,6 +232,9 @@ _No artifacts yet_
 
 ### ai-memory
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md)
+
+### ai-models
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
 
 ### aristotle
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md)
@@ -325,6 +331,9 @@ _No artifacts yet_
 ### estimation
 - [Lead Software Developer Role in Scrum Teams](roles/lead-software-developer-scrum-role.md)
 
+### extended-thinking
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
+
 ### facilitation
 - [Synthesis / Integration Lead Role](roles/synthesis-role.md)
 - [Scrum Master Role in Scrum Teams](roles/scrum-master-role.md)
@@ -337,6 +346,9 @@ _No artifacts yet_
 
 ### generative-culture
 - [Team Roles Critical for DORA Success](roles/dora-team-roles-critical-success.md)
+
+### hallucination
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
 
 ### Gherkin
 - [TDD and BDD for AI Code Verification](patterns/tdd-bdd-ai-verification.md)
@@ -402,6 +414,12 @@ _No artifacts yet_
 ### mcp
 - [Git + AI Tool Ecosystem Survey](patterns/git-ai-tool-ecosystem.md)
 
+### model-selection
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
+
+### model-versioning
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
+
 ### MTTR
 - [Team Roles Critical for DORA Success](roles/dora-team-roles-critical-success.md)
 
@@ -444,6 +462,9 @@ _No artifacts yet_
 
 ### prompting
 - [TDD and BDD for AI Code Verification](patterns/tdd-bdd-ai-verification.md)
+
+### prompt-injection
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
 
 ### QA-engineer
 - [Why QA Engineer Is Not a Formal Role in Scrum](roles/qa-engineer-role-scrum-dora-analysis.md)
@@ -568,6 +589,9 @@ _No artifacts yet_
 ### toil
 - [Site Reliability Engineering (SRE) Role](roles/sre-role.md)
 
+### transformers
+- [AI Model Education: Understanding and Selection](foundations/model-education.md)
+
 ### token-budget
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md)
 
@@ -605,6 +629,7 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2026-01-25 | [AI Model Education: Understanding and Selection](foundations/model-education.md) | foundations |
 | 2026-01-25 | [Context Management in AI/LLM Interactions](foundations/context-management-fundamentals.md) | foundations |
 | 2026-01-25 | [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md) | foundations |
 | 2026-01-04 | [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md) | roles |
