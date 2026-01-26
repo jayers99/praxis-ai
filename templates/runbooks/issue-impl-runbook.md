@@ -78,14 +78,14 @@ The agent must collect:
 1. **Repo:** `<owner>/<repo>`
 2. **Issue:** `NN`
 3. **Base branch:** typically `main` (confirm)
-4. **Working folder:** under `bench/wip/<slug>/`
+4. **Working folder:** under `_workshop/5-active/3-forge/<slug>/`
 
 ### Working Folder Rules
 
-- If the issue body contains a WIP folder link/path, use it.
-- Otherwise, propose a folder name derived from the issue title:
+- If the issue body specifies a working folder path, use it.
+- Otherwise, create a folder under `_workshop/5-active/3-forge/<slug>/`:
   - slug = kebab-case of title + `-<issue-number>`
-  - path = `bench/wip/<slug>/`
+  - Example: Issue #456 "Add user authentication" → `_workshop/5-active/3-forge/add-user-authentication-456/`
 - If the folder already exists: **STOP** and ask the human.
 
 ---
@@ -142,7 +142,7 @@ Any other response will be treated as revision guidance.
 
 **Behavior:**
 
-- Semantic acceptance → proceed to Phase 2
+- Semantic acceptance → proceed to Phase 2 (worktree + branch setup)
 - Any other response → revise the plan and re-present checkpoint
 
 ---
@@ -184,6 +184,8 @@ git worktree add <worktree-path> -b issue/<issue-number>-<slug> <base-branch>
 Instead of editing the issue title, use a **draft PR** to signal active work.
 
 Create the draft PR **as early as possible**, usually right after your first meaningful commit exists on the branch.
+
+**What counts as "meaningful":** A commit that changes the codebase toward the stated solution (e.g., file structure, initial implementation, test scaffolding). Do not use draft PR creation as a blocker for exploration—create it after the first commit that proves direction.
 
 Prerequisite: the branch must exist and contain at least one commit not on `<base-branch>`.
 
@@ -230,6 +232,18 @@ git commit -m "<type>: <summary>" -m "Refs #<issue-number>"
 
 Update `3.10-implementation-notes.md` as you go (what changed + why).
 
+### Session Logging
+
+Maintain `0.10-session-log.md` as a running record:
+
+- Commands executed (especially git/gh commands)
+- Key decisions and their reasoning
+- Blockers encountered and how resolved
+- Surprises or deviations from the plan
+- PR URL once created
+
+This artifact is useful for retrospective review and debugging if the implementation needs to restart.
+
 ---
 
 ## Phase 4: Verify
@@ -258,10 +272,17 @@ Verification: <working-folder>/4.10-verification.md
 
 PR: <PR URL> (draft)
 
-To proceed, respond with acceptance.
+To proceed, respond with acceptance
+(e.g., "ACCEPT", "Proceed", "Ship it").
+
 Any other response will be treated as revision guidance.
 ══════════════════════════════════════════════════════════
 ```
+
+**Behavior:**
+
+- Semantic acceptance → proceed to Phase 5 (mark PR ready + update body)
+- Any other response → revise implementation and re-present checkpoint
 
 ---
 
@@ -291,7 +312,7 @@ Any other response will be treated as revision guidance.
 3. Mark the PR ready for review:
 
    ```bash
-   GH_PAGER=cat gh pr ready <PR URL> --repo <owner>/<repo>
+   GH_PAGER=cat gh pr ready <issue-number> --repo <owner>/<repo>
    ```
 
 4. (Optional) If you used `Refs #NN` while WIP and now intend auto-close on merge, update the PR body to `Closes #NN`.
@@ -303,8 +324,36 @@ Any other response will be treated as revision guidance.
 When PR feedback arrives:
 
 1. Summarize requested changes (3–6 bullets)
-2. Propose a resolution plan (what you will change, what you won’t)
+2. Propose a resolution plan (what you will change, what you won't)
 3. **STOP** and request approval before broad refactors
+
+**Present:**
+
+```
+══════════════════════════════════════════════════════════
+ CHECKPOINT C: Review Feedback & Resolution Plan
+══════════════════════════════════════════════════════════
+
+PR: <PR URL>
+
+Feedback Summary:
+- <change 1>
+- <change 2>
+...
+
+Resolution Plan:
+- <what you will do>
+- <what you won't do + reasoning>
+
+To proceed, respond with acceptance.
+Any other response will be treated as revision guidance.
+══════════════════════════════════════════════════════════
+```
+
+**Behavior:**
+
+- Semantic acceptance → proceed to implementation of changes
+- Any other response → revise the resolution plan and re-present checkpoint
 
 ---
 
