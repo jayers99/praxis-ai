@@ -187,7 +187,7 @@ How these principles apply to our specific context:
 | Findability | CATALOG.md + topic _index.md files. Metadata in YAML frontmatter. |
 | Connections | `related:` field links to other research IDs. Cross-reference in body. |
 | Hybrid retrieval | Start with metadata/keyword (librarian function). Semantic search is future enhancement. |
-| Lifecycle | bench/research/ (draft) → review → approved → research-library/ (cataloged) |
+| Lifecycle | _workshop/1-inbox/ (draft) → review → approved → research-library/ (cataloged) |
 | Maintenance | Librarian function updates indexes on approval. Quarterly review for staleness. |
 
 **Scope decision**: Focus on file-based markdown library with structured metadata. Defer vector/semantic retrieval to future iteration.

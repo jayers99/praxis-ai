@@ -143,10 +143,14 @@ $PRAXIS_HOME/                       # User workspace root (default: ~/.praxis)
 ├── examples/                       # Example projects
 │   └── template-python-cli/
 │
-└── bench/                          # Workspace-level artifacts
-    ├── sessions/                   # AI session summaries
-    │   └── 2026-01-05.md
-    └── inbox-from-subagents/       # Subagent outputs
+└── _workshop/                      # Steward-managed work-in-flight
+    ├── 1-inbox/                    # Active research, subagent outputs
+    ├── 5-active/                   # Work in progress (backlog, forge, shelf)
+    │   ├── 1-backlog/
+    │   ├── 3-forge/
+    │   └── 7-shelf/
+    ├── 7-exits/                    # Completed/archived items
+    └── 9-items/                    # Canonical completed items
 ```
 
 ---

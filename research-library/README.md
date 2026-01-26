@@ -86,7 +86,7 @@ metadata:
 Research follows a lifecycle:
 
 ```
-bench/research/     →    review      →    approved     →    research-library/
+_workshop/1-inbox/  →    review      →    approved     →    research-library/
    (draft)              (red-team,        (human)            (cataloged)
                          synthesis)
 ```
@@ -109,7 +109,7 @@ Core keywords: `knowledge-management`, `research-library`, `findability`, `metad
 
 ## Related
 
-- `../../bench/research/` — Staging area for draft research
+- `../../_workshop/1-inbox/` — Staging area for draft research
 
 ---
 

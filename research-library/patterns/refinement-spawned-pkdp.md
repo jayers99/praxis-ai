@@ -179,11 +179,11 @@ Research spawned via standard PKDP process:
 
 1. **Gap cascade:** What if researching one gap reveals more gaps? (Proposed: queue additional gaps)
 2. **Parallel research:** Can multiple gaps be researched in parallel? (Deferred to post-POC)
-3. **Background agent integration:** How does agent output flow back to refinement? (Using `bench/inbox-from-subagents/`)
+3. **Background agent integration:** How does agent output flow back to refinement? (Using `_workshop/1-inbox/`)
 
 ## Related Topics
 
-- [Ticket Refinement Runbook](../../bench/backlog/_templates/ticket-refinement-runbook.md) — Integration point
+- [Issue Refinement Runbook](../../../extensions/praxis-workshop/runbooks/issue-refinement-runbook.md) — Integration point
 - [PKDP Guide](../../docs/guides/pkdp.md) — Research pipeline
 - [Knowledge Distillation Pipeline](../foundations/knowledge-distillation-pipeline.md) — PKDP foundations
 

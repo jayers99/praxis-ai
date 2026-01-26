@@ -15,7 +15,7 @@ This document is **normative** for subagent naming and invocation. Subagent impl
 
 | Role | Subagent ID | Invocation | Output Location |
 |------|-------------|------------|-----------------|
-| Research Librarian | `researcher` | `[SUBAGENT: researcher]` | `$PRAXIS_HOME/bench/inbox-from-subagents/` |
+| Research Librarian | `researcher` | `[SUBAGENT: researcher]` | `$PRAXIS_HOME/_workshop/1-inbox/` |
 | Product Owner | `product-owner` | `[SUBAGENT: product-owner]` | Inline / Issue comments |
 | Red Team | `red-team` | `[SUBAGENT: red-team]` | Inline / Review comments |
 | Synthesis | `synthesis` | `[SUBAGENT: synthesis]` | Inline / Decision logs |
@@ -60,7 +60,7 @@ Challenge the assumptions in the proposed authentication flow.
 ```
 [SUBAGENT: researcher]
 [PHASE: Explore]
-[OUTPUT: $PRAXIS_HOME/bench/inbox-from-subagents/oauth-research.md]
+[OUTPUT: $PRAXIS_HOME/_workshop/1-inbox/oauth-research.md]
 [FORMAT: research-report]
 Research OAuth 2.0 PKCE flow for CLI applications.
 ```
@@ -73,7 +73,7 @@ Research OAuth 2.0 PKCE flow for CLI applications.
 
 **Role:** Research Librarian
 **Default Timebox:** 20 minutes
-**Default Output:** `$PRAXIS_HOME/bench/inbox-from-subagents/`
+**Default Output:** `$PRAXIS_HOME/_workshop/1-inbox/`
 
 **Capabilities:**
 - Web search and fetch
@@ -431,7 +431,7 @@ For independent reviews:
 
 Subagent outputs that require human review go to:
 ```
-$PRAXIS_HOME/bench/inbox-from-subagents/
+$PRAXIS_HOME/_workshop/1-inbox/
 ```
 
 Files are named: `[subagent]-[topic]-[date].md`
