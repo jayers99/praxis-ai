@@ -8,11 +8,11 @@ Copy/paste this entire prompt into your agentic coding tool.
 
 ---
 
-You are an execution agent. Your task is to migrate the Praxis Roles subsystem from `bench/inbox/praxis-roles/` to `praxis-ai/`.
+You are an execution agent. Your task is to migrate the Praxis Roles subsystem to `praxis-ai/`.
 
-### Source Structure (current)
+### Source Structure (historical - migration completed)
 ```
-bench/inbox/praxis-roles/
+(original source archived - migration completed)
 ├── README.md
 ├── core-roles-index.md
 ├── core-roles-README.md

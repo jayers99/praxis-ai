@@ -315,10 +315,10 @@ This artifact was produced through the full PKDP pipeline:
 
 | Stage | Date | Artifact |
 |-------|------|----------|
-| RTC | 2025-12-31 | `bench/wip/research-pipline/praxis-knowledge-distillation-pipeline-handoff.md` |
-| SAD | 2025-12-31 | `bench/inbox-from-subagents/researcher/knowledge-distillation-pipeline-foundations_2025-12-31T120000.md` |
-| CCR | 2025-12-31 | `bench/inbox-from-subagents/red-team/pkdp-foundations-ccr_2025-12-31.md` |
-| ASR | 2025-12-31 | `bench/wip/research-pipline/pkdp-foundations-asr_2025-12-31.md` |
+| RTC | 2025-12-31 | (archived - praxis-knowledge-distillation-pipeline-handoff.md) |
+| SAD | 2025-12-31 | (archived - knowledge-distillation-pipeline-foundations_2025-12-31T120000.md) |
+| CCR | 2025-12-31 | (archived - pkdp-foundations-ccr_2025-12-31.md) |
+| ASR | 2025-12-31 | (archived - pkdp-foundations-asr_2025-12-31.md) |
 | HVA | 2025-12-31 | Accepted with amendments |
 
 ---

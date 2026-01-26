@@ -4,7 +4,7 @@ Feature: Catalog artifact into research library
   So that I can maintain the research library consistently
 
   Scenario: Successfully catalog a new artifact
-    Given a research artifact with valid metadata at "bench/research/my-topic-research.md"
+    Given a research artifact with valid metadata at "_workshop/1-inbox/my-topic-research.md"
     And the research-library exists at "research-library/"
     When I catalog the artifact to topic "patterns"
     Then the artifact is moved to "research-library/patterns/my-topic-research.md"
