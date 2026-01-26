@@ -1,4 +1,4 @@
-# Ticket Implementation Runbook v1 (GitHub Issue → Branch → PR)
+# Issue Implementation Runbook v1 (GitHub Issue → Branch → PR)
 
 **Purpose:** Implement an existing GitHub issue in a consistent, reviewable way.
 
