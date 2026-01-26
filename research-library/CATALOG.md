@@ -1,7 +1,7 @@
 # Research Library Catalog
 
 _Last updated: 2026-01-25_
-_Total artifacts: 38_
+_Total artifacts: 39_
 
 ---
 
@@ -14,6 +14,7 @@ _Total artifacts: 38_
 | [ai-guards-rules-analysis-2024-12-24](ai-guards/analysis-user-models.md) | Model File Rules Analysis | ai-guards | Medium | 2024-12-24 |
 | [ai-guards-design-notes-2024-12-24](ai-guards/capture-notes.md) | AI Guards Capture & Design Notes | ai-guards | Low | 2024-12-24 |
 | [foundations-atomic-prompt-fundamentals-2026-01-25](foundations/atomic-prompt-fundamentals.md) | The Atomic Prompt: Foundations of Effective AI Prompting | foundations | High | 2026-01-25 |
+| [foundations-context-management-fundamentals-2026-01-25](foundations/context-management-fundamentals.md) | Context Management in AI/LLM Interactions | foundations | Medium-High | 2026-01-25 |
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | foundations | High | 2025-12-30 |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | foundations | High | 2025-12-28 |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | foundations | Medium | 2025-12-26 |
@@ -67,6 +68,7 @@ _Total artifacts: 38_
 | ID | Title | Consensus | Keywords |
 |----|-------|-----------|----------|
 | [foundations-atomic-prompt-fundamentals-2026-01-25](foundations/atomic-prompt-fundamentals.md) | The Atomic Prompt: Foundations of Effective AI Prompting | High | prompt-engineering, atomic-prompts, llm, ai-prompting, best-practices |
+| [foundations-context-management-fundamentals-2026-01-25](foundations/context-management-fundamentals.md) | Context Management in AI/LLM Interactions | Medium-High | context-management, LLM, attention, RAG, summarization, token-budgets, context-window, transformer |
 | [foundations-research-library-design-2025-12-30](foundations/research-library-design.md) | Research Library Design Principles for AI Agents | High | research-library, knowledge-management, findability, zettelkasten |
 | [foundations-classical-roots-2025-12-28](foundations/classical-roots.md) | Classical Roots of Praxis-AI | High | philosophy, aristotle, plato, socrates, praxis, phronesis |
 | [foundations-human-ai-intent-2025-12-26](foundations/human-ai-intent-maintenance.md) | Human Intent vs AI Throughput Research | Medium | human-ai-collaboration, intent-maintenance, cognitive-load |
@@ -136,6 +138,7 @@ _No artifacts yet_
 - [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md) — foundations — prompt-engineering, atomic-prompts, llm
 - [AI Memory: First Principles & Best Practices](ai-guards/first-principles.md) — ai-guards — ai-memory, context-window, instruction-files
 - [Knowledge Distillation Pipeline: Foundations](foundations/knowledge-distillation-pipeline.md) — foundations — knowledge-distillation, epistemology, pkdp _(medium-high)_
+- [Context Management in AI/LLM Interactions](foundations/context-management-fundamentals.md) — foundations — context-management, attention, RAG, summarization _(medium-high)_
 - [Research Library Design Principles for AI Agents](foundations/research-library-design.md) — foundations — research-library, knowledge-management
 - [Classical Roots of Praxis-AI](foundations/classical-roots.md) — foundations — philosophy, aristotle, plato
 - [Rationale for Praxis Roles Architecture](roles/rationale.md) — roles — praxis-roles, accountability
@@ -602,6 +605,7 @@ _No artifacts yet_
 
 | Date | Title | Topic |
 |------|-------|-------|
+| 2026-01-25 | [Context Management in AI/LLM Interactions](foundations/context-management-fundamentals.md) | foundations |
 | 2026-01-25 | [The Atomic Prompt: Foundations of Effective AI Prompting](foundations/atomic-prompt-fundamentals.md) | foundations |
 | 2026-01-04 | [Architect CCR Enhancement for AI Agent Tickets](roles/architect-ccr-agent-guidance.md) | roles |
 | 2026-01-04 | [Architectural Direction for AI Agent Tickets](patterns/agent-architectural-direction.md) | patterns |
