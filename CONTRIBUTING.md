@@ -6,16 +6,13 @@ Thank you for your interest in contributing to Praxis-AI! This document outlines
 
 By submitting a pull request or otherwise contributing to this project, you agree to the following terms:
 
-### 1. Grant of Copyright License
+### 1. License Grant
 
-You hereby grant to the Project Owner (the owner of the GitHub repository at https://github.com/jayers99/praxis-ai) a perpetual, worldwide, non-exclusive, royalty-free, irrevocable copyright license to:
-
-- Reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute your contributions and any derivative works thereof
-- Incorporate your contributions into the project under any license, including licenses different from the current project license
+You agree that your contributions are licensed under the [GNU General Public License v3.0](LICENSE) (GPLv3), the same license that covers this project. You retain copyright ownership of your contributions.
 
 ### 2. Grant of Patent License
 
-You hereby grant to the Project Owner a perpetual, worldwide, non-exclusive, royalty-free, irrevocable patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer your contributions, where such license applies only to patent claims licensable by you that are necessarily infringed by your contribution alone or in combination with the project.
+You hereby grant to the Project Owner and to recipients of the software a perpetual, worldwide, non-exclusive, royalty-free, irrevocable patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer your contributions, where such license applies only to patent claims licensable by you that are necessarily infringed by your contribution alone or in combination with the project.
 
 ### 3. Representations
 
@@ -26,11 +23,7 @@ You represent that:
 - Your contributions are your original work and do not violate any third-party rights
 - You are not aware of any claims, suits, or actions pertaining to your contributions
 
-### 4. Right to Relicense
-
-You understand and agree that the Project Owner may, at their sole discretion, change the license of the project (including your contributions) at any time, without notice to you.
-
-### 5. No Obligation
+### 4. No Obligation
 
 You understand that your contributions are voluntary and that the Project Owner is under no obligation to accept, use, or include your contributions.
 
@@ -226,4 +219,4 @@ Open an issue or reach out to the project owner.
 
 ---
 
-*By submitting a contribution, you acknowledge that you have read and agree to the terms of this Contributor License Agreement.*
+*By submitting a contribution, you acknowledge that you have read and agree to the terms of this Contributor License Agreement. All contributions are licensed under GPLv3.*
