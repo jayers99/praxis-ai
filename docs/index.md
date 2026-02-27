@@ -189,7 +189,7 @@ We welcome contributions! See the [Contributing Guide](CONTRIBUTING.md) for deta
 
 ## License
 
-PolyForm Noncommercial License 1.0.0
+GNU General Public License v3.0
 
 ---
 

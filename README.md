@@ -4,7 +4,7 @@
 
 For solo creators and small teams who use AI to build, write, create, and learn — Praxis gives you lifecycle governance, domain-specific guidance, and deterministic policy resolution so your intent stays coherent as AI accelerates your output.
 
-> **Early-stage (v0.1.0)** · [PolyForm Noncommercial License 1.0.0](LICENSE) · Python 3.12+
+> **Early-stage (v0.1.0)** · [GNU GPLv3](LICENSE) · Python 3.12+
 
 ---
 
@@ -380,4 +380,4 @@ poetry run pytest && poetry run ruff check . && poetry run mypy .
 
 ## License
 
-PolyForm Noncommercial License 1.0.0
+GNU General Public License v3.0

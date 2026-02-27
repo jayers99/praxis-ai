@@ -130,7 +130,7 @@ For new dependencies:
 
 1. **Justification:** Why is this dependency needed?
 2. **Alternatives:** Were alternatives considered?
-3. **License:** Compatible with PolyForm Noncommercial?
+3. **License:** Compatible with GPLv3?
 4. **Maintenance:** Is it actively maintained?
 5. **Security:** Known vulnerabilities? (check GitHub Advisories)
 6. **Size:** What's the transitive dependency footprint?
