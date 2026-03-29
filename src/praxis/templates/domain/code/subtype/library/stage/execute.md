@@ -24,9 +24,9 @@
 
 ## Quality gates
 
-- [ ] `poetry run pytest` passes
-- [ ] `poetry run ruff check .` passes
-- [ ] `poetry run mypy .` passes
+- [ ] `uv run pytest` passes
+- [ ] `uv run ruff check .` passes
+- [ ] `uv run mypy .` passes
 - [ ] Coverage meets threshold
 - [ ] All public APIs documented
 

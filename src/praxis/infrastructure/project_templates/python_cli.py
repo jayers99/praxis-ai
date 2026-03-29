@@ -34,30 +34,34 @@ def _get_template_files() -> list[TemplateFileData]:
         TemplateFileData(
             path="pyproject.toml",
             content="""[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.poetry]
+[project]
 name = "{package_name}"
 version = "0.1.0"
 description = ""
 authors = []
 readme = "README.md"
-packages = [{include = "{package_name}", from = "src"}]
+requires-python = ">=3.10"
+dependencies = [
+    "typer>=0.9.0",
+    "pydantic>=2.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.10"
-typer = ">=0.9.0"
-pydantic = ">=2.0"
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.0"
-pytest-bdd = "^8.0"
-ruff = "^0.8"
-mypy = "^1.0"
-
-[tool.poetry.scripts]
+[project.scripts]
 {package_name} = "{package_name}.cli:app"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-bdd>=8.0",
+    "ruff>=0.8",
+    "mypy>=1.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{package_name}"]
 
 [tool.ruff]
 line-length = 88
@@ -315,31 +319,31 @@ A Python CLI tool built with hexagonal architecture.
 ## Installation
 
 ```bash
-poetry install
+uv sync
 ```
 
 ## Usage
 
 ```bash
-poetry run {package_name} hello
-poetry run {package_name} hello Alice
+uv run {package_name} hello
+uv run {package_name} hello Alice
 ```
 
 ## Development
 
 Run tests:
 ```bash
-poetry run pytest
+uv run pytest
 ```
 
 Lint:
 ```bash
-poetry run ruff check .
+uv run ruff check .
 ```
 
 Type check:
 ```bash
-poetry run mypy .
+uv run mypy .
 ```
 
 ## Architecture

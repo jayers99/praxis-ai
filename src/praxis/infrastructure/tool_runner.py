@@ -73,7 +73,7 @@ def run_tool(
 def _output_indicates_missing_tool(result: ToolResult) -> bool:
     """Heuristic: detect cases where a wrapper exists but the underlying tool isn't available.
 
-    This module tries commands in a preferred order (e.g. `poetry run ...` then
+    This module tries commands in a preferred order (e.g. `uv run ...` then
     `python -m ...` then bare executable). If a command fails because the underlying
     tool isn't installed, we treat that failure as "try the next command" rather than
     a hard failure.
@@ -97,9 +97,9 @@ def run_pytest(project_root: Path) -> ToolResult:
     Returns:
         ToolResult indicating if tests passed.
     """
-    # Try poetry run pytest first, fall back to pytest
+    # Try uv run pytest first, fall back to pytest
     commands = [
-        ["poetry", "run", "pytest", "--tb=short", "-q"],
+        ["uv", "run", "pytest", "--tb=short", "-q"],
         [sys.executable, "-m", "pytest", "--tb=short", "-q"],
         ["pytest", "--tb=short", "-q"],
     ]
@@ -133,7 +133,7 @@ def run_ruff(project_root: Path) -> ToolResult:
         ToolResult indicating if linting passed.
     """
     commands = [
-        ["poetry", "run", "ruff", "check", "."],
+        ["uv", "run", "ruff", "check", "."],
         [sys.executable, "-m", "ruff", "check", "."],
         ["ruff", "check", "."],
     ]
@@ -167,7 +167,7 @@ def run_mypy(project_root: Path) -> ToolResult:
         ToolResult indicating if type checking passed.
     """
     commands = [
-        ["poetry", "run", "mypy", "."],
+        ["uv", "run", "mypy", "."],
         [sys.executable, "-m", "mypy", "."],
         ["mypy", "."],
     ]
@@ -245,9 +245,9 @@ def run_coverage(project_root: Path, threshold: int) -> CoverageResult:
     Returns:
         CoverageResult with coverage percentage and pass/fail status.
     """
-    # Try poetry run pytest with coverage first, fall back to pytest
+    # Try uv run pytest with coverage first, fall back to pytest
     commands = [
-        ["poetry", "run", "pytest", "--cov", "--cov-report=term", "-q"],
+        ["uv", "run", "pytest", "--cov", "--cov-report=term", "-q"],
         [
             sys.executable,
             "-m",

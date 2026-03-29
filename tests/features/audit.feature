@@ -13,7 +13,7 @@ Feature: Praxis Audit CLI
     Given a code project without pyproject.toml
     When I run praxis audit
     Then the exit code should be 0
-    And the output should contain "Poetry not configured"
+    And the output should contain "pyproject.toml missing"
 
   Scenario: Strict mode fails on warnings
     Given a code project without pyproject.toml

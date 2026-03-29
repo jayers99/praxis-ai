@@ -66,7 +66,7 @@ See [CONTRIBUTING.md workflow section](CONTRIBUTING.md) for more details on the 
 
 **Prerequisites:**
 - Python >=3.10
-- Poetry (install via `pip install poetry` or see https://python-poetry.org/)
+- uv (install via `curl -LsSf https://astral.sh/uv/install.sh | sh`)
 - Git
 
 **Initial setup:**
@@ -76,43 +76,43 @@ git clone https://github.com/YOUR_USERNAME/praxis-ai.git
 cd praxis-ai
 
 # Install dependencies
-poetry install
+uv sync
 
 # Verify installation
-poetry run praxis --version
+uv run praxis --version
 ```
 
 **Running quality checks locally:**
 ```bash
 # Run all tests
-poetry run pytest
+uv run pytest
 
 # Run specific test file
-poetry run pytest tests/features/test_validate.py
+uv run pytest tests/features/test_validate.py
 
 # Run tests with verbose output
-poetry run pytest -v
+uv run pytest -v
 
 # Run linting (code style checks)
-poetry run ruff check .
+uv run ruff check .
 
 # Auto-fix linting issues where possible
-poetry run ruff check . --fix
+uv run ruff check . --fix
 
 # Run type checking
-poetry run mypy .
+uv run mypy .
 
 # Run all checks (recommended before committing)
-poetry run pytest && poetry run ruff check . && poetry run mypy .
+uv run pytest && uv run ruff check . && uv run mypy .
 ```
 
 **Debugging:**
 ```bash
 # Run tests with debugging output
-poetry run pytest -vv -s
+uv run pytest -vv -s
 
 # Run specific test scenario by name
-poetry run pytest -k "test_scenario_name"
+uv run pytest -k "test_scenario_name"
 ```
 
 ### Testing Requirements
@@ -127,10 +127,10 @@ This project uses **Behavior-Driven Development (BDD)** with Gherkin feature fil
 
 **Running tests:**
 ```bash
-poetry run pytest                    # Run all tests
-poetry run pytest tests/features/    # Run BDD tests only
-poetry run ruff check .              # Linting
-poetry run mypy .                    # Type checking
+uv run pytest                    # Run all tests
+uv run pytest tests/features/    # Run BDD tests only
+uv run ruff check .              # Linting
+uv run mypy .                    # Type checking
 ```
 
 **Example Gherkin scenario:**
@@ -185,14 +185,14 @@ This includes:
 ### Dependency Management
 
 **When adding or updating dependencies:**
-- Add dependencies via `poetry add <package>`
-- Update `poetry.lock` by running `poetry update` or `poetry lock`
-- Commit both `pyproject.toml` and `poetry.lock` changes
+- Add dependencies via `uv add <package>` (or `uv add --dev <package>` for dev deps)
+- This updates both `pyproject.toml` and `uv.lock` automatically
+- Commit both `pyproject.toml` and `uv.lock` changes
 - Document why the dependency is needed in PR description
 - Check for known vulnerabilities (planned: automated scanning)
 
 **Avoid:**
-- Directly editing `pyproject.toml` without running `poetry lock`
+- Directly editing `pyproject.toml` without running `uv sync`
 - Adding dependencies with wildcard versions (`*`)
 - Including development-only dependencies in production dependencies
 

@@ -45,27 +45,44 @@ def get_dependencies(project_root: Path) -> set[str]:
         return set()
 
     deps: set[str] = set()
-    poetry = data.get("tool", {}).get("poetry", {})
 
-    # Main dependencies
+    # PEP 621 format ([project] dependencies)
+    project = data.get("project", {})
+    for dep_str in project.get("dependencies", []):
+        # PEP 508 format: "package>=1.0" -> "package"
+        name = dep_str.split(">")[0].split("<")[0].split("=")[0].split("!")[0].split("[")[0].strip()
+        if name:
+            deps.add(name.lower())
+
+    # PEP 735 dependency-groups
+    dep_groups = data.get("dependency-groups", {})
+    for group_deps in dep_groups.values():
+        for dep_str in group_deps:
+            if isinstance(dep_str, str):
+                name = dep_str.split(">")[0].split("<")[0].split("=")[0].split("!")[0].split("[")[0].strip()
+                if name:
+                    deps.add(name.lower())
+
+    # Legacy Poetry format ([tool.poetry] dependencies)
+    poetry = data.get("tool", {}).get("poetry", {})
     main_deps = poetry.get("dependencies", {})
     deps.update(k.lower() for k in main_deps)
 
-    # Dev dependencies (Poetry 1.2+ style)
     groups = poetry.get("group", {})
     for group in groups.values():
         group_deps = group.get("dependencies", {})
         deps.update(k.lower() for k in group_deps)
 
-    # Legacy dev-dependencies
     legacy_dev = poetry.get("dev-dependencies", {})
     deps.update(k.lower() for k in legacy_dev)
 
     return deps
 
 
-def get_poetry_scripts(project_root: Path) -> dict[str, str]:
+def get_console_scripts(project_root: Path) -> dict[str, str]:
     """Get console script entry points from pyproject.toml.
+
+    Supports both PEP 621 ([project.scripts]) and Poetry ([tool.poetry.scripts]).
 
     Args:
         project_root: Project directory.
@@ -77,5 +94,15 @@ def get_poetry_scripts(project_root: Path) -> dict[str, str]:
     if not data:
         return {}
 
+    # PEP 621 format
+    project_scripts = data.get("project", {}).get("scripts", {})
+    if project_scripts:
+        return cast(dict[str, str], project_scripts)
+
+    # Legacy Poetry format
     poetry = data.get("tool", {}).get("poetry", {})
     return cast(dict[str, str], poetry.get("scripts", {}))
+
+
+# Backward-compatible alias
+get_poetry_scripts = get_console_scripts

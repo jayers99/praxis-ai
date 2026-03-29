@@ -92,7 +92,7 @@ tests/
 ### Console Script (Primary)
 
 ```toml
-[tool.poetry.scripts]
+[project.scripts]
 my-tool = "my_package.cli:app"
 ```
 
@@ -142,4 +142,4 @@ if __name__ == "__main__":
 
 - [CLI-Python Opinion](../../cli-python.md) — Legacy file (being migrated)
 - [Typer Documentation](https://typer.tiangolo.com/)
-- [Poetry Documentation](https://python-poetry.org/)
+- [uv Documentation](https://docs.astral.sh/uv/)

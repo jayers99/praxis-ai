@@ -11,7 +11,7 @@ from praxis.domain.stages import Stage
 from praxis.infrastructure.audit_helpers import dir_exists, file_exists_any
 from praxis.infrastructure.pyproject_loader import (
     get_dependencies,
-    get_poetry_scripts,
+    get_console_scripts,
     load_pyproject,
 )
 
@@ -69,11 +69,11 @@ def _has_bdd_tests(project_root: Path) -> bool:
 CODE_CHECKS: list[CheckDefinition] = [
     # Tooling
     CheckDefinition(
-        name="poetry_configured",
+        name="pyproject_configured",
         category="tooling",
         check_fn=lambda p: (p / "pyproject.toml").exists(),
-        pass_message="Poetry configured (pyproject.toml exists)",
-        fail_message="Poetry not configured (pyproject.toml missing)",
+        pass_message="pyproject.toml exists",
+        fail_message="pyproject.toml missing",
     ),
     CheckDefinition(
         name="typer_dependency",
@@ -107,9 +107,9 @@ CODE_CHECKS: list[CheckDefinition] = [
     CheckDefinition(
         name="console_script",
         category="structure",
-        check_fn=lambda p: bool(get_poetry_scripts(p)),
+        check_fn=lambda p: bool(get_console_scripts(p)),
         pass_message="Console script entry point configured",
-        fail_message="No console script in [tool.poetry.scripts]",
+        fail_message="No console script in [project.scripts]",
     ),
     CheckDefinition(
         name="main_module",
@@ -145,11 +145,11 @@ def _cli_has_entry_point(project_root: Path) -> bool:
     """Check for CLI entry point (console script or __main__.py).
 
     A CLI entry point is considered present if:
-    - pyproject.toml contains [tool.poetry.scripts] entries, OR
+    - pyproject.toml contains [project.scripts] entries, OR
     - A __main__.py file exists in the main package under src/
     """
     # Check for console script
-    if get_poetry_scripts(project_root):
+    if get_console_scripts(project_root):
         return True
     # Check for __main__.py
     return _has_main_module(project_root)
@@ -238,7 +238,7 @@ CLI_CHECKS: list[CheckDefinition] = [
         category="cli",
         check_fn=_cli_has_entry_point,
         pass_message="CLI entry point exists (console script or __main__.py)",
-        fail_message=("CLI entry point not found. Add [tool.poetry.scripts] or __main__.py"),
+        fail_message=("CLI entry point not found. Add [project.scripts] or __main__.py"),
         subtypes=["cli"],
     ),
     CheckDefinition(
@@ -292,8 +292,12 @@ def _library_has_exports(project_root: Path) -> bool:
     # Check for explicit package configuration in pyproject.toml
     data = load_pyproject(project_root)
     if data:
+        # PEP 621 / hatchling format
+        hatch = data.get("tool", {}).get("hatch", {}).get("build", {}).get("targets", {}).get("wheel", {})
+        if hatch.get("packages"):
+            return True
+        # Legacy Poetry format
         poetry = data.get("tool", {}).get("poetry", {})
-        # Explicit packages or modules indicate intentional exports
         if poetry.get("packages") or poetry.get("modules"):
             return True
 
@@ -312,8 +316,11 @@ def _library_has_version(project_root: Path) -> bool:
     if not data:
         return False
 
-    poetry = data.get("tool", {}).get("poetry", {})
-    if not poetry.get("version"):
+    # Check PEP 621 format first, then Poetry format
+    version = data.get("project", {}).get("version")
+    if not version:
+        version = data.get("tool", {}).get("poetry", {}).get("version")
+    if not version:
         return False
 
     # Check for __version__ in package __init__.py

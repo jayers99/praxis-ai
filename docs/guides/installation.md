@@ -27,18 +27,15 @@ Until Praxis is published to PyPI, install from source:
 
 - Python 3.10 or higher
 - Git
-- Poetry (Python package manager)
+- uv (Python package manager)
 
-### Step 1: Install Poetry
+### Step 1: Install uv
 
-If you don't have Poetry installed:
+If you don't have uv installed:
 
 ```bash
 # macOS/Linux
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Or with pip
-pip install poetry
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 ### Step 2: Clone the Repository
@@ -51,13 +48,13 @@ cd praxis-ai
 ### Step 3: Install Dependencies
 
 ```bash
-poetry install
+uv sync
 ```
 
 ### Step 4: Verify Installation
 
 ```bash
-poetry run praxis --version
+uv run praxis --version
 ```
 
 ### Step 5: Create CLI Wrapper (Recommended)
@@ -71,7 +68,7 @@ mkdir -p ~/bin
 # Create wrapper script (adjust path to your clone location)
 cat > ~/bin/praxis << 'EOF'
 #!/bin/bash
-exec poetry -C "$HOME/path/to/praxis-ai" run praxis "$@"
+exec uv run --project "$HOME/path/to/praxis-ai" praxis "$@"
 EOF
 
 # Make executable
@@ -186,8 +183,7 @@ If using Homebrew Python, you may need to:
 # Ensure Python 3.10+ is installed
 brew install python@3.12
 
-# Use explicit Python version
-python3.12 -m pip install poetry
+# uv handles Python version management automatically
 ```
 
 **PATH Configuration:**
@@ -249,20 +245,20 @@ export PRAXIS_HOME="$HOME/praxis-workspace"
 ```dockerfile
 FROM python:3.12-slim
 
-# Install Poetry
-RUN pip install poetry
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
 
 # Clone and install Praxis
 RUN git clone https://github.com/jayers99/praxis-ai.git /opt/praxis-ai
 WORKDIR /opt/praxis-ai
-RUN poetry install
+RUN uv sync
 
 # Set up workspace
 ENV PRAXIS_HOME=/workspace
 RUN mkdir -p /workspace
 
 # Entrypoint
-ENTRYPOINT ["poetry", "run", "praxis"]
+ENTRYPOINT ["uv", "run", "praxis"]
 ```
 
 Build and run:
@@ -282,9 +278,9 @@ docker run -it -v $(pwd):/workspace praxis-ai --help
 
 **Solutions:**
 
-1. **Using Poetry directly:**
+1. **Using uv directly:**
    ```bash
-   poetry run praxis --version
+   uv run praxis --version
    ```
 
 2. **Check wrapper script:**
@@ -334,23 +330,20 @@ sudo apt install python3.10
 # macOS (Homebrew):
 brew install python@3.12
 
-# Use specific Python version with Poetry
-poetry env use python3.10
-poetry install
+# Use specific Python version with uv
+uv python install 3.10
+uv sync
 ```
 
-### Poetry not found
+### uv not found
 
-**Problem:** `poetry: command not found`
+**Problem:** `uv: command not found`
 
 **Solution:**
 
 ```bash
-# Install Poetry
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Or with pip
-pip install --user poetry
+# Install uv
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Add to PATH (location varies)
 export PATH="$HOME/.local/bin:$PATH"
@@ -367,8 +360,8 @@ export PATH="$HOME/.local/bin:$PATH"
 mkdir -p $PRAXIS_HOME
 chmod u+w $PRAXIS_HOME
 
-# Don't use sudo with Poetry
-# Poetry installs to user directory, no sudo needed
+# Don't use sudo with uv
+# uv installs to user directory, no sudo needed
 ```
 
 ### Import errors after installation
@@ -380,11 +373,7 @@ chmod u+w $PRAXIS_HOME
 ```bash
 # Reinstall dependencies
 cd /path/to/praxis-ai
-poetry install
-
-# Verify environment
-poetry env info
-poetry show
+uv sync
 ```
 
 ---
@@ -410,10 +399,10 @@ cd /path/to/praxis-ai
 git pull origin main
 
 # Update dependencies
-poetry install
+uv sync
 
 # Verify update
-poetry run praxis --version
+uv run praxis --version
 ```
 
 ### Update Extensions

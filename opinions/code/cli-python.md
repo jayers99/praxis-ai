@@ -16,8 +16,8 @@ See [cli.md](cli.md) for general CLI ideals. This file adds Python-specific cons
 
 ## Tooling
 
-- **Poetry** for dependency management
-- **Console script entry point** via `[tool.poetry.scripts]`
+- **uv** for dependency management with **hatchling** build backend
+- **Console script entry point** via `[project.scripts]`
 - **Typer** for CLI framework
 - **ruff** for linting and formatting
 - **mypy** for type checking

@@ -76,7 +76,7 @@ Example (xmas-cards-2025):
 
 Example command (Create project repo, using Render Run as a local checkout/submodule):
 
-- `poetry -C $PRAXIS_HOME/extensions/render-run run render-run prepare --in praxis/docs/prompting/ideas.md --domain create --project xmas-cards-2025`
+- `uv run --project $PRAXIS_HOME/extensions/render-run render-run prepare --in praxis/docs/prompting/ideas.md --domain create --project xmas-cards-2025`
 
 ### Output Root Configuration
 

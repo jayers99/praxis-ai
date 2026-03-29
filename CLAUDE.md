@@ -112,7 +112,7 @@ adr/               # Architecture Decision Records
 
 ```bash
 # Development
-poetry run pytest && poetry run ruff check . && poetry run mypy .
+uv run pytest && uv run ruff check . && uv run mypy .
 
 # CLI
 praxis new <name> --domain <d> --privacy <p>

@@ -15,7 +15,7 @@ For solo creators and small teams who use AI to build, write, create, and learn 
 ```bash
 git clone https://github.com/jayers99/praxis-ai.git
 cd praxis-ai
-poetry install
+uv sync
 ```
 
 ### 2. Configure shell
@@ -33,7 +33,7 @@ Create CLI wrapper:
 mkdir -p ~/bin
 cat > ~/bin/praxis << 'EOF'
 #!/bin/bash
-exec poetry -C "$PRAXIS_HOME/praxis-ai" run praxis "$@"
+exec uv run --project "$PRAXIS_HOME/praxis-ai" praxis "$@"
 EOF
 chmod +x ~/bin/praxis
 ```
@@ -373,7 +373,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the issue workflow, labels, developme
 Run before committing:
 
 ```bash
-poetry run pytest && poetry run ruff check . && poetry run mypy .
+uv run pytest && uv run ruff check . && uv run mypy .
 ```
 
 ---
